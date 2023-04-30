@@ -1,13 +1,17 @@
 import './App.css';
 import Navbar from './Navbar.js'
+import Register from './Register.js'
 
 function App() {
   return (
     <div className="App">
       <header className="app__body">
         <div className="app__navbar">
-          <h1>Navbar goes here</h1>
           <Navbar />
+        </div>
+
+        <div className="app__register">
+          <Register />
         </div>
       </header>
     </div>
@@ -15,3 +19,7 @@ function App() {
 }
 
 export default App;
+
+
+
+
