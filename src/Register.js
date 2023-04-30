@@ -18,13 +18,10 @@ function Register() {
     var patt = new RegExp(check_email);
     var result = patt.test(email);
     if (!result) {
-      
       alert("You can't use that email to register"); 
     }
-
     e.preventDefault();
-    auth
-      .createUserWithEmailAndPassword(email, password)
+    auth.createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         console.log(userCredentials);
       })
