@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { inter } from "@/app/ui/fonts";
-import "./globals.css";
+import "@/app/globals.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -10,7 +10,9 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <main className="min-h-screen">{children}</main>
+      </body>
     </html>
   );
 };
