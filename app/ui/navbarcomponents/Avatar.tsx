@@ -20,12 +20,13 @@ export function Avatar() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                    <Icons.avatar className="h-[1.3rem] w-[1.3rem]" />
-                    <span className="sr-only">User Menu</span>
-                </Button>
+                <div className="flex items-center space-x-3">
+                    <Button variant="ghost" size="icon">
+                        <Icons.avatar className="h-[1.7rem] w-[1.7rem]" />
+                    </Button>
+                </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="center">
                 <DropdownMenuItem onClick={() => console.log("View Your Profile")}>
                     View Your Profile
                 </DropdownMenuItem>
