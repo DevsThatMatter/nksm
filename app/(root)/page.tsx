@@ -1,7 +1,10 @@
 import Image from 'next/image'
+import Categories from '../ui/categories'
 
 export default function Page() {
   return (
-      <h1>Main Page</h1>
+      <>
+      <Categories/>
+      </>
   )
 }
