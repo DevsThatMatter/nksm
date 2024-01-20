@@ -60,7 +60,7 @@ const Categories = () => {
             </div>
             <div className="col-span-1">
                 {categories.slice(5, 8).map((category) => (
-                    <CategoryCard key={category.name} name={category.name} imgUrl={category.imgUrl} width="30vw" height="38.5vh" />
+                    <CategoryCard key={category.name} name={category.name} imgUrl={category.imgUrl} width="28vw" height="38.5vh" />
                 ))}
             </div>
         </div>
