@@ -1,9 +1,12 @@
 import { ModeToggle } from "@/app/ui/theme/mode-toggle";
+import UserChat from "@/components/Chat/userChat";
 
 const Navbar = () => {
   return (
-    <div className="bg-red-400">
+    //  these classnames can be removed, just added to check
+    <div className="flex justify-between m-10">
       <ModeToggle />
+      <UserChat/>
     </div>
   );
 };
