@@ -12,8 +12,8 @@ import SearchBar from "./navbarcomponents/SearchBar";
 const Navbar = () => {
   return (
     <>
-      <nav className="flex justify-between p-3">
-        <div className="logo hidden sm:block ">
+      <nav className="flex lg:justify-between justify-center p-5">
+        <div className="logo hidden lg:block ">
           <Link href="/">
             <Image src="logo.svg" alt="Logo" width={150} height={150} className="invert"/>
           </Link>

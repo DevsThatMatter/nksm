@@ -3,9 +3,9 @@ import { Icons } from "@/app/ui/icons";
 
 export function AddListing() {
     return (
-        <Button variant="default">
-            <Icons.add className="h-[1.3rem] w-[1.3rem]" />
-            <span className="hidden sm:inline-block ml-2"> Add Listing </span>
+        <Button variant="default" className="relative">
+            <Icons.add className="absolute left-2 top-2.5 h-4 w-4" />
+            <span className="hidden sm:inline-block pl-4"> Add Listing </span>
         </Button>
     );
 }
