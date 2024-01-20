@@ -1,6 +1,8 @@
-import { SunIcon, MoonIcon } from "@radix-ui/react-icons";
-type IconProps = React.HTMLAttributes<SVGElement>;
+import { SunIcon, MoonIcon, AvatarIcon, BookmarkIcon } from "@radix-ui/react-icons";
+
 export const Icons = {
   sun: SunIcon,
   moon: MoonIcon,
+  avatar: AvatarIcon,
+  saved: BookmarkIcon,
 };
