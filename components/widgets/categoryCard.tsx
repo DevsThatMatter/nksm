@@ -6,7 +6,6 @@ interface CategoryProp {
     width: string,
     height: string
 }
-const val = "100px"
 const CategoryCard: React.FC<CategoryProp> = ({name, imgUrl, width, height}) => {
   return (
     <Link href={""} key={name}>
