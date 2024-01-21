@@ -43,7 +43,7 @@ export default function UserChat() {
     return (
         <div>
             <Sheet>
-                <SheetTrigger>
+                <SheetTrigger asChild>
                     <Button variant="ghost">
                         <Icons.chaticon className="w-6 h-6" />
                     </Button>
