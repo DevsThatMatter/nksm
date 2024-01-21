@@ -23,7 +23,7 @@ const Navbar = () => {
           <UserChat />
           <AddListing />
           <SavedItems />
-          <ModeToggle />
+          {/* <ModeToggle /> */}
           <Separator orientation="vertical" />
           <Avatar />
         </div>

@@ -11,7 +11,7 @@ import {
 import { Icons } from "@/app/ui/icons";
 
 export function Avatar() {
-    const { theme } = useTheme();
+    const { setTheme } = useTheme();
     const handleLogout = () => {
         // Placeholder function for handling logout
         console.log("Logout clicked");
@@ -33,6 +33,25 @@ export function Avatar() {
                 <DropdownMenuItem onClick={() => console.log("Settings")}>
                     Settings
                 </DropdownMenuItem>
+                <DropdownMenu>
+                    <DropdownMenuItem>
+                        <DropdownMenuTrigger>
+                            Change Theme
+                        </DropdownMenuTrigger>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuContent align="center">
+                        <DropdownMenuItem onClick={() => setTheme("light")}>
+                            Light
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setTheme("dark")}>
+                            Dark
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setTheme("system")}>
+                            System
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
                 <DropdownMenuItem onClick={handleLogout} className="text-red-500">
                     Logout
                 </DropdownMenuItem>
