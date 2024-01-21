@@ -42,25 +42,25 @@ const Categories = () => {
         setResolution(window.innerWidth)
     }, [])
     return resolution >= 1024 ? (
-        <div className="grid grid-cols-3 sm:flex">
-            <div className="col-span-1">
+        <div className="grid grid-cols-3 sm:flex px-3">
+            <div className="col-span-1 w-[35%]">
                 {categories.slice(0, 2).map((category) => (
-                    <CategoryCard key={category.name} name={category.name} imgUrl={category.imgUrl} width="32vw" height="51vh"/>
+                    <CategoryCard key={category.name} name={category.name} imgUrl={category.imgUrl} height="51vh"/>
                 ))}
             </div>
-            <div className="col-span-1">
+            <div className="col-span-1 w-[40%]">
                 {categories.slice(2, 3).map((category) => (
-                    <CategoryCard key={category.name} name={category.name} imgUrl={category.imgUrl} width="38vw" height="68vh" />
+                    <CategoryCard key={category.name} name={category.name} imgUrl={category.imgUrl}  height="68vh" />
                 ))}
-                <div className="flex justify-center ">
+                <div className="flex justify-center w-[100%]">
                     {categories.slice(3, 5).map((category) => (
-                        <CategoryCard key={category.name} name={category.name} imgUrl={category.imgUrl} width="18vw" height="34vh" />
+                        <CategoryCard key={category.name} name={category.name} imgUrl={category.imgUrl} height="34vh" />
                     ))}
                 </div>
             </div>
-            <div className="col-span-1">
+            <div className="col-span-1 w-[25%]">
                 {categories.slice(5, 8).map((category) => (
-                    <CategoryCard key={category.name} name={category.name} imgUrl={category.imgUrl} width="20vw" height="32.5vh" />
+                    <CategoryCard key={category.name} name={category.name} imgUrl={category.imgUrl} height="33.5vh" />
                 ))}
             </div>
         </div>
@@ -68,7 +68,7 @@ const Categories = () => {
         (
             <div className="grid grid-cols-2">
                 {categories.map((category) => (
-                    <CategoryCard key={category.name} name={category.name} imgUrl={category.imgUrl} width="100vw" height={resolution>=768 ? '40vh' : '20vh'} />
+                    <CategoryCard key={category.name} name={category.name} imgUrl={category.imgUrl} width="100vw" height={resolution>=768 ? '60vh' : '30vh'} />
                 ))}
             </div>
         );
