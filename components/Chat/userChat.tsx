@@ -11,9 +11,9 @@ import {
     SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { ChatBubbleIcon } from "@radix-ui/react-icons";
 import useChatStore from "./store";
 import ChatUI from "./ChatUI";
+import { Icons } from "@/app/ui/icons";
 
 interface Chat {
     name: string;
@@ -45,7 +45,7 @@ export default function UserChat() {
             <Sheet>
                 <SheetTrigger asChild>
                     <Button variant="ghost">
-                        <ChatBubbleIcon className="w-6 h-6" />
+                        <Icons.chaticon className="w-6 h-6" />
                     </Button>
                 </SheetTrigger>
                 {/* if there are some sellers/buyers the current user is having chat with, then only we render the content */}
