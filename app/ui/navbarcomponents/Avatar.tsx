@@ -47,9 +47,6 @@ export function Avatar() {
                         <DropdownMenuItem onClick={() => setTheme("dark")}>
                             Dark
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setTheme("system")}>
-                            System
-                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
                 <DropdownMenuItem onClick={handleLogout} className="text-red-500">
