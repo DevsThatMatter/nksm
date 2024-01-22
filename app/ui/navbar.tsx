@@ -1,5 +1,5 @@
 import { ModeToggle } from "@/app/ui/theme/mode-toggle";
-import UserChat from "@/components/Chat/userChat";
+import UserChat from "@/components/Chat/UserChat";
 
 const Navbar = () => {
   return (

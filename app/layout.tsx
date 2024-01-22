@@ -3,6 +3,7 @@ import { inter } from "@/app/ui/fonts";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/app/ui/theme/theme-provider";
+import { SocketProvider } from "@/components/providers/socketProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,10 +19,9 @@ export const viewport: Viewport = {
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head />
       <body
-        suppressHydrationWarning={true}
         className={cn(
           "min-h-screen bg-background antialiased",
           inter.className,
@@ -33,7 +33,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <SocketProvider>
+            {children}
+          </SocketProvider>
         </ThemeProvider>
       </body>
     </html>
