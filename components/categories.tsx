@@ -9,28 +9,30 @@ const Categories = () => {
     },
     {
       name: "Category 2",
-      imgUrl: "/categoriesImages/Mattress.png",
-    },
-    {
-      name: "Category 3",
       imgUrl: "/categoriesImages/Cooler.png",
     },
     {
-      name: "Category 4",
-      imgUrl: "/categoriesImages/Kettle.png",
-    },
-    {
-      name: "Category 5",
-      imgUrl: "/categoriesImages/Luggage Bags.png",
-    },
-    {
-      name: "Category 6",
+      name: "Category 3",
       imgUrl: "/categoriesImages/Stationery.png",
     },
     {
-      name: "Category 7",
+      name: "Category 4",
       imgUrl: "/categoriesImages/Decoratives.png",
     },
+
+    {
+      name: "Category 5",
+      imgUrl: "/categoriesImages/Mattress.png",
+    },
+    {
+      name: "Category 6",
+      imgUrl: "/categoriesImages/Kettle.png",
+    },
+    {
+      name: "Category 7",
+      imgUrl: "/categoriesImages/Luggage Bags.png",
+    },
+
     {
       name: "Category 8",
       imgUrl: "/categoriesImages/Electronics.png",
