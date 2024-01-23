@@ -1,8 +1,7 @@
 "use client";
 import CategoryCard from "./widgets/categoryCard";
 import { categories } from "@/constants/categories";
-import { cn } from "@/lib/utils";
-import { spartan } from "@/app/ui/fonts";
+//import { className } from "postcss-selector-parser";
 
 const Categories = () => {
   return (
@@ -14,19 +13,9 @@ const Categories = () => {
           key={category.name}
           name={category.name}
           imgUrl={category.imgUrl}
-          imageClassName={cn(
-            "rounded-lg object-cover hover:opacity-75 h-full w-full ",
-            category.imageClassName,
-          )}
-          className={cn(
-            "@container relative rounded-3xl p-2 sm:h-[30vh] md:h-[60vh] lg:h-auto overflow-hidden",
-            category.className,
-          )}
-          textClassName={cn(
-            "absolute w-fit h-fit text-2xl @2xs:text-3xl @xs:text-4xl @sm:text-5xl @md:text-6xl font-semibold @md:font-medium text-gray-700",
-            category.textClassName,
-            spartan.className,
-          )}
+          imageClassName={category.imageClassName}
+          className={category.className}
+          textClassName={category.textClassName}
         />
       ))}
     </div>
