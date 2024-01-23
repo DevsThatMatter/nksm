@@ -16,7 +16,6 @@ export const categories: category[] = [
   {
     name: "Stationery",
     imgUrl: "/categoriesImagesNoTxt/Stationery.png",
-    imageClassName: "object-top",
     textClassName: "top-[20%]  pl-3 right-0 left-0 mx-auto",
   },
   {
