@@ -3,8 +3,7 @@ import { Icons } from "@/app/ui/icons";
 
 export function SavedItems() {
   return (
-    <Button variant="ghost" size="icon" className="ml-[3.7px!important]">
-      {/* TODO */}
+    <Button variant="ghost" size="icon">
       <Icons.saved className="h-[1.4rem] w-[1.4rem] " />
     </Button>
   );
