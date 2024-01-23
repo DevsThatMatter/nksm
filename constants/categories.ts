@@ -27,7 +27,7 @@ export const categories: category[] = [
   },
 
   {
-    name: "Mattress",
+    name: "Mattresses",
     imgUrl: "/categoriesImagesNoTxt/Mattress.png",
     className: "lg:row-span-2",
     textClassName: "inset-0 m-auto",
