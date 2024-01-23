@@ -2,7 +2,6 @@ export const categories: category[] = [
   {
     name: "Bikes",
     imgUrl: "/categoriesImagesNoTxt/Bicycle.png",
-    imageClassName: "object-top",
     className: "lg:row-span-2",
     textClassName: "top-[10%] right-0 left-0 mx-auto",
   },
