@@ -1,7 +1,6 @@
 "use client"
 // bits
 
-import React, { useState } from "react";
 import {
     Sheet,
     SheetContent,
@@ -11,7 +10,7 @@ import {
     SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
-import useChatStore from "./store";
+import useChatStore from "../../Hooks/chatStore";
 import ChatUI from "./ChatUI";
 import { Icons } from "@/app/ui/icons";
 
@@ -23,7 +22,7 @@ interface Chat {
 export default function UserChat() {
     const chat = useChatStore((state) => state.chat)
     const createChat = useChatStore((state) => state.createChat);
-
+    const removeChat = useChatStore((state) => state.removeChat)
     function handleSetChat(phoneNumber: string) {
         try {
             if (!phoneNumber) {
@@ -43,42 +42,56 @@ export default function UserChat() {
     return (
         <div>
             <Sheet>
-                <SheetTrigger asChild>
+                <SheetTrigger asChild >
                     <Button variant="ghost">
-                        <Icons.chaticon className="w-6 h-6" />
+                        <Icons.chaticon />
                     </Button>
                 </SheetTrigger>
-                {/* if there are some sellers/buyers the current user is having chat with, then only we render the content */}
                 {chats ? (
                     <SheetContent side="left">
                         <SheetHeader>
-                            <SheetTitle>Lets have some chats...</SheetTitle>
+                            <SheetTitle>
+                                {chat === "" ? (
+                                    <span>Lets have some chats...</span>
+                                ) : (
+                                    <Button
+                                        className="-left-4"
+                                        size={"icon"}
+                                        variant="ghost"
+                                        onClick={() => {
+                                            removeChat();
+                                        }}
+                                    >
+                                        <Icons.moveback />
+                                    </Button>
+                                )}
+                            </SheetTitle>
                         </SheetHeader>
-                        {
-                            chat === "" ? (
-                                <SheetDescription className="mt-20 flex flex-col space-y-4 w-60">
-                                    {chats.map((chat) => (
-                                        <div
-                                            key={chat.phoneNumber}
-                                            className="flex flex-1 justify-between p-2 border rounded-md shadow-md cursor-pointer hover:shadow-xl"
-                                            onClick={() => handleSetChat(chat.phoneNumber)}
-                                        >
-                                            <h1 className="text-lg font-bold ">{chat.name}</h1>
-                                            <p className="text-md font-medium ">{chat.phoneNumber}</p>
+                        {chat === "" ? (
+                            <SheetDescription className="mt-4 flex flex-col space-y-4 w-full">
+                                {chats.map((chat) => (
+                                    <div
+                                        key={chat.phoneNumber}
+                                        className="flex items-center justify-between p-2 border rounded-md shadow-md cursor-pointer hover:shadow-xl"
+                                        onClick={() => handleSetChat(chat.phoneNumber)}
+                                    >
+                                        <div>
+                                            <h1 className="text-lg font-bold">{chat.name}</h1>
+                                            <p className="text-md font-medium">{chat.phoneNumber}</p>
                                         </div>
-                                    ))}
-                                </SheetDescription>
-                            ) : (
-                                <ChatUI />
-                            )
-                        }
+                                        {/* Add any additional information like last message or online status here */}
+                                    </div>
+                                ))}
+                            </SheetDescription>
+                        ) : (
+                            <ChatUI />
+                        )}
                     </SheetContent>
                 ) : (
-                    <div>
-                        {/* ui for no chats */}
-                    </div>
+                    <div>{/* UI for no chats */}</div>
                 )}
             </Sheet>
         </div>
+
     );
 }
