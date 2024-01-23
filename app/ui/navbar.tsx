@@ -16,11 +16,11 @@ const Navbar = () => {
         <div className="logo hidden lg:block ">
           <Link href="/">
             <Image
-              src="logo.svg"
+              src="logon.svg"
               alt="Logo"
               width={150}
               height={150}
-              className="invert"
+              className="dark:invert"
             />
           </Link>
         </div>

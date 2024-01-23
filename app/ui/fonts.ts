@@ -1,6 +1,8 @@
-import { Inter, Lusitana } from 'next/font/google';
+import { Inter, League_Spartan } from "next/font/google";
 
 export const inter = Inter({
-    subsets: ['latin'],
+  subsets: ["latin"],
 });
-
+export const spartan = League_Spartan({
+  subsets: ["latin"],
+});
