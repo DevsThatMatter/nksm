@@ -5,6 +5,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <main className="min-h-screen">
       <Navbar />
       {children}
+      {/* TODO: remove this in actual production */}
+      <div className="hidden top-[10%] left-[10%] top-[15%] top-[20%]"></div>
     </main>
   );
 };

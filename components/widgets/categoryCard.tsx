@@ -30,7 +30,7 @@ const CategoryCard: React.FC<CategoryProp> = ({
       />
 
       <h1
-        className={`absolute w-fit h-fit text-2xl @2xs:text-3xl @xs:text-4xl @sm:text-5xl @md:text-6xl font-semibold @md:font-medium text-gray-700   ${textClassName} ${spartan.className}`}
+        className={`absolute w-fit h-fit text-2xl @2xs:text-3xl @xs:text-4xl @sm:text-5xl @md:text-6xl font-semibold @md:font-medium text-gray-700 ${textClassName} ${spartan.className}`}
       >
         {name}
       </h1>
