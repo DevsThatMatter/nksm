@@ -21,7 +21,7 @@ const CategoryCard: React.FC<CategoryProp> = ({
       href={""}
       key={name}
       className={cn(
-        "@container relative rounded-3xl p-2 sm:h-[30vh] md:h-[60vh] lg:h-auto overflow-hidden",
+        "@container relative rounded-lg  sm:h-[30vh] md:h-[60vh] lg:h-auto overflow-hidden",
         className,
       )}
     >
