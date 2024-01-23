@@ -14,16 +14,16 @@ export const categories: category[] = [
   },
   {
     name: "Stationery",
-    imgUrl: "/categoriesImagesNoTxt/Stationery.png",
+    imgUrl: "/categoriesImagesNoTxt/Stationery.jpg",
     textClassName:
       "top-[20%]  pl-3 right-0 left-0 mx-auto top-[25%] xl:top-[20%]",
   },
   {
-    name: "Decoratives",
-    imgUrl: "/categoriesImagesNoTxt/Decoratives.png",
+    name: "Miscellaneous",
+    imgUrl: "/categoriesImagesNoTxt/Miscellaneous.jpg",
     className: "lg:row-span-2",
     textClassName:
-      "inset-0 m-auto @xs:text-3xl @sm:text-[2.6rem] @md:text-[2.6rem]",
+      "top-[15%] left-[10%]",
   },
 
   {
@@ -39,9 +39,8 @@ export const categories: category[] = [
     textClassName: "top-[20%] sm:right-[20%] right-[5%]",
   },
   {
-    name: "Bags",
-    imgUrl: "/categoriesImagesNoTxt/Luggage Bags.png",
-    imageClassName: "object-right-top",
+    name: "Instruments",
+    imgUrl: "/categoriesImagesNoTxt/Instruments.jpg",
     textClassName: "top-[10%] left-[20%]",
   },
   {
