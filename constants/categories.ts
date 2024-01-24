@@ -1,5 +1,4 @@
 import { category } from "@/types";
-
 export const categories: category[] = [
   {
     name: "Bicycles",

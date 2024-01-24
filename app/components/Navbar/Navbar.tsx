@@ -1,12 +1,12 @@
-import { Avatar } from "./ui/Avatar";
+import { Avatar } from "./Avatar";
 
 import Image from "next/image";
 import Link from "next/link";
-import { SavedItems } from "./ui/SavedItems";
-import { Separator } from "@/components/ui/separator";
-import UserChat from "@/app/components/Chat/ui/ChatsPanel";
-import { AddListing } from "./ui/AddListing";
-import SearchBar from "./ui/SearchBar";
+import { SavedItems } from "./SavedItems";
+import { Separator } from "@/app/components/ui/separator";
+import UserChat from "@/app/components/Chat/ChatsPanel";
+import { AddListing } from "./AddListing";
+import SearchBar from "./SearchBar";
 
 const Navbar = () => {
   return (

@@ -1,4 +1,4 @@
-import CategoryCard from "../../../widgets/categoryCard";
+import CategoryCard from "./categoryCard";
 import { categories } from "@/constants/categories";
 //import { className } from "postcss-selector-parser";
 

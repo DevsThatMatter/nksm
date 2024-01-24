@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { inter } from "@/app/utils/fonts";
-import "./globals.css";
-import { cn } from "@/lib/utils";
-import { ThemeProvider } from "@/providers/theme-provider";
-import { SocketProvider } from "@/providers/socketProvider";
+import "./styles/globals.css";
+import { cn } from "@/app/utils/utils";
+import { ThemeProvider } from "@/app/components/providers/theme-provider";
+import { SocketProvider } from "@/app/components/providers/socketProvider";
 
 export const metadata: Metadata = {
   title: "NKSM",
@@ -34,9 +34,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           enableSystem
           disableTransitionOnChange
         >
-          <SocketProvider>
-            {children}
-          </SocketProvider>
+          <SocketProvider>{children}</SocketProvider>
         </ThemeProvider>
       </body>
     </html>

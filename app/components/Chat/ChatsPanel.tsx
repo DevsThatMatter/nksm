@@ -6,9 +6,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "../../../../components/ui/sheet";
-import { Button } from "../../../../components/ui/button";
-import useChatStore from "../../../../hooks/useChatStore";
+} from "@/app/components//ui/sheet";
+import { Button } from "@/app/components//ui/button";
+import useChatStore from "../../../hooks/useChatStore";
 import ChatUI from "./ChatUI";
 import { Icons } from "@/app/utils/icons";
 

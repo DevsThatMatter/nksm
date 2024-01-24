@@ -4,7 +4,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Icons } from "@/app/utils/icons";
 import ChatInput from "./ChatInput";
-import { SocketIOIndicator } from "./socketIndicator";
+import { SocketIOIndicator } from "./SocketIndicator";
 
 interface ChatType {
   userName: string;

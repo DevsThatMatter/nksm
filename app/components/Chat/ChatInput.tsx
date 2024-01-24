@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormItem } from "@/components/ui/form";
+import { Form, FormControl, FormItem } from "@/app/components/ui/form";
 import { Icons } from "@/app/utils/icons";
-import { Input } from "../../../../components/ui/input";
+import { Input } from "@/app/components/ui/input";
 import Skeleton from "react-loading-skeleton";
-import FileUploadModal from "../../../../modals/fileUploadModal";
+import FileUploadModal from "@/app/components/modals/fileUploadModal";
 import { chatHandler } from "@/lib/actions/chat.actions";
 
 interface chatInputProps {
