@@ -22,8 +22,7 @@ export const categories: category[] = [
     name: "Miscellaneous",
     imgUrl: "/categoriesImagesNoTxt/Miscellaneous.jpg",
     className: "lg:row-span-2",
-    textClassName:
-      "top-[15%] left-[10%]",
+    textClassName: "top-[10%] left-[5%] @md:top-[15%]",
   },
 
   {
@@ -41,7 +40,7 @@ export const categories: category[] = [
   {
     name: "Instruments",
     imgUrl: "/categoriesImagesNoTxt/Instruments.jpg",
-    textClassName: "top-[10%] left-[20%]",
+    textClassName: "top-[15%] left-[10%]",
   },
   {
     name: "Electronics",
