@@ -3,6 +3,7 @@ import { inter } from "@/app/ui/fonts";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/app/ui/theme/theme-provider";
+import { SocketProvider } from "@/components/providers/socketProvider";
 
 export const metadata: Metadata = {
   title: "NKSM",
@@ -33,7 +34,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <SocketProvider>
+            {children}
+          </SocketProvider>
         </ThemeProvider>
       </body>
     </html>
