@@ -1,4 +1,3 @@
-"use client";
 import CategoryCard from "./widgets/categoryCard";
 import { categories } from "@/constants/categories";
 //import { className } from "postcss-selector-parser";
