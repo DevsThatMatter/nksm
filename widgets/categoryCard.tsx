@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { spartan } from "@/app/ui/fonts";
+import { spartan } from "@/app/utils/fonts";
 import { cn } from "@/lib/utils";
 interface CategoryProp {
   name: string;

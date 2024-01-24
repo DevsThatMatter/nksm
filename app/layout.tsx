@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { inter } from "@/app/ui/fonts";
+import { inter } from "@/app/utils/fonts";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { ThemeProvider } from "@/app/ui/theme/theme-provider";
-import { SocketProvider } from "@/components/providers/socketProvider";
+import { ThemeProvider } from "@/providers/theme-provider";
+import { SocketProvider } from "@/providers/socketProvider";
 
 export const metadata: Metadata = {
   title: "NKSM",

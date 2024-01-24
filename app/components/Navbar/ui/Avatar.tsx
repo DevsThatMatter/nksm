@@ -8,7 +8,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Icons } from "@/app/ui/icons";
+import { Icons } from "@/app/utils/icons";
 
 export function Avatar() {
     const { setTheme } = useTheme();

@@ -1,5 +1,4 @@
-import Image from 'next/image'
-import Categories from '../../components/categories'
+import Categories from '../components/HomePage/categories'
 
 export default function Page() {
   return (

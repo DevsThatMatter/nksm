@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Icons } from "@/app/ui/icons";
+import { Icons } from "@/app/utils/icons";
 
 export function SavedItems() {
   return (

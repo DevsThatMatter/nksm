@@ -2,7 +2,7 @@
 // <todo> after adding authentication we need to import the user from current auth
 
 export async function currentUser() {
-    const userId = ""// needs to be exported from somewhere
+    const userId = ""// needs to be imported from somewhere
 
     if (!userId) {
         return null

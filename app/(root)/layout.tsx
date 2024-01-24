@@ -1,4 +1,4 @@
-import Navbar from "@/app/ui/navbar";
+import Navbar from "@/app/components/Navbar/Navbar";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (

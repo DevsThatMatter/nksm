@@ -1,13 +1,12 @@
-import { ModeToggle } from "@/app/ui/theme/mode-toggle";
-import { Avatar } from "./navbarcomponents/Avatar";
+import { Avatar } from "./ui/Avatar";
 
 import Image from "next/image";
 import Link from "next/link";
-import { SavedItems } from "./navbarcomponents/SavedItems";
+import { SavedItems } from "./ui/SavedItems";
 import { Separator } from "@/components/ui/separator";
-import UserChat from "@/components/Chat/userChat";
-import { AddListing } from "./navbarcomponents/AddListing";
-import SearchBar from "./navbarcomponents/SearchBar";
+import UserChat from "@/app/components/Chat/ui/ChatsPanel";
+import { AddListing } from "./ui/AddListing";
+import SearchBar from "./ui/SearchBar";
 
 const Navbar = () => {
   return (
@@ -29,7 +28,6 @@ const Navbar = () => {
           <AddListing />
           <UserChat />
           <SavedItems />
-          {/* <ModeToggle /> */}
           <Separator orientation="vertical" />
           <Avatar />
         </div>
