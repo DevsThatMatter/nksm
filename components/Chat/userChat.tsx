@@ -1,13 +1,13 @@
-"use client"
+"use client";
 // bits
 
 import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
 import useChatStore from "../../Hooks/chatStore";
@@ -15,8 +15,8 @@ import ChatUI from "./ChatUI";
 import { Icons } from "@/app/ui/icons";
 
 interface Chat {
-    name: string;
-    phoneNumber: string;
+  name: string;
+  phoneNumber: string;
 }
 
 export default function UserChat() {
@@ -35,10 +35,10 @@ export default function UserChat() {
             console.error(error);
         }
     }
+  }
 
-    // Dummy data
-    const chats: Chat[] = [{ name: "Bits", phoneNumber: "+91-1234567800" }];
-
+  // Dummy data
+  const chats: Chat[] = [{ name: "Bits", phoneNumber: "+91-1234567800" }];
     return (
         <div>
             <Sheet>
