@@ -1,55 +1,52 @@
 "use client"
+import { ReactNode, createContext, useContext, useEffect, useState } from "react"
+import { io as clientIo } from "socket.io-client"
 
-import { useContext, useEffect, useState, createContext, ReactNode } from "react"
-import { io as IoClient } from "socket.io-client"
 
-type SocketContextType = {
-    socket: any | null;
-    isConnected: boolean;
+
+
+type socketContextType = {
+    socket: any | null,
+    isConnected: boolean
 }
 
-const socketContext = createContext<SocketContextType>({
+const socketContext = createContext<socketContextType>({
     socket: null,
-    isConnected: false,
+    isConnected: false
 })
+
 
 export const useSocket = () => {
     return useContext(socketContext)
+
 }
 
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
     const [socket, setSocket] = useState(null)
-    const [isConnected, setIsConnected] = useState(false)
+    const [isConnected, setIsConnected] = useState<boolean>(false)
 
     useEffect(() => {
-        // we need not add anything for this in the env, dev => localhost, deployment => our own url
-        const socketInstance = new (IoClient as any)(process.env.NEXT_PUBLIC_SITE_URL!, {
+        const socketInstance = new (clientIo as any)(
+            process.env.NEXT_PUBLIC_SITE_URL!, {
             path: "/api/socket/io",
-            addTrailingSlash: false
-        });
-
-        socketInstance.on("connect", function () {
+            addTralingSlash: false
+        })
+        socketInstance.on("connect", () => {
+            console.log("got connected")
             setIsConnected(true)
         })
-
-        socketInstance.on("disconnect", function () {
+        socketInstance.on("diconnect", () => {
             setIsConnected(false)
         })
-
         setSocket(socketInstance)
-
-        return function () {
-            socketInstance.disconnect();
+        return () => {
+            socketInstance.disconnect()
         }
-
     }, [])
-
-
     return (
         <socketContext.Provider value={{ socket, isConnected }}>
             {children}
         </socketContext.Provider>
     )
-
 }

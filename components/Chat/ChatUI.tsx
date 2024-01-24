@@ -26,7 +26,7 @@ export default function ChatUI() {
     return (
         <div className="mt-10 h-full flex flex-col items-center">
             {/* just added to check if the socket connection was correctly  getting setting up */}
-            {/* <SocketIOIndicator /> */}
+            <SocketIOIndicator />
 
             <div className="rounded-md border border-gray-300 dark:border-gray-600 h-[90%] p-4 relative w-full max-w-md md:max-w-xl lg:max-w-2xl xl:max-w-4xl">
                 {/* User display */}
@@ -41,14 +41,13 @@ export default function ChatUI() {
                             {chatMessages.userName.charAt(0).toUpperCase()}
                         </span>
                     </div>
-
+                    || <Skeleton circle width={40} height={40} baseColor='#e2e8f0' highlightColor='#f7fafc' className='absolute -top-8 -left-8 ' />
                 ) : (
                     <div className="user-display z-10 border p-2 bg-gray-200 dark:bg-gray-800 rounded-md flex items-center justify-between mb-4 cursor-pointer" onClick={() => setCompleteUserDisplay(false)}>
                         <span className="text-lg font-semibold">{chatMessages.userName}</span>
                         <span className="text-sm font-normal">{chatMessages.phoneNumber}</span>
                     </div>
-                ) || <Skeleton circle width={40} height={40} baseColor='#e2e8f0' highlightColor='#f7fafc' className='absolute -top-8 -left-8 ' />}
-
+                )}
 
                 <div className="chat-display overflow-y-auto mt-4 max-h-[90%] my-auto">
                     <div className="flex flex-col space-y-4">
@@ -73,7 +72,7 @@ export default function ChatUI() {
                 {/* Input and action buttons */}
                 <div className="flex flex-1 items-center space-x-2 absolute bottom-0 left-0 right-0 p-2">
                     {
-                        <ChatInput apiUrl={'/api/scoket/messages'} />
+                        <ChatInput userId1={''} userId2={''}/>
                         || <Skeleton width={200} height={40} baseColor='#e2e8f0' highlightColor='#f7fafc' />
                     }
                 </div>

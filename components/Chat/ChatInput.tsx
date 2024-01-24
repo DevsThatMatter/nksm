@@ -1,17 +1,17 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
+import { Form, FormControl, FormItem } from '@/components/ui/form';
 import { Icons } from '@/app/ui/icons';
 import { Input } from '../ui/input';
 import Skeleton from 'react-loading-skeleton';
-import qs from "query-string";
-import axios from 'axios';
+import FileUploadModal from '../modals/fileUploadModal';
+import { chatHandler } from './actions';
 
-interface ChatInputProps {
-    apiUrl: string;
+
+interface chatInputProps {
+    userId1: string;
+    userId2: string;
 }
 
 // to check the empty messages are not sent
@@ -19,7 +19,7 @@ const messageSchema = z.object({
     content: z.string().min(1),
 });
 
-export default function ChatInput({ apiUrl }: ChatInputProps) {
+export default function ChatInput({ userId1, userId2 }: chatInputProps) {
     const form = useForm({
         resolver: zodResolver(messageSchema),
         defaultValues: {
@@ -31,15 +31,18 @@ export default function ChatInput({ apiUrl }: ChatInputProps) {
 
     async function onSend(values: z.infer<typeof messageSchema>) {
         try {
-            const url = qs.stringifyUrl({
-                url: apiUrl,
-                // query:{}
-            })
-            await axios.post(url, values)
+            console.log("hello from frontend")
+            await chatHandler(userId1, userId2).then((res) => {
+                console.log(`res ${res}`)
+            }).catch((err) => {
+                console.log(`err ${err}`);
+            });
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
+
+
 
     return (
         <Form {...form}>
@@ -53,11 +56,8 @@ export default function ChatInput({ apiUrl }: ChatInputProps) {
                                     className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none"
                                     {...form.register('content')}
                                 />
-                                {/* button type to prevent these to get triggered by "enter" */}
                                 <div className="flex space-x-1">
-                                    <button type="button">
-                                        <Icons.fileLink className="w-5 h-5 text-blue-500 cursor-pointer hover:text-blue-700 transform hover:scale-105 transition-transform" />
-                                    </button>
+                                    <FileUploadModal />
                                     <button type="button">
                                         <Icons.image className="w-5 h-5 text-blue-500 cursor-pointer hover:text-blue-700 transform hover:scale-105 transition-transform" />
                                     </button>

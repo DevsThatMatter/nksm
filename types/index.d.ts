@@ -1,11 +1,11 @@
-import { Server as NetServer, Socket } from 'net'
-import { NextApiResponse } from 'next'
-import { Server as SocketIoServer } from 'socket.io'
+import { Socket, Server as netServer } from "net"
+import { NextApiResponse } from "next"
+import { Server as socketIoServer } from 'socket.io'
 
 export type NextApiResponseServerIo = NextApiResponse & {
     socket: Socket & {
-        server: NetServer & {
-            io: SocketIoServer
+        server: netServer & {
+            io: socketIoServer
         }
     }
 }
