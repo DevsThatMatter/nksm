@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { inter } from "@/app/utils/fonts";
 import "./styles/globals.css";
-import { cn } from "@/app/utils/utils";
+import { cn } from "@/app/utils";
 import { ThemeProvider } from "@/app/components/providers/theme-provider";
 import { SocketProvider } from "@/app/components/providers/socketProvider";
 

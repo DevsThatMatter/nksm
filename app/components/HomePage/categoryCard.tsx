@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { spartan } from "@/app/utils/fonts";
-import { cn } from "@/app/utils/utils";
+import { cn } from "@/app/utils";
 interface CategoryProp {
   name: string;
   imgUrl: string;
@@ -22,7 +22,6 @@ const CategoryCard: React.FC<CategoryProp> = ({
       key={name}
       className={cn(
         "@container relative rounded-lg group sm:h-[30vh] md:h-[60vh] lg:h-auto overflow-hidden",
-
         className,
       )}
     >
