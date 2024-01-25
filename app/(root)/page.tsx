@@ -1,10 +1,9 @@
-import Image from 'next/image'
-import Categories from '../../components/categories'
+import Categories from "@/app/components/HomePage/Categories";
 
 export default function Page() {
   return (
-      <>
+    <>
       <Categories />
-      </>
-  )
+    </>
+  );
 }
