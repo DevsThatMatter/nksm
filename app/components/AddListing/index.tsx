@@ -43,7 +43,7 @@ export function AddListing() {
         </Button>
       </DialogTrigger>
       <div className="grid gap-4">
-        <DialogContent className="l:max-w-[800px] h-[600px] grid gap-5">
+        <DialogContent>
           <DialogHeader>
             <div>{`Step ${currentStep} of 4.`}</div>
             <DialogTitle>Add Listing</DialogTitle>
