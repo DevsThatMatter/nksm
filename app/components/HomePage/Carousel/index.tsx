@@ -26,7 +26,7 @@ const ProductCarousel = () => {
             products.map((product)=> (
               <CarouselItem
                 key={product.name}
-                className="lg:basis-1/4 basis-1/2 md:basis-1/3 xl:basis-1/6 xs:basis-1/3"
+                className="lg:basis-1/4 basis-1/2 md:basis-1/3 xl:basis-1/5 xs:basis-1/3"
               >
                 <ProductCard
                   image_url={product.image_url}
