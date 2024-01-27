@@ -39,7 +39,7 @@ const ProductCard = ({
               </p>
             </div>
           </Link>
-          <div className="absolute top-0 right-0 mt-4 mr-4 lg:mt-5 lg:mr-5 sm:mt-6 sm:mr-6 2xl:mt-5 2xl:mr-12 rounded-full bg-gray-200 p-1" onClick={()=>{setIsSaved(!isSaved)}}>
+          <div className="absolute top-0 right-0 mt-4 mr-4 lg:mt-5 lg:mr-5 sm:mt-6 sm:mr-6 2xl:mt-5 2xl:mr-6 rounded-full bg-gray-200 p-1" onClick={()=>{setIsSaved(!isSaved)}}>
             {!isSaved ? <BookmarkIcon className="w-4 h-4 text-gray-500"/> : <BookmarkFilledIcon className="w-4 h-4 text-gray-500" />}
             </div>
         </CardContent>
