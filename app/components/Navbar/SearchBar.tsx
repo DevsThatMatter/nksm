@@ -47,9 +47,9 @@ export default function SearchBar() {
           />
         </div>
         {input && isDropdownOpen && filteredProducts.length > 0 ? (
-          <div className="absolute left-0 right-0 mt-1 rounded-md bg-white shadow-lg z-50 max-h-60 overflow-auto">
+          <div className="absolute left-0 right-0 mt-1 rounded-md shadow-lg z-50 max-h-60 overflow-auto bg-background">
             {filteredProducts.map((product, index) => (
-              <li key={index} className="flex items-center px-4 py-2 hover:bg-gray-100 rounded-md">
+              <li key={index} className="flex items-center px-4 py-2  hover:bg-accent rounded-md">
                 <img
                   alt={product.name}
                   className="w-16 h-16 rounded-md"
@@ -66,7 +66,7 @@ export default function SearchBar() {
         ) : (
           // Render "No results" message when no products match the input
           input && isDropdownOpen && (
-            <div className="absolute left-0 right-0 mt-1 rounded-md bg-white shadow-lg z-50 max-h-60 overflow-auto">
+            <div className="absolute left-0 right-0 mt-1 rounded-md shadow-lg z-50 max-h-60 overflow-auto bg-background">
               <div className="px-4 py-2">No Results</div>
             </div>
           )
