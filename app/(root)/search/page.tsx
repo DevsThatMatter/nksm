@@ -1,7 +1,11 @@
+export default function Page({
+    searchParams,
+  }: {
+    searchParams: { [key: string]: string | undefined };
+  }) {
+    const valuesString = Object.values(searchParams).join(', ');
 
-
-export default function Page() {
-  return (
-    <div>Search Page</div>
-  )
-}
+    return (
+      <div>Showing related products for {valuesString}</div>
+    );
+  }
