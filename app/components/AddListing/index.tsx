@@ -11,8 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/components/ui/dialog";
-import { Input } from "@/app/components/ui/input";
-import { Label } from "@/app/components/ui/label";
+
 import { StepOne } from "./StepOne";
 import { StepTwo } from "./StepTwo";
 import { StepThree } from "./StepThree";
@@ -20,10 +19,21 @@ import { StepFour } from "./StepFour"; // Assuming you have a StepFour component
 
 export function AddListing() {
   const [currentStep, setCurrentStep] = useState<number>(1);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleNext = () => {
-    // Increment current step when "Next" is clicked
+
     setCurrentStep(currentStep + 1);
+  };
+
+  const handleDialogOpen = () => {
+    console.log("triggered")
+    if(isDialogOpen){
+      setIsDialogOpen(false);
+      setCurrentStep(1);
+    }else{
+      setIsDialogOpen(true);
+    }
   };
 
   // Define the content for each step
@@ -35,9 +45,9 @@ export function AddListing() {
   };
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={handleDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="relative">
+        <Button variant="default" className="relative" onClick={handleDialogOpen} >
           <Icons.add className="absolute left-2 m-auto top-0 bottom-0 h-5 w-5" />
           <span className="hidden sm:inline-block pl-4"> Add Listing </span>
         </Button>
