@@ -27,3 +27,9 @@ export enum CategoryEnum {
   Instruments,
   Electronics,
 }
+
+export enum ConditionEnum {
+  'Brand New',
+  'Like New',
+  'Used',
+}
