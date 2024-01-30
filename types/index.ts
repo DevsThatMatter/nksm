@@ -16,3 +16,20 @@ export type category = {
   className?: string;
   textClassName?: string;
 };
+
+export enum CategoryEnum {
+  Bicycles,
+  Coolers,
+  Stationery,
+  Miscellaneous,
+  Mattresses,
+  Kitchenware,
+  Instruments,
+  Electronics,
+}
+
+export enum ConditionEnum {
+  'Brand New',
+  'Like New',
+  'Used',
+}

@@ -55,7 +55,6 @@ export function AddListing() {
           <span className="hidden sm:inline-block pl-4"> Add Listing </span>
         </Button>
       </DialogTrigger>
-      
         <DialogContent>
           <DialogHeader>
             <div>{`Step ${currentStep} of 4.`}</div>
@@ -88,7 +87,6 @@ export function AddListing() {
             
           </DialogFooter>
         </DialogContent>
-      
     </Dialog>
   );
 }
