@@ -25,6 +25,9 @@ export function AddListing() {
 
     setCurrentStep(currentStep + 1);
   };
+  const handlePrev = () => {
+    setCurrentStep(currentStep - 1);
+  }
 
   const handleDialogOpen = () => {
     console.log("triggered")
@@ -41,7 +44,7 @@ export function AddListing() {
     1: <StepOne />,
     2: <StepTwo />,
     3: <StepThree />,
-    // 4: <StepFour />,
+    4: <StepFour />
   };
 
   return (
@@ -52,7 +55,7 @@ export function AddListing() {
           <span className="hidden sm:inline-block pl-4"> Add Listing </span>
         </Button>
       </DialogTrigger>
-      <div className="grid gap-4">
+      
         <DialogContent>
           <DialogHeader>
             <div>{`Step ${currentStep} of 4.`}</div>
@@ -65,14 +68,27 @@ export function AddListing() {
             {stepContent[currentStep]}
           </div>
           <DialogFooter className="flex mt-auto">
+            {
+              currentStep > 1 && currentStep < 4 && (
+                <Button type="button" onClick={handlePrev}>Previous</Button>
+              )
+            }
             {currentStep < 4 && (
               <Button type="button" onClick={handleNext}>
                 Next
               </Button>
             )}
+            {
+              currentStep == 4 && (
+                <Button type="button">
+                  Finish
+                </Button>
+              )
+            }
+            
           </DialogFooter>
         </DialogContent>
-      </div>
+      
     </Dialog>
   );
 }
