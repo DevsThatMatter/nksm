@@ -52,7 +52,6 @@ export function AddListing() {
           <span className="hidden sm:inline-block pl-4"> Add Listing </span>
         </Button>
       </DialogTrigger>
-      <div className="grid gap-4">
         <DialogContent>
           <DialogHeader>
             <div>{`Step ${currentStep} of 4.`}</div>
@@ -72,7 +71,6 @@ export function AddListing() {
             )}
           </DialogFooter>
         </DialogContent>
-      </div>
     </Dialog>
   );
 }
