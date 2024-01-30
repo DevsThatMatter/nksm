@@ -9,7 +9,28 @@ import {
 } from "../ui/select";
 import { ConditionEnum } from "@/types";
 
-export function StepThree() {
+interface StepThreeProps {
+  data: { price: string; condition: string; expiryDate: Date | null };
+  onDataChange: (data: {
+    price: string;
+    condition: string;
+    expiryDate: Date | null;
+  }) => void;
+}
+
+export function StepThree({ data, onDataChange }: StepThreeProps) {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onDataChange({ ...data, [e.target.id]: e.target.value });
+  };
+
+  const handleSelectChange = (value: string) => {
+    onDataChange({ ...data, condition: value });
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    onDataChange({ ...data, expiryDate: date });
+  };
+
   return (
     <>
       <div className="flex items-center space-x-4">
@@ -22,12 +43,14 @@ export function StepThree() {
             placeholder="Price"
             className="pl-12 pr-4"
             type="text"
+            value={data.price}
+            onChange={handleInputChange}
           />
         </div>
 
         <div className="flex items-center space-x-2">
           <Select>
-            <SelectTrigger id="framework">
+            <SelectTrigger id="condition">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent position="popper">
@@ -48,7 +71,7 @@ export function StepThree() {
           Expiry Date
         </label>
 
-        <DatePicker />
+        <DatePicker onChange={handleDateChange} />
       </div>
     </>
   );
