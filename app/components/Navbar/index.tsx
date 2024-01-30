@@ -5,7 +5,7 @@ import Link from "next/link";
 import { SavedItems } from "./SavedItems";
 import { Separator } from "@/app/components/ui/separator";
 import UserChat from "@/app/components/Chat/ChatsPanel";
-import { AddListing } from "./AddListing";
+import { AddListing } from "../AddListing";
 import SearchBar from "./SearchBar";
 
 const Navbar = () => {
