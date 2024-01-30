@@ -6,7 +6,7 @@ import { Icons } from '@/app/ui/icons';
 import { Input } from '../ui/input';
 import Skeleton from 'react-loading-skeleton';
 import FileUploadModal from '../modals/fileUploadModal';
-import { chatHandler } from './actions';
+import { chatHandler } from '../../lib/actions/chat.actions';
 
 
 interface chatInputProps {

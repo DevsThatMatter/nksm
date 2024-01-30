@@ -1,0 +1,41 @@
+[
+    {
+      "Seller": "65b533afa47477aa438a88c6",
+      "Buyer": "65b533afa47477aa438a88c7",
+      "ProductId": "65b53729a47477aa438a88d4",
+      "Messages": [
+        {
+          "Sender": "65b533afa47477aa438a88c6",
+          "Message": "Hello, how are you?",
+          "Timestamp": "2024-01-27T12:00:00Z"
+        },
+        {
+          "Sender": "65b533afa47477aa438a88c7",
+          "Message": "I'm good, thanks for asking!",
+          "Timestamp": "2024-01-27T12:05:00Z"
+        }
+      ],
+      "Created_Timestamp": "2024-01-27T10:00:00Z",
+      "Updated_Timestamp": "2024-01-27T10:00:00Z"
+    },
+    {
+      "Seller": "65b533afa47477aa438a88c8",
+      "Buyer": "65b533afa47477aa438a88c6",
+      "ProductId": "65b5373ba47477aa438a88d5",
+      "Messages": [
+        {
+          "Sender": "65b533afa47477aa438a88c8",
+          "Message": "Hello, how are you?",
+          "Timestamp": "2024-03-27T12:00:00Z"
+        },
+        {
+          "Sender": "65b533afa47477aa438a88c6",
+          "Message": "I'm good, thanks for asking!",
+          "Timestamp": "2024-03-27T12:05:00Z"
+        }
+      ],
+      "Created_Timestamp": "2024-03-27T10:00:00Z",
+      "Updated_Timestamp": "2024-03-27T10:00:00Z"
+    }
+  ]
+  
