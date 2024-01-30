@@ -1,4 +1,5 @@
 import { Input } from "@/app/components/ui/input";
+import { DatePicker } from "./components/date";
 export function StepThree() {
   return (
 <>
@@ -32,6 +33,7 @@ export function StepThree() {
     type="date"
     className="border p-2"
   />
+  <DatePicker />
 </div>
 
 
