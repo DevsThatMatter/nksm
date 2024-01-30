@@ -1,5 +1,5 @@
 import { Input } from "@/app/components/ui/input";
-import { DatePicker } from "./components/date";
+import { DatePicker } from "../ui/date";
 import {
   Select,
   SelectTrigger,
@@ -34,7 +34,7 @@ export function StepThree() {
               {Object.values(ConditionEnum)
                 .filter((value) => typeof value === "string")
                 .map((condition) => (
-                  <SelectItem key={condition} value={condition}>
+                  <SelectItem key={condition} value={condition as string}>
                     {condition}
                   </SelectItem>
                 ))}

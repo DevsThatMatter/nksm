@@ -22,7 +22,6 @@ export function AddListing() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleNext = () => {
-
     setCurrentStep(currentStep + 1);
   };
   const handlePrev = () => {
@@ -31,10 +30,10 @@ export function AddListing() {
 
   const handleDialogOpen = () => {
     console.log("triggered")
-    if(isDialogOpen){
+    if (isDialogOpen) {
       setIsDialogOpen(false);
       setCurrentStep(1);
-    }else{
+    } else {
       setIsDialogOpen(true);
     }
   };
@@ -55,38 +54,37 @@ export function AddListing() {
           <span className="hidden sm:inline-block pl-4"> Add Listing </span>
         </Button>
       </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <div>{`Step ${currentStep} of 4.`}</div>
-            <DialogTitle>Add Listing</DialogTitle>
-            <DialogDescription>
-              Provide details for your new listing.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="bg-gray-50 dark:bg-gray-950 p-6 rounded-lg shadow-2xl">
-            {stepContent[currentStep]}
-          </div>
-          <DialogFooter className="flex mt-auto">
-            {
-              currentStep > 1 && currentStep < 4 && (
-                <Button type="button" onClick={handlePrev}>Previous</Button>
-              )
-            }
-            {currentStep < 4 && (
-              <Button type="button" onClick={handleNext}>
-                Next
+      <DialogContent className='h-[30rem]'>
+        <DialogHeader>
+          <div>{`Step ${currentStep} of 4.`}</div>
+          <DialogTitle>Add Listing</DialogTitle>
+          <DialogDescription>
+            Provide details for your new listing.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="bg-gray-50 dark:bg-gray-950 p-6 rounded-lg shadow-2xl">
+          {stepContent[currentStep]}
+        </div>
+        <DialogFooter className="flex mt-auto">
+          {
+            currentStep > 1 && currentStep < 4 && (
+              <Button type="button" onClick={handlePrev}>Previous</Button>
+            )
+          }
+          {currentStep < 4 && (
+            <Button type="button" onClick={handleNext}>
+              Next
+            </Button>
+          )}
+          {
+            currentStep == 4 && (
+              <Button type="button">
+                Finish
               </Button>
-            )}
-            {
-              currentStep == 4 && (
-                <Button type="button">
-                  Finish
-                </Button>
-              )
-            }
-            
-          </DialogFooter>
-        </DialogContent>
+            )
+          }
+        </DialogFooter>
+      </DialogContent>
     </Dialog>
   );
 }

@@ -6,7 +6,6 @@ export const DBPopulator = async () => {
     try {
         // Connect to the database
         await connectToDB();
-
         // Create a new user
         const newUser = new User({
           Username: "aryansri69",
@@ -35,7 +34,6 @@ export const DBPopulator = async () => {
 
         // Save the product to the database
         const savedProduct = await newProduct.save();
-
         console.log("User created:", savedUser);
         console.log("Product created:", savedProduct);
       } catch (error) {

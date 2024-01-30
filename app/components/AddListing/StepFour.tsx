@@ -8,7 +8,6 @@ export function StepFour() {
         <div>
           Confirmation
         </div>
-
         <div className="flex space-x-9">
           <div className="bg-gray-200 dark:bg-gray-950 p-2 rounded-sm shadow-2xl max-w-20">
             {/* Place your image component here */}
@@ -20,7 +19,6 @@ export function StepFour() {
             </div>
           </div>
         </div>
-      
     </>
   );
 }
