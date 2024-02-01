@@ -42,7 +42,7 @@ export function StepThree({ data, onDataChange }: StepThreeProps) {
             id="price"
             placeholder="Price"
             className="pl-12 pr-4"
-            type="text"
+            type="number"
             value={data.price}
             onChange={handleInputChange}
           />

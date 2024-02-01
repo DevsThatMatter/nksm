@@ -41,7 +41,7 @@ export function AddListing() {
     if (validateStep(currentStep)) {
       setCurrentStep(currentStep + 1);
     } else {
-      setError("Please fill in all the required fields before proceeding.");
+       // setError("Please fill in all the required fields before proceeding.");
     }
   };
   
@@ -198,3 +198,7 @@ export function AddListing() {
     </Dialog>
   );
 }
+function setError(arg0: string) {
+  throw new Error("Function not implemented.");
+}
+
