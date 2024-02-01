@@ -16,6 +16,7 @@ import { StepOne } from "./StepOne";
 import { StepTwo } from "./StepTwo";
 import { StepThree } from "./StepThree";
 import { StepFour } from "./StepFour";
+import { set } from "mongoose";
 
 export function AddListing() {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -39,8 +40,11 @@ export function AddListing() {
   const handleNext = () => {
     if (validateStep(currentStep)) {
       setCurrentStep(currentStep + 1);
+    } else {
+      setError("Please fill in all the required fields before proceeding.");
     }
   };
+  
 
   const handlePrev = () => {
     setCurrentStep(currentStep - 1);
@@ -66,77 +70,82 @@ export function AddListing() {
     setCurrentStep(1);
   };
 
+  const validateStepOne = () => {
+    if (!stepOneData.item.trim()) {
+      alert("Please enter a product name.");
+      return false;
+    }
+  
+    if (!stepOneData.image) {
+      alert("Please upload an image of the product.");
+      return false;
+    }
+  
+    return true;
+  };
+  
+  const validateStepTwo = () => {
+    if (!stepTwoData.category.trim()) {
+      alert("Please enter a category.");
+      return false;
+    }
+  
+    if (!stepTwoData.description.trim()) {
+      alert("Please enter a description.");
+      return false;
+    }
+  
+    return true;
+  };
+  
+  const validateStepThree = () => {
+    if (!stepThreeData.price.trim()) {
+      alert("Please enter a price.");
+      return false;
+    }
+  
+    if (!stepThreeData.condition) {
+      alert("Please select a condition.");
+      return false;
+    }
+  
+    if (!stepThreeData.expiryDate) {
+      alert("Please select an expiry date.");
+      return false;
+    }
+  
+    return true;
+  };
+  
+  const validateStepFour = () => {
+    if (!stepFourData.itemName.trim()) {
+      alert("Please enter an item name.");
+      return false;
+    }
+  
+    if (!stepFourData.itemPrice.trim()) {
+      alert("Please enter an item price.");
+      return false;
+    }
+  
+    return true;
+  };
+  
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 1:
-        const validateStepOne = () => {
-          if (!stepOneData.item.trim()) {
-            alert("Please enter a product name.");
-            return false;
-          }
-
-          if (!stepOneData.image) {
-            alert("Please upload an image of the product.");
-            return false;
-          }
-
-          return true;
-        };
-        return true;
+        return validateStepOne();
       case 2:
-        const validateStepTwo = () => {
-          if (!stepTwoData.category.trim()) {
-            alert("Please enter a category.");
-            return false;
-          }
-
-          if (!stepTwoData.description.trim()) {
-            alert("Please enter a description.");
-            return false;
-          }
-
-          return true;
-        };
-        return true;
+        return validateStepTwo();
       case 3:
-        const validateStepThree = () => {
-          if (!stepThreeData.price.trim()) {
-            alert("Please enter a price.");
-            return false;
-          }
-
-          if (!stepThreeData.condition) {
-            alert("Please select a condition.");
-            return false;
-          }
-
-          if (!stepThreeData.expiryDate) {
-            alert("Please select an expiry date.");
-            return false;
-          }
-
-          return true;
-        };
-        return true;
-
+        return validateStepThree();
       case 4:
-        const validateStepFour = () => {
-          if (!stepFourData.itemName.trim()) {
-            alert("Please enter an item name.");
-            return false;
-          }
-
-          if (!stepFourData.itemPrice.trim()) {
-            alert("Please enter an item price.");
-            return false;
-          }
-
-          return true;
-        };
+        return validateStepFour();
       default:
         return true;
     }
   };
+  
 
   const stepContent: Record<number, JSX.Element> = {
     1: <StepOne data={stepOneData} onDataChange={setStepOneData} />,
