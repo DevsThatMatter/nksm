@@ -19,7 +19,7 @@ const LoginForm = () => {
   >
     <Button size="lg" className="w-full flex items-center justify-center space-x-3" variant='outline' onClick= {handleClick} >
       <FcGoogle className="h-6 w-6"/>
-      <span>Continue with Google</span>
+      <span>Continue with your Domain ID</span>
     </Button>
   </CardWrapper>;
 };
