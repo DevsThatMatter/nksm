@@ -8,7 +8,7 @@ import FloatBottomContainer from "../components/BottomNav/FloatBottomContainer";
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const mobnav = getIsSsrMobile();
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-background">
       <Navbar />
       {children}
       {mobnav ? (
