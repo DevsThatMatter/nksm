@@ -17,6 +17,7 @@ import { StepTwo } from "./StepTwo";
 import { StepThree } from "./StepThree";
 import { StepFour } from "./StepFour";
 import { set } from "mongoose";
+import { ConditionEnum } from "@/types";
 
 export function AddListing() {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -29,8 +30,8 @@ export function AddListing() {
   });
   const [stepThreeData, setStepThreeData] = useState({
     price: "",
-    condition: "",
-    expiryDate: null,
+    condition: ConditionEnum,
+    expiryDate: Date,
   });
   const [stepFourData, setStepFourData] = useState({
     itemName: "",
