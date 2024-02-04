@@ -31,7 +31,7 @@ export function AddListing() {
   const [stepThreeData, setStepThreeData] = useState({
     price: "",
     condition: ConditionEnum,
-    expiryDate: Date,
+    expiryDate: null,
   });
   const [stepFourData, setStepFourData] = useState({
     itemName: "",
