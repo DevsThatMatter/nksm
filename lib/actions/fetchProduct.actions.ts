@@ -2,7 +2,7 @@ import { Product } from "../models/product.model";
 import { connectToDB } from "../database/mongoose";
 export const fetchRecentProducts = async () => {
     try {
-        connectToDB();
+        await connectToDB();
         console.log('Fetching recent products')
         const fetchedProducts = await Product.find({}).sort({ createdAt: -1 }).limit(10);
         const modifiedProducts = fetchedProducts.map((product) => ({
