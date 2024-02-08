@@ -3,7 +3,7 @@ import qs from "query-string";
 import { useModal } from "@/hooks/useModal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { Form, useForm } from "react-hook-form";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import {
@@ -16,6 +16,10 @@ import {
   DialogTrigger,
 } from "@/app/components/ui/dialog";
 import { Icons } from "@/app/utils/icons";
+import { FormControl, FormField, FormItem } from "../ui/form";
+import { Button } from "../ui/button";
+import FileUpload from "../Chat/fileUpload";
+import { revalidatePath } from "next/cache";
 
 const formSchema = z.object({
   fileUrl: z.string().min(1, {
@@ -50,7 +54,7 @@ export default function FileUploadModal() {
       });
 
       form.reset();
-      router.refresh();
+      // revalidatePath("/")
       handleClose();
     } catch (error) {
       console.log(error);
@@ -69,7 +73,36 @@ export default function FileUploadModal() {
           <DialogDescription>You may Upload any file</DialogDescription>
         </DialogHeader>
 
-        <div className=""></div>
+        <div className="">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <div className="space-y-8 px-6">
+                <div className="flex items-center justify-center text-center">
+                  <FormField
+                    control={form.control}
+                    name="fileUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <FileUpload
+                          endpoint="messageFile"
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              <DialogFooter className="px-6 py-4 flex-1">
+                <Button variant={"default"} disabled={isLoading}>
+                  Done
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </div>
       </DialogContent>
     </Dialog>
   );

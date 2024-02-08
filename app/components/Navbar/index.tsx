@@ -26,7 +26,7 @@ const Navbar = () => {
         <div className="nav-items flex space-x-5 items-center px-2">
           <SearchBar />
           <AddListing />
-          <UserChat />
+          <UserChat userId={""} />
           <SavedItems />
           <Separator orientation="vertical" />
           <Avatar />

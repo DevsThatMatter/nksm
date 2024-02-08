@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   Username: { type: String, required: true, unique: true },
   First_Name: { type: String, required: true },
-  Last_Name: { type: String},
+  Last_Name: { type: String },
   Password: { type: String, required: true },
   Phone_Number: { type: String },
   Avatar: { type: String },
@@ -15,5 +15,5 @@ const userSchema = new mongoose.Schema({
 });
 
 
-export const User = mongoose.model('User', userSchema);
+export const User = mongoose.models.User || mongoose.model('User', userSchema,"User");
 
