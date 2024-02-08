@@ -25,7 +25,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <body
         suppressHydrationWarning={true}
         className={cn(
-          "min-h-screen bg-background antialiased",
+          "min-h-screen antialiased",
           inter.className,
         )}
       >
