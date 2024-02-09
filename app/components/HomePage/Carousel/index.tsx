@@ -15,7 +15,6 @@ import { useEffect, useState } from "react";
 import ProductSkeleton from "./ProductSkeleton";
 
 const options: EmblaOptionsType = { loop: true, align: "center" };
-const plugins: EmblaPluginType[] = [Autoplay({ delay: 5000 })];
 
 const ProductCarousel = () => {
   const [products, setProducts] = useState<any[] | undefined>([]);
@@ -33,7 +32,7 @@ const ProductCarousel = () => {
 
   return (
     <div className="lg:m-9 lg:mt-12 p-4">
-      <h1 className="text-2xl font-semibold">Recent Items</h1>
+      <h1 className="text-2xl font-semibold pb-3">Recent Items</h1>
       <Carousel className="w-full" opts={options} >
         <CarouselContent>
           {isLoading || !products ? (
