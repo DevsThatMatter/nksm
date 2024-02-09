@@ -9,6 +9,11 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "husky": {
+    "hooks": {
+      "pre-push": "pnpm build"
+    }
+  },
   "engines": {
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
@@ -63,11 +68,6 @@
     "prettier": "^3.2.4",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
-  },
-    "husky": {
-      "hooks": {
-        "pre-push": "pnpm build"
-      }
   }
 }
 
