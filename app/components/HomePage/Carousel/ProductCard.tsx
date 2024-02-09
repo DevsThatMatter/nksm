@@ -22,19 +22,19 @@ const ProductCard = ({
       <Card className="min-w-[120px]">
         <CardContent className="flex aspect-square items-center justify-center p-3 relative">
           <Link href={""}>
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col justify-center ">
               <Image
                 src={image_url}
                 alt={name}
                 width={400}
                 height={400}
-                className="rounded shadow-md object-cover"
+                className="rounded shadow-md object-cover h-48"
               />
-              <div className="flex justify-between items-center mt-2 ">
-              <h1 className="2xl:text-xl lg:text-base sm:text-xl min-[280px]:text-lg font-semibold 2xl:max-w-48 min-[2000px]:max-w-60 lg:max-w-32 md:max-w-40 sm:max-w-44 min-[240px]:max-w-20 min-[440px]:max-w-32 overflow-ellipsis overflow-hidden hover:underline">{name}</h1>
+              <div className="flex justify-between items-center mt-2">
+              <h1 className="2xl:text-xl lg:text-base sm:text-xl min-[280px]:text-lg font-semibold 2xl:max-w-48 min-[2000px]:max-w-60 lg:max-w-32 md:max-w-40 sm:max-w-44 min-[240px]:max-w-20 min-[440px]:max-w-32 overflow-ellipsis overflow-hidden hover:underline line-clamp-1">{name}</h1>
               <span className="text-gray-500">₹{price}</span>
               </div>
-              <p className="lg:text-xs md:text-sm min-[300px]:text-sm text-gray-500 line-clamp-2 overflow-ellipsis">
+              <p className="lg:text-xs md:text-sm min-[300px]:text-sm text-gray-500 line-clamp-2 overflow-ellipsis h-8">
                 {description}
               </p>
             </div>
