@@ -68,7 +68,6 @@
       "hooks": {
         "pre-push": "pnpm build"
       }
-    }
-  
+  }
 }
 
