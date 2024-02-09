@@ -1,11 +1,13 @@
+'use server';
+
 import { Product } from "../models/product.model";
 import { connectToDB } from "../database/mongoose";
 export const fetchRecentProducts = async () => {
     try {
         await connectToDB();
-        console.log('Fetching recent products')
         const fetchedProducts = await Product.find({}).sort({ createdAt: -1 }).limit(10);
         const modifiedProducts = fetchedProducts.map((product) => ({
+            _id: product._id.toString(),
             Seller: product.Seller.toString(),
             Total_Quantity_Available: product.Total_Quantity_Available,
             Product_Name: product.Product_Name,
