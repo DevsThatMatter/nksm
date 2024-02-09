@@ -1,0 +1,3 @@
+echo "Testing your code...🛠️"
+
+pnpm build

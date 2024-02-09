@@ -7,7 +7,7 @@ export const connectToDB = async () => {
 
     if (!process.env.MONGODB_URL) return console.log("No MONGODB_URL found");
 
-    if (isConnected) return console.log("Already connected to DB");
+    if (isConnected) return console.log("Already connected to MongoDB");
 
     try {
         await mongoose.connect(process.env.MONGODB_URL, {dbName: "NKSMDB", connectTimeoutMS: 10000});
