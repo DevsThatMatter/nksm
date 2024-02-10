@@ -95,7 +95,7 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
           input &&
           isDropdownOpen && (
             <div className="absolute left-0 right-0 mt-1 rounded-md shadow-lg z-50 max-h-60 overflow-auto bg-card border">
-              <div className="px-4 py-2">No Results</div>
+              <div className="px-4 py-2">Search NKSM for "{input}"</div>
             </div>
           )
         )}
