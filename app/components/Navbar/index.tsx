@@ -12,30 +12,33 @@ import { fetchRecentProducts } from "@/lib/actions/fetchProduct.actions";
 
 const Navbar = async () => {
   const userData = await auth();
-  const products = await fetchRecentProducts() || [];;
+  const products = (await fetchRecentProducts()) || [];
   return (
     <>
-      <nav className="sticky top-0 left-0 right-0 flex lg:justify-between justify-center max-h-30 z-50 bg-white shadow-md">
-        <div className="">
-          <Link href="/">
-            <Image
-              src="logon.svg"
-              alt="Logo"
-              width={150}
-              height={150}
-              className="dark:invert logo hidden lg:block my-2 mx-3 mt-3"
-            />
-          </Link>
-        </div>
-        <div className="nav-items flex space-x-5 items-center mx-3 my-5">
-          <SearchBar products={products}/>
-          <AddListing />
-          <UserChat />
-          <SavedItems />
-          <Separator orientation="vertical" />
-          <UserProfile data={userData}/>
-        </div>
-      </nav>
+      <div className="sticky top-0 left-0 right-0  z-50 bg-background shadow-md">
+        <nav className="flex lg:justify-between justify-center max-h-30">
+          <div className="">
+            <Link href="/">
+              <Image
+                src="logon.svg"
+                alt="Logo"
+                width={150}
+                height={150}
+                className="dark:invert logo hidden lg:block my-2 mx-3 mt-3"
+              />
+            </Link>
+          </div>
+          <div className="nav-items flex space-x-5 items-center mx-3 my-5">
+            <SearchBar products={products} />
+            <AddListing />
+            <UserChat />
+            <SavedItems />
+            <Separator orientation="vertical" />
+            <UserProfile data={userData} />
+          </div>
+        </nav>
+        <Separator orientation="horizontal"  />
+      </div>
     </>
   );
 };
