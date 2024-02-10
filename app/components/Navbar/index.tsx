@@ -1,4 +1,4 @@
-import { Avatar } from "./Avatar";
+import { UserProfile } from "./Profile";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -7,18 +7,20 @@ import { Separator } from "@/app/components/ui/separator";
 import UserChat from "@/app/components/Chat/ChatsPanel";
 import { AddListing } from "../AddListing";
 import SearchBar from "./SearchBar";
+import { auth } from "@/auth";
 
-const Navbar = () => {
+const Navbar = async () => {
+  const userData = await auth();
   return (
     <>
-      <nav className="flex lg:justify-between justify-center p-5">
+      <nav className="flex lg:justify-between justify-center p-5 max-h-22">
         <div className="logo hidden lg:block ">
           <Link href="/">
             <Image
               src="logon.svg"
               alt="Logo"
-              width={150}
-              height={150}
+              width={140}
+              height={140}
               className="dark:invert"
             />
           </Link>
@@ -29,7 +31,7 @@ const Navbar = () => {
           <UserChat />
           <SavedItems />
           <Separator orientation="vertical" />
-          <Avatar />
+          <UserProfile data={userData}/>
         </div>
       </nav>
       <Separator orientation="horizontal" />
