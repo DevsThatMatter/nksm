@@ -21,8 +21,8 @@ const CategoryCard: React.FC<CategoryProp> = ({
       href={""}
       key={name}
       className={cn(
-        "@container relative rounded-lg group sm:h-[30vh] md:h-[60vh] lg:h-auto overflow-hidden",
-        className,
+        "@container relative rounded-lg group sm:h-[30vh] md:h-[60vh] lg:h-auto aspect-square sm:aspect-auto overflow-hidden",
+        className
       )}
     >
       <Image
@@ -30,7 +30,7 @@ const CategoryCard: React.FC<CategoryProp> = ({
         alt={name}
         className={cn(
           "rounded-lg object-cover group-hover:opacity-75 h-full w-full ",
-          imageClassName,
+          imageClassName
         )}
         width={800}
         height={800}
@@ -40,7 +40,7 @@ const CategoryCard: React.FC<CategoryProp> = ({
         className={cn(
           "absolute w-fit h-fit group-hover:opacity-75 text-2xl @2xs:text-3xl @xs:text-4xl @sm:text-5xl @md:text-6xl font-semibold @md:font-medium text-gray-700",
           textClassName,
-          spartan.className,
+          spartan.className
         )}
       >
         {name}

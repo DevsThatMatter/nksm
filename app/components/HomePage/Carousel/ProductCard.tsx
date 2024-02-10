@@ -29,7 +29,7 @@ const ProductCard = ({
                 alt={name}
                 width={400}
                 height={400}
-                className="rounded shadow-md object-cover h-48"
+                className="rounded shadow-md object-cover aspect-square "
               />
               <div className="flex justify-between items-center mt-2">
                 <h1 className="2xl:text-xl lg:text-base sm:text-xl min-[280px]:text-lg font-semibold 2xl:max-w-48 min-[2000px]:max-w-60 lg:max-w-32 md:max-w-40 sm:max-w-44 min-[240px]:max-w-20 min-[440px]:max-w-32 overflow-ellipsis overflow-hidden hover:underline line-clamp-1">
