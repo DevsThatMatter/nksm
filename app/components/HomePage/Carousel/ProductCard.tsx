@@ -20,7 +20,7 @@ const ProductCard = ({
 }: ProductCardProps) => {
   const [isSaved, setIsSaved] = useState(false);
   return (
-    <CarouselItem className="lg:basis-1/4 basis-1/2 md:basis-1/3 xl:basis-1/5 xs:basis-1/3">
+    <CarouselItem className="lg:basis-1/4 basis-1/2 md:basis-1/3 xl:basis-1/5 sm:basis-1/3 min-[200px]:basis-11/12 min-[300px]:basis-1/2">
       <Card className="min-w-[120px] m-1">
         <CardContent className="flex aspect-square items-center justify-center p-3 relative">
           <Link href={""}>
@@ -33,12 +33,12 @@ const ProductCard = ({
                 className="rounded shadow-md object-cover aspect-square "
               />
               <div className="flex justify-between items-center mt-2">
-                <h1 className="2xl:text-xl lg:text-base sm:text-xl min-[280px]:text-lg font-semibold 2xl:max-w-48 min-[2000px]:max-w-60 lg:max-w-32 md:max-w-40 sm:max-w-44 min-[240px]:max-w-20 min-[440px]:max-w-32 overflow-ellipsis overflow-hidden hover:underline line-clamp-1">
+                <h1 className="2xl:text-xl lg:text-base sm:text-xl min-[280px]:text-lg font-semibold 2xl:max-w-48 min-[2000px]:max-w-60 lg:max-w-32 md:max-w-40 sm:max-w-44 min-[240px]:max-w-12 min-[440px]:max-w-32 overflow-ellipsis overflow-hidden hover:underline line-clamp-1">
                   {name}
                 </h1>
                 <span className="text-gray-500">₹{price}</span>
               </div>
-              <p className="lg:text-xs md:text-sm min-[300px]:text-sm text-gray-500 line-clamp-2 overflow-ellipsis h-9">
+              <p className="lg:text-xs md:text-sm min-[300px]:text-xs text-gray-500 line-clamp-2 overflow-ellipsis min-[240px]:line-clamp-1">
                 {description}
               </p>
             </div>
