@@ -21,11 +21,11 @@ const BottomNav = ({ children }: { children: React.ReactNode }) => {
 
       setHeaderStyle(shouldBeStyle);
     },
-    [headerStyle],
+    [headerStyle]
   );
   return (
     <div
-      className="fixed bottom-2 w-[96%] h-12 transform -translate-x-1/2 left-1/2 flex text-gray-600 max-w-screen-sm"
+      className="fixed bottom-2 w-[96%] h-12 transform -translate-x-1/2 left-1/2 flex text-gray-600 max-w-screen-sm bg-[#f7f7f78c] dark:bg-[#1f1f1f8c] rounded-lg  backdrop-blur-md"
       style={{ ...headerStyle }}
     >
       {children}

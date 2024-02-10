@@ -3,21 +3,18 @@ import { cn } from "@/app/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Button } from "@/app/components/ui/button";
 
-const divVariants = cva(
-  "relative grow z-10 bg-[#f7f7f78c] dark:bg-[#1f1f1f8c] grid place-items-center backdrop-blur-md",
-  {
-    variants: {
-      variant: {
-        left: "rounded-l-lg rounded-tr-[1.3rem] ",
-        right: "rounded-r-lg rounded-tl-[1.3rem] ",
-      },
-      size: {
-        default: "grid-cols-2",
-        three: "grid-cols-3",
-      },
+const divVariants = cva("relative grow z-10  grid place-items-center", {
+  variants: {
+    variant: {
+      left: "rounded-l-lg",
+      right: "rounded-r-lg",
+    },
+    size: {
+      default: "grid-cols-2",
+      three: "grid-cols-3",
     },
   },
-);
+});
 export interface DivProps
   extends HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof divVariants> {
@@ -26,7 +23,7 @@ export interface DivProps
 const BottomContainer = forwardRef<HTMLDivElement, DivProps>(
   (
     { className, variant = "left", size = "default", children, ...props },
-    ref,
+    ref
   ) => {
     return (
       <div
@@ -37,7 +34,7 @@ const BottomContainer = forwardRef<HTMLDivElement, DivProps>(
         {children}
       </div>
     );
-  },
+  }
 );
 BottomContainer.displayName = "BottomContainer";
 export default BottomContainer;
