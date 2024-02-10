@@ -1,7 +1,6 @@
 import {
   Carousel,
   CarouselContent,
-  CarouselItem,
   CarouselNext,
   CarouselPrevious,
 } from "@/app/components/ui/carousel";
@@ -38,17 +37,13 @@ const ProductCarousel = () => {
 const CarouselItems = async () => {
   const data = await fetchRecentProducts();
   return data!.map((product) => (
-    <CarouselItem
+    <ProductCard
+      image_url={product.Images[0]}
       key={product._id}
-      className="lg:basis-1/4 basis-1/2 md:basis-1/3 xl:basis-1/5 xs:basis-1/3"
-    >
-      <ProductCard
-        image_url={product.Images[0]}
-        name={product.Product_Name}
-        price={product.Price}
-        description={product.Description}
-      />
-    </CarouselItem>
+      name={product.Product_Name}
+      price={product.Price}
+      description={product.Description}
+    />
   ));
 };
 export default ProductCarousel;

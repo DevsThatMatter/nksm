@@ -4,6 +4,7 @@ import { Card, CardContent } from "../../ui/card";
 import Link from "next/link";
 import { BookmarkFilledIcon, BookmarkIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
+import { CarouselItem } from "../../ui/carousel";
 
 interface ProductCardProps {
   image_url: string;
@@ -19,8 +20,8 @@ const ProductCard = ({
 }: ProductCardProps) => {
   const [isSaved, setIsSaved] = useState(false);
   return (
-    <div className="p-1">
-      <Card className="min-w-[120px]">
+    <CarouselItem className="lg:basis-1/4 basis-1/2 md:basis-1/3 xl:basis-1/5 xs:basis-1/3">
+      <Card className="min-w-[120px] m-1">
         <CardContent className="flex aspect-square items-center justify-center p-3 relative">
           <Link href={""}>
             <div className="flex flex-col justify-center ">
@@ -37,7 +38,7 @@ const ProductCard = ({
                 </h1>
                 <span className="text-gray-500">₹{price}</span>
               </div>
-              <p className="lg:text-xs md:text-sm min-[300px]:text-sm text-gray-500 line-clamp-2 overflow-ellipsis h-8">
+              <p className="lg:text-xs md:text-sm min-[300px]:text-sm text-gray-500 line-clamp-2 overflow-ellipsis h-9">
                 {description}
               </p>
             </div>
@@ -56,7 +57,7 @@ const ProductCard = ({
           </div>
         </CardContent>
       </Card>
-    </div>
+    </CarouselItem>
   );
 };
 
