@@ -13,19 +13,19 @@ const Navbar = async () => {
   const userData = await auth();
   return (
     <>
-      <nav className="flex lg:justify-between justify-center p-5 max-h-22">
-        <div className="logo hidden lg:block ">
+      <nav className="flex lg:justify-between justify-center max-h-30">
+        <div className="">
           <Link href="/">
             <Image
               src="logon.svg"
               alt="Logo"
-              width={140}
-              height={140}
-              className="dark:invert"
+              width={150}
+              height={150}
+              className="dark:invert logo hidden lg:block my-2 mx-3 mt-3"
             />
           </Link>
         </div>
-        <div className="nav-items flex space-x-5 items-center px-2">
+        <div className="nav-items flex space-x-5 items-center mx-3 my-5">
           <SearchBar />
           <AddListing />
           <UserChat />
