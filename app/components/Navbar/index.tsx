@@ -8,9 +8,11 @@ import UserChat from "@/app/components/Chat/ChatsPanel";
 import { AddListing } from "../AddListing";
 import SearchBar from "./SearchBar";
 import { auth } from "@/auth";
+import { fetchRecentProducts } from "@/lib/actions/fetchProduct.actions";
 
 const Navbar = async () => {
   const userData = await auth();
+  const products = await fetchRecentProducts() || [];;
   return (
     <>
       <nav className="flex lg:justify-between justify-center max-h-30">
@@ -26,7 +28,7 @@ const Navbar = async () => {
           </Link>
         </div>
         <div className="nav-items flex space-x-5 items-center mx-3 my-5">
-          <SearchBar />
+          <SearchBar products={products}/>
           <AddListing />
           <UserChat />
           <SavedItems />
