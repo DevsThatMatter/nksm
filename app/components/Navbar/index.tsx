@@ -15,7 +15,7 @@ const Navbar = async () => {
   const products = await fetchRecentProducts() || [];;
   return (
     <>
-      <nav className="flex lg:justify-between justify-center max-h-30">
+      <nav className="sticky top-0 left-0 right-0 flex lg:justify-between justify-center max-h-30 z-50 bg-white shadow-md">
         <div className="">
           <Link href="/">
             <Image
@@ -36,7 +36,6 @@ const Navbar = async () => {
           <UserProfile data={userData}/>
         </div>
       </nav>
-      <Separator orientation="horizontal" />
     </>
   );
 };
