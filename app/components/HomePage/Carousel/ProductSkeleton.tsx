@@ -1,21 +1,22 @@
-
+import { Skeleton } from "../../ui/skeleton";
 import { Card, CardContent } from "../../ui/card";
+import { CarouselItem } from "../../ui/carousel";
 const ProductSkeleton = () => {
   return (
-    <div className="p-1">
-      <Card className="min-w-[120px] animate-pulse">
-        <CardContent className="flex aspect-square items-center justify-center p-3">
-            <div className="flex flex-col justify-center">
-              <div className="2xl:w-[240px] 2xl:h-48 min-[2000px]:min-w-72 min-[2000px]:h-56 lg:w-52 lg:h-52 md:w-56 sm:w-68 min-[240px]:w-32 min-[440px]:w-44 min-[550px]:w-60 bg-gray-400 min-[240px]:h-32 min-[440px]:h-40 sm:h-40 h-56 rounded-md"></div>
-              <div className="flex justify-between items-center mt-2">
-              <h1 className="2xl:w-40 min-[2000px]:w-52 lg:w-32 md:w-40 sm:w-44 min-[240px]:w-20 min-[440px]:w-32 bg-gray-400 h-4 rounded-md"></h1>
-              <span className="2xl:w-12 min-[2000px]:w-15 lg:w-8 md:w-10 sm:w-11 min-[240px]:w-5 min-[440px]:w-8 bg-gray-400 h-4 rounded-md"></span>
-              </div>
-              <p className="mt-2 2xl:w-60 min-[2000px]:w-72 lg:w-52 md:w-56 sm:w-68 min-[240px]:w-32 min-[440px]:w-44 min-[550px]:w-60 bg-gray-400 h-8 rounded-md"></p>
-            </div>
+    <CarouselItem className="basis-1/2 min-[200px]:basis-11/12 min-[300px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
+      <Card className="min-w-[120px] m-1">
+        <CardContent className="flex flex-col aspect-square justify-center p-3 relative ">
+          <Skeleton className="rounded aspect-square grow w-[100%]" />
+          <div className="flex justify-between items-center mt-2">
+            <Skeleton className="overflow-hidden font-semibold sm:text-xl lg:text-base 2xl:text-xl hover:underline min-[280px]:text-lg min-[2000px]:max-w-60 min-[370px]:max-w-24 min-[300px]:max-w-12 min-[440px]:max-w-52 overflow-ellipsis line-clamp-1 sm:max-w-44 md:max-w-40 lg:max-w-32 2xl:max-w-48 w-[50%]">
+              <span className="opacity-0">0</span>
+            </Skeleton>
+            <Skeleton className="h-5 w-[20%]" />
+          </div>
+          <Skeleton className="w-full mt-1 h-7 md:h-9 lg:h-7" />
         </CardContent>
       </Card>
-    </div>
+    </CarouselItem>
   );
 };
 
