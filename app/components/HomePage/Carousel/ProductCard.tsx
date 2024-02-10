@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import { Card, CardContent } from "../../ui/card";
 import Link from "next/link";
@@ -16,7 +17,7 @@ const ProductCard = ({
   price,
   description,
 }: ProductCardProps) => {
-    const [isSaved, setIsSaved] = useState(false)
+  const [isSaved, setIsSaved] = useState(false);
   return (
     <div className="p-1">
       <Card className="min-w-[120px]">
@@ -31,17 +32,28 @@ const ProductCard = ({
                 className="rounded shadow-md object-cover h-48"
               />
               <div className="flex justify-between items-center mt-2">
-              <h1 className="2xl:text-xl lg:text-base sm:text-xl min-[280px]:text-lg font-semibold 2xl:max-w-48 min-[2000px]:max-w-60 lg:max-w-32 md:max-w-40 sm:max-w-44 min-[240px]:max-w-20 min-[440px]:max-w-32 overflow-ellipsis overflow-hidden hover:underline line-clamp-1">{name}</h1>
-              <span className="text-gray-500">₹{price}</span>
+                <h1 className="2xl:text-xl lg:text-base sm:text-xl min-[280px]:text-lg font-semibold 2xl:max-w-48 min-[2000px]:max-w-60 lg:max-w-32 md:max-w-40 sm:max-w-44 min-[240px]:max-w-20 min-[440px]:max-w-32 overflow-ellipsis overflow-hidden hover:underline line-clamp-1">
+                  {name}
+                </h1>
+                <span className="text-gray-500">₹{price}</span>
               </div>
               <p className="lg:text-xs md:text-sm min-[300px]:text-sm text-gray-500 line-clamp-2 overflow-ellipsis h-8">
                 {description}
               </p>
             </div>
           </Link>
-          <div className="absolute top-0 right-0 mt-4 mr-4 lg:mt-5 lg:mr-5 sm:mt-6 sm:mr-6 2xl:mt-5 2xl:mr-6 rounded-full bg-gray-200 p-1" onClick={()=>{setIsSaved(!isSaved)}}>
-            {!isSaved ? <BookmarkIcon className="w-4 h-4 text-gray-500"/> : <BookmarkFilledIcon className="w-4 h-4 text-gray-500" />}
-            </div>
+          <div
+            className="absolute top-0 right-0 mt-4 mr-4 lg:mt-5 lg:mr-5 sm:mt-6 sm:mr-6 2xl:mt-5 2xl:mr-6 rounded-full bg-gray-200 p-1"
+            onClick={() => {
+              setIsSaved(!isSaved);
+            }}
+          >
+            {!isSaved ? (
+              <BookmarkIcon className="w-4 h-4 text-gray-500" />
+            ) : (
+              <BookmarkFilledIcon className="w-4 h-4 text-gray-500" />
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
