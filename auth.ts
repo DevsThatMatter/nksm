@@ -15,4 +15,13 @@ export const {
         'https://accounts.google.com/o/oauth2/auth?response_type=code&hd=nitkkr.ac.in'
     })
   ],
+  callbacks: {
+    async signIn({ user }) {
+      if (user.email && user.email.endsWith('@nitkkr.ac.in')) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
 })
