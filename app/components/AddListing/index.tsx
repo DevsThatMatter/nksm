@@ -47,7 +47,7 @@ export function AddListing() {
   const [stepThreeData, setStepThreeData] = useState({
     price: "",
     condition: "",
-    expiryDate: null,
+    expiryDate: Date,
   });
   const [stepFourData, setStepFourData] = useState({
     itemName: "",

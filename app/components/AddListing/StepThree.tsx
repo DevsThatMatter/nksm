@@ -14,7 +14,7 @@ interface StepThreeProps {
   onDataChange: (data: {
     price: string;
     condition: string;
-    expiryDate: Date | null;
+    expiryDate: Date;
   }) => void;
 }
 
@@ -27,7 +27,7 @@ export function StepThree({ data, onDataChange }: StepThreeProps) {
     onDataChange({ ...data, condition: value });
   };
 
-  const handleDateChange = (date: Date | null) => {
+  const handleDateChange = (date: Date) => {
     onDataChange({ ...data, expiryDate: date });
   };
 
