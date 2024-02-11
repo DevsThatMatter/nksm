@@ -49,9 +49,10 @@ export function StepThree({ data, onDataChange }: StepThreeProps) {
         </div>
 
         <div className="flex items-center space-x-2">
-          <Select>
+          <Select onValueChange={handleSelectChange}>
             <SelectTrigger
               id="condition"
+              v
               onChange={(value: string) => handleSelectChange(value)}
             >
               <SelectValue placeholder="Select" />
