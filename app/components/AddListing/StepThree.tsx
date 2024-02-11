@@ -57,7 +57,7 @@ export function StepThree({ data, onDataChange }: StepThreeProps) {
               {Object.values(ConditionEnum)
                 .filter((value) => typeof value === "string")
                 .map((condition) => (
-                  <SelectItem key={condition} value={condition as string}>
+                  <SelectItem key={condition} value={condition}>
                     {condition}
                   </SelectItem>
                 ))}

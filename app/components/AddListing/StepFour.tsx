@@ -21,9 +21,15 @@ export function StepFour({ data, onDataChange }: StepFourProps) {
             />
           </div>
           <div>
-            <h1 className="text-xl font-bold">{data.itemName} <>item name</></h1>
-            <p className="text-gray-500">{`Description: Add description here Add description here Add description here Add description here Add description here Add description here Add description here Add description here Add description here`}</p>
-            <h1 className="text-xl font-bold">{`Price: Rs ${data.itemPrice}`} <>999</></h1>
+            <h1 className="text-xl font-bold">
+              {data.itemName} <>item name</>
+            </h1>
+            <p className="text-gray-500">
+              {`Description: Add description here Add description here Add description here Add description here Add description here Add description here Add description here Add description here Add description here`}
+            </p>
+            <h1 className="text-xl font-bold">
+              {`Price: Rs ${data.itemPrice}`} <>999</>
+            </h1>
           </div>
         </div>
       </div>

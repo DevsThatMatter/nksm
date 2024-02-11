@@ -88,12 +88,11 @@ export function AddListing() {
     if (!stepOneData.item.trim()) {
       setStepOneError("Fill in Item Name");
       return false;
-    } 
+    }
     if (!stepOneData.image) {
       setStepOneError("Please upload an image of the product.");
       return false;
-    }
-    else {
+    } else {
       setStepOneError("");
       return true;
     }
@@ -103,11 +102,11 @@ export function AddListing() {
     if (!stepTwoData.category.trim()) {
       setStepTwoError("Fill in Category");
       return false;
-    } 
+    }
     if (!stepTwoData.description.trim()) {
       setStepTwoError("Please enter a description.");
-      return false;}
-    else {
+      return false;
+    } else {
       setStepTwoError("");
       return true;
     }
@@ -183,7 +182,7 @@ export function AddListing() {
           <DialogDescription>
             Provide details for your new listing.
           </DialogDescription>
-          
+
           {currentStep === 1 && stepOneError && (
             <p className="text-red-500">{stepOneError}</p>
           )}
@@ -201,7 +200,7 @@ export function AddListing() {
           {stepContent[currentStep]}
         </div>
         <DialogFooter className="flex mt-auto">
-          {currentStep > 1 && currentStep < 4 && (
+          {currentStep > 1 && (
             <Button type="button" onClick={handlePrev}>
               Previous
             </Button>
