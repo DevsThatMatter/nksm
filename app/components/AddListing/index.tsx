@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+
+import React, { useState } from "react";
 import { Button } from "@/app/components/ui/button";
 import { Icons } from "@/app/utils/icons";
 import {
@@ -11,17 +12,32 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/components/ui/dialog";
+import { Input } from "@/app/components/ui/input";
+import { Textarea } from "../ui/textarea";
+import { DatePicker } from "../ui/date";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "../ui/select";
+import Image from "next/image";
+
+import { ConditionEnum } from "@/types";
 
 import { StepOne } from "./StepOne";
 import { StepTwo } from "./StepTwo";
 import { StepThree } from "./StepThree";
 import { StepFour } from "./StepFour";
-import { set } from "mongoose";
-import { ConditionEnum } from "@/types";
 
 export function AddListing() {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [stepOneError, setStepOneError] = useState("");
+  const [stepTwoError, setStepTwoError] = useState("");
+  const [stepThreeError, setStepThreeError] = useState("");
+  const [stepFourError, setStepFourError] = useState("");
 
   const [stepOneData, setStepOneData] = useState({ item: "", image: null });
   const [stepTwoData, setStepTwoData] = useState({
@@ -30,7 +46,7 @@ export function AddListing() {
   });
   const [stepThreeData, setStepThreeData] = useState({
     price: "",
-    condition: ConditionEnum,
+    condition: "",
     expiryDate: null,
   });
   const [stepFourData, setStepFourData] = useState({
@@ -43,7 +59,6 @@ export function AddListing() {
       setCurrentStep(currentStep + 1);
     }
   };
-  
 
   const handlePrev = () => {
     setCurrentStep(currentStep - 1);
@@ -71,65 +86,62 @@ export function AddListing() {
 
   const validateStepOne = () => {
     if (!stepOneData.item.trim()) {
-      alert("Please enter a product name.");
+      setStepOneError("Fill in Item Name");
       return false;
-    }
-  
+    } 
     if (!stepOneData.image) {
-      alert("Please upload an image of the product.");
+      setStepOneError("Please upload an image of the product.");
       return false;
     }
-  
-    return true;
+    else {
+      setStepOneError("");
+      return true;
+    }
   };
-  
+
   const validateStepTwo = () => {
     if (!stepTwoData.category.trim()) {
-      alert("Please enter a category.");
+      setStepTwoError("Fill in Category");
       return false;
-    }
-  
+    } 
     if (!stepTwoData.description.trim()) {
-      alert("Please enter a description.");
-      return false;
+      setStepTwoError("Please enter a description.");
+      return false;}
+    else {
+      setStepTwoError("");
+      return true;
     }
-  
-    return true;
   };
-  
+
   const validateStepThree = () => {
     if (!stepThreeData.price.trim()) {
-      alert("Please enter a price.");
+      setStepThreeError("Fill in Price");
       return false;
-    }
-  
-    if (!stepThreeData.condition) {
-      alert("Please select a condition.");
+    } else if (!stepThreeData.condition) {
+      setStepThreeError("Select Condition");
       return false;
-    }
-  
-    if (!stepThreeData.expiryDate) {
-      alert("Please select an expiry date.");
+    } else if (!stepThreeData.expiryDate) {
+      setStepThreeError("Select Expiry Date");
       return false;
+    } else {
+      setStepThreeError("");
+      return true;
     }
-  
-    return true;
   };
-  
+
   const validateStepFour = () => {
     if (!stepFourData.itemName.trim()) {
-      alert("Please enter an item name.");
+      setStepFourError("Fill in Item Name");
       return false;
-    }
-  
-    if (!stepFourData.itemPrice.trim()) {
-      alert("Please enter an item price.");
+    } else if (!stepFourData.itemPrice.trim()) {
+      setStepFourError("Fill in Item Price");
       return false;
+    } else {
+      setStepFourError("");
+      return true;
     }
-  
-    return true;
   };
-  
+
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 1:
@@ -144,7 +156,6 @@ export function AddListing() {
         return true;
     }
   };
-  
 
   const stepContent: Record<number, JSX.Element> = {
     1: <StepOne data={stepOneData} onDataChange={setStepOneData} />,
@@ -172,6 +183,19 @@ export function AddListing() {
           <DialogDescription>
             Provide details for your new listing.
           </DialogDescription>
+          
+          {currentStep === 1 && stepOneError && (
+            <p className="text-red-500">{stepOneError}</p>
+          )}
+          {currentStep === 2 && stepTwoError && (
+            <p className="text-red-500">{stepTwoError}</p>
+          )}
+          {currentStep === 3 && stepThreeError && (
+            <p className="text-red-500">{stepThreeError}</p>
+          )}
+          {currentStep === 4 && stepFourError && (
+            <p className="text-red-500">{stepFourError}</p>
+          )}
         </DialogHeader>
         <div className="bg-gray-50 dark:bg-gray-950 p-6 rounded-lg shadow-2xl">
           {stepContent[currentStep]}

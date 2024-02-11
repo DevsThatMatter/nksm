@@ -35,15 +35,26 @@ const ProductCarousel = () => {
 };
 
 const CarouselItems = async () => {
-  const data = await fetchRecentProducts();
-  return data!.map((product) => (
-    <ProductCard
-      image_url={product.Images[0]}
-      key={product._id}
-      name={product.Product_Name}
-      price={product.Price}
-      description={product.Description}
-    />
-  ));
+  try {
+    const data = await fetchRecentProducts();
+    
+    if (!data) {
+      return null; 
+    }
+    
+    return data.map((product) => (
+      <ProductCard
+        image_url={product.Images[0]}
+        key={product._id}
+        name={product.Product_Name}
+        price={product.Price}
+        description={product.Description}
+      />
+    ));
+  } catch (error) {
+    console.error("Error fetching recent products:", error);
+    return null; 
+  }
 };
+
 export default ProductCarousel;
