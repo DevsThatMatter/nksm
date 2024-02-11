@@ -5,7 +5,7 @@ import { Icons } from "@/app/utils/icons";
 import { useState, useRef } from "react";
 import { categories } from "@/constants/categories";
 import { useRouter } from 'next/navigation';
-
+import Image  from 'next/image'
 
 export default function SearchBar() {
   const [input, setInput] = useState('');
@@ -49,11 +49,13 @@ export default function SearchBar() {
         {input && isDropdownOpen && filteredProducts.length > 0 ? (
           <div className="absolute left-0 right-0 mt-1 rounded-md shadow-lg z-50 max-h-60 overflow-auto bg-card border">
             {filteredProducts.map((product, index) => (
-              <li key={index} className="flex items-center px-4 py-2  hover:bg-accent rounded-md border">
-                <img
+              <li key={index} className="flex items-center px-4 py-2 hover:bg-accent  border ">
+                <Image
                   alt={product.name}
-                  className="w-16 h-16 rounded-md"
+                  className="rounded-md"
                   src={product.imgUrl}
+                  height={56}
+                  width={56}
                   style={{
                     aspectRatio: "64/64",
                     objectFit: "cover",

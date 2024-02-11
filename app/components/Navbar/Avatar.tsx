@@ -10,11 +10,11 @@ import {
 } from "@/app/components/ui/dropdown-menu";
 import { Icons } from "@/app/utils/icons";
 
+import { signOut } from "next-auth/react";
 export function Avatar() {
   const { setTheme } = useTheme();
   const handleLogout = () => {
-    // Placeholder function for handling logout
-    console.log("Logout clicked");
+    signOut({callbackUrl: '/login'})
   };
 
   return (

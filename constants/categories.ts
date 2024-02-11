@@ -2,50 +2,50 @@ import { category } from "@/types";
 export const categories: category[] = [
   {
     name: "Bicycles",
-    imgUrl: "/images/Categories/Bicycle.png",
+    imgUrl: "/Categories/Bicycle.png",
     className: "lg:row-span-2",
     textClassName: "top-[20%] right-0 left-0 mx-auto",
   },
   {
     name: "Coolers",
-    imgUrl: "/images/Categories/Cooler.png",
+    imgUrl: "/Categories/Cooler.png",
     imageClassName: "object-left-top",
     className: "lg:col-span-2 lg:row-span-3",
     textClassName: "top-[20%] left-[15%]",
   },
   {
     name: "Stationery",
-    imgUrl: "/images/Categories/Stationery.jpg",
+    imgUrl: "/Categories/Stationery.jpg",
     textClassName:
       "top-[20%]  pl-3 right-0 left-0 mx-auto top-[25%] xl:top-[20%]",
   },
   {
     name: "Miscellaneous",
-    imgUrl: "/images/Categories/Miscellaneous.jpg",
+    imgUrl: "/Categories/Miscellaneous.jpg",
     className: "lg:row-span-2",
     textClassName: "top-[10%] left-[5%] @md:top-[15%]",
   },
 
   {
     name: "Mattresses",
-    imgUrl: "/images/Categories/Mattress.png",
+    imgUrl: "/Categories/Mattress.png",
     className: "lg:row-span-2",
     textClassName: "inset-0 m-auto",
   },
   {
     name: "Kitchenware",
-    imgUrl: "/images/Categories/Kettle.png",
+    imgUrl: "/Categories/Kettle.png",
     imageClassName: "object-right-top",
     textClassName: "top-[20%] sm:right-[20%] right-[5%]",
   },
   {
     name: "Instruments",
-    imgUrl: "/images/Categories/Instruments.jpg",
+    imgUrl: "/Categories/Instruments.jpg",
     textClassName: "top-[15%] left-[10%]",
   },
   {
     name: "Electronics",
-    imgUrl: "/images/Categories/Electronics.png",
+    imgUrl: "/Categories/Electronics.png",
     textClassName: "top-[15%] left-[10%]",
   },
 ];

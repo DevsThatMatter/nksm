@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<p align="center">
+  <img src="https://github.com/DevsThatMatter/nksm/assets/20147775/1c4c7717-40fd-4663-90aa-99b92928c39a">
+</p>
 
-## Getting Started
 
-First, run the development server:
+## NKSM - NIT Kurukshetra Student Marketplace
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+NKSM is a vibrant online marketplace designed exclusively for students at NIT Kurukshetra. This platform facilitates easy buying and selling of goods among students, fostering a sustainable cycle where departing seniors can pass on their belongings to incoming students.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+*Greetings from the NIT Kurukshetra Student Marketplace team! While there's still work to be done, we're excited about the potential of this platform to serve our campus community. Our goal is to create the most intuitive and user-friendly marketplace introduced to NIT Kurukshetra, implementing industry-leading practices for an exceptional user experience. Any creative ideas are earnestly welcome.*
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<br>
+<br>
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+![ScreenshotLandingPagelongCroppedScrollbarRemoved](https://github.com/DevsThatMatter/nksm/assets/20147775/8e78fccc-edcd-4f6f-b199-74ef8433f6f9)
 
-## Learn More
+<br>
 
-To learn more about Next.js, take a look at the following resources:
+## Technologies:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+• **NextJS 14**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+• **Tailwind**
 
-## Deploy on Vercel
+• **ShadCN Components**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+• **Typescript**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+• **MongoDB**
+
+• **Vercel**
+
+• **Socket.io**
+  
