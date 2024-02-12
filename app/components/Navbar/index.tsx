@@ -15,7 +15,7 @@ const Navbar = async () => {
   const products = (await fetchRecentProducts()) || [];
   return (
     <>
-      <div className="sticky top-0 left-0 right-0  z-50 bg-background shadow-md">
+      <div className="sticky top-0 left-0 right-0 z-50 bg-background shadow-md">
         <nav className="flex lg:justify-between justify-center max-h-30">
           <div className="">
             <Link href="/">
