@@ -31,6 +31,11 @@ import { StepTwo } from "./StepTwo";
 import { StepThree } from "./StepThree";
 import { StepFour } from "./StepFour";
 
+import { z } from "zod";
+import { FormSchema } from "./formSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, SubmitHandler } from "react-hook-form";
+
 export function AddListing() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -55,6 +60,23 @@ export function AddListing() {
     setIsDialogOpen(false);
     setCurrentStep(1);
   };
+  type Inputs = z.infer<typeof FormSchema>;
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    trigger,
+    formState: { errors },
+  } = useForm<Inputs>({
+    resolver: zodResolver(FormSchema),
+  });
+
+  const processForm: SubmitHandler<Inputs> = (data) => {
+    reset();
+  };
+
+  type FieldName = keyof Inputs;
 
   return (
     <>
