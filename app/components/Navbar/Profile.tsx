@@ -53,10 +53,10 @@ export function UserProfile({ data }: UserProfileProps) {
         {data?.user && (
           <>
             <DropdownMenuItem onClick={() => console.log("View Your Profile")}>
-              View Your Profile
+              View Your Orders
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => console.log("Settings")}>
-              Settings
+              Account Info
             </DropdownMenuItem>
           </>
         )}
