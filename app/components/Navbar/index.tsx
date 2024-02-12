@@ -20,7 +20,7 @@ const Navbar = async () => {
           <div className="">
             <Link href="/">
               <Image
-                src="logon.svg"
+                src="/logon.svg"
                 alt="Logo"
                 width={150}
                 height={150}
