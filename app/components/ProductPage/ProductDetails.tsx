@@ -17,7 +17,7 @@ const ProductDetails = () => {
             storage space for all your essentials.
           </p>
           <p className="mt-2 text-gray-700">
-            Whether you're heading to the office or exploring the city, the Vintage Leather Messenger Bag is the perfect
+            Whether you are heading to the office or exploring the city, the Vintage Leather Messenger Bag is the perfect
             companion. The adjustable shoulder strap ensures a comfortable fit, while the multiple pockets allow you to
             stay organized on the go.
           </p>
