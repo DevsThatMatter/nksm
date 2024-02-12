@@ -35,10 +35,13 @@ import { z } from "zod";
 import { FormSchema } from "./formSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { DragHandleDots1Icon } from "@radix-ui/react-icons";
 
 export function AddListing() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [previousStep, setPreviousStep] = useState(0);
+
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -100,7 +103,12 @@ export function AddListing() {
             </DialogDescription>
           </DialogHeader>
 
-          <form></form>
+          <form onSubmit={handleSubmit(processForm)}>
+            {currentStep === 1 && <StepOne />}
+            {currentStep === 2 && <StepTwo />}
+            {currentStep === 3 && <StepThree />}
+            {currentStep === 4 && <StepFour />}
+          </form>
 
           <DialogFooter className="flex mt-auto">
             <Button

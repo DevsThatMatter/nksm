@@ -22,14 +22,12 @@ export function StepTwo({ data, onDataChange }: StepTwoProps) {
           id="category"
           placeholder="Category"
           className="col-span-3"
-          value={data.category}
           onChange={handleInputChange}
         />
         <Textarea
           id="description"
           placeholder="Enter Description"
           className="col-span-3 h-20 resize-y pl-4 pt-4 max-h-48"
-          value={data.description}
           onChange={handleTextareaChange}
         />
       </div>

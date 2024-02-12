@@ -23,7 +23,6 @@ export function StepOne({ data, onDataChange }: StepOneProps) {
             id="item"
             placeholder="Product Name"
             className="col-span-3"
-            value={data.item}
             onChange={handleInputChange}
           />
         </div>
