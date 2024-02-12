@@ -40,15 +40,11 @@ import { DragHandleDots1Icon } from "@radix-ui/react-icons";
 export function AddListing() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [previousStep, setPreviousStep] = useState(0);
 
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
   };
 
-  const handlePrev = () => {
-    setCurrentStep(currentStep - 1);
-  };
 
   const handleDialogOpen = () => {
     if (isDialogOpen) {
