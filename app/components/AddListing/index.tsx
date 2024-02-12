@@ -32,15 +32,16 @@ import { StepThree } from "./StepThree";
 import { StepFour } from "./StepFour";
 
 import { z } from "zod";
-import { FormSchema } from "./formSchema";
+import { FormSchema } from "./FormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { DragHandleDots1Icon } from "@radix-ui/react-icons";
 
+import { FormProvider } from "./FormContext";
+
 export function AddListing() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
 
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
@@ -73,6 +74,18 @@ export function AddListing() {
     formState: { errors },
   } = useForm<Inputs>({
     resolver: zodResolver(FormSchema),
+    defaultValues : {
+      step1 : {
+        item: "",
+        images: []
+      },
+      step2: {
+        price: 0,
+      },
+      step3: {
+        description : ""
+      }
+    }
   });
 
   const processForm: SubmitHandler<Inputs> = (data) => {
@@ -103,40 +116,29 @@ export function AddListing() {
             </DialogDescription>
           </DialogHeader>
 
-          <form onSubmit={handleSubmit(processForm)}>
-            {currentStep === 1 && <StepOne />}
-            {currentStep === 2 && <StepTwo />}
-            {currentStep === 3 && <StepThree />}
-            {currentStep === 4 && <StepFour />}
-          </form>
+          <FormProvider>
+            <form onSubmit={handleSubmit(processForm)}>
+              {currentStep === 1 && <StepOne />}
+              {currentStep === 2 && <StepTwo />}
+              {currentStep === 3 && <StepThree />}
 
-          <DialogFooter className="flex mt-auto">
-            <Button
-              type="button"
-              onClick={handlePrev}
-              disabled={currentStep === 1}
-            >
-              Previous
-            </Button>
-
-            <Button
-              type="button"
-              onClick={handleNext}
-              disabled={currentStep === 4}
-            >
-              Next
-            </Button>
-
-            <Button
-              type="button"
-              onClick={handleFinish}
-              disabled={
-                currentStep === 1 || currentStep === 2 || currentStep === 3
-              }
-            >
-              Finish
-            </Button>
-          </DialogFooter>
+              <button
+                type="button"
+                onClick={handlePrev}
+                disabled={currentStep === 1}
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={currentStep === 4}
+              >
+                Next
+              </button>
+              {currentStep === 4 && <button type="submit">Submit</button>}
+            </form>
+          </FormProvider>
         </DialogContent>
       </Dialog>
     </>

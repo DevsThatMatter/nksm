@@ -1,14 +1,27 @@
-"use client";
-
 import { z } from "zod";
-
-
-
-
+const ACCEPTED_IMAGE_MIME_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
+const MAX_FILE_SIZE = 1024 * 1024 * 5;
 export const FormSchema = z.object({
-  itemName: z.string().min(1, "item name is needed"),
-  Category: z.string().min(1, "item Category is needed"),
-  Description: z.string().min(1, "item Description is needed"),
-  itemPrice: z.number().min(1, "Price is needed"),
-  itemCondition: z.string().min(1, "item condition is needed"),
+  step1: z.object({
+    item: z.string().min(1,"This field can't be left empty"),
+    images: z
+      .array(z.any())
+      .refine((files) => files.every((file) => file.size <= MAX_FILE_SIZE))
+      .refine(
+        (files) =>
+          files.every((file) => ACCEPTED_IMAGE_MIME_TYPES.includes(file.type)),
+        "Only .jpg, .jpeg, .png, and .webp formats are supported."
+      ),
+  }),
+  step2: z.object({
+    price: z.number().min(0),
+  }),
+  step3: z.object({
+    description: z.string(),
+  }),
 });
