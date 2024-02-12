@@ -41,10 +41,14 @@ export function AddListing() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
   };
 
+  const handlePrev = () => {
+    setCurrentStep(currentStep - 1);
+  };
 
   const handleDialogOpen = () => {
     if (isDialogOpen) {
