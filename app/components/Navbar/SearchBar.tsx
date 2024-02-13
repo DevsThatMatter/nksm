@@ -18,6 +18,7 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
   const searchParams = useSearchParams();
   const category = searchParams!.get("category") || "";
   const sort = searchParams!.get("sort") || "";
+  const sortBy = searchParams!.get("by") || "";
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -61,7 +62,7 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
                 : router.push(
                     "?q=" +
                       e.target.value +
-                      `&category=${category}&sort=${sort}`
+                      `&category=${category}&sort=${sort}&by=${sortBy}`
                   ); // Show dropdown when input is not empty
             }, 300)}
             onFocus={() => {

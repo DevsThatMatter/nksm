@@ -49,7 +49,7 @@ export const getSearchResults = async ({
   searchString: string;
   pageNumber?: number;
   pageSize?: number;
-  sortBy?: "createdAt" | "price";
+  sortBy?: "createdAt" | "Price";
   sortOrder?: SortOrder;
   category?: string;
 }) => {
@@ -82,7 +82,7 @@ export const getSearchResults = async ({
       Condition: 1,
     };
 
-    const sortOptions = { createdAt: sortOrder };
+    const sortOptions = { [sortBy]: sortOrder };
 
     const searchQuery = Product.find(query)
       .sort(sortOptions)

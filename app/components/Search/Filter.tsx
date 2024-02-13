@@ -18,8 +18,16 @@ import {
   PopoverTrigger,
 } from "@/app/components/ui/popover";
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Switch } from "../ui/switch";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  navigationMenuTriggerStyle,
+} from "@/app/components/ui/navigation-menu";
+import Link from "next/link";
 
 const frameworks = [
   { label: "Bicycles", value: "bicycles" },
@@ -38,6 +46,7 @@ const Filter = () => {
   const value = searchParams!.get("category") || "";
   const sort = Number(searchParams!.get("sort")) || -1;
   const q = searchParams!.get("q") || "";
+  const sortBy = searchParams!.get("by") || "createdAt";
 
   return (
     <div className="my-2">
@@ -67,7 +76,9 @@ const Filter = () => {
                       (framework) => framework.value === currentValue
                     )?.label;
                     if (!label) return;
-                    router.push(`?q=${q}&category=${label}&sort=${sort}`);
+                    router.push(
+                      `?q=${q}&category=${label}&sort=${sort}&by=${sortBy}`
+                    );
                     setOpen(false);
                   }}
                 >
@@ -86,17 +97,45 @@ const Filter = () => {
       </Popover>
       <Button
         className="w-8 h-8 p-0 mt-2"
-        onClick={() => router.push(`?q=${q}&sort=${sort}`)}
+        onClick={() => router.push(`?q=${q}&sort=${sort}&by=${sortBy}`)}
         variant={"ghost"}
       >
         <Cross1Icon />
       </Button>
       <Switch
         onClick={() => {
-          router.push(`?q=${q}&category=${value}&sort=${-1 * sort}`);
+          router.push(
+            `?q=${q}&category=${value}&sort=${-1 * sort}&by=${sortBy}`
+          );
           console.log("Switch Clicked");
         }}
       />
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <Link
+              href={`?q=${q}&category=${value}&sort=${sort}&by=createdAt`}
+              legacyBehavior
+              passHref
+            >
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Created
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link
+              href={`?q=${q}&category=${value}&sort=${sort}&by=Price`}
+              legacyBehavior
+              passHref
+            >
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Price
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
     </div>
   );
 };

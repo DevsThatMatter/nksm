@@ -12,8 +12,8 @@ export default async function Page({
     searchString: searchParams.q || "",
     pageNumber: searchParams?.page ? +searchParams.page : 1,
     pageSize: 25,
-    sortBy: searchParams?.sort ? (searchParams.sort as any) : "createdAt",
     sortOrder: searchParams?.sort === "1" ? 1 : -1,
+    sortBy: searchParams?.by === "Price" ? "Price" : "createdAt",
     category: searchParams?.category,
   });
 
