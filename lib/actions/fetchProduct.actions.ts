@@ -2,6 +2,9 @@
 
 import { Product } from "../models/product.model";
 import { connectToDB } from "../database/mongoose";
+import { FilterQuery, SortOrder } from "mongoose";
+import { revalidatePath } from "next/cache";
+import { CategoryEnum } from "@/types";
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -21,24 +24,87 @@ export const fetchRecentProductS = async () => {
     await connectToDB();
     const fetchedProducts = await Product.find({})
       .sort({ createdAt: -1 })
+      .select({ _id: 1, Images: 1, Product_Name: 1, Price: 1 })
       .limit(10);
     const modifiedProducts = fetchedProducts.map((product) => ({
       _id: product._id.toString(),
-      Seller: product.Seller.toString(),
-      Total_Quantity_Available: product.Total_Quantity_Available,
       Product_Name: product.Product_Name,
-      Description: product.Description,
       Price: product.Price,
       Images: product.Images,
-      Condition: product.Condition,
-      Category: product.Category,
-      expires_in: product.expires_in,
-      is_archived: product.is_archived,
-      createdAt: product.createdAt,
-      updatedAt: product.updatedAt,
     }));
     return modifiedProducts;
   } catch (error) {
     console.error("Error fetching recent products:", error);
+  }
+};
+
+export const getSearchResults = async ({
+  searchString,
+  pageNumber = 1,
+  pageSize = 20,
+  sortBy = "createdAt",
+  sortOrder = "desc",
+  category,
+}: {
+  searchString: string;
+  pageNumber?: number;
+  pageSize?: number;
+  sortBy?: "createdAt" | "price";
+  sortOrder?: SortOrder;
+  category?: string;
+}) => {
+  try {
+    connectToDB();
+
+    const skipAmount = (pageNumber - 1) * pageSize;
+
+    const regex = new RegExp(searchString, "i");
+
+    const query: FilterQuery<typeof Product> = category
+      ? { Category: category, is_archived: false }
+      : {
+          is_archived: false,
+        };
+
+    if (searchString.trim() !== "") {
+      query.$or = [
+        { Product_Name: { $regex: regex } },
+        { Description: { $regex: regex } },
+        { Category: { $regex: regex } },
+      ];
+    }
+    const select = {
+      _id: 1,
+      Images: 1,
+      Product_Name: 1,
+      Price: 1,
+      Description: 1,
+      Condition: 1,
+    };
+
+    const sortOptions = { createdAt: sortOrder };
+
+    const searchQuery = Product.find(query)
+      .sort(sortOptions)
+      .skip(skipAmount)
+      .select(select)
+      .limit(pageSize);
+
+    const totalProductsCount = await Product.countDocuments(query);
+
+    const products = await searchQuery.exec();
+
+    const isNext = totalProductsCount > skipAmount + products.length;
+    revalidatePath("/search");
+    return {
+      products,
+      isNext,
+      totalProductsCount,
+      productsCount: products.length,
+      skipAmount,
+    };
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw error;
   }
 };
