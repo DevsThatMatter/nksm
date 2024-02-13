@@ -9,9 +9,9 @@ const userSchema = new mongoose.Schema({
   Avatar: { type: String },
   Email: { type: String, required: true },
   Chat_IDs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'chat' }],
-  Owned_Products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'product' }],
+  Owned_Products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
   address: { type: String },
-  Ordered_Products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'product' }]
+  Ordered_Products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }]
 });
 
 

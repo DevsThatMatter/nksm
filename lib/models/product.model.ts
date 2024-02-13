@@ -3,7 +3,7 @@ import { CategoryEnum, ConditionEnum } from "@/types";
 
 // Define the schema for the 'product' collection
 const productSchema = new mongoose.Schema({
-  Seller: { type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true },
+  Seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   Total_Quantity_Available: { type: Number, required: true },
   Product_Name: { type: String, required: true },
   Description: { type: String, required: true },

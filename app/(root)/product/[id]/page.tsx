@@ -1,8 +1,15 @@
 import ProductPage from '@/app/components/ProductPage'
+import { fetchProductDetails } from '@/lib/actions/fetchProduct.actions'
+import { Product } from '@/types';
 
-export default function Page() {
+
+export default async function Page({params}:{
+  params: {id: string}
+}) {
+  const ProductInfo: Product = await fetchProductDetails(params.id);
+  console.log(ProductInfo)
   return (
-    <ProductPage />
+    <ProductPage productInfo={ProductInfo}/>
   )
 }
 
