@@ -1,6 +1,33 @@
 import React from "react";
 import { useFormContext } from "./FormContext";
 import { Input } from "../ui/input";
+import { step1Schema } from "./formSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "../ui/button";
+
+type Inputs = z.infer<typeof step1Schema>;
+const {
+  register,
+  handleSubmit,
+  watch,
+  reset,
+  trigger,
+  formState: { errors },
+} = useForm<Inputs>({
+  resolver: zodResolver(step1Schema),
+  defaultValues: {
+    item: "",
+    images: [],
+  },
+});
+
+const processForm: SubmitHandler<Inputs> = (data) => {
+  reset();
+};
+
+type FieldName = keyof Inputs;
 
 export function StepOne() {
   const { formData, setFormData } = useFormContext();
@@ -10,6 +37,7 @@ export function StepOne() {
       ...formData,
       step1: { ...formData.step1, item: e.target.value },
     });
+    console.log(formData.step1.item);
   };
   const handleFileChange = (e: any) => {
     const files = Array.from(e.target.files || []);
@@ -18,7 +46,7 @@ export function StepOne() {
   const item = formData.step1.item || "";
 
   return (
-    <div>
+    <form onSubmit={handleSubmit(processForm)}>
       <Input type="text" value={item} onChange={handleInputChange} min={1} />
       <Input
         id="images" // Change the id to "images" to match the data structure
@@ -27,6 +55,9 @@ export function StepOne() {
         onChange={handleFileChange}
         multiple // Allow multiple file selection
       />
-    </div>
+
+      <Button >Next</Button>
+
+    </form>
   );
 }

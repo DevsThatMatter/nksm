@@ -32,19 +32,27 @@ import { StepThree } from "./StepThree";
 import { StepFour } from "./StepFour";
 
 import { z } from "zod";
-import { FormSchema } from "./FormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { DragHandleDots1Icon } from "@radix-ui/react-icons";
 
-import { FormProvider } from "./FormContext";
+import { FormProvider, useFormContext } from "./FormContext";
 
 export function AddListing() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  const { formData, setFormData } = useFormContext();
+  const Steps = [
+    { Fields: ["item", "images"] },
+    { Fields: ["price"] },
+    {
+      Fields: ["description"],
+    },
+  ];
   const handleNext = () => {
-    setCurrentStep(currentStep + 1);
+
+    return setCurrentStep(currentStep + 1);
   };
 
   const handlePrev = () => {
@@ -64,35 +72,7 @@ export function AddListing() {
     setIsDialogOpen(false);
     setCurrentStep(1);
   };
-  type Inputs = z.infer<typeof FormSchema>;
-  const {
-    register,
-    handleSubmit,
-    watch,
-    reset,
-    trigger,
-    formState: { errors },
-  } = useForm<Inputs>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      step1: {
-        item: "",
-        images: [],
-      },
-      step2: {
-        price: 0,
-      },
-      step3: {
-        description: "",
-      },
-    },
-  });
-
-  const processForm: SubmitHandler<Inputs> = (data) => {
-    reset();
-  };
-
-  type FieldName = keyof Inputs;
+  
 
   return (
     <>
@@ -117,7 +97,7 @@ export function AddListing() {
           </DialogHeader>
 
           <FormProvider>
-            <form onSubmit={handleSubmit(processForm)}>
+            <form >
               {currentStep === 1 && <StepOne />}
               {currentStep === 2 && <StepTwo />}
               {currentStep === 3 && <StepThree />}
