@@ -24,12 +24,12 @@ export default async function Page({
         <p className="text-xl font-semibold mb-4">
           Showing {result.skipAmount + 1} –{" "}
           {result.skipAmount + result.productsCount} of{" "}
-          {result.totalProductsCount} results for "{searchParams.q || "All"}"
+          {result.totalProductsCount} results for &quot;{searchParams.q || "All"}&quot;
           {searchParams.category ? ` in ${searchParams.category}` : ""}
         </p>
 
         {result.products.length === 0 ? (
-          <p className="no-result">No Result</p>
+          <p className="no result">No Result</p>
         ) : (
           <>
             {result.products.map((product) => (

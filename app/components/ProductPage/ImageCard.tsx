@@ -33,8 +33,9 @@ export default function ImageCard({ images }: any) {
   return (
     <div className="grid grid-cols-6 gap-4 max-h-[400px]">
       <div className="col-span-1 max-h-[20px]">
-        {images.map((image: string) => (
+        {images.map((image: string, index: number) => (
           <Image
+            key={index}
             src={image}
             alt={`Image `}
             width={80}
@@ -66,7 +67,7 @@ export default function ImageCard({ images }: any) {
             <div
               key={index}
               className={`w-3 h-3 rounded-full mx-1 ${
-                current === index+1  ? "bg-gray-600" : "bg-gray-300"
+                current === index + 1 ? "bg-gray-600" : "bg-gray-300"
               }`}
             />
           ))}
