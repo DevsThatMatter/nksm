@@ -5,29 +5,26 @@ import { step2Schema } from "./formSchema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
-
-type Inputs = z.infer<typeof step2Schema>;
-const {
-  register,
-  handleSubmit,
-  watch,
-  reset,
-  trigger,
-  formState: { errors },
-} = useForm<Inputs>({
-  resolver: zodResolver(step2Schema),
-  defaultValues: {
-    price: 0,
-  },
-});
-
-const processForm: SubmitHandler<Inputs> = (data) => {
-  reset();
-};
-
-type FieldName = keyof Inputs;
+import { Button } from "react-day-picker";
 
 export function StepTwo() {
+  type Inputs = z.infer<typeof step2Schema>;
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    trigger,
+    formState: { errors },
+  } = useForm<Inputs>({
+    resolver: zodResolver(step2Schema),
+  });
+
+  const processForm: SubmitHandler<Inputs> = (data) => {
+    reset();
+  };
+
+  type FieldName = keyof Inputs;
   const { formData, setFormData } = useFormContext();
 
   const handleInputChange = (e: any) => {
@@ -35,12 +32,14 @@ export function StepTwo() {
   };
 
   return (
-    <div>
+    <form onSubmit={handleSubmit(processForm)}>
       <Input
         type="number"
         value={formData.step2?.price || ""}
         onChange={handleInputChange}
       />
-    </div>
+      <Button>Next</Button>
+      <Button>Prev</Button>
+    </form>
   );
 }

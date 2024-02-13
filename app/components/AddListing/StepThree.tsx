@@ -2,31 +2,28 @@ import React from "react";
 import { useFormContext } from "./FormContext";
 import { step3Schema } from "./formSchema";
 import { z } from "zod";
-
-type Inputs = z.infer<typeof step3Schema>;
-const {
-  register,
-  handleSubmit,
-  watch,
-  reset,
-  trigger,
-  formState: { errors },
-} = useForm<Inputs>({
-  resolver: zodResolver(step3Schema),
-  defaultValues: {
-    step3: {
-      description: "",
-    },
-  },
-});
-
-const processForm: SubmitHandler<Inputs> = (data) => {
-  reset();
-};
-
-type FieldName = keyof Inputs;
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "react-day-picker";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 export function StepThree() {
+  type Inputs = z.infer<typeof step3Schema>;
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    trigger,
+    formState: { errors },
+  } = useForm<Inputs>({
+    resolver: zodResolver(step3Schema),
+  });
+
+  const processForm: SubmitHandler<Inputs> = (data) => {
+    reset();
+  };
+
+  type FieldName = keyof Inputs;
   const { formData, setFormData } = useFormContext();
 
   const handleInputChange = (e: any) => {
@@ -34,11 +31,13 @@ export function StepThree() {
   };
 
   return (
-    <div>
+    <form onSubmit={handleSubmit(processForm)}>
       <textarea
         value={formData.step3?.description || ""}
         onChange={handleInputChange}
       />
-    </div>
+      <Button>Next</Button>
+      <Button>Prev</Button>
+    </form>
   );
 }

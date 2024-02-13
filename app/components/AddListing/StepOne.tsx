@@ -1,63 +1,86 @@
 import React from "react";
 import { useFormContext } from "./FormContext";
 import { Input } from "../ui/input";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { step1Schema } from "./formSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "../ui/button";
 
-type Inputs = z.infer<typeof step1Schema>;
-const {
-  register,
-  handleSubmit,
-  watch,
-  reset,
-  trigger,
-  formState: { errors },
-} = useForm<Inputs>({
-  resolver: zodResolver(step1Schema),
-  defaultValues: {
-    item: "",
-    images: [],
-  },
-});
-
-const processForm: SubmitHandler<Inputs> = (data) => {
-  reset();
-};
-
-type FieldName = keyof Inputs;
-
-export function StepOne() {
+export function StepOne({
+  handlePrev,
+  handleNext,
+  currentStep,
+}: {
+  handlePrev: () => void;
+  handleNext: () => void;
+  currentStep: number;
+}) {
   const { formData, setFormData } = useFormContext();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(step1Schema),
+    defaultValues: formData.step1,
+  });
 
-  const handleInputChange = (e: any) => {
+  const processForm: SubmitHandler<{ item: string; images: File[] }> = (
+    data
+  ) => {
     setFormData({
       ...formData,
-      step1: { ...formData.step1, item: e.target.value },
+      step1: data,
     });
-    console.log(formData.step1.item);
+    handleNext();
   };
-  const handleFileChange = (e: any) => {
-    const files = Array.from(e.target.files || []);
-    setFormData({ ...formData, step1: { ...formData.step1, images: files } });
-  };
-  const item = formData.step1.item || "";
+
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setFormData({
+  //     ...formData,
+  //     step1: { ...formData.step1, item: e.target.value },
+  //   });
+  // };
+
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const files = Array.from(e.target.files || []);
+  //   setFormData({ ...formData, step1: { ...formData.step1, images: files } });
+  // };
 
   return (
     <form onSubmit={handleSubmit(processForm)}>
-      <Input type="text" value={item} onChange={handleInputChange} min={1} />
+      <Input type="text" {...register("item")} min={1} />
+      {errors?.item && (
+        <span className="text-red-500">{errors.item.message}</span>
+      )}{" "}
+      {/* Display error message */}
       <Input
-        id="images" // Change the id to "images" to match the data structure
-        className="max-w-[200px] h-[150px]"
+        id="images"
         type="file"
-        onChange={handleFileChange}
-        multiple // Allow multiple file selection
+        onChange={(e) => {
+          const fileList = e.target.files;
+          const event = {
+            target: {
+              files: fileList,
+              type: "file",
+            },
+          };
+          register("images").onChange(event);
+        }}
+        multiple
       />
-
-      <Button >Next</Button>
-
+      {errors?.images && (
+        <span className="text-red-500">{errors.images.message}</span>
+      )}{" "}
+      {/* Display error message */}
+      <div className="">
+        <Button type="button" onClick={handlePrev} disabled={currentStep === 1}>
+          Previous
+        </Button>
+        <Button type="submit" disabled={currentStep === 4}>
+          Next
+        </Button>
+      </div>
     </form>
   );
 }

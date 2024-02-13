@@ -22,7 +22,7 @@ export function StepFour({ data, onDataChange }: StepFourProps) {
           </div>
           <div>
             <h1 className="text-xl font-bold">
-            <>item name</>
+              <>item name</>
             </h1>
             <p className="text-gray-500">
               {`Description: Add description here Add description here Add description here Add description here Add description here Add description here Add description here Add description here Add description here`}

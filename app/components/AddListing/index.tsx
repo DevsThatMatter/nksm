@@ -51,7 +51,6 @@ export function AddListing() {
     },
   ];
   const handleNext = () => {
-
     return setCurrentStep(currentStep + 1);
   };
 
@@ -72,7 +71,6 @@ export function AddListing() {
     setIsDialogOpen(false);
     setCurrentStep(1);
   };
-  
 
   return (
     <>
@@ -97,28 +95,15 @@ export function AddListing() {
           </DialogHeader>
 
           <FormProvider>
-            <form >
-              {currentStep === 1 && <StepOne />}
-              {currentStep === 2 && <StepTwo />}
-              {currentStep === 3 && <StepThree />}
-              <div className="">
-                <Button
-                  type="button"
-                  onClick={handlePrev}
-                  disabled={currentStep === 1}
-                >
-                  Previous
-                </Button>
-                <Button
-                  type="button"
-                  onClick={handleNext}
-                  disabled={currentStep === 4}
-                >
-                  Next
-                </Button>
-                {currentStep === 4 && <Button type="submit">Submit</Button>}
-              </div>
-            </form>
+            {currentStep === 1 && (
+              <StepOne
+                handlePrev={handlePrev}
+                handleNext={handleNext}
+                currentStep={currentStep}
+              />
+            )}
+            {currentStep === 2 && <StepTwo />}
+            {currentStep === 3 && <StepThree />}
           </FormProvider>
         </DialogContent>
       </Dialog>

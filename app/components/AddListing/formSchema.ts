@@ -19,13 +19,10 @@ export const step1Schema = z.object({
     ),
 });
 
-export const step2Schema = z.object;
-step2: z.object({
+export const step2Schema = z.object({
   price: z.number().min(0),
 });
 
-export const step3Schema = z.object;
-
-step3: z.object({
+export const step3Schema = z.object({
   description: z.string(),
 });
