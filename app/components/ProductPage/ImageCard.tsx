@@ -31,36 +31,45 @@ export default function ImageCard({ images }: any) {
   }, [api]);
 
   return (
-    <div className="grid grid-cols-4 gap-4">
-      <div className="col-span-1">
-        <Image
-          src={images[1]}
-          alt={`Image `}
-          width={600}
-          height={400}
-          className="object-cover rounded shadow-md w-full"
-        />
+    <div className="grid grid-cols-6 gap-4 max-h-[400px]">
+      <div className="col-span-1 max-h-[20px]">
+        {images.map((image: string) => (
+          <Image
+            src={image}
+            alt={`Image `}
+            width={80}
+            height={80}
+            className="object-cover rounded-md shadow-md w-auto h-auto my-1"
+          />
+        ))}
       </div>
-      <div className="col-span-3">
+      <div className="col-span-5">
         <Carousel setApi={setApi} className="w-full">
           <CarouselContent>
             {images.map((image: string, index: number) => (
-              <CarouselItem key={index}>
-                <Card className="max-w-[600px] max-h-auto">
+              <CarouselItem key={index} className="rounded-md">
+                <Card className="max-w-[800px] max-h-[400px]">
                   <Image
                     src={image}
                     alt={`Image ${index + 1}`}
-                    width={600}
-                    height={300}
-                    className="object-fill rounded shadow-md"
+                    width={800}
+                    height={400}
+                    className="object-cover rounded-xl shadow-md aspect-video"
                   />
                 </Card>
               </CarouselItem>
             ))}
           </CarouselContent>
         </Carousel>
-        <div className="py-2 text-center text-sm text-muted-foreground">
-          Slide {current} of {images.length}
+        <div className="py-2 flex justify-center items-center">
+          {images.map((_: any, index: number) => (
+            <div
+              key={index}
+              className={`w-3 h-3 rounded-full mx-1 ${
+                current === index+1  ? "bg-gray-600" : "bg-gray-300"
+              }`}
+            />
+          ))}
         </div>
       </div>
     </div>

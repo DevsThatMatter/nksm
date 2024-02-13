@@ -17,9 +17,9 @@ const ProductPage = () => {
   ];
   return (
     <div key="1" className="max-w-full mx-auto p-4">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="lg:grid lg:grid-cols-3 gap-4">
         <div className="col-span-2">
-          <ImageCard images={images} />
+          <ImageCard images={images}/>
           <ProductDetails />
           <ProductCarousel />
         </div>
