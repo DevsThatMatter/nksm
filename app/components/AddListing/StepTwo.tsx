@@ -1,5 +1,6 @@
 import React from "react";
 import { useFormContext } from "./FormContext";
+import { Input } from "../ui/input";
 
 export function StepTwo() {
   const { formData, setFormData } = useFormContext();
@@ -10,7 +11,7 @@ export function StepTwo() {
 
   return (
     <div>
-      <input
+      <Input
         type="number"
         value={formData.step2?.price || ""}
         onChange={handleInputChange}

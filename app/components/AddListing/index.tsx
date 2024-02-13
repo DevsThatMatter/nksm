@@ -74,18 +74,18 @@ export function AddListing() {
     formState: { errors },
   } = useForm<Inputs>({
     resolver: zodResolver(FormSchema),
-    defaultValues : {
-      step1 : {
+    defaultValues: {
+      step1: {
         item: "",
-        images: []
+        images: [],
       },
       step2: {
         price: 0,
       },
       step3: {
-        description : ""
-      }
-    }
+        description: "",
+      },
+    },
   });
 
   const processForm: SubmitHandler<Inputs> = (data) => {
@@ -121,22 +121,23 @@ export function AddListing() {
               {currentStep === 1 && <StepOne />}
               {currentStep === 2 && <StepTwo />}
               {currentStep === 3 && <StepThree />}
-
-              <button
-                type="button"
-                onClick={handlePrev}
-                disabled={currentStep === 1}
-              >
-                Previous
-              </button>
-              <button
-                type="button"
-                onClick={handleNext}
-                disabled={currentStep === 4}
-              >
-                Next
-              </button>
-              {currentStep === 4 && <button type="submit">Submit</button>}
+              <div className="">
+                <Button
+                  type="button"
+                  onClick={handlePrev}
+                  disabled={currentStep === 1}
+                >
+                  Previous
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleNext}
+                  disabled={currentStep === 4}
+                >
+                  Next
+                </Button>
+                {currentStep === 4 && <Button type="submit">Submit</Button>}
+              </div>
             </form>
           </FormProvider>
         </DialogContent>
