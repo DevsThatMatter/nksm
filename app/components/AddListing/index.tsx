@@ -85,7 +85,6 @@ export function AddListing() {
     console.log("triggered");
     if (isDialogOpen) {
       setIsDialogOpen(false);
-      
     } else {
       setIsDialogOpen(true);
     }
@@ -105,7 +104,7 @@ export function AddListing() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <div>{`Step ${currentStep+1} of 4.`}</div>
+          <div>{`Step ${currentStep + 1} of 4.`}</div>
           <DialogTitle>Add Listing</DialogTitle>
           <DialogDescription>
             Provide details for your new listing.
@@ -204,6 +203,7 @@ export function AddListing() {
               </p>
             </>
           )}
+          {currentStep === 3 && <h1>Card</h1>}
         </form>
         <div className="mt-8 pt-5">
           <div className="flex justify-between">
