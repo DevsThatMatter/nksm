@@ -12,5 +12,5 @@ export const Icons = {
   moveback: ArrowLeftIcon,
   sendIcon: PaperPlaneIcon,
   fileLink: Link2Icon,
-  image: ImageIcon
+  image: ImageIcon,
 };

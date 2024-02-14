@@ -6,21 +6,16 @@ const ProductDetails = ({productInfo, className }: { productInfo: Product , clas
   return (
     <div className={cn("mt-4", className)}>
         <h1 className="text-2xl font-bold">{productInfo.Product_Name}</h1>
-        <p className="text-l font-normal">Available: {productInfo.Quantity}</p>
-      <div className="flex items-center space-x-1 my-2">
-        <StarIcon className="text-yellow-400" />
-        <StarIcon className="text-yellow-400" />
-        <StarIcon className="text-yellow-400" />
-      </div>
-      <div className="flex justify-between">
         <p className="text-xl font-semibold">₹{productInfo.Price}</p>
+      <div className="flex justify-between">
         <div>
+        <p className="text-l font-normal">Available: {productInfo.Quantity}</p>
           <p className="text-l font-normal mr-10">
             Condition: {productInfo.Condition}
           </p>
         </div>
       </div>
-      <p className="mt-2 text-gray-700">{productInfo.Description}</p>
+      <p className="mt-2 text-muted-foreground">{productInfo.Description}</p>
     </div>
   );
 };

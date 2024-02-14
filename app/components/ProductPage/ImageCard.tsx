@@ -34,8 +34,8 @@ export default function ImageCard({ images }: any) {
               <Image
                 src={image}
                 alt={`Image ${index + 1}`}
-                width={800}
-                height={600}
+                width={1280}
+                height={800}
                 className="object-cover rounded-lg aspect-video w-full h-full"
               />
             </CarouselItem>
