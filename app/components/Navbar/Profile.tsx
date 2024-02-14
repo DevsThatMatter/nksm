@@ -35,7 +35,7 @@ export function UserProfile({ data }: UserProfileProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-[1.7rem] w-[1.7rem] rounded-full">
+        <Button variant="ghost" className="h-[1.7rem] w-[1.7rem] rounded-full focus:outline-none focus:ring-0 outline-none">
           <Avatar className="h-[2.1rem] w-[2.1rem] rounded-full">
             <AvatarImage
               src={data?.user?.image!}
