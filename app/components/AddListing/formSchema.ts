@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 const ACCEPTED_IMAGE_MIME_TYPES = [
   "image/jpeg",
   "image/jpg",
@@ -10,7 +11,10 @@ const MAX_FILE_SIZE = 1024 * 1024 * 5;
 export const step1Schema = z.object({
   item: z.string().min(1, "This field can't be left empty"),
   images: z
-    .array(z.any())
+    .array(z.object({
+      size: z.number(),
+      type: z.string(),
+    }))
     .refine((files) => files.every((file) => file.size <= MAX_FILE_SIZE))
     .refine(
       (files) =>
@@ -20,9 +24,9 @@ export const step1Schema = z.object({
 });
 
 export const step2Schema = z.object({
-  price: z.number().min(0, "this field cant be empty"),
+  price: z.number().min(0, "This field can't be left empty"),
 });
 
 export const step3Schema = z.object({
-  description: z.string(),
+  description: z.string().min(1, "This field can't be left empty"),
 });
