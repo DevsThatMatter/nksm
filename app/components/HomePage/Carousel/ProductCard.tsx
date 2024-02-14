@@ -23,7 +23,7 @@ const ProductCard = ({
     <CarouselItem className="basis-1/2 min-[200px]:basis-11/12 min-[300px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
       <Card className="m-1 min-w-[120px]">
         <CardContent className="flex relative justify-center items-center p-3 aspect-square">
-          <Link href={""}>
+          <Link href={`/product/${id}`}>
             <div className="flex flex-col justify-center">
               <Image
                 src={image_url}

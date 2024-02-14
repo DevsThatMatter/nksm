@@ -1,9 +1,10 @@
 import React from "react";
 import { Product } from "@/types";
+import { cn } from "@/app/utils";
 
-const ProductDetails = ({ productInfo }: { productInfo: Product }) => {
+const ProductDetails = ({productInfo, className }: { productInfo: Product , className: string}) => {
   return (
-    <div className="mt-4">
+    <div className={cn("mt-4", className)}>
         <h1 className="text-2xl font-bold">{productInfo.Product_Name}</h1>
         <p className="text-l font-normal">Available: {productInfo.Quantity}</p>
       <div className="flex items-center space-x-1 my-2">

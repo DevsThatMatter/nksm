@@ -25,6 +25,8 @@ export interface Seller {
     Phone_Number: string,
     Avatar: string,
     Email :string,
+    First_Name: string,
+    Last_Name: string,
 }
 export interface Product {
   _id: string;

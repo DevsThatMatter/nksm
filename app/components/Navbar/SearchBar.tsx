@@ -64,7 +64,7 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
                       e.target.value +
                       `&category=${category}&sort=${sort}&by=${sortBy}`
                   ); // Show dropdown when input is not empty
-            }, 300)}
+            }, 1000)}
             onFocus={() => {
               pathname != "/search" && setIsDropdownOpen(true);
             }}

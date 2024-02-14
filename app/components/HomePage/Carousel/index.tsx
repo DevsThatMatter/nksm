@@ -10,12 +10,13 @@ import ProductCard from "@/app/components/HomePage/Carousel/ProductCard";
 import { fetchRecentProducts } from "@/lib/actions/fetchProduct.actions";
 import { Suspense } from "react";
 import ProductSkeleton from "./ProductSkeleton";
+import { cn } from "@/app/utils";
 
 const options: EmblaOptionsType = { loop: true, align: "center" };
 
-const ProductCarousel = () => {
+const ProductCarousel = ({className}: {className: string | undefined}) => {
   return (
-    <div className="p-4 lg:m-9 lg:mt-12">
+    <div className={cn("p-4 lg:m-9 lg:mt-12", className)}>
       <h1 className="pb-3 text-2xl font-semibold">Recent Items</h1>
       <Carousel className="w-full" opts={options}>
         <CarouselContent>

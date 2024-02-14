@@ -118,7 +118,7 @@ export const fetchProductDetails = async (productId:string) => {
     .populate({
       path:"Seller",
       model:User,
-      select:"_id Username Phone_Number Avatar",
+      select:"_id Username Phone_Number Avatar First_Name Last_Name",
       });
     if(!productDetails){
       throw new Error("Product not found!");
