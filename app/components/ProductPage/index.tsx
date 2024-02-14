@@ -96,7 +96,7 @@ const ProductPage = ({ productInfo }: { productInfo: Product }) => {
                 placeholder="Ask about the product..."
               />
             </div>
-            <SellerCard/>
+            <SellerCard sellerInfo = {productInfo.Seller}/>
           </div>
         </div>
       </div>

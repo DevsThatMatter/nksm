@@ -19,15 +19,16 @@ export type category = {
   textClassName?: string;
 };
 
-export interface Product {
-  _id: string;
-  Seller: {
-    SellerId: string,
+export interface Seller {
+  SellerId: string,
     Username: string,
     Phone_Number: string,
     Avatar: string,
     Email :string,
-  }
+}
+export interface Product {
+  _id: string;
+  Seller: Seller,
   Quantity: number;
   Product_Name: string;
   Description: string;

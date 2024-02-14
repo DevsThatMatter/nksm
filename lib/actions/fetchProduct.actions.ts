@@ -115,11 +115,11 @@ export const fetchProductDetails = async (productId:string) => {
   try{
     await connectToDB();
     const productDetails = await Product.findById(productId)
-    // .populate({
-    //   path:"Seller",
-    //   model:User,
-    //   select:"_id Username Phone_Number Avatar",
-    //   });
+    .populate({
+      path:"Seller",
+      model:User,
+      select:"_id Username Phone_Number Avatar",
+      });
     if(!productDetails){
       throw new Error("Product not found!");
     }
