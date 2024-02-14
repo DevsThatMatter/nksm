@@ -29,7 +29,6 @@ export function StepThree({
       ...formData,
       step3: data,
     });
-    handleNext();
   };
 
   return (

@@ -109,7 +109,14 @@ export function AddListing() {
                 currentStep={currentStep}
               />
             )}
-            {currentStep === 3 && <StepThree />}
+            {currentStep === 3 && (
+              <StepThree
+                handlePrev={handlePrev}
+                handleNext={handleNext}
+                currentStep={currentStep}
+              />
+            )}
+            {currentStep === 4 && <StepFour />}
           </FormProvider>
         </DialogContent>
       </Dialog>
