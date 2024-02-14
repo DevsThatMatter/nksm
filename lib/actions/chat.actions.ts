@@ -10,11 +10,12 @@ import { User } from "../models/user.model";
 import { Product } from "../models/product.model";
 
 
-export async function getAllChats(userId: string) {
+export async function getAllChats(userEmail: string) {
   try {
+
     connectToDB();
-    // Validate userId
-    if (!userId || typeof userId !== "string") {
+
+    if (!userEmail || typeof userEmail !== "string") {
       throw new Error("Invalid userId provided");
     }
     const matchStage = {
@@ -101,12 +102,19 @@ export async function getAllChats(userId: string) {
 
     const result = (await Chat.aggregate(pipeline).exec()) as chatDetails[];
 
+
     if (!result || result.length === 0) {
       console.log("No chats found for the given user");
-      return new Map();
+      return {
+        data: new Map(),
+        status: false
+      };
     }
 
-    return groupDocs(result);
+    return {
+      data:groupDocs(result),
+      status:true
+    }
   } catch (error) {
     console.error("Error in chatHandler:", error);
     throw error;
@@ -158,10 +166,6 @@ export async function chatBetweenSellerAndBuyerForProduct(
   }
 }
 
-
-export async function chatHandler(userId1: string, userId2: string) {
-
-}
 
 const GetmessageProps = z.object({
   sellerId: z.string().min(1, { message: "No less than one sellerId required" }),
@@ -246,6 +250,6 @@ export async function createMessages(props: z.infer<typeof CreateMessagesProps>)
     // extra opt
     { $upsert: 1 }
   );
-  
+
 
 }

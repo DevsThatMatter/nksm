@@ -17,10 +17,11 @@ export const useChatQuery = ({
 }: ChatQueryProps) => {
     const { isConnected } = useSocket();
 
-    async function fetchMessages() {
-        const res = await getMessages({ sellerId, buyerId, productId, currentUser, pageNo  });
+    async function fetchMessages({ pageParam = undefined }){
+        const res = await getMessages({ sellerId, buyerId, productId, currentUser, pageNo: pageParam !== undefined ? pageParam : 0 });
         return res;
     }
+
 
     const {
         data,
@@ -31,7 +32,7 @@ export const useChatQuery = ({
     } = useInfiniteQuery({
         queryKey: [queryKey],
         queryFn: fetchMessages,
-        getNextPageParam: (lastPage) => lastPage?.nextPageNo || null,
+        getNextPageParam: (lastPage) => lastPage?.nextPageNo,
         refetchInterval: 1000, // currently its polling but I am facing an erorr soon I will change
         initialPageParam: undefined
     });

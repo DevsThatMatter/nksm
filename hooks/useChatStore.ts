@@ -1,9 +1,10 @@
 // bits
-import { chatDetails } from "@/lib/actions/chat.actions";
+
+import { chatDetails } from "@/types";
 import { create } from "zustand";
 
 interface ChatState {
-    discussions: chatDetails[];
+    discussions: chatDetails[] ;
     otherUserDetails: {
         id: string;
         name: string;
@@ -40,7 +41,7 @@ const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
     sellerDetails: { id: "" },
     buyerDetails: { id: "" },
     createChat: (to: {
-        discussions: chatDetails[];
+        discussions: chatDetails[] ;
         otherUserDetails: {
             id: string;
             name: string;
@@ -63,7 +64,7 @@ const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
     removeChat: (caller: string) =>
         set((state) => {
             if (caller === "chatPanel") {
-                return { ...state, discussions: [] };
+                return { ...state, discussions:[] };
             } else if (caller === "productPanel") {
                 return { ...state, otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "" } };
             }

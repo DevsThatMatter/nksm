@@ -6,7 +6,7 @@ import { useEffect } from "react"
 type SocketMessagesProps = {
     addKey: string,
     queryKey: string,
-    updateKey: string, // <TODO>: this need to be implemented yet
+    updateKey: string,
 }
 
 
@@ -18,7 +18,7 @@ export function useSocketMessages({
 }: SocketMessagesProps) {
     const { socket } = useSocket()
     const queryClient = useQueryClient()
-
+    
     useEffect(() => {
         socket.on(addKey, function (message: MessageTypes) {
             queryClient.setQueryData([queryKey], function (oldData: any) {
@@ -42,10 +42,10 @@ export function useSocketMessages({
                     pages: newData
                 }
             })
-        })        
+        })
         return function () {
             socket.off(addKey);
             socket.off(updateKey)
         }
-    }, [queryClient, addKey, queryKey, updateKey, socket])
+    }, [queryClient, addKey, queryKey, socket])
 }

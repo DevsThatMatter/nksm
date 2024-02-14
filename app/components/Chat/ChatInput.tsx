@@ -7,7 +7,6 @@ import { Input } from "@/app/components/ui/input";
 import Skeleton from "react-loading-skeleton";
 import FileUploadModal from "@/app/components/modals/fileUploadModal";
 import axios from "axios";
-import qs from "query-string";
 import ImageUploadModal from "../modals/imageUploadModal";
 
 const messageSchema = z.object({

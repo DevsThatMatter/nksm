@@ -1,9 +1,9 @@
-"use client"; // Bitsimport { Fragment, useEffect, useState } from "react";
-import { useChatQuery } from "@/hooks/useChatQuery";
+"use client"; // Bits
+import { Fragment, useEffect, useState, useRef, ElementRef } from "react";
 import ChatInput from "./ChatInput";
-import Skeleton from "react-loading-skeleton";
 import clsx from "clsx";
-import { Fragment, useState } from "react";
+import { useChatQuery } from "@/hooks/useChatQuery";
+import { useChatScroll } from "@/hooks/useChatScroll";
 import { useSocketMessages } from "@/hooks/useSocketMessages";
 
 interface ChatUIProps {
@@ -14,11 +14,6 @@ interface ChatUIProps {
   productId: string;
   otherUserName: string;
   otherUserPhoneNumber: string;
-}
-
-function shortenName(name: string) {
-  const components = name.split("");
-  return components[0].charAt(0).toUpperCase() + components[components.length - 1].charAt(0);
 }
 
 export default function ChatUI({
@@ -33,6 +28,10 @@ export default function ChatUI({
   const queryKey = `chat:${productId},productId:${productId},sellerId:${sellerId},buyerId:${buyerId},query`;
   const addKey = `chat:${productId},productId:${productId},sellerId:${sellerId},buyerId:${buyerId},add`
   const updateKey = `chat:${productId},productId:${productId},sellerId:${sellerId},buyerId:${buyerId},update`
+
+  const chatRef = useRef<ElementRef<"div">>(null);
+  const bottomRef = useRef<ElementRef<"div">>(null);
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useChatQuery({
     queryKey,
     sellerId,
@@ -44,10 +43,18 @@ export default function ChatUI({
 
   // useSocketMessages({ queryKey, addKey, updateKey })
 
+  useChatScroll({
+    chatRef,
+    bottomRef,
+    loadMore: fetchNextPage,
+    shouldLoadMore: !isFetchingNextPage && !!hasNextPage,
+    count: data?.pages?.[0].items?.length ?? 0
+  });
+
   const [completeUserDisplay, setCompleteUserDisplay] = useState<boolean>(false);
 
   return (
-    <div className="mt-5 h-[95vh] flex flex-col items-center">
+    <div className="mt-5 h-[95vh] flex flex-col items-center" >
       <div className="rounded-md border border-gray-400 dark:border-gray-600 h-[90%] p-4 relative w-full max-w-md md:max-w-xl lg:max-w-2xl xl:max-w-4xl">
         {/* User display */}
         {!completeUserDisplay ? (
@@ -78,6 +85,7 @@ export default function ChatUI({
             <div>Error: Something went wrong</div>
           ) : (
             <Fragment>
+              <div ref={chatRef}/>
               {data?.pages.map((page, idx) => (
                 <Fragment key={idx}>
                   {page.items?.map((msg, j) => (
@@ -103,13 +111,15 @@ export default function ChatUI({
                   ))}
                 </Fragment>
               ))}
+              <div ref={bottomRef}/>
             </Fragment>
           )}
+
         </div>
 
         {/* Input and action buttons */}
         <div className="flex items-center space-x-2 absolute bottom-0 left-0 right-0 p-2">
-          {<ChatInput
+          <ChatInput
             otherUserPhoneNumber={otherUserPhoneNumber}
             userId={currentUserId}
             productId={productId}
@@ -117,7 +127,7 @@ export default function ChatUI({
             otherUserName={otherUserName}
             sellerDetails={{ id: sellerId }}
             buyerDetails={{ id: buyerId }}
-          /> || <Skeleton width={200} height={40} baseColor="#e2e8f0" highlightColor="#f7fafc" />}
+          />
         </div>
       </div>
     </div>

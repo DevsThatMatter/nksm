@@ -5,8 +5,6 @@ import { Chat } from "@/lib/models/chats.model";
 import { Product } from "@/lib/models/product.model";
 import { User } from "@/lib/models/user.model";
 import { Types } from "mongoose";
-import { createMessages } from "@/lib/actions/chat.actions";
-import { IChat } from "@/lib/interfaces";
 
 const CreateMessagesBodyProps = z.object({
     message: z.string().min(1, { message: "No more than one message can be sent at a time" }),
@@ -29,7 +27,7 @@ export default async function ioHandler(req: NextApiRequest, res: NextApiRespons
     if (req.method !== "POST") {
         return res.status(405).json({ error: "Method not allowed" });
     }
-    console.log("hello from backend")
+    
     try {
         const { message, sender, fileUrl } = CreateMessagesBodyProps.parse(req.body);
         const { sellerId, buyerId, productId } = CreateMessagesQueryProps.parse(req.query)
@@ -91,7 +89,7 @@ export default async function ioHandler(req: NextApiRequest, res: NextApiRespons
         
         const addKey = `chat:${productId},productId:${productId},sellerId:${sellerId},buyerId:${buyerId},add`;
         res?.socket?.server?.io?.emit(addKey, newMessage);
-        console.log("emited")
+        
         return res.status(200).json({ Success: "Message sent successfully" });
     } catch (error) {
         if (error instanceof ZodError) {
