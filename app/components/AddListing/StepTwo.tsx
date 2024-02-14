@@ -1,45 +1,61 @@
 import React from "react";
 import { useFormContext } from "./FormContext";
 import { Input } from "../ui/input";
-import { step2Schema } from "./formSchema";
-import { z } from "zod";
+import { step2Schema } from "./FormSchema"; // Import step2Schema
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Button } from "react-day-picker";
+import { Button } from "../ui/button";
 
-export function StepTwo() {
-  type Inputs = z.infer<typeof step2Schema>;
+export function StepTwo({
+  handlePrev,
+  handleNext,
+  currentStep,
+}: {
+  handlePrev: () => void;
+  handleNext: () => void;
+  currentStep: number;
+}) {
+  const { formData, setFormData } = useFormContext();
   const {
     register,
     handleSubmit,
-    watch,
-    reset,
-    trigger,
     formState: { errors },
-  } = useForm<Inputs>({
+  } = useForm({
     resolver: zodResolver(step2Schema),
+    defaultValues: {
+      ...formData.step2,
+      price: formData.step2?.price || 0, // Ensure default value for price is set
+    },
   });
 
-  const processForm: SubmitHandler<Inputs> = (data) => {
-    reset();
-  };
-
-  type FieldName = keyof Inputs;
-  const { formData, setFormData } = useFormContext();
-
-  const handleInputChange = (e: any) => {
-    setFormData({ ...formData, step2: { price: parseFloat(e.target.value) } });
+  const processForm: SubmitHandler<{ price: number }> = (data) => {
+    data.price = parseFloat(data.price);
+    setFormData({
+      ...formData,
+      step2: data,
+    });
+    handleNext();
   };
 
   return (
     <form onSubmit={handleSubmit(processForm)}>
       <Input
         type="number"
-        value={formData.step2?.price || ""}
-        onChange={handleInputChange}
+        {...register("price")}
+        min={0}
+        defaultValue={formData.step2?.price || ""}
       />
-      <Button>Next</Button>
-      <Button>Prev</Button>
+      {errors?.price && (
+        <span className="text-red-500">{errors.price.message}</span>
+      )}
+      <div className="">
+        <Button type="button" onClick={handlePrev} disabled={currentStep === 1}>
+          Previous
+        </Button>
+        <Button type="submit" disabled={currentStep === 4}>
+          Next
+        </Button>
+      </div>
     </form>
   );
 }

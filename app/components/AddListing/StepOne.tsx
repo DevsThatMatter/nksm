@@ -2,7 +2,7 @@ import React from "react";
 import { useFormContext } from "./FormContext";
 import { Input } from "../ui/input";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { step1Schema } from "./formSchema";
+import { step1Schema } from "./FormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/button";
 
@@ -35,17 +35,6 @@ export function StepOne({
     handleNext();
   };
 
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setFormData({
-  //     ...formData,
-  //     step1: { ...formData.step1, item: e.target.value },
-  //   });
-  // };
-
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const files = Array.from(e.target.files || []);
-  //   setFormData({ ...formData, step1: { ...formData.step1, images: files } });
-  // };
 
   return (
     <form onSubmit={handleSubmit(processForm)}>

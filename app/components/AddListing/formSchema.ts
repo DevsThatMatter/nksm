@@ -20,7 +20,7 @@ export const step1Schema = z.object({
 });
 
 export const step2Schema = z.object({
-  price: z.number().min(0),
+  price: z.number().min(0, "this field cant be empty"),
 });
 
 export const step3Schema = z.object({
