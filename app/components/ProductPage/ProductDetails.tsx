@@ -2,7 +2,7 @@ import React from "react";
 import { Product } from "@/types";
 import { cn } from "@/app/utils";
 
-const ProductDetails = ({productInfo, className }: { productInfo: Product , className: string}) => {
+const ProductDetails = ({productInfo, className }: { productInfo: Product , className?: string}) => {
   return (
     <div className={cn("mt-4", className)}>
         <h1 className="text-2xl font-bold">{productInfo.Product_Name}</h1>
