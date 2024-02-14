@@ -24,4 +24,8 @@ const productSchema = new mongoose.Schema({
 },{timestamps: true});
 
 // Create the 'product' model based on the schema
-export const Product = mongoose.models.Product || mongoose.model('Product', productSchema,"Product");
+
+// export const Product = mongoose.models.Product || mongoose.model('Product', productSchema,"Product"); pls consider using this format instead
+
+export const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
+

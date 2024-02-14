@@ -5,14 +5,12 @@ let isConnected: boolean = false;
 export const connectToDB = async () => {
     mongoose.set("strictQuery", true);
 
-    if (!process.env.MONGODB_URL) return console.log("No MONGODB_URI found");
+    if (!process.env.MONGODB_URL) return console.log("No MONGODB_URL found");
 
-    if (isConnected) return console.log("Already connected to DB");
+    if (isConnected) return console.log("Already connected to MongoDB");
 
     try {
-        console.log(process.env.MONGODB_URL)
-        console.log("connecting to DB");
-        await mongoose.connect(process.env.MONGODB_URL);
+        await mongoose.connect(process.env.MONGODB_URL, {dbName: "NKSMDB", connectTimeoutMS: 10000});
         isConnected = true;
 
         console.log("connected to DB");

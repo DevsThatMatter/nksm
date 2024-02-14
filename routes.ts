@@ -3,7 +3,7 @@
  * @type {string[]}
  */
 export const publicRoutes = [
-    ""
+    "/", "/search"
 ]
 /**
  * Array of routes used for authentication, will redirect to landing page

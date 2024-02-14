@@ -1,5 +1,4 @@
-import { Avatar } from "./Avatar";
-
+import { UserProfile } from "./Profile";
 import Image from "next/image";
 import Link from "next/link";
 import { SavedItems } from "./SavedItems";
@@ -10,12 +9,17 @@ import SearchBar from "./SearchBar";
 import { auth } from "@/auth";
 import { User } from "@/lib/models/user.model";
 import { connectToDB } from "@/lib/database/mongoose";
+import { fetchRecentProducts } from "@/lib/actions/fetchProduct.actions";
 
 const Navbar = async () => {
-  const userEmail = (await auth())?.user?.email;
+  // Authentication and user data
+  const userData = await auth();
+
+  const products = (await fetchRecentProducts()) || [];
+
+  const userEmail = userData?.user?.email;
 
   async function getUserId() {
-    "use server"
     try {
       await connectToDB();
 
@@ -37,33 +41,34 @@ const Navbar = async () => {
     }
   }
 
-  const id = (await auth())?.user?.id || await getUserId() ;
- 
+  const id = userData?.user?.id || (await getUserId());
 
   return (
     <>
-      <nav className="flex lg:justify-between justify-center p-5">
-        <div className="logo hidden lg:block ">
-          <Link href="/">
-            <Image
-              src="logon.svg"
-              alt="Logo"
-              width={150}
-              height={150}
-              className="dark:invert"
-            />
-          </Link>
-        </div>
-        <div className="nav-items flex space-x-5 items-center px-2">
-          <SearchBar />
-          <AddListing />
-          <UserChat userId={id} />
-          <SavedItems />
-          <Separator orientation="vertical" />
-          <Avatar />
-        </div>
-      </nav>
-      <Separator orientation="horizontal" />
+      <div className="sticky top-0 left-0 right-0 z-50 bg-background shadow-md">
+        <nav className="flex lg:justify-between justify-center max-h-30">
+          <div className="">
+            <Link href="/">
+              <Image
+                src="/logon.svg"
+                alt="Logo"
+                width={150}
+                height={150}
+                className="dark:invert logo hidden lg:block my-2 mx-3 mt-3"
+              />
+            </Link>
+          </div>
+          <div className="nav-items flex space-x-5 items-center mx-3 my-5 mr-5">
+            <SearchBar products={products} />
+            <AddListing />
+            <UserChat userId={id} />
+            <SavedItems />
+            <Separator orientation="vertical" />
+            <UserProfile data={userData} />
+          </div>
+        </nav>
+        <Separator orientation="horizontal" />
+      </div>
     </>
   );
 };
