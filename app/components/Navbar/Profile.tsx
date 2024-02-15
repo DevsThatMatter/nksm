@@ -38,11 +38,10 @@ export function Profile({ data, whichIcon }: UserProfileProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          size="icon"
           variant="ghost"
-          className="h-[1.7rem] w-[1.7rem] rounded-full"
+          className="h-[1.7rem] w-[1.7rem] rounded-full focus:outline-none focus:ring-0 outline-none"
         >
-          <Avatar className="h-8 w-8 rounded-full ">
+          <Avatar className="h-[2.1rem] w-[2.1rem] rounded-full">
             <AvatarImage
               src={data?.user?.image!}
               alt={data?.user?.name?.trim()}

@@ -41,7 +41,7 @@ const Navbar = async ({
               />
             </Link>
           </div>
-          <div className="nav-items flex space-x-5 items-center mx-3 my-5">
+          <div className="nav-items flex space-x-5 items-center mx-3 my-5 mr-5">
             <SearchBar products={products} />
             {children}
           </div>
