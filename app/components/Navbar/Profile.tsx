@@ -22,12 +22,9 @@ import { ReactNode } from "react";
 
 interface UserProfileProps {
   data: Session | null;
-  children: ReactNode;
+  whichIcon?: Boolean;
 }
-export function Profile({
-  data,
-  children = <Icons.avatar className="h-[1.7rem] w-[1.7rem]" />,
-}: UserProfileProps) {
+export function Profile({ data, whichIcon }: UserProfileProps) {
   const { setTheme } = useTheme();
   const router = useRouter();
   const handleLogout = () => {
@@ -40,13 +37,28 @@ export function Profile({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-[1.7rem] w-[1.7rem] rounded-full">
-          <Avatar className="h-[2.1rem] w-[2.1rem] rounded-full">
+        <Button
+          size="icon"
+          variant="ghost"
+          className="h-[1.7rem] w-[1.7rem] rounded-full"
+        >
+          <Avatar className="h-8 w-8 rounded-full ">
             <AvatarImage
               src={data?.user?.image!}
               alt={data?.user?.name?.trim()}
             />
-            <AvatarFallback></AvatarFallback>
+            <AvatarFallback className="bg-transparent">
+              {whichIcon ? (
+                <svg
+                  className="w-8 p-1 fill-[#4B5563] dark:fill-gray-500"
+                  viewBox="0 0 1024 1025"
+                >
+                  <path d="M1024 958q0 12-13.5 22T969 996.5t-57.5 12t-75.5 8.5t-80 4.5t-87.5 2.5t-81 1h-151l-81-1l-87.5-2.5l-80-4.5l-75.5-8.5l-57.5-12L13.5 980L0 958q2-88 110-155.5T384 713v-33q-52-23-90-65t-60-98.5t-32-121T192 256q0-64 25-114t69-80.5t101-46T512 0t125 15.5t101 46t69 80.5t25 114q0 350-192 426v31q166 22 274 89.5T1024 958z"></path>
+                </svg>
+              ) : (
+                <Icons.avatar className="h-8 w-8 p-[0.15rem] bg-muted" />
+              )}{" "}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

@@ -2,11 +2,11 @@ import { auth } from "@/auth";
 import { Profile } from "./Profile";
 
 export default async function UserProfile({
-  children,
+  whichIcon,
 }: {
-  children?: React.ReactNode;
+  whichIcon?: boolean;
 }) {
   console.log("UserProfile");
   const userData = await auth();
-  return <Profile data={userData} children={children} />;
+  return <Profile data={userData} whichIcon={whichIcon} />;
 }

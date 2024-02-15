@@ -24,6 +24,7 @@ const CategoriesDrawer = ({ children }: { children: React.ReactNode }) => {
               <Link
                 className="flex items-center justify-center p-2 font-semibold"
                 href={`/search?&category=${category.name}`}
+                key={category.name}
               >
                 {category.name}
               </Link>

@@ -7,7 +7,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <main className="min-h-screen bg-background">
       {mobnav ? (
         <>
-          <Navbar children={<></>} />
+          <Navbar>
+            <></>
+          </Navbar>
           <BottomNav />
         </>
       ) : (
