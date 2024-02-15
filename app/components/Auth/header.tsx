@@ -7,7 +7,7 @@ export default function Header({ headerLabel }: HeaderProps) {
     return (
         <div className="w-full flex flex-col gap-y-2 items-center" >
             <Image
-                src="logon.svg"
+                src="/logon.svg"
                 alt="Logo"
                 width={150}
                 height={150}
