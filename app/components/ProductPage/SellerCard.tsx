@@ -35,7 +35,6 @@ function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
       </div>
       <div className="mt-2">
         <p className="text-sm">{sellerInfo.Phone_Number}</p>
-        <p className="mt-1 text-sm text-gray-500">No Reviews Yet</p>
       </div>
     </div>
   );
