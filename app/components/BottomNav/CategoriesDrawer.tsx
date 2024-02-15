@@ -23,7 +23,7 @@ const CategoriesDrawer = ({ children }: { children: React.ReactNode }) => {
             {categories.map((category) => (
               <Link
                 className="flex items-center justify-center p-2 font-semibold"
-                href={`/category/${category.name}`}
+                href={`/search?&category=${category.name}`}
               >
                 {category.name}
               </Link>
