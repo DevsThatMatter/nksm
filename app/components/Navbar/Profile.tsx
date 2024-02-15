@@ -18,11 +18,16 @@ import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
 import { Icons } from "@/app/utils/icons";
 import { useRouter } from "next/navigation";
+import { ReactNode } from "react";
 
 interface UserProfileProps {
-  data?: Session | null;
+  data: Session | null;
+  children: ReactNode;
 }
-export function UserProfile({ data }: UserProfileProps) {
+export function Profile({
+  data,
+  children = <Icons.avatar className="h-[1.7rem] w-[1.7rem]" />,
+}: UserProfileProps) {
   const { setTheme } = useTheme();
   const router = useRouter();
   const handleLogout = () => {
@@ -41,9 +46,7 @@ export function UserProfile({ data }: UserProfileProps) {
               src={data?.user?.image!}
               alt={data?.user?.name?.trim()}
             />
-            <AvatarFallback>
-              <Icons.avatar className="h-[1.7rem] w-[1.7rem]" />
-            </AvatarFallback>
+            <AvatarFallback></AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
@@ -72,7 +75,9 @@ export function UserProfile({ data }: UserProfileProps) {
           </DropdownMenuContent>
         </DropdownMenu>
         {!data?.user ? (
-          <DropdownMenuItem onClick={handleLogin} className="text-blue-500">Login</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleLogin} className="text-blue-500">
+            Login
+          </DropdownMenuItem>
         ) : (
           <DropdownMenuItem onClick={handleLogout} className="text-red-500">
             Logout

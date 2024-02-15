@@ -1,4 +1,4 @@
-import { UserProfile } from "./Profile";
+import UserProfile from "./UserProfile";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -14,12 +14,11 @@ import { fetchRecentProducts } from "@/lib/actions/fetchProduct.actions";
 const Navbar = async ({
   children = (
     <>
-      <SearchBar products={products} />
       <AddListing />
       <UserChat />
       <SavedItems />
       <Separator orientation="vertical" />
-      <UserProfile data={userData} />
+      <UserProfile />
     </>
   ),
 }: {
@@ -43,6 +42,7 @@ const Navbar = async ({
             </Link>
           </div>
           <div className="nav-items flex space-x-5 items-center mx-3 my-5">
+            <SearchBar products={products} />
             {children}
           </div>
         </nav>
