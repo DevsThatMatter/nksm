@@ -11,20 +11,25 @@ import {
 import { Icons } from "@/app/utils/icons";
 
 import { signOut } from "next-auth/react";
-export function Avatar() {
+
+export function Avatar({
+  children = (
+    <Button variant="ghost" size="icon">
+      <Icons.avatar className="h-[1.7rem] w-[1.7rem]" />
+    </Button>
+  ),
+}: {
+  children?: React.ReactNode;
+}) {
   const { setTheme } = useTheme();
   const handleLogout = () => {
-    signOut({callbackUrl: '/login'})
+    signOut({ callbackUrl: "/login" });
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="flex items-center space-x-3">
-          <Button variant="ghost" size="icon">
-            <Icons.avatar className="h-[1.7rem] w-[1.7rem]" />
-          </Button>
-        </div>
+        <div className="flex items-center space-x-3">{children}</div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center">
         <DropdownMenuItem onClick={() => console.log("View Your Profile")}>

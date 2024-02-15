@@ -1,36 +1,59 @@
-"use client";
-import { useScrollPosition } from "@n8tb1t/use-scroll-position";
-import { useState } from "react";
+import BottomNavContainer from "./BottomNavContainer";
+import UserChat from "../Chat/ChatsPanel";
+import { Avatar } from "../Navbar/Avatar";
+import ButtonContainer from "./ButtonContainer";
+import NavButton from "./NavButton";
+import PlusBottomContainer from "./PlusBottomContainer";
 
-const BottomNav = ({ children }: { children: React.ReactNode }) => {
-  const [headerStyle, setHeaderStyle] = useState({
-    transition: "all 200ms ease-in",
-  });
+import CategoriesDrawer from "./CategoriesDrawer";
 
-  useScrollPosition(
-    ({ prevPos, currPos }) => {
-      const isVisible = currPos.y > prevPos.y;
-
-      const shouldBeStyle = {
-        visibility: isVisible ? "visible" : "hidden",
-        transition: `all 200ms ${isVisible ? "ease-in" : "ease-out"}`,
-        transform: isVisible ? "translate(-50%,0)" : "translate(-50%, 100%)",
-      };
-
-      if (JSON.stringify(shouldBeStyle) === JSON.stringify(headerStyle)) return;
-
-      setHeaderStyle(shouldBeStyle);
-    },
-    [headerStyle]
-  );
+const BottomNav = () => {
   return (
-    <div
-      className="fixed bottom-2 w-[96%] h-12 transform -translate-x-1/2 left-1/2 flex text-gray-600 max-w-screen-sm bg-[#f7f7f78c] dark:bg-[#1f1f1f8c] rounded-lg  backdrop-blur-md"
-      style={{ ...headerStyle }}
-    >
-      {children}
-    </div>
+    <BottomNavContainer>
+      <ButtonContainer>
+        <UserChat>
+          <NavButton>
+            <svg
+              className="w-8 fill-[#4B5563] dark:fill-gray-500"
+              viewBox="0 0 24 24"
+            >
+              <path d="m 6.6312013,0.0081728 c -4.4189192,0 -4.6555293,0.00271 -4.7971137,0.033203 -0.87742244,0.1889619 -1.55358294,0.9103611 -1.76481294,1.8828126 -0.066535,0.3063121 -0.071724,0.5594235 -0.06562,3.2792968 0.00629,2.8023458 0.00225,2.6580757 0.1087899,3.0371098 0.242768,0.863674 0.8450863,1.480167 1.65947674,1.699218 0.1095015,0.02946 0.2742242,0.03201 2.3985568,0.03711 l 2.2811328,0.0059 1.2933902,1.460938 c 0.7113043,0.803367 1.3158583,1.473604 1.3451943,1.490234 0.02933,0.01663 0.08643,0.03627 0.126059,0.04297 0.146832,0.02487 0.281309,-0.03249 0.388534,-0.164063 0.117003,-0.143612 0.113972,-0.10123 0.113972,-1.546875 v -1.28125 l 0.8271466,-0.0078 c 0.717301,-0.0059 0.842586,-0.01025 0.944573,-0.03711 0.916413,-0.241363 1.55875,-0.993609 1.733729,-2.0312496 0.02642,-0.15668 0.02941,-0.346633 0.03453,-2.7050782 0.006,-2.7195568 8.84e-4,-2.973147 -0.06562,-3.2792968 C 12.981893,0.951721 12.30575,0.2303407 11.428314,0.0413759 11.286729,0.0108839 11.05012,0.0081728 6.6312013,0.0081728 Z" />
+            </svg>
+          </NavButton>
+        </UserChat>
+        <CategoriesDrawer>
+          <NavButton>
+            <svg
+              className="w-8 fill-[#4B5563] dark:fill-gray-500"
+              viewBox="0 0 24 24"
+            >
+              <path d="M10 3H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zm10 10h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1zM17 3c-2.206 0-4 1.794-4 4s1.794 4 4 4s4-1.794 4-4s-1.794-4-4-4zM7 13c-2.206 0-4 1.794-4 4s1.794 4 4 4s4-1.794 4-4s-1.794-4-4-4z"></path>
+            </svg>
+          </NavButton>
+        </CategoriesDrawer>
+      </ButtonContainer>
+      <PlusBottomContainer />
+      <ButtonContainer variant={"right"}>
+        <NavButton>
+          <svg
+            className="w-8 fill-[#4B5563] dark:fill-gray-500"
+            viewBox="0 0 24 24"
+          >
+            <path d="M6 5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v13.131a1 1 0 0 1-1.555.832l-3.89-2.593a1 1 0 0 0-1.11 0l-3.89 2.593A1 1 0 0 1 6 18.131V5Z"></path>
+          </svg>
+        </NavButton>
+        <Avatar>
+          <NavButton>
+            <svg
+              className="w-8 p-1 fill-[#4B5563] dark:fill-gray-500"
+              viewBox="0 0 1024 1025"
+            >
+              <path d="M1024 958q0 12-13.5 22T969 996.5t-57.5 12t-75.5 8.5t-80 4.5t-87.5 2.5t-81 1h-151l-81-1l-87.5-2.5l-80-4.5l-75.5-8.5l-57.5-12L13.5 980L0 958q2-88 110-155.5T384 713v-33q-52-23-90-65t-60-98.5t-32-121T192 256q0-64 25-114t69-80.5t101-46T512 0t125 15.5t101 46t69 80.5t25 114q0 350-192 426v31q166 22 274 89.5T1024 958z"></path>
+            </svg>
+          </NavButton>
+        </Avatar>
+      </ButtonContainer>
+    </BottomNavContainer>
   );
 };
-
 export default BottomNav;

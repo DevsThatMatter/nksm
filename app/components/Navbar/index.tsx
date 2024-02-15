@@ -7,8 +7,22 @@ import { Separator } from "@/app/components/ui/separator";
 import UserChat from "@/app/components/Chat/ChatsPanel";
 import { AddListing } from "../AddListing";
 import SearchBar from "./SearchBar";
+import { ReactNode } from "react";
 
-const Navbar = () => {
+const Navbar = ({
+  children = (
+    <>
+      <SearchBar />
+      <AddListing />
+      <UserChat />
+      <SavedItems />
+      <Separator orientation="vertical" />
+      <Avatar />
+    </>
+  ),
+}: {
+  children?: ReactNode;
+}) => {
   return (
     <>
       <nav className="flex lg:justify-between justify-center p-5">
@@ -24,12 +38,7 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="nav-items flex space-x-5 items-center px-2">
-          <SearchBar />
-          <AddListing />
-          <UserChat />
-          <SavedItems />
-          <Separator orientation="vertical" />
-          <Avatar />
+          {children}
         </div>
       </nav>
       <Separator orientation="horizontal" />
