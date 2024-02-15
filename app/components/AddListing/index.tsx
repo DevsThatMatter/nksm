@@ -136,6 +136,28 @@ export function AddListing() {
                     )}
                   </div>
                 </div>
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="iname"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Image
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="text"
+                      id="images"
+                      {...register("images")}
+                      autoComplete="given-name"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                    />
+                    {errors.images?.message && (
+                      <p className="mt-2 text-sm text-red-400">
+                        {errors.images.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
               </div>
             </>
           )}
@@ -195,9 +217,7 @@ export function AddListing() {
 
           {currentStep === 2 && (
             <>
-              <h2 className="text-base font-semibold leading-7 text-gray-900">
-                Complete
-              </h2>
+              <h2 className="text-base font-semibold leading-7 text-gray-900"></h2>
               <p className="mt-1 text-sm leading-6 text-gray-600">
                 Thank you for your submission.
               </p>
