@@ -64,6 +64,7 @@ export default function page() {
                 id="images"
                 {...register("images")}
                 autoComplete="given-name"
+                multiple
                 className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
               />
               {errors.images && (
@@ -80,16 +81,23 @@ export default function page() {
             >
               Condition
             </label>
-            <div className="mt-1">
+            <div className="mt-1 relative">
               <select
                 id="condition"
                 {...register("condition")}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm py-2 px-4"
               >
                 <option>Brand New</option>
                 <option>Like New</option>
                 <option>Old</option>
               </select>
+
+              <path
+                fillRule="evenodd"
+                d="M9.293 14.707a1 1 0 0 0 1.414 0l5-5a1 1 0 1 0-1.414-1.414L10 12.586l-4.293-4.293a1 1 0 1 0-1.414 1.414l5 5z"
+                clipRule="evenodd"
+              />
+
               {errors.condition && (
                 <p className="mt-2 text-sm text-red-600" role="alert">
                   {errors.condition.message}
