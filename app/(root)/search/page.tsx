@@ -10,7 +10,7 @@ export default async function Page({
 }) {
   const result = await getSearchResults({
     searchString: searchParams.q || "",
-    pageNumber: searchParams?.page ? +searchParams.page : 1,
+    pageNumber: 1,
     pageSize: 5,
     sortOrder: searchParams?.sort === "1" ? 1 : -1,
     sortBy: searchParams?.by === "Price" ? "Price" : "createdAt",
@@ -21,16 +21,15 @@ export default async function Page({
     <main className=" flex justify-center w-full">
       <div className="max-w-screen-md">
         <Filter />
+
         <p className="text-xl font-semibold mb-4">
-          Showing {result.skipAmount + 1}
-          {result.skipAmount + result.productsCount} of
-          {result.totalProductsCount} results for{" "}
-          {`"${searchParams.q}"` || "All"}
+          Showing results for &quot;{searchParams.q || "All"}&quot;
           {searchParams.category ? ` in ${searchParams.category}` : ""}
         </p>
 
         {result.productsData}
-        {result.isNext && <LoadMore />}
+        {result.isNext && <LoadMore pages={2} />}
+        <br />
       </div>
     </main>
   );

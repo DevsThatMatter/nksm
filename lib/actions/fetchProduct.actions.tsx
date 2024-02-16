@@ -58,6 +58,8 @@ export const getSearchResults = async ({
     connectToDB();
 
     const skipAmount = (pageNumber - 1) * pageSize;
+    console.log("pageNumber", pageNumber);
+    console.log("skipAmount", skipAmount);
 
     const regex = new RegExp(searchString, "i");
 
@@ -86,10 +88,10 @@ export const getSearchResults = async ({
     const sortOptions = { [sortBy]: sortOrder };
 
     const searchQuery = Product.find(query)
-      .sort(sortOptions)
-      .skip(skipAmount)
       .select(select)
-      .limit(pageSize);
+      .sort(sortOptions)
+      .limit(pageSize)
+      .skip(skipAmount);
 
     const totalProductsCount = await Product.countDocuments(query);
 
@@ -107,13 +109,9 @@ export const getSearchResults = async ({
     ));
 
     const isNext = totalProductsCount > skipAmount + products.length;
-    revalidatePath("/search");
     return {
       productsData,
       isNext,
-      totalProductsCount,
-      productsCount: products.length,
-      skipAmount,
     };
   } catch (error) {
     console.error("Error fetching users:", error);
