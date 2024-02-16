@@ -18,7 +18,6 @@ import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
 import { Icons } from "@/app/utils/icons";
 import { useRouter } from "next/navigation";
-import { ReactNode } from "react";
 
 interface UserProfileProps {
   data: Session | null;

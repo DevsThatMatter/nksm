@@ -1,15 +1,22 @@
 import { Button } from "@/app/components/ui/button";
-import { Icons } from "@/app/utils/icons";
-import { cva } from "class-variance-authority";
+import { cn } from "@/app/utils";
 
-const NavButton = ({ children }: { children: React.ReactNode }) => {
+const NavButton = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
   return (
     <Button
       title="home"
       variant="ghost"
       size="icon"
-      className="active:-translate-y-1 transition
-                        hover:text-purple-500"
+      className={cn(
+        "active:-translate-y-1 transition hover:text-purple-500",
+        className
+      )}
     >
       {children}
     </Button>
