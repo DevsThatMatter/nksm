@@ -7,7 +7,7 @@ export const FormDataSchema = z.object({
   condition: z.string().min(1, 'condition is required'),
   Description: z.string().min(1, 'description is required'),
 
-    images: z
+  images: z
     .array(z.any())
     .refine((files) => files.every((file) => file.size <= MAX_FILE_SIZE))
     .refine(

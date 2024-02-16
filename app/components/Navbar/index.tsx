@@ -37,7 +37,7 @@ const Navbar = async () => {
             <UserProfile data={userData} />
           </div>
         </nav>
-        <Separator orientation="horizontal"  />
+        <Separator orientation="horizontal" />
       </div>
     </>
   );
