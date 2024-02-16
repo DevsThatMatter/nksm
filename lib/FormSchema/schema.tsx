@@ -21,5 +21,5 @@ export const FormDataSchema = z.object({
       "Only .jpg, .jpeg, .png, and .webp formats are supported."
     ),
 
-  Price: z.number().min(0, "Price is required"),
+  Price: z.string().min(1, "Price is required"),
 });
