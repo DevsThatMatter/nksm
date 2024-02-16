@@ -34,9 +34,8 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
     product.Product_Name.toLowerCase().startsWith(input.toLowerCase())
   );
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    router.push("/search?q=" + input);
+  const handleSearchSubmit = (formData: FormData) => {
+    router.push("/search?q=" + formData.get("q"));
     setIsDropdownOpen(false);
   };
 
@@ -47,12 +46,13 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
   };
 
   return (
-    <form onSubmit={handleSearchSubmit}>
+    <form action={handleSearchSubmit}>
       <div className="relative" ref={dropdownRef}>
         <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
         <div>
           <Input
             placeholder="Search"
+            name="q"
             className="pl-8 w-100% sm:w-56 md:w-[31.4rem]"
             onChange={useDebouncedCallback((e) => {
               // debounce can create artificial delay before querying db
