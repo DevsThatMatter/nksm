@@ -23,7 +23,7 @@ export default function AddListingForm() {
   };
 
   return (
-    <>
+    <div>
       <form
         className="mt-12 py-12 max-w-screen-lg mx-auto"
         onSubmit={handleSubmit(processForm)}
@@ -137,6 +137,7 @@ export default function AddListingForm() {
             <div className="mt-1">
               <Input
                 type="number"
+                min = "0"
                 id="Price"
                 {...register("Price")}
                 autoComplete="given-name"
@@ -160,6 +161,6 @@ export default function AddListingForm() {
           </Button>
         </div>
       </form>
-    </>
+    </div>
   );
 }
