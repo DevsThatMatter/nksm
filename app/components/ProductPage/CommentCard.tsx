@@ -100,7 +100,7 @@ function CommentCard() {
               <p className="font-semibold">Fiona</p>
               <p className="text-sm">
                 What is the warranty period for this product? My pet hamster has
-                a habit of "testing" things out.
+                a habit of &apos;testing&apos; things out.
               </p>
             </div>
           </div>
