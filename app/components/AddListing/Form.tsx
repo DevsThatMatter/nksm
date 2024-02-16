@@ -41,7 +41,6 @@ export default function AddListingForm() {
                 type="text"
                 id="iname"
                 {...register("iname")}
-                autoComplete="given-name"
                 className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
               />
               {errors.iname && (
