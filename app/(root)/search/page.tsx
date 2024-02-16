@@ -1,5 +1,6 @@
 import Filter from "@/app/components/Search/Filter";
-import SearchCard from "@/app/components/Search/SearchCard";
+import LoadMore from "@/app/components/Search/LoadMore";
+
 import { getSearchResults } from "@/lib/actions/fetchProduct.actions";
 
 export default async function Page({
@@ -7,11 +8,10 @@ export default async function Page({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) {
-  const valuesString = Object.values(searchParams).join(", ");
   const result = await getSearchResults({
     searchString: searchParams.q || "",
     pageNumber: searchParams?.page ? +searchParams.page : 1,
-    pageSize: 25,
+    pageSize: 5,
     sortOrder: searchParams?.sort === "1" ? 1 : -1,
     sortBy: searchParams?.by === "Price" ? "Price" : "createdAt",
     category: searchParams?.category,
@@ -22,29 +22,15 @@ export default async function Page({
       <div className="max-w-screen-md">
         <Filter />
         <p className="text-xl font-semibold mb-4">
-          Showing {result.skipAmount + 1} –{" "}
-          {result.skipAmount + result.productsCount} of{" "}
-          {result.totalProductsCount} results for "{searchParams.q || "All"}"
+          Showing {result.skipAmount + 1}
+          {result.skipAmount + result.productsCount} of
+          {result.totalProductsCount} results for{" "}
+          {`"${searchParams.q}"` || "All"}
           {searchParams.category ? ` in ${searchParams.category}` : ""}
         </p>
 
-        {result.products.length === 0 ? (
-          <p className="no-result">No Result</p>
-        ) : (
-          <>
-            {result.products.map((product) => (
-              <SearchCard
-                key={product._id}
-                id={product._id}
-                image_url={product.Images[0]}
-                name={product.Product_Name}
-                price={product.Price}
-                description={product.Description}
-                condition={product.Condition}
-              />
-            ))}
-          </>
-        )}
+        {result.productsData}
+        {result.isNext && <LoadMore />}
       </div>
     </main>
   );

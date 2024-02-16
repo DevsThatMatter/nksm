@@ -5,6 +5,7 @@ import { connectToDB } from "../database/mongoose";
 import { FilterQuery, SortOrder } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { CategoryEnum } from "@/types";
+import SearchCard from "@/app/components/Search/SearchCard";
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -93,11 +94,22 @@ export const getSearchResults = async ({
     const totalProductsCount = await Product.countDocuments(query);
 
     const products = await searchQuery.exec();
+    const productsData = products.map((product) => (
+      <SearchCard
+        key={product._id}
+        id={product._id}
+        image_url={product.Images[0]}
+        name={product.Product_Name}
+        price={product.Price}
+        description={product.Description}
+        condition={product.Condition}
+      />
+    ));
 
     const isNext = totalProductsCount > skipAmount + products.length;
     revalidatePath("/search");
     return {
-      products,
+      productsData,
       isNext,
       totalProductsCount,
       productsCount: products.length,

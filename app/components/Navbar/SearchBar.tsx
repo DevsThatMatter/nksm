@@ -62,9 +62,10 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
                 : router.push(
                     "?q=" +
                       e.target.value +
-                      `&category=${category}&sort=${sort}&by=${sortBy}`
+                      `&category=${category}&sort=${sort}&by=${sortBy}`,
+                    { scroll: true }
                   ); // Show dropdown when input is not empty
-            }, 300)}
+            }, 800)}
             onFocus={() => {
               pathname != "/search" && setIsDropdownOpen(true);
             }}

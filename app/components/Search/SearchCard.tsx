@@ -2,6 +2,7 @@ import { CardContent, Card } from "@/app/components/ui/card";
 import { ConditionEnum } from "@/types";
 import { ObjectId } from "mongoose";
 import ProductSaved from "../ProductSaved";
+import Image from "next/image";
 
 interface ProductCardProps {
   id: ObjectId;
@@ -23,7 +24,7 @@ const SearchCard = ({
   return (
     <Card>
       <CardContent className="flex items-start gap-6 p-6">
-        <img
+        <Image
           alt="Product Image"
           className="aspect-square object-cover border border-gray-200 rounded-lg overflow-hidden dark:border-gray-800"
           height={200}
