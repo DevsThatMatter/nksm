@@ -23,6 +23,7 @@ export default function ImageCard({ images }: any) {
             width={200}
             height={200}
             className="rounded-md"
+            
           />
         ))}
       </div>

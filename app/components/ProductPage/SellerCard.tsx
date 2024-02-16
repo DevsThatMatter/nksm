@@ -22,7 +22,7 @@ function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
             <p className="font-semibold">
               {sellerInfo.First_Name} {sellerInfo.Last_Name}
             </p>
-            <p className="text-sm text-gray-500">5 Ads</p>
+            <p className="text-sm text-gray-500">{sellerInfo.Phone_Number}</p>
           </div>
         </div>
         <Button
@@ -32,9 +32,6 @@ function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
           <Icons.sendIcon className="absolute left-2 m-auto top-0 bottom-0 h-4 w-4" />
           <span className="pl-4">Message</span>
         </Button>
-      </div>
-      <div className="mt-2">
-        <p className="text-sm">{sellerInfo.Phone_Number}</p>
       </div>
     </div>
   );

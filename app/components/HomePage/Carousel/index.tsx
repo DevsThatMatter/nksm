@@ -25,7 +25,7 @@ const ProductCarousel = ({className}: {className?: string | undefined}) => {
               <ProductSkeleton key={i} />
             ))}
           >
-            <CarouselItems />
+            <CarouselItems productPageCarousel={true}/>
           </Suspense>
         </CarouselContent>
         <CarouselPrevious className="hidden lg:flex" />
@@ -35,7 +35,7 @@ const ProductCarousel = ({className}: {className?: string | undefined}) => {
   );
 };
 
-const CarouselItems = async () => {
+export const CarouselItems = async ({productPageCarousel} : {productPageCarousel? : boolean}) => {
   const data = await fetchRecentProducts();
   return data!.map((product) => (
     <ProductCard
@@ -45,6 +45,7 @@ const CarouselItems = async () => {
       name={product.Product_Name}
       price={product.Price}
       description={product.Description}
+      productPageCarousel= {productPageCarousel}
     />
   ));
 };
