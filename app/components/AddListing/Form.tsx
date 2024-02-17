@@ -1,12 +1,28 @@
 "use client";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "../ui/input";
-import { Form } from "react-hook-form";
 import { FormDataSchema } from "@/lib/FormSchema/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { ConditionEnum } from "@/types";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/app/components/ui/form";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@radix-ui/react-select";
+import Link from "next/link";
 
 type Inputs = z.infer<typeof FormDataSchema>;
 
@@ -23,143 +39,101 @@ export default function AddListingForm() {
     console.log(data);
   };
 
+  const form = useForm<z.infer<typeof FormDataSchema>>({
+    resolver: zodResolver(FormDataSchema),
+    defaultValues: {
+      iname: "",
+      condition: "",
+      Description: "",
+      images: [],
+      Price: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof FormDataSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log(values);
+  }
+
   return (
     <div>
-      <form
-        className="mt-12 py-12 max-w-screen-lg mx-auto"
-        onSubmit={handleSubmit(processForm)}
-      >
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <div className="sm:col-span-1">
-            <label
-              htmlFor="iname"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Item Name
-            </label>
-            <div className="mt-1">
-              <Input
-                type="text"
-                id="iname"
-                {...register("iname")}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-              />
-              {errors.iname && (
-                <p className="mt-2 text-sm text-red-600" role="alert">
-                  {errors.iname.message}
-                </p>
-              )}
-            </div>
-          </div>
-          <div className="sm:col-span-1">
-            <label
-              htmlFor="images"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Image
-            </label>
-            <div className="mt-1">
-              <Input
-                type="file"
-                id="images"
-                {...register("images")}
-                autoComplete="given-name"
-                multiple
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-              />
-              {errors.images && (
-                <p className="mt-2 text-sm text-red-600" role="alert">
-                  {errors.images.message}
-                </p>
-              )}
-            </div>
-          </div>
-          <div className="sm:col-span-1">
-            <label
-              htmlFor="condition"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Condition
-            </label>
-            <div className="mt-1 relative">
-              <select
-                id="condition"
-                {...register("condition")}
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm py-2 px-4"
-              >
-                {Object.values(ConditionEnum).map((condition, index) => (
-                  <option key={index}>{condition}</option>
-                ))}
-              </select>
-              <path
-                fillRule="evenodd"
-                d="M9.293 14.707a1 1 0 0 0 1.414 0l5-5a1 1 0 1 0-1.414-1.414L10 12.586l-4.293-4.293a1 1 0 1 0-1.414 1.414l5 5z"
-                clipRule="evenodd"
-              />
-
-              {errors.condition && (
-                <p className="mt-2 text-sm text-red-600" role="alert">
-                  {errors.condition.message}
-                </p>
-              )}
-            </div>
-          </div>
-          <div className="sm:col-span-1">
-            <label
-              htmlFor="Description"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Description
-            </label>
-            <div className="mt-1">
-              <Input
-                type="text"
-                id="Description"
-                {...register("Description")}
-                autoComplete="given-name"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-              />
-              {errors.Description && (
-                <p className="mt-2 text-sm text-red-600" role="alert">
-                  {errors.Description.message}
-                </p>
-              )}
-            </div>
-          </div>
-          <div className="sm:col-span-1">
-            <label
-              htmlFor="Price"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Price
-            </label>
-            <div className="mt-1">
-              <Input
-                type="number"
-                min="0"
-                id="Price"
-                {...register("Price")}
-                autoComplete="given-name"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-              />
-              {errors.Price && (
-                <p className="mt-2 text-sm text-red-600" role="alert">
-                  {errors.Price.message}
-                </p>
-              )}
-            </div>
-          </div>
-          <div className="sm:col-span-1"></div>
-        </div>
-        <div className="mt-8 pt-5">
-          <Button
-            type="submit"
-            className="rounded bg-white px-4 py-2 text-sm font-semibold text-sky-900 shadow-sm ring-1 ring-inset ring-sky-300 hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Submit
-          </Button>
-        </div>
-      </form>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField //item name
+            control={form.control}
+            name="iname"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Item Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Item Name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField //description
+            control={form.control}
+            name="Description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Input placeholder="shadcn" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField // images
+            control={form.control}
+            name="images"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Image</FormLabel>
+                <FormControl>
+                  <Input type="file" multiple />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField // condition
+            control={form.control}
+            name="condition"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Condition</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent position="popper">
+                    {Object.values(ConditionEnum)
+                      .filter((value) => typeof value === "string")
+                      .map((condition) => (
+                        <SelectItem key={condition} value={condition}>
+                          {condition}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                <FormDescription>
+                  What is the condition your item?
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
     </div>
   );
 }
