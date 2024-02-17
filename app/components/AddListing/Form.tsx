@@ -27,17 +27,18 @@ import Link from "next/link";
 type Inputs = z.infer<typeof FormDataSchema>;
 
 export default function AddListingForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>({
-    resolver: zodResolver(FormDataSchema),
-  });
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm<Inputs>({
+  //   resolver: zodResolver(FormDataSchema),
 
-  const processForm: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
-  };
+  // });
+
+  // const processForm: SubmitHandler<Inputs> = (data) => {
+  //   console.log(data);
+  // };
 
   const form = useForm<z.infer<typeof FormDataSchema>>({
     resolver: zodResolver(FormDataSchema),
@@ -86,7 +87,7 @@ export default function AddListingForm() {
               </FormItem>
             )}
           />
-          <FormField // images
+          {/* <FormField // images
             control={form.control}
             name="images"
             render={({ field }) => (
@@ -98,8 +99,8 @@ export default function AddListingForm() {
                 <FormMessage />
               </FormItem>
             )}
-          />
-          <FormField // condition
+          /> */}
+          {/* <FormField // condition
             control={form.control}
             name="condition"
             render={({ field }) => (
@@ -125,12 +126,12 @@ export default function AddListingForm() {
                   </SelectContent>
                 </Select>
                 <FormDescription>
-                  What is the condition your item?
+                  What is the condition of your item?
                 </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
           <Button type="submit">Submit</Button>
         </form>
       </Form>
