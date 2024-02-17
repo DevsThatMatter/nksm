@@ -6,9 +6,10 @@ import { FormDataSchema } from "@/lib/FormSchema/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { ConditionEnum } from "@/types";
 
 type Inputs = z.infer<typeof FormDataSchema>;
-  
+
 export default function AddListingForm() {
   const {
     register,
@@ -86,11 +87,10 @@ export default function AddListingForm() {
                 {...register("condition")}
                 className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-sky-500 focus:border-sky-500 sm:text-sm py-2 px-4"
               >
-                <option>Brand New</option>
-                <option>Like New</option>
-                <option>Old</option>
+                {Object.values(ConditionEnum).map((condition, index) => (
+                  <option key={index}>{condition}</option>
+                ))}
               </select>
-
               <path
                 fillRule="evenodd"
                 d="M9.293 14.707a1 1 0 0 0 1.414 0l5-5a1 1 0 1 0-1.414-1.414L10 12.586l-4.293-4.293a1 1 0 1 0-1.414 1.414l5 5z"
@@ -136,7 +136,7 @@ export default function AddListingForm() {
             <div className="mt-1">
               <Input
                 type="number"
-                min = "0"
+                min="0"
                 id="Price"
                 {...register("Price")}
                 autoComplete="given-name"

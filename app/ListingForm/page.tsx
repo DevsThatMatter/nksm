@@ -1,8 +1,6 @@
-import AddListingForm from '../components/AddListing/Form'
+import AddListingForm from "../components/AddListing/Form";
 function page() {
-  return (
-    < AddListingForm />
-  )
+  return <AddListingForm />;
 }
 
-export default page
+export default page;
