@@ -3,6 +3,7 @@ import { SheetDescription } from "../ui/sheet";
 import ChatUI from "./ChatUI";
 import { useState } from "react";
 import { chatDetails } from "@/types";
+import Image from "next/image";
 
 interface ProductPanelProps {
     userId: string;
@@ -72,19 +73,20 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
     return (
         <SheetDescription className="mt-4 flex flex-col space-y-4 w-full">
             {otherUserDetails.id === "" ? (
-                discussions.map((discussion: chatDetails) => (
-                    <div
-                        key={discussion.sellerDetails.Phone_Number}
-                        className="border rounded-md shadow-md cursor-pointer p-4 hover:shadow-xl dark:shadow-gray-700 bg-gradient-to-tr from-slate-200 via-slate-300 to-slate-400"
-                        onClick={() => handleChatItemClick(discussion)}
-                    >
-                        <div>
-                            <h1 className="text-lg font-bold text-black">{discussion.productDetails.Product_Name}</h1>
-                            <div className="text-gray-700 text-sm">
-                                {discussion.sellerDetails.id === userId ? `You: ` : `Owner: `}
-                                {`${discussion.sellerDetails.First_Name} ${discussion.sellerDetails.Last_Name}`}
+                discussions.map((discussion: chatDetails, idx) => (
+                    <div key={idx} className="flex items-center space-x-2 flex-1 cursor-pointer p-2 rounded-md hover:shadow-md " onClick={() => handleChatItemClick(discussion)}>
+                        <div className="flex-shrink-0 rounded-md bg-gray-600 overflow-hidden">
+                            <Image src={discussion.productDetails.Images[0]} alt={discussion.productDetails.Product_Name} width={64} height={64} />
+                        </div>
+                        <div className="flex-grow px-4 py-2 cursor-pointer">
+                            <span className="text-xl font-semibold dark:text-white text-black">{discussion.productDetails.Product_Name}</span>
+                            <div className="flex justify-between">
+                                <span className="text-gray-400 dark:text-gray-500 text-sm">
+                                    {discussion.buyerDetails.id === userId ? "Seller: " + discussion.sellerDetails.First_Name + " " + discussion.sellerDetails.Last_Name : "Buyer: " + discussion.buyerDetails.First_Name + " " + discussion.buyerDetails.Last_Name}
+                                </span>
                             </div>
                         </div>
+                        <div aria-hidden className="bg-lime-500 rounded-full flex-shrink-0 w-6 h-6 text-white flex justify-center items-center" />
                     </div>
                 ))
             ) : (

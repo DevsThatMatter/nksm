@@ -1,31 +1,53 @@
 "use server";
 
-import { MessageTypes, SellerBuyerChatType, chatDetails } from "@/types";
-import { connectToDB } from "../database/mongoose";
-import { IChat, IProduct } from "../interfaces";
-import { Chat } from "../models/chats.model";
-import { Types, now } from "mongoose";
 import * as z from 'zod'
+
+import { Types } from "mongoose";
+
 import { User } from "../models/user.model";
+import { connectToDB } from "../database/mongoose";
+import { Chat } from "../models/chats.model";
 import { Product } from "../models/product.model";
 
+import { MessageTypes, SellerBuyerChatType, chatDetails } from "@/types";
+
+
+
+function groupDocs(data: chatDetails[]): Map<Types.ObjectId, chatDetails[]> {
+  const groupDocsByProduct = new Map<Types.ObjectId, chatDetails[]>();
+
+  for (const doc of data) {
+    const id = doc.productDetails._id;
+
+    if (!groupDocsByProduct.has(id)) {
+      groupDocsByProduct.set(id, []);
+    }
+    groupDocsByProduct.get(id)?.push(doc);
+  }
+
+  return groupDocsByProduct;
+}
 
 export async function getAllChats(userEmail: string) {
   try {
-
     connectToDB();
 
     if (!userEmail || typeof userEmail !== "string") {
       throw new Error("Invalid userId provided");
     }
-    const matchStage = {
+
+    const matchStage0 = {
       $match: {
-        $or: [
-          { Buyer: "65b533afa47477aa438a88c6" },
-          { Seller: "65b533afa47477aa438a88c6" },
-        ],
+        Seller: "65b533afa47477aa438a88c6"
       },
     };
+
+    const matchStage1 = {
+      $match: {
+        Buyer: "65b533afa47477aa438a88c6"
+      },
+    };
+
     const addFieldsStage = {
       $addFields: {
         ProductOid: { $toObjectId: "$ProductId" },
@@ -33,6 +55,7 @@ export async function getAllChats(userEmail: string) {
         BuyerId: { $toObjectId: "$Buyer" },
       },
     };
+
     const lookupStage1 = {
       $lookup: {
         from: "Product",
@@ -41,6 +64,7 @@ export async function getAllChats(userEmail: string) {
         as: "ProductInfo",
       },
     };
+
     const lookupStage2 = {
       $lookup: {
         from: "User",
@@ -49,6 +73,7 @@ export async function getAllChats(userEmail: string) {
         as: "sellerInfo",
       },
     };
+
     const lookupStage3 = {
       $lookup: {
         from: "User",
@@ -57,6 +82,7 @@ export async function getAllChats(userEmail: string) {
         as: "buyerInfo",
       },
     };
+
     const projectStage = {
       $project: {
         _id: 0,
@@ -91,8 +117,9 @@ export async function getAllChats(userEmail: string) {
         },
       },
     };
-    const pipeline = [
-      matchStage,
+
+    const userIsSellerPipeline = [
+      matchStage0,
       addFieldsStage,
       lookupStage1,
       lookupStage2,
@@ -100,41 +127,35 @@ export async function getAllChats(userEmail: string) {
       projectStage,
     ];
 
-    const result = (await Chat.aggregate(pipeline).exec()) as chatDetails[];
+    const userIsBuyerPipeline = [
+      matchStage1,
+      addFieldsStage,
+      lookupStage1,
+      lookupStage2,
+      lookupStage3,
+      projectStage,
+    ];
 
+    const resultWhereUserIsSeller: chatDetails[] = await Chat.aggregate(userIsSellerPipeline).exec();
+    const resultWhereUserIsBuyer: chatDetails[] = await Chat.aggregate(userIsBuyerPipeline).exec();
 
-    if (!result || result.length === 0) {
-      console.log("No chats found for the given user");
-      return {
-        data: new Map(),
-        status: false
-      };
+    if (!resultWhereUserIsSeller || resultWhereUserIsSeller.length === 0) {
+      console.log("No chats found for the given user as seller");
     }
 
+    if (!resultWhereUserIsBuyer || resultWhereUserIsBuyer.length === 0) {
+      console.log("No chats found for the given user as buyer");
+    }
+    let resultWhereUserIsSeller1 = groupDocs(resultWhereUserIsSeller)
     return {
-      data:groupDocs(result),
-      status:true
-    }
+      data: { resultWhereUserIsBuyer,resultWhereUserIsSeller1 },
+    };
   } catch (error) {
     console.error("Error in chatHandler:", error);
     throw error;
   }
 }
 
-function groupDocs(data: chatDetails[]): Map<Types.ObjectId, chatDetails[]> {
-  const groupDocsByProduct = new Map<Types.ObjectId, chatDetails[]>();
-
-  for (const doc of data) {
-    const id = doc.productDetails._id;
-
-    if (!groupDocsByProduct.has(id)) {
-      groupDocsByProduct.set(id, []);
-    }
-    groupDocsByProduct.get(id)?.push(doc);
-  }
-
-  return groupDocsByProduct;
-}
 
 export async function chatBetweenSellerAndBuyerForProduct(
   otherUserPhoneNumber: string,

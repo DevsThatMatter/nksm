@@ -27,5 +27,5 @@ const productSchema = new mongoose.Schema({
 
 // export const Product = mongoose.models.Product || mongoose.model('Product', productSchema,"Product"); pls consider using this format instead
 
-export const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
+export const Product = mongoose.models.Product || mongoose.model('Product', productSchema,'Product');
 

@@ -1,7 +1,13 @@
+import { IProduct } from "@/lib/interfaces";
+
 export enum ConditionEnum {
   'Brand New',
   'Like New',
   'Used',
+}
+
+export enum CategoryEnum {
+ 
 }
 
 interface userDetails {

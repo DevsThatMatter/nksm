@@ -40,8 +40,8 @@ const Navbar = async () => {
       throw error;
     }
   }
+  const id = userData?.user?.id || (await getUserId()) || "65b533afa47477aa438a88c6"
 
-  const id = userData?.user?.id || (await getUserId());
 
   return (
     <>

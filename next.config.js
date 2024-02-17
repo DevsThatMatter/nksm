@@ -3,7 +3,8 @@ const nextConfig = {
     reactStrictMode: true,
     images: {
         domains: [
-            "utfs.io"
+            "utfs.io",
+           "example.com"
         ],
         remotePatterns: [
             {

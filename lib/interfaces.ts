@@ -16,16 +16,17 @@ export interface IProduct {
     expires_in?: Date;
     is_archived: boolean;
 }
-interface messageType{
-    Sender:string,
-    Message?:string,
-    FileUrl?:string
-    TimeStamp?:string
+interface messageType {
+    Sender: string,
+    Message?: string,
+    FileUrl?: string
+    TimeStamp?: string
+    readStatus?: boolean
 }
-export interface IChat{
+export interface IChat {
     save(): unknown;
-    Seller:string,
-    Buyer:string,
-    ProductId:string,
-    Messages:Array<messageType>
+    Seller: string,
+    Buyer: string,
+    ProductId: string,
+    Messages: Array<messageType>
 }

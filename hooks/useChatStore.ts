@@ -4,7 +4,7 @@ import { chatDetails } from "@/types";
 import { create } from "zustand";
 
 interface ChatState {
-    discussions: chatDetails[] ;
+    discussions: chatDetails[];
     otherUserDetails: {
         id: string;
         name: string;
@@ -30,7 +30,7 @@ interface ChatState {
             id: string;
         };
     }) => void;
-    removeChat: (caller: string) => void;
+    removeChat: (caller: "productPanel" | "chatPanel" | "chatUi") => void;
     createSeller: (sellerId: string) => void;
     createBuyer: (buyerId: string) => void;
 }
@@ -41,7 +41,7 @@ const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
     sellerDetails: { id: "" },
     buyerDetails: { id: "" },
     createChat: (to: {
-        discussions: chatDetails[] ;
+        discussions: chatDetails[];
         otherUserDetails: {
             id: string;
             name: string;
@@ -61,12 +61,18 @@ const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
             sellerDetails: to.sellerDetails,
             buyerDetails: to.buyerDetails,
         })),
-    removeChat: (caller: string) =>
+    removeChat: (caller: "productPanel" | "chatPanel" | "chatUi") =>
         set((state) => {
             if (caller === "chatPanel") {
-                return { ...state, discussions:[] };
+                return { ...state, discussions: [] };
             } else if (caller === "productPanel") {
                 return { ...state, otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "" } };
+            } else if (caller === "chatUi") {
+                return {
+                    ...state,
+                    discussions: [],
+                    otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "" }
+                };
             }
             return state;
         }),

@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { useChatQuery } from "@/hooks/useChatQuery";
 import { useChatScroll } from "@/hooks/useChatScroll";
 import { useSocketMessages } from "@/hooks/useSocketMessages";
+import useChatStore from "@/hooks/useChatStore";
 
 interface ChatUIProps {
   currentUserId: string;
@@ -28,6 +29,7 @@ export default function ChatUI({
   const queryKey = `chat:${productId},productId:${productId},sellerId:${sellerId},buyerId:${buyerId},query`;
   const addKey = `chat:${productId},productId:${productId},sellerId:${sellerId},buyerId:${buyerId},add`
   const updateKey = `chat:${productId},productId:${productId},sellerId:${sellerId},buyerId:${buyerId},update`
+  const { removeChat } = useChatStore()
 
   const chatRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
@@ -51,41 +53,32 @@ export default function ChatUI({
     count: data?.pages?.[0].items?.length ?? 0
   });
 
-  const [completeUserDisplay, setCompleteUserDisplay] = useState<boolean>(false);
+
+
+  if (productId === "" && sellerId !== "" && buyerId !== "") {
+    removeChat("chatUi")
+  }
 
   return (
-    <div className="mt-5 h-[95vh] flex flex-col items-center" >
-      <div className="rounded-md border border-gray-400 dark:border-gray-600 h-[90%] p-4 relative w-full max-w-md md:max-w-xl lg:max-w-2xl xl:max-w-4xl">
+    <div className=" h-[95vh] flex flex-col items-center" >
+      <div className="rounded-md border border-gray-400 dark:border-gray-600 h-[90%]  relative w-full max-w-md md:max-w-xl lg:max-w-2xl xl:max-w-4xl">
         {/* User display */}
-        {!completeUserDisplay ? (
-          <div
-            className="
-              z-10 w-10 h-10 p-2 mb-4 border rounded-full
-              flex items-center justify-center absolute -top-4 -left-4 
-              bg-gray-300 hover:border-blue-500 hover:bg-blue-100 dark:hover:bg-white transition-all cursor-pointer"
-            onClick={() => setCompleteUserDisplay(true)}
-          >
-            <span className="text-lg font-semibold dark:text-blue-900">{otherUserName.charAt(0).toUpperCase()}</span>
+        <div className="user-display z-10  py-3 px-4 flex items-center justify-between mb-2">
+          <div className="flex flex-col">
+            <span className="text-lg font-semibold text-gray-800 dark:text-white">{otherUserName}</span>
+            <span className="text-sm font-normal text-gray-600 dark:text-gray-400">Seller: {sellerId === currentUserId ? "You" : otherUserName}</span>
           </div>
-        ) : (
-          <div
-            className="user-display z-10 border p-2 bg-gray-200 dark:bg-gray-800 rounded-md flex items-center justify-between mb-4 cursor-pointer"
-            onClick={() => setCompleteUserDisplay(false)}
-          >
-            <span className="text-lg font-semibold">{otherUserName}</span>
-            <span className="text-sm font-normal">{otherUserPhoneNumber}</span>
-          </div>
-        )}
-
+          <span className="text-sm font-normal text-gray-600 dark:text-gray-400">{otherUserPhoneNumber}</span>
+        </div>
         {/* Messages */}
-        <div className="flex flex-col flex-1 overflow-y-auto mx-auto max-w-md h-[90%]">
+        <div className={clsx("flex flex-col flex-1 overflow-y-auto mx-auto max-w-md  h-[80%] px-2.5 pb-2")}>
           {status === "pending" ? (
             <div>Loading...</div>
           ) : status === "error" ? (
             <div>Error: Something went wrong</div>
           ) : (
             <Fragment>
-              <div ref={chatRef}/>
+              <div ref={chatRef} />
               {data?.pages.map((page, idx) => (
                 <Fragment key={idx}>
                   {page.items?.map((msg, j) => (
@@ -98,8 +91,8 @@ export default function ChatUI({
                           >
                             <div
                               className={clsx(
-                                "max-w-[80%] text-white rounded-lg p-2 break-words",
-                                currentUserId === m.Sender ? "bg-blue-700" : "bg-pink-600"
+                                "max-w-[80%] text-white  rounded-lg p-2 break-words",
+                                currentUserId === m.Sender ? "bg-indigo-700" : "bg-lime-500"
                               )}
                             >
                               {m.Message}
@@ -111,7 +104,7 @@ export default function ChatUI({
                   ))}
                 </Fragment>
               ))}
-              <div ref={bottomRef}/>
+              <div ref={bottomRef} />
             </Fragment>
           )}
 
