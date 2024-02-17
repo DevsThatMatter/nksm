@@ -87,7 +87,7 @@ export default function AddListingForm() {
               </FormItem>
             )}
           />
-          {/* <FormField // images
+          <FormField // images
             control={form.control}
             name="images"
             render={({ field }) => (
@@ -99,8 +99,8 @@ export default function AddListingForm() {
                 <FormMessage />
               </FormItem>
             )}
-          /> */}
-          {/* <FormField // condition
+          /> 
+           <FormField // condition
             control={form.control}
             name="condition"
             render={({ field }) => (
@@ -131,7 +131,7 @@ export default function AddListingForm() {
                 <FormMessage />
               </FormItem>
             )}
-          /> */}
+          />
           <Button type="submit">Submit</Button>
         </form>
       </Form>
