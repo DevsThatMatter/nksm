@@ -5,7 +5,7 @@ export function AddListing() {
   return (
     <div>
       <Link href="/ListingForm">
-        <Button variant="default">Go to Listing Form</Button>
+        <Button variant="default">Add Listing</Button>
       </Link>
     </div>
   );
