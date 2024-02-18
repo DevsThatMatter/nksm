@@ -13,27 +13,24 @@ export const FormDataSchema = z.object({
   Description: z.string().min(1, "description is required"),
 
   images: z
-  .any()
-  .refine((files) => files?.length > 0, "Image is required.")
-  .refine((files) => {
-    let ans: boolean = true;
-    for(let i=0;i<files.length;i++)
-    {
-      ans = ans && (files?.[i].size <= MAX_FILE_SIZE);
-    }
-    return ans
-  })
-  .refine(
-    (files) => {
+    .any()
+    .refine((files) => files?.length > 0, "Image is required.")
+    .refine((files) => {
       let ans: boolean = true;
-      for(let i=0;i<files?.length;i++)
-      {
-        ans = ans && (ACCEPTED_IMAGE_MIME_TYPES.includes(files?.[i]?.type));
+      for (let i = 0; i < files?.length; i++) {
+        ans = ans && files?.[i].size <= MAX_FILE_SIZE;
       }
-      return ans
-    },
-    ".jpg, .jpeg, .png and .webp files are accepted."
-  ),
+      return ans;
+    })
+    .refine((files) => {
+      let ans: boolean = true;
+      for (let i = 0; i < files?.length; i++) {
+        ans = ans && ACCEPTED_IMAGE_MIME_TYPES.includes(files?.[i]?.type);
+      }
+      return ans;
+    }, ".jpg, .jpeg, .png and .webp files are accepted."),
 
-  Price: z.coerce.number().min(1, "Price can't be left empty")
+  Price: z.coerce
+    .number()
+    .min(1, "Price can't be left empty")
 });

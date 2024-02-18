@@ -4,12 +4,11 @@ import { Input } from "../ui/input";
 import { FormDataSchema } from "@/lib/FormSchema/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { ConditionEnum } from "@/types";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,27 +20,18 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-  SelectGroup,
-} from "@radix-ui/react-select";
+} from "@/app/components/ui/select";
 import Link from "next/link";
+import { Textarea } from "../ui/textarea";
 
 type Inputs = z.infer<typeof FormDataSchema>;
 
 export default function AddListingForm() {
-  const form = useForm<z.infer<typeof FormDataSchema>>({
+  const form = useForm<Inputs>({
     resolver: zodResolver(FormDataSchema),
-    defaultValues: {
-      iname: "",
-      condition: "",
-      Description: "",
-      images: [],
-      Price: "",
-    },
   });
 
   function onSubmit(values: Inputs) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     console.log(values);
   }
 
@@ -62,19 +52,23 @@ export default function AddListingForm() {
               </FormItem>
             )}
           />
-          <FormField //description
+          <FormField
             control={form.control}
             name="Description"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Textarea
+                    placeholder="Tell us a little bit about your product"
+                    className="resize-none"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
-          />{" "}
+          />
           <FormField //price
             control={form.control}
             name="Price"
@@ -83,19 +77,6 @@ export default function AddListingForm() {
                 <FormLabel>Price</FormLabel>
                 <FormControl>
                   <Input {...field} type="number" min="0" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField // images
-            control={form.control}
-            name="images"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Image</FormLabel>
-                <FormControl>
-                  <Input type="file" multiple />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -116,21 +97,27 @@ export default function AddListingForm() {
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent position="popper">
-                    <SelectGroup>
-                      {Object.values(ConditionEnum)
-                        .filter((value) => typeof value === "string")
-                        .map((condition) => (
-                          <SelectItem  value={condition}>
-                            {condition}
-                          </SelectItem>
-                        ))}
-                    </SelectGroup>
+                  <SelectContent>
+                    {Object.values(ConditionEnum).map((condition) => (
+                      <SelectItem key={condition} value={condition}>
+                        {condition}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
-                <FormDescription>
-                  What is the condition of your item?
-                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField // images
+            control={form.control}
+            name="images"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Image</FormLabel>
+                <FormControl>
+                  <Input type="file" multiple accept="image/*" />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
