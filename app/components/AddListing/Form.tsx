@@ -81,12 +81,24 @@ export default function AddListingForm() {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input  {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
-          />
+          />  <FormField //price
+          control={form.control}
+          name="Price"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Price</FormLabel>
+              <FormControl>
+                <Input  {...field} type="number"/>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
           <FormField // images
             control={form.control}
             name="images"

@@ -35,5 +35,5 @@ export const FormDataSchema = z.object({
     ".jpg, .jpeg, .png and .webp files are accepted."
   ),
 
-  Price: z.string().min(1, "Price is required"),
+  Price: z.coerce.number().int().nonnegative().min(0, "Price can't be left empty")
 });
