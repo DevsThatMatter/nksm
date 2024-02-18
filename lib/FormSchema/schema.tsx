@@ -21,7 +21,7 @@ export const FormDataSchema = z.object({
         ans = ans && files?.[i].size <= MAX_FILE_SIZE;
       }
       return ans;
-    })
+    },"Maximum accepted file size is 5 mb")
     .refine((files) => {
       let ans: boolean = true;
       for (let i = 0; i < files?.length; i++) {
