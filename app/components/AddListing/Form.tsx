@@ -58,7 +58,7 @@ export default function AddListingForm() {
   }
 
   return (
-    <div>
+    <div className="min-h-screen flex justify-center items-center">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField //item name
@@ -99,8 +99,8 @@ export default function AddListingForm() {
                 <FormMessage />
               </FormItem>
             )}
-          /> 
-           <FormField // condition
+          />
+          <FormField // condition
             control={form.control}
             name="condition"
             render={({ field }) => (
