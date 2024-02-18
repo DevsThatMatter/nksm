@@ -21,25 +21,13 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
+  SelectGroup,
 } from "@radix-ui/react-select";
 import Link from "next/link";
 
 type Inputs = z.infer<typeof FormDataSchema>;
 
 export default function AddListingForm() {
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm<Inputs>({
-  //   resolver: zodResolver(FormDataSchema),
-
-  // });
-
-  // const processForm: SubmitHandler<Inputs> = (data) => {
-  //   console.log(data);
-  // };
-
   const form = useForm<z.infer<typeof FormDataSchema>>({
     resolver: zodResolver(FormDataSchema),
     defaultValues: {
@@ -51,7 +39,7 @@ export default function AddListingForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof FormDataSchema>) {
+  function onSubmit(values: Inputs) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
@@ -81,24 +69,25 @@ export default function AddListingForm() {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input  {...field} />
+                  <Input {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
-          />  <FormField //price
-          control={form.control}
-          name="Price"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Price</FormLabel>
-              <FormControl>
-                <Input  {...field} type="number"/>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          />{" "}
+          <FormField //price
+            control={form.control}
+            name="Price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input {...field} type="number" min="0" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField // images
             control={form.control}
             name="images"
@@ -128,13 +117,15 @@ export default function AddListingForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent position="popper">
-                    {Object.values(ConditionEnum)
-                      .filter((value) => typeof value === "string")
-                      .map((condition) => (
-                        <SelectItem key={condition} value={condition}>
-                          {condition}
-                        </SelectItem>
-                      ))}
+                    <SelectGroup>
+                      {Object.values(ConditionEnum)
+                        .filter((value) => typeof value === "string")
+                        .map((condition) => (
+                          <SelectItem  value={condition}>
+                            {condition}
+                          </SelectItem>
+                        ))}
+                    </SelectGroup>
                   </SelectContent>
                 </Select>
                 <FormDescription>
