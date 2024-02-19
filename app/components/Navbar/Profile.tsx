@@ -72,7 +72,9 @@ export function UserProfile({ data }: UserProfileProps) {
           </DropdownMenuContent>
         </DropdownMenu>
         {!data?.user ? (
-          <DropdownMenuItem onClick={handleLogin} className="text-blue-500">Login</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleLogin} className="text-blue-500">
+            Login
+          </DropdownMenuItem>
         ) : (
           <DropdownMenuItem onClick={handleLogout} className="text-red-500">
             Logout

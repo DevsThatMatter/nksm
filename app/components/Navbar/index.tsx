@@ -8,19 +8,19 @@ import UserChat from "@/app/components/Chat/ChatsPanel";
 import { AddListing } from "../AddListing";
 import SearchBar from "./SearchBar";
 import { auth } from "@/auth";
-import { fetchRecentProducts } from "@/lib/actions/fetchProduct.actions";
+import { fetchRecentProductS } from "@/lib/actions/fetchProduct.actions";
 
 const Navbar = async () => {
   const userData = await auth();
-  const products = (await fetchRecentProducts()) || [];
+  const products = (await fetchRecentProductS()) || [];
   return (
     <>
-      <div className="sticky top-0 left-0 right-0 z-50 bg-background shadow-md">
+      <div className="sticky top-0 left-0 right-0  z-50 bg-background shadow-md">
         <nav className="flex lg:justify-between justify-center max-h-30">
           <div className="">
             <Link href="/">
               <Image
-                src="/logon.svg"
+                src="logon.svg"
                 alt="Logo"
                 width={150}
                 height={150}
@@ -37,7 +37,7 @@ const Navbar = async () => {
             <UserProfile data={userData} />
           </div>
         </nav>
-        <Separator orientation="horizontal"  />
+        <Separator orientation="horizontal" />
       </div>
     </>
   );
