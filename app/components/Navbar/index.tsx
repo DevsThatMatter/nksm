@@ -18,7 +18,7 @@ const Navbar = async ({
       <AddListing />
       <UserChat />
       <SavedItems />
-      <Separator orientation="vertical" />
+      <Separator orientation="vertical" className="h-10"/>
       <UserProfile />
     </>
   ),
