@@ -24,14 +24,20 @@ type Product = {
 
 type ProductsArray = Product[];
 
-export default function SearchBar({ products }: { products: ProductsArray }) {
+export default function SearchBar({
+  products,
+  className,
+}: {
+  products: ProductsArray;
+  className?: string;
+}) {
   const [input, setInput] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
   const dropdownRef = useRef(null);
 
   const filteredProducts = products?.filter((product) =>
-    product.Product_Name.toLowerCase().startsWith(input.toLowerCase()),
+    product.Product_Name.toLowerCase().startsWith(input.toLowerCase())
   );
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -46,7 +52,7 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
   };
 
   return (
-    <form onSubmit={handleSearchSubmit}>
+    <form onSubmit={handleSearchSubmit} className={className}>
       <div className="relative" ref={dropdownRef}>
         <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
         <div>
