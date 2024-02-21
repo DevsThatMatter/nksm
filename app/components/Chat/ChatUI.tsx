@@ -44,7 +44,7 @@ export default function ChatUI({
   });
 
   // useSocketMessages({ queryKey, addKey, updateKey })
-
+  console.log(data)
   useChatScroll({
     chatRef,
     bottomRef,
@@ -71,7 +71,7 @@ export default function ChatUI({
           <span className="text-sm font-normal text-gray-600 dark:text-gray-400">{otherUserPhoneNumber}</span>
         </div>
         {/* Messages */}
-        <div className={clsx("flex flex-col flex-1 overflow-y-auto mx-auto max-w-md  h-[80%] px-2.5 pb-2")}>
+        <div className={clsx("flex flex-col flex-1 overflow-y-auto mx-auto max-w-md  h-[77%] px-2.5 pb-2")}>
           {status === "pending" ? (
             <div>Loading...</div>
           ) : status === "error" ? (

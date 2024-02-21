@@ -2,7 +2,7 @@
 
 import * as z from 'zod'
 
-import { Types } from "mongoose";
+import { Types, mongo } from "mongoose";
 
 import { User } from "../models/user.model";
 import { connectToDB } from "../database/mongoose";
@@ -28,23 +28,23 @@ function groupDocs(data: chatDetails[]): Map<Types.ObjectId, chatDetails[]> {
   return groupDocsByProduct;
 }
 
-export async function getAllChats(userEmail: string) {
+export async function getAllChats(userId: string) {
   try {
     connectToDB();
 
-    if (!userEmail || typeof userEmail !== "string") {
+    if (!userId || typeof userId !== "string") {
       throw new Error("Invalid userId provided");
     }
-
+    
     const matchStage0 = {
       $match: {
-        Seller: "65b533afa47477aa438a88c6"
+        Seller: new mongo.ObjectId('65c5e97aafe71c6df760f715')
       },
     };
 
     const matchStage1 = {
       $match: {
-        Buyer: "65b533afa47477aa438a88c6"
+        Buyer: new mongo.ObjectId('65c5e97aafe71c6df760f715')
       },
     };
 
@@ -58,7 +58,7 @@ export async function getAllChats(userEmail: string) {
 
     const lookupStage1 = {
       $lookup: {
-        from: "Product",
+        from: "products",
         localField: "ProductOid",
         foreignField: "_id",
         as: "ProductInfo",
@@ -67,7 +67,7 @@ export async function getAllChats(userEmail: string) {
 
     const lookupStage2 = {
       $lookup: {
-        from: "User",
+        from: "users",
         localField: "SellerId",
         foreignField: "_id",
         as: "sellerInfo",
@@ -76,7 +76,7 @@ export async function getAllChats(userEmail: string) {
 
     const lookupStage3 = {
       $lookup: {
-        from: "User",
+        from: "users",
         localField: "BuyerId",
         foreignField: "_id",
         as: "buyerInfo",
@@ -138,17 +138,13 @@ export async function getAllChats(userEmail: string) {
 
     const resultWhereUserIsSeller: chatDetails[] = await Chat.aggregate(userIsSellerPipeline).exec();
     const resultWhereUserIsBuyer: chatDetails[] = await Chat.aggregate(userIsBuyerPipeline).exec();
-
-    if (!resultWhereUserIsSeller || resultWhereUserIsSeller.length === 0) {
-      console.log("No chats found for the given user as seller");
-    }
-
-    if (!resultWhereUserIsBuyer || resultWhereUserIsBuyer.length === 0) {
-      console.log("No chats found for the given user as buyer");
-    }
     let resultWhereUserIsSeller1 = groupDocs(resultWhereUserIsSeller)
+    console.log("user is seller=>",resultWhereUserIsSeller)
+   
+
     return {
       data: { resultWhereUserIsBuyer,resultWhereUserIsSeller1 },
+      fetchComplete:true
     };
   } catch (error) {
     console.error("Error in chatHandler:", error);
@@ -205,9 +201,9 @@ export async function getMessages(props: z.infer<typeof GetmessageProps>) {
     const pipeline = [
       {
         $match: {
-          Seller: validatedProps.sellerId,
-          Buyer: validatedProps.buyerId,
-          ProductId: validatedProps.productId
+          Seller: new mongo.ObjectId(validatedProps.sellerId),
+          Buyer: new mongo.ObjectId(validatedProps.buyerId),
+          ProductId: new mongo.ObjectId(validatedProps.productId)
         }
       },
       {
@@ -271,6 +267,4 @@ export async function createMessages(props: z.infer<typeof CreateMessagesProps>)
     // extra opt
     { $upsert: 1 }
   );
-
-
 }

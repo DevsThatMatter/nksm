@@ -1,4 +1,5 @@
 import { connectToDB } from "@/lib/database/mongoose";
+import { Chat } from "@/lib/models/chats.model";
 import { Product } from "@/lib/models/product.model";
 import { User } from "@/lib/models/user.model";
 
@@ -110,12 +111,41 @@ export const DBPopulator = async () => {
           },
         ];
 
-        for(const user of userData) {
-          const newUser = new User(user);
-          await newUser.save();
-        }
+        // for(const user of userData) {
+        //   const newUser = new User(user);
+        //   await newUser.save();
+        // }
 
         const users = await User.find({});
+        const products = await Product.find({});
+
+
+        const chatData = [
+          {
+            Seller:String(users[8]._id),
+            Buyer:String(users[9]._id),
+            ProductId:String(products[8]._id),
+            Messages:[]
+          },
+          {
+            Seller:String(users[1]._id),
+            Buyer:String(users[2]._id),
+            ProductId:String(products[3]._id),
+            Messages:[]
+          },
+          {
+            Seller:String(users[2]._id),
+            Buyer:String(users[4]._id),
+            ProductId:String(products[5]._id),
+            Messages:[]
+          },
+        ] 
+         for(const chat of chatData) {
+          const newChat = new Chat(chat);
+          await newChat.save();
+        }
+
+
 
         const productData = [
           {
@@ -240,11 +270,11 @@ export const DBPopulator = async () => {
           }
         ];
 
-        await Product.insertMany(productData);
-        await User.insertMany(userData);
+        // await Product.insertMany(productData);
+        // await User.insertMany(userData);
         console.log("Data inserted successfully")
 
       } catch (error) {
-        console.error("Error creating user and product:", error);
+        console.error("Error creating user and product and chat:", error);
       }
 }

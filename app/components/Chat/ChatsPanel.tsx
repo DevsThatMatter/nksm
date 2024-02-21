@@ -4,7 +4,7 @@ import { Types } from "mongoose";
 import clsx from "clsx";
 import { Tabs, TabsList } from "../ui/tabs";
 import { TabsTrigger } from "@radix-ui/react-tabs";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTrigger, SheetTitle } from "@/app/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTrigger,  } from "@/app/components/ui/sheet";
 import { Button } from "@/app/components/ui/button";
 import { Icons } from "@/app/utils/icons";
 import { chatDetails } from "@/types";
@@ -12,13 +12,14 @@ import { getAllChats } from "@/lib/actions/chat.actions";
 import ProductPanel from "./ProductPanel";
 import UserUnauthorized from "./UserUnauthorized";
 import useChatStore from "../../../hooks/useChatStore";
-import { RandomDots } from "./RandomDots";
+
 
 export default function UserChat({ userId }: { userId: string }) {
-  const { discussions, otherUserDetails, createChat, removeChat, sellerDetails, buyerDetails } = useChatStore();
+  const { discussions, otherUserDetails, createChat, removeChat,} = useChatStore();
   const [productDiscussionsWhereUserIsSeller, setProductDiscussionsWhereUserIsSeller] = useState<Map<Types.ObjectId, chatDetails[]> | null>(null);
   const [productDiscussionsWhereUserIsBuyer, setProductDiscussionsWhereUserIsBuyer] = useState<chatDetails[] | null>(null);
   const [activeTab, setActiveTab] = useState('seller');
+  const [fetchDone,setFetchDone] = useState<boolean>(false)
 
   useEffect(() => {
     async function getPrevProductDiscussions() {
@@ -26,6 +27,7 @@ export default function UserChat({ userId }: { userId: string }) {
         const data = await getAllChats(userId);
         setProductDiscussionsWhereUserIsSeller(data.data.resultWhereUserIsSeller1);
         setProductDiscussionsWhereUserIsBuyer(data.data.resultWhereUserIsBuyer)
+        setFetchDone(true);
       }
     }
     getPrevProductDiscussions();

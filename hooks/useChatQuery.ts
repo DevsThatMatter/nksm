@@ -17,8 +17,8 @@ export const useChatQuery = ({
 }: ChatQueryProps) => {
     const { isConnected } = useSocket();
 
-    async function fetchMessages({ pageParam = undefined }){
-        const res = await getMessages({ sellerId, buyerId, productId, currentUser, pageNo: pageParam !== undefined ? pageParam : 0 });
+    async function fetchMessages(){
+        const res = await getMessages({ sellerId, buyerId, productId, currentUser, pageNo });
         return res;
     }
 
