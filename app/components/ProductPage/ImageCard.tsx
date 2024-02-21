@@ -37,7 +37,7 @@ export default function ImageCard({ images }: any) {
                 alt={`Image ${index + 1}`}
                 width={1920}
                 height={1080}
-                className="object-cover rounded-lg aspect-video w-full h-full"
+                className="object-fill rounded-lg aspect-video w-full h-full"
               />
             </CarouselItem>
           ))}

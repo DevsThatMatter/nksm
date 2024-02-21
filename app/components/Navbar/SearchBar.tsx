@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useDebouncedCallback } from "use-debounce";
+import Link from "next/link";
 
 type ProductsArray = {
   _id: string;
@@ -13,7 +14,13 @@ type ProductsArray = {
   Images: string[];
 }[];
 
-export default function SearchBar({ products }: { products: ProductsArray }) {
+export default function SearchBar({
+  products,
+  className,
+}: {
+  products: ProductsArray;
+  className?: string;
+}) {
   const [input, setInput] = useState("");
   const searchParams = useSearchParams();
   const category = searchParams!.get("category") || "";
@@ -31,7 +38,7 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
   }, [pathname]);
 
   const filteredProducts = products?.filter((product) =>
-    product.Product_Name.toLowerCase().startsWith(input.toLowerCase()),
+    product.Product_Name.toLowerCase().startsWith(input.toLowerCase())
   );
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -41,13 +48,15 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
   };
 
   const handleFocusOut = () => {
-    if (dropdownRef.current) {
-      setIsDropdownOpen(false);
-    }
+    setTimeout(() => { // Corrected syntax: added the missing arrow function '() => {'
+      if (dropdownRef.current) {
+        setIsDropdownOpen(false);
+      }
+    }, 100); // Moved the timeout value (100) inside the setTimeout function call
   };
 
   return (
-    <form onSubmit={handleSearchSubmit}>
+    <form onSubmit={handleSearchSubmit} className={className}>
       <div className="relative" ref={dropdownRef}>
         <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
         <div>
@@ -60,10 +69,10 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
               pathname != "/search"
                 ? setIsDropdownOpen(!!e.target.value)
                 : router.push(
-                    "?q=" +
-                      e.target.value +
-                      `&category=${category}&sort=${sort}&by=${sortBy}`,
-                  ); // Show dropdown when input is not empty
+                  "?q=" +
+                  e.target.value +
+                  `&category=${category}&sort=${sort}&by=${sortBy}`,
+                ); // Show dropdown when input is not empty
             }, 1000)}
             onFocus={() => {
               pathname != "/search" && setIsDropdownOpen(true);
@@ -72,31 +81,32 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
           />
         </div>
         {input &&
-        isDropdownOpen &&
-        filteredProducts &&
-        filteredProducts.length > 0 ? (
+          isDropdownOpen &&
+          filteredProducts &&
+          filteredProducts.length > 0 ? (
           <div className="absolute left-0 right-0 mt-1 rounded-md shadow-lg z-50 max-h-60 overflow-auto bg-card border">
             {filteredProducts.map((product) => (
-              <li
-                key={product._id}
-                className="flex items-center justify-between px-4 py-2 hover:bg-accent border"
-              >
-                <div className="flex items-center">
-                  <Image
-                    alt={product.Product_Name}
-                    className="rounded-md"
-                    src={product.Images[0]}
-                    height={56}
-                    width={56}
-                    style={{
-                      aspectRatio: "64/64",
-                      objectFit: "cover",
-                    }}
-                  />
-                  <span className="ml-4">{product.Product_Name}</span>
-                </div>
-                <span>₹ {product.Price}</span>
-              </li>
+              <Link href={`/product/${product._id}`} key={product._id}>
+                <li
+                  className="flex items-center justify-between px-4 py-2 hover:bg-accent border"
+                >
+                  <div className="flex items-center">
+                    <Image
+                      alt={product.Product_Name}
+                      className="rounded-md"
+                      src={product.Images[0]}
+                      height={56}
+                      width={56}
+                      style={{
+                        aspectRatio: "64/64",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <span className="ml-4">{product.Product_Name}</span>
+                  </div>
+                  <span>₹ {product.Price}</span>
+                </li>
+              </Link>
             ))}
           </div>
         ) : (

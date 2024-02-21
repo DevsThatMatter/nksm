@@ -28,6 +28,7 @@ function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
         <Button
           variant="default"
           className="relative items-center justify-center my-auto bg-green-600 hover:bg-green-700"
+          
         >
           <Icons.sendIcon className="absolute left-2 m-auto top-0 bottom-0 h-4 w-4" />
           <span className="pl-4">Message</span>

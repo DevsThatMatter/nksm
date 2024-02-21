@@ -17,7 +17,15 @@ interface Chat {
   phoneNumber: string;
 }
 
-export default function UserChat() {
+export default function UserChat({
+  children = (
+    <Button variant="ghost" size="icon">
+      <Icons.chaticon className="w-[1.32rem] h-[1.3rem]" />
+    </Button>
+  ),
+}: {
+  children?: React.ReactNode;
+}) {
   const chat = useChatStore((state) => state.chat);
   const createChat = useChatStore((state) => state.createChat);
   const removeChat = useChatStore((state) => state.removeChat);
@@ -39,11 +47,7 @@ export default function UserChat() {
   return (
     <div>
       <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <Icons.chaticon className="w-[1.32rem] h-[1.3rem]" />
-          </Button>
-        </SheetTrigger>
+        <SheetTrigger asChild>{children}</SheetTrigger>
         {chats ? (
           <SheetContent side="left">
             <SheetHeader>
