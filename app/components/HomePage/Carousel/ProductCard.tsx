@@ -20,7 +20,7 @@ const ProductCard = ({
   name,
   price,
   description,
-  productPageCarousel
+  productPageCarousel = false,
 }: ProductCardProps) => {
 
   return (

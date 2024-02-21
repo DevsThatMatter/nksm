@@ -25,7 +25,7 @@ const ProductCarousel = ({className}: {className?: string | undefined}) => {
               <ProductSkeleton key={i} />
             ))}
           >
-            <CarouselItems productPageCarousel={true}/>
+            <CarouselItems/>
           </Suspense>
         </CarouselContent>
         <CarouselPrevious className="hidden lg:flex" />
