@@ -11,6 +11,7 @@ export const FormDataSchema = z.object({
 
   condition: z.string().min(1, "condition is required"),
   Description: z.string().min(1, "description is required"),
+  category: z.string().min(1, "category is required"),
 
   images: z
     .any()
@@ -21,7 +22,7 @@ export const FormDataSchema = z.object({
         ans = ans && files?.[i].size <= MAX_FILE_SIZE;
       }
       return ans;
-    },"Maximum accepted file size is 5 mb")
+    }, "Maximum accepted file size is 5 mb")
     .refine((files) => {
       let ans: boolean = true;
       for (let i = 0; i < files?.length; i++) {
@@ -30,7 +31,5 @@ export const FormDataSchema = z.object({
       return ans;
     }, ".jpg, .jpeg, .png and .webp files are accepted."),
 
-  Price: z.coerce
-    .number()
-    .min(1, "Price can't be left empty")
+  Price: z.coerce.number().min(1, "Price can't be left empty"),
 });

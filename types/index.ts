@@ -18,18 +18,18 @@ export type category = {
 };
 
 export enum CategoryEnum {
-  Bicycles,
-  Coolers,
-  Stationery,
-  Miscellaneous,
-  Mattresses,
-  Kitchenware,
-  Instruments,
-  Electronics,
+  "Bicycles" = "Bicycles",
+  "Coolers" = "Coolers",
+  "Stationery" = "Stationery",
+  "Miscellaneous" = "Miscellaneous",
+  "Mattresses" = "Mattresses",
+  "Kitchenware" = "Kitchenware",
+  "Instruments" = "Instruments",
+  "Electronics" = "Electronics",
 }
 
 export enum ConditionEnum {
-  'Brand New' = 'Brand New',
-  'Like New' = 'Like New',
-  'Used' = 'Used',
+  "Brand New" = "Brand New",
+  "Like New" = "Like New",
+  "Used" = "Used",
 }
