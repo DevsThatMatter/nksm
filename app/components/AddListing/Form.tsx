@@ -5,7 +5,7 @@ import { FormDataSchema } from "@/lib/FormSchema/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { ConditionEnum } from "@/types";
+import { CategoryEnum, ConditionEnum } from "@/types";
 import {
   Form,
   FormControl,
@@ -109,6 +109,33 @@ export default function AddListingForm() {
               </FormItem>
             )}
           />
+          <FormField // category
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>category</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {Object.values(CategoryEnum).map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField // images
             control={form.control}
             name="images"
@@ -116,7 +143,12 @@ export default function AddListingForm() {
               <FormItem>
                 <FormLabel>Image</FormLabel>
                 <FormControl>
-                  <Input type="file" multiple accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                  <Input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={(e) => field.onChange(e.target.files)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
