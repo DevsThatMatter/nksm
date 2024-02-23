@@ -43,7 +43,7 @@ export function Profile({ data, whichIcon }: UserProfileProps) {
           <Avatar className="h-[2.1rem] w-[2.1rem] rounded-full">
             <AvatarImage
               src={data?.user?.image!}
-              alt={data?.user?.name?.trim()}
+              alt={data?.user?.name?.slice(0,2)}
             />
             <AvatarFallback className="bg-transparent">
               {whichIcon ? (
