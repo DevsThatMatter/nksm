@@ -16,10 +16,10 @@ const CategoriesDrawer = ({ children }: { children: React.ReactNode }) => {
       <DrawerContent>
         <div className="mx-auto w-full max-w-sm">
           <DrawerHeader>
-            <DrawerTitle className="font-bold text-xl">Categories</DrawerTitle>
+            <DrawerTitle className="text-xl font-bold">Categories</DrawerTitle>
           </DrawerHeader>
           <Separator />
-          <nav className="flex flex-col p-2 gap-2 justify-center">
+          <nav className="flex flex-col justify-center gap-2 p-2">
             {categories.map((category) => (
               <Link
                 className="flex items-center justify-center p-2 font-semibold"

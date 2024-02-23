@@ -23,7 +23,7 @@ export interface DivProps
 const BottomContainer = forwardRef<HTMLDivElement, DivProps>(
   (
     { className, variant = "left", size = "default", children, ...props },
-    ref
+    ref,
   ) => {
     return (
       <div
@@ -34,7 +34,7 @@ const BottomContainer = forwardRef<HTMLDivElement, DivProps>(
         {children}
       </div>
     );
-  }
+  },
 );
 BottomContainer.displayName = "BottomContainer";
 export default BottomContainer;
