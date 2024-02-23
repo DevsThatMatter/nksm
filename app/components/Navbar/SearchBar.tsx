@@ -17,8 +17,6 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
   const [input, setInput] = useState("");
   const searchParams = useSearchParams();
   const category = searchParams!.get("category") || "";
-  const sort = searchParams!.get("sort") || "";
-  const sortBy = searchParams!.get("by") || "";
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -35,7 +33,18 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
   );
 
   const handleSearchSubmit = (formData: FormData) => {
-    router.push("/search?q=" + formData.get("q"));
+    const input = formData.get("q")?.toString().trim();
+    if (!input && pathname == "/search") {
+      console.log(category);
+      if (category) {
+        router.push("/search?category=" + category);
+      } else {
+        router.push("/");
+        return;
+      }
+    } else {
+      router.push("/search?q=" + formData.get("q"));
+    }
     setIsDropdownOpen(false);
   };
 
@@ -59,10 +68,9 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
               setInput(e.target.value);
               pathname != "/search"
                 ? setIsDropdownOpen(!!e.target.value)
-                : router.push(
-                    "?q=" +
-                      e.target.value +
-                      `&category=${category}&sort=${sort}&by=${sortBy}`,
+                : (e.target.value || category) &&
+                  router.push(
+                    "/search?q=" + e.target.value + `&category=${category}`,
                     { scroll: true }
                   ); // Show dropdown when input is not empty
             }, 800)}

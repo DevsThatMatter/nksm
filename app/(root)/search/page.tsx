@@ -2,12 +2,16 @@ import Filter from "@/app/components/Search/Filter";
 import LoadMore from "@/app/components/Search/LoadMore";
 
 import { getSearchResults } from "@/lib/actions/fetchProduct.actions";
+import { redirect } from "next/navigation";
 
 export default async function Page({
   searchParams,
 }: {
   searchParams: { [key: string]: string | undefined };
 }) {
+  if (!(searchParams.q || searchParams.category)) {
+    redirect("/");
+  }
   const result = await getSearchResults({
     searchString: searchParams.q || "",
     pageNumber: 1,
