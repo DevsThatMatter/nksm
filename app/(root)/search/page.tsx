@@ -18,13 +18,14 @@ export default async function Page({
   });
 
   return (
-    <main className=" flex justify-center w-full">
+    <main className=" flex w-full justify-center">
       <div className="max-w-screen-md">
         <Filter />
-        <p className="text-xl font-semibold mb-4">
+        <p className="mb-4 text-xl font-semibold">
           Showing {result.skipAmount + 1} –{" "}
           {result.skipAmount + result.productsCount} of{" "}
-          {result.totalProductsCount} results for &quot;{searchParams.q || "All"}&quot;
+          {result.totalProductsCount} results for &quot;
+          {searchParams.q || "All"}&quot;
           {searchParams.category ? ` in ${searchParams.category}` : ""}
         </p>
 

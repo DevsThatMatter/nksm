@@ -20,8 +20,8 @@ import { StepFour } from "./StepFour"; // Assuming you have a StepFour component
 export function AddListing({
   children = (
     <Button variant="default" className="relative">
-      <Icons.add className="absolute left-2 m-auto top-0 bottom-0 h-5 w-5" />
-      <span className="hidden sm:inline-block pl-4"> Add Listing </span>
+      <Icons.add className="absolute bottom-0 left-2 top-0 m-auto h-5 w-5" />
+      <span className="hidden pl-4 sm:inline-block"> Add Listing </span>
     </Button>
   ),
 }: {
@@ -63,10 +63,10 @@ export function AddListing({
             Provide details for your new listing.
           </DialogDescription>
         </DialogHeader>
-        <div className="bg-gray-50 dark:bg-gray-950 p-6 rounded-lg shadow-2xl">
+        <div className="rounded-lg bg-gray-50 p-6 shadow-2xl dark:bg-gray-950">
           {stepContent[currentStep]}
         </div>
-        <DialogFooter className="flex mt-auto">
+        <DialogFooter className="mt-auto flex">
           {currentStep < 4 && (
             <Button type="button" onClick={handleNext}>
               Next

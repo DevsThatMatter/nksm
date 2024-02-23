@@ -18,7 +18,7 @@ const Navbar = async ({
       <AddListing />
       <UserChat />
       <SavedItems />
-      <Separator orientation="vertical" className="h-10"/>
+      <Separator orientation="vertical" className="h-10" />
       <UserProfile />
     </>
   ),
@@ -30,8 +30,8 @@ const Navbar = async ({
   const products = (await fetchRecentProductS()) || [];
   return (
     <>
-      <div className="sticky top-0 left-0 right-0 z-50 bg-background shadow-md">
-        <nav className="flex lg:justify-between justify-center max-h-30">
+      <div className="sticky left-0 right-0 top-0 z-50 bg-background shadow-md">
+        <nav className="max-h-30 flex justify-center lg:justify-between">
           {!className && (
             <div className="h-[4.769rem]">
               <Link href="/">
@@ -40,18 +40,18 @@ const Navbar = async ({
                   alt="Logo"
                   width={150}
                   height={150}
-                  className="dark:invert logo hidden lg:block my-2 mx-3 mt-3"
+                  className="logo mx-3 my-2 mt-3 hidden dark:invert lg:block"
                 />
               </Link>
             </div>
           )}
           <div
             className={cn(
-              "nav-items flex space-x-5 items-center mr-5",
-              className
+              "nav-items mr-5 flex items-center space-x-5",
+              className,
             )}
           >
-            <SearchBar products={products} className="ml-3 my-5" />
+            <SearchBar products={products} className="my-5 ml-3" />
             {children}
           </div>
         </nav>

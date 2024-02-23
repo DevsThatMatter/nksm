@@ -1,4 +1,5 @@
 "use server";
+"use server";
 
 import { Product } from "../models/product.model";
 import { connectToDB } from "../database/mongoose";

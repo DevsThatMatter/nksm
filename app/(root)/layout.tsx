@@ -11,14 +11,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <>
           <Navbar className="w-[100%] justify-between">
             <>
-              <div className="h-[4.769rem] order-[-1]">
+              <div className="order-[-1] h-[4.769rem]">
                 <Link href="/">
                   <Image
                     src="/logon.svg"
                     alt="Logo"
                     width={150}
                     height={150}
-                    className="dark:invert logo my-2 mt-3 "
+                    className="logo my-2 mt-3 dark:invert "
                   />
                 </Link>
               </div>

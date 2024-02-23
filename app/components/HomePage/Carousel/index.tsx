@@ -14,7 +14,7 @@ import { cn } from "@/app/utils";
 
 const options: EmblaOptionsType = { loop: true, align: "center" };
 
-const ProductCarousel = ({className}: {className?: string | undefined}) => {
+const ProductCarousel = ({ className }: { className?: string | undefined }) => {
   return (
     <div className={cn("p-4 lg:m-9 lg:mt-12", className)}>
       <h1 className="pb-3 text-2xl font-semibold">Recent Items</h1>
@@ -25,7 +25,7 @@ const ProductCarousel = ({className}: {className?: string | undefined}) => {
               <ProductSkeleton key={i} />
             ))}
           >
-            <CarouselItems/>
+            <CarouselItems />
           </Suspense>
         </CarouselContent>
         <CarouselPrevious className="hidden lg:flex" />
@@ -35,7 +35,11 @@ const ProductCarousel = ({className}: {className?: string | undefined}) => {
   );
 };
 
-export const CarouselItems = async ({productPageCarousel} : {productPageCarousel? : boolean}) => {
+export const CarouselItems = async ({
+  productPageCarousel,
+}: {
+  productPageCarousel?: boolean;
+}) => {
   const data = await fetchRecentProducts();
   return data!.map((product) => (
     <ProductCard
@@ -45,7 +49,7 @@ export const CarouselItems = async ({productPageCarousel} : {productPageCarousel
       name={product.Product_Name}
       price={product.Price}
       description={product.Description}
-      productPageCarousel= {productPageCarousel}
+      productPageCarousel={productPageCarousel}
     />
   ));
 };

@@ -38,7 +38,7 @@ export default function SearchBar({
   }, [pathname]);
 
   const filteredProducts = products?.filter((product) =>
-    product.Product_Name.toLowerCase().startsWith(input.toLowerCase())
+    product.Product_Name.toLowerCase().startsWith(input.toLowerCase()),
   );
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -62,7 +62,7 @@ export default function SearchBar({
         <div>
           <Input
             placeholder="Search"
-            className="pl-8 w-100% sm:w-56 md:w-[31.4rem]"
+            className="w-100% pl-8 sm:w-56 md:w-[31.4rem]"
             onChange={useDebouncedCallback((e) => {
               // debounce can create artificial delay before querying db
               setInput(e.target.value);
@@ -113,7 +113,7 @@ export default function SearchBar({
           // Render "No results" message when no products match the input
           input &&
           isDropdownOpen && (
-            <div className="absolute left-0 right-0 mt-1 rounded-md shadow-lg z-50 max-h-60 overflow-auto bg-card border">
+            <div className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-auto rounded-md border bg-card shadow-lg">
               <div className="px-4 py-2">
                 Search NKSM for &quot;{input}&quot;
               </div>

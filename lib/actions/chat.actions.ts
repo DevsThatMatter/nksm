@@ -62,7 +62,7 @@ export async function chatHandler(userId1: string, userId2: string) {
     const chatId = chatModel.find(
       (chat) =>
         chat.Participants.includes(userId1) &&
-        chat.Participants.includes(userId2)
+        chat.Participants.includes(userId2),
     )?.Chat_ID;
 
     if (chatId) {

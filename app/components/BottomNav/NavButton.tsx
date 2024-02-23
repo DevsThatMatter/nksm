@@ -14,8 +14,8 @@ const NavButton = ({
       variant="ghost"
       size="icon"
       className={cn(
-        "active:-translate-y-1 transition hover:text-purple-500",
-        className
+        "transition hover:text-purple-500 active:-translate-y-1",
+        className,
       )}
     >
       {children}
