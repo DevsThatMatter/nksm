@@ -17,7 +17,15 @@ interface Chat {
   phoneNumber: string;
 }
 
-export default function UserChat() {
+export default function UserChat({
+  children = (
+    <Button variant="ghost" size="icon">
+      <Icons.chaticon className="h-[1.3rem] w-[1.32rem]" />
+    </Button>
+  ),
+}: {
+  children?: React.ReactNode;
+}) {
   const chat = useChatStore((state) => state.chat);
   const createChat = useChatStore((state) => state.createChat);
   const removeChat = useChatStore((state) => state.removeChat);
@@ -39,11 +47,7 @@ export default function UserChat() {
   return (
     <div>
       <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <Icons.chaticon className="w-[1.32rem] h-[1.3rem]" />
-          </Button>
-        </SheetTrigger>
+        <SheetTrigger asChild>{children}</SheetTrigger>
         {chats ? (
           <SheetContent side="left">
             <SheetHeader>
@@ -65,11 +69,11 @@ export default function UserChat() {
               </SheetTitle>
             </SheetHeader>
             {chat === "" ? (
-              <SheetDescription className="mt-4 flex flex-col space-y-4 w-full">
+              <SheetDescription className="mt-4 flex w-full flex-col space-y-4">
                 {chats.map((chat) => (
                   <div
                     key={chat.phoneNumber}
-                    className="flex items-center justify-between p-2 border rounded-md shadow-md cursor-pointer hover:shadow-xl"
+                    className="flex cursor-pointer items-center justify-between rounded-md border p-2 shadow-md hover:shadow-xl"
                     onClick={() => handleSetChat(chat.phoneNumber)}
                   >
                     <div>

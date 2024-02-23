@@ -13,9 +13,9 @@ const ProductSaved = ({ className, id }: { className: string; id: string }) => {
       }}
     >
       {!isSaved ? (
-        <BookmarkIcon className="w-4 h-4 text-gray-500" />
+        <BookmarkIcon className="h-4 w-4 text-gray-500" />
       ) : (
-        <BookmarkFilledIcon className="w-4 h-4 text-gray-500" />
+        <BookmarkFilledIcon className="h-4 w-4 text-gray-500" />
       )}
     </div>
   );

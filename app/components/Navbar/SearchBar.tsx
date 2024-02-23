@@ -13,7 +13,13 @@ type ProductsArray = {
   Images: string[];
 }[];
 
-export default function SearchBar({ products }: { products: ProductsArray }) {
+export default function SearchBar({
+  products,
+  className,
+}: {
+  products: ProductsArray;
+  className?: string;
+}) {
   const [input, setInput] = useState("");
   const searchParams = useSearchParams();
   const category = searchParams!.get("category") || "";
@@ -29,7 +35,7 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
   }, [pathname]);
 
   const filteredProducts = products?.filter((product) =>
-    product.Product_Name.toLowerCase().startsWith(input.toLowerCase())
+    product.Product_Name.toLowerCase().startsWith(input.toLowerCase()),
   );
 
   const handleSearchSubmit = (formData: FormData) => {
@@ -55,14 +61,14 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
   };
 
   return (
-    <form action={handleSearchSubmit}>
+    <form action={handleSearchSubmit} className={className}>
       <div className="relative" ref={dropdownRef}>
         <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
         <div>
           <Input
             placeholder="Search"
             name="q"
-            className="pl-8 w-100% sm:w-56 md:w-[31.4rem]"
+            className="w-100% pl-8 sm:w-56 md:w-[31.4rem]"
             onChange={useDebouncedCallback((e) => {
               // debounce can create artificial delay before querying db
               setInput(e.target.value);
@@ -71,7 +77,7 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
                 : (e.target.value || category) &&
                   router.push(
                     "/search?q=" + e.target.value + `&category=${category}`,
-                    { scroll: true }
+                    { scroll: true },
                   ); // Show dropdown when input is not empty
             }, 800)}
             onFocus={() => {
@@ -84,11 +90,11 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
         isDropdownOpen &&
         filteredProducts &&
         filteredProducts.length > 0 ? (
-          <div className="absolute left-0 right-0 mt-1 rounded-md shadow-lg z-50 max-h-60 overflow-auto bg-card border">
+          <div className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-auto rounded-md border bg-card shadow-lg">
             {filteredProducts.map((product) => (
               <li
                 key={product._id}
-                className="flex items-center justify-between px-4 py-2 hover:bg-accent border"
+                className="flex items-center justify-between border px-4 py-2 hover:bg-accent"
               >
                 <div className="flex items-center">
                   <Image
@@ -112,7 +118,7 @@ export default function SearchBar({ products }: { products: ProductsArray }) {
           // Render "No results" message when no products match the input
           input &&
           isDropdownOpen && (
-            <div className="absolute left-0 right-0 mt-1 rounded-md shadow-lg z-50 max-h-60 overflow-auto bg-card border">
+            <div className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-auto rounded-md border bg-card shadow-lg">
               <div className="px-4 py-2">
                 Search NKSM for &quot;{input}&quot;
               </div>

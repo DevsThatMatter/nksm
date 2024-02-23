@@ -23,10 +23,10 @@ export default async function Page({
   });
 
   return (
-    <main className="max-w-screen-md m-auto">
+    <main className="m-auto max-w-screen-md">
       <Filter />
 
-      <p className="text-xl font-semibold mb-4">
+      <p className="mb-4 text-xl font-semibold">
         Showing results for &quot;{searchParams.q || "All"}&quot;
         {searchParams.category ? ` in ${searchParams.category}` : ""}
       </p>

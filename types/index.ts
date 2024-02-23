@@ -29,7 +29,7 @@ export enum CategoryEnum {
 }
 
 export enum ConditionEnum {
-  'Brand New',
-  'Like New' ,
-  'Used' ,
+  "Brand New",
+  "Like New",
+  "Used",
 }
