@@ -49,16 +49,16 @@ export default function ChatInput({ userId1, userId2 }: chatInputProps) {
         <FormItem>
           <FormControl>
             <div className="flex flex-1">
-              <div className="border p-1 rounded-md max-w-[95%] border-gray-300 dark:bg-gray-900 flex justify-between">
+              <div className="flex max-w-[95%] justify-between rounded-md border border-gray-300 p-1 dark:bg-gray-900">
                 <Input
                   disabled={isLoading}
-                  className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none"
+                  className="w-full border-none focus-visible:ring-0 focus-visible:ring-offset-0"
                   {...form.register("content")}
                 />
                 <div className="flex space-x-1">
                   <FileUploadModal />
                   <button type="button">
-                    <Icons.image className="w-5 h-5 text-blue-500 cursor-pointer hover:text-blue-700 transform hover:scale-105 transition-transform" />
+                    <Icons.image className="h-5 w-5 transform cursor-pointer text-blue-500 transition-transform hover:scale-105 hover:text-blue-700" />
                   </button>
                 </div>
               </div>
@@ -67,7 +67,7 @@ export default function ChatInput({ userId1, userId2 }: chatInputProps) {
         </FormItem>
         {(
           <button type="submit">
-            <Icons.sendIcon className="w-9 h-9 bg-blue-200 dark:bg-blue-300 p-2 rounded-full text-blue-500 dark:text-blue-700 cursor-pointer  transform hover:scale-105 transition-transform" />{" "}
+            <Icons.sendIcon className="h-9 w-9 transform cursor-pointer rounded-full bg-blue-200 p-2 text-blue-500 transition-transform  hover:scale-105 dark:bg-blue-300 dark:text-blue-700" />{" "}
           </button>
         ) || (
           <Skeleton

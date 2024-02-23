@@ -2,12 +2,11 @@
   <img src="https://github.com/DevsThatMatter/nksm/assets/20147775/1c4c7717-40fd-4663-90aa-99b92928c39a">
 </p>
 
-
 ## NKSM - NIT Kurukshetra Student Marketplace
 
 NKSM is a vibrant online marketplace designed exclusively for students at NIT Kurukshetra. This platform facilitates easy buying and selling of goods among students, fostering a sustainable cycle where departing seniors can pass on their belongings to incoming students.
 
-*Greetings from the NIT Kurukshetra Student Marketplace team! While there's still work to be done, we're excited about the potential of this platform to serve our campus community. Our goal is to create the most intuitive and user-friendly marketplace introduced to NIT Kurukshetra, implementing industry-leading practices for an exceptional user experience. Any creative ideas are earnestly welcome.*
+_Greetings from the NIT Kurukshetra Student Marketplace team! While there's still work to be done, we're excited about the potential of this platform to serve our campus community. Our goal is to create the most intuitive and user-friendly marketplace introduced to NIT Kurukshetra, implementing industry-leading practices for an exceptional user experience. Any creative ideas are earnestly welcome._
 
 <br>
 <br>
@@ -31,4 +30,3 @@ NKSM is a vibrant online marketplace designed exclusively for students at NIT Ku
 • **Vercel**
 
 • **Socket.io**
-  
