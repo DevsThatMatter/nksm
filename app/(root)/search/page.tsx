@@ -1,5 +1,6 @@
 import Filter from "@/app/components/Search/Filter";
 import LoadMore from "@/app/components/Search/LoadMore";
+import SearchShell from "@/app/components/Search/SearchShell";
 
 import { getSearchResults } from "@/lib/actions/fetchProduct.actions";
 import { redirect } from "next/navigation";
@@ -22,19 +23,18 @@ export default async function Page({
   });
 
   return (
-    <main className=" flex justify-center w-full">
-      <div className="max-w-screen-md">
-        <Filter />
+    <main className="max-w-screen-md m-auto">
+      <Filter />
 
-        <p className="text-xl font-semibold mb-4">
-          Showing results for &quot;{searchParams.q || "All"}&quot;
-          {searchParams.category ? ` in ${searchParams.category}` : ""}
-        </p>
-
+      <p className="text-xl font-semibold mb-4">
+        Showing results for &quot;{searchParams.q || "All"}&quot;
+        {searchParams.category ? ` in ${searchParams.category}` : ""}
+      </p>
+      <SearchShell>
         {result.productsData}
         {result.isNext && <LoadMore pages={2} />}
-        <br />
-      </div>
+      </SearchShell>
+      <br />
     </main>
   );
 }

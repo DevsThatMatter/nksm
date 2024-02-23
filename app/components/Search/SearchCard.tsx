@@ -23,16 +23,22 @@ const SearchCard = ({
 }: ProductCardProps) => {
   return (
     <Card>
-      <CardContent className="flex items-start gap-6 p-6">
-        <Image
-          alt="Product Image"
-          className="aspect-square object-cover border border-gray-200 rounded-lg overflow-hidden dark:border-gray-800"
-          height={200}
-          src={image_url}
-          width={200}
-        />
+      <CardContent className="flex items-start gap-6 p-6 relative @container">
+        <div className="">
+          <Image
+            alt="Product Image"
+            className="aspect-square object-cover border border-gray-200 rounded-lg overflow-hidden dark:border-gray-800"
+            height={200}
+            src={image_url}
+            width={200}
+          />
+          <ProductSaved
+            className="absolute top-0 right-0 p-1 mt-6 mr-5 bg-gray-200 rounded-full "
+            id={id.toString()}
+          />
+        </div>
         <div className="grid gap-2 text-base">
-          <h2 className="font-extrabold text-xl leading-tight">{name}</h2>
+          <h2 className="font-extrabold md:text-xl leading-tight">{name}</h2>
           <p className="text-base leading-normal">{description}</p>
           <div className="flex items-center gap-2">
             <h4 className="font-bold">${price}</h4>
@@ -42,10 +48,6 @@ const SearchCard = ({
             <span className="text-sm text-muted-foreground">{condition}</span>
           </div>
         </div>
-        <ProductSaved
-          className="absolute top-0 right-0 p-1 mt-4 mr-4 bg-gray-200 rounded-full sm:mt-6 sm:mr-6 lg:mt-5 lg:mr-5 2xl:mt-5 2xl:mr-6"
-          id={id.toString()}
-        />
       </CardContent>
     </Card>
   );

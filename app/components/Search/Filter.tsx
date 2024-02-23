@@ -49,7 +49,7 @@ const Filter = () => {
   const sortBy = searchParams!.get("by") || "createdAt";
 
   return (
-    <div className="my-2">
+    <div className="my-2 w-[48rem]">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
