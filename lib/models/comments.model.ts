@@ -1,9 +1,13 @@
 import mongoose from "mongoose";
-import { string } from "zod";
 
 const commentSchema = new mongoose.Schema({
+  Product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+    required: true,
+  },
   User: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  Comment: { type: string, required: true },
+  Comment: { type: String, required: true },
 });
 
 export const Comments =

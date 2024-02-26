@@ -16,12 +16,10 @@ function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
         <div className="flex items-center">
           <Avatar className="h-[3rem] w-[3rem]">
             <AvatarImage alt="Seller" src={sellerInfo.Avatar} />
-            <AvatarFallback>{sellerInfo.First_Name.slice(0, 2)}</AvatarFallback>
+            <AvatarFallback>{sellerInfo.Name}</AvatarFallback>
           </Avatar>
           <div className="ml-2">
-            <p className="font-semibold">
-              {sellerInfo.First_Name} {sellerInfo.Last_Name}
-            </p>
+            <p className="font-semibold">{sellerInfo.Name}</p>
             <p className="text-sm text-gray-500">{sellerInfo.Phone_Number}</p>
           </div>
         </div>

@@ -6,145 +6,74 @@ import {
 } from "@/app/components/ui/avatar";
 import React from "react";
 import { Input } from "../ui/input";
+import { CommentsInterface, CommentsType } from "@/types";
+import { addComment } from "@/lib/actions/comment.actions";
+import { Session } from "next-auth";
+import { redirect } from "next/navigation";
+import mongoose, { mongo } from "mongoose";
 
-function CommentCard() {
+function CommentCard({
+  comments,
+  productId,
+  userdata,
+}: {
+  comments: CommentsType;
+  productId: string;
+  userdata: Session | null;
+}) {
+  const sendComment = async (formData: FormData) => {
+    "use server";
+
+    const comment = formData.get("content") as string;
+    if (comment.trim() !== "" && userdata?.user) {
+      const newcomment: CommentsInterface = {
+        Product: new mongo.ObjectId(productId),
+        User: new mongo.ObjectId(userdata.user.id),
+        Comment: comment,
+      };
+      await addComment(newcomment);
+    } else {
+      redirect("/login");
+    }
+  };
+
   return (
     <>
       <h2 className="mt-5 text-lg font-semibold">Comments</h2>
       <ScrollArea className="mt-2 h-72 w-full rounded-md border p-2">
         <div className="space-y-4">
-          <div className="flex items-start space-x-2">
-            <Avatar>
-              <AvatarImage
-                alt="Alice"
-                src="/placeholder.svg?height=40&width=40"
-              />
-              <AvatarFallback>AL</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-semibold">Alice</p>
-              <p className="text-sm">
-                What are the available sizes for this product?
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-2">
-            <Avatar>
-              <AvatarImage
-                alt="Charlie"
-                src="/placeholder.svg?height=40&width=40"
-              />
-              <AvatarFallback>CH</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-semibold">Charlie</p>
-              <p className="text-sm">
-                Is this product available in other colors?
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-2">
-            <Avatar>
-              <AvatarImage
-                alt="David"
-                src="/placeholder.svg?height=40&width=40"
-              />
-              <AvatarFallback>DA</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-semibold">David</p>
-              <p className="text-sm">Can this product be customized?</p>
-            </div>
-          </div>
-          <div className="flex items-start space-x-2">
-            <Avatar>
-              <AvatarImage
-                alt="Ian"
-                src="/placeholder.svg?height=40&width=40"
-              />
-              <AvatarFallback>IA</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-semibold">Ian</p>
-              <p className="text-sm">
-                Is this product suitable for outdoor use? Because my garden
-                gnomes need some new friends.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start space-x-2">
-            <Avatar>
-              <AvatarImage
-                alt="Eva"
-                src="/placeholder.svg?height=40&width=40"
-              />
-              <AvatarFallback>EV</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-semibold">Eva</p>
-              <p className="text-sm">What is the material of this product?</p>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-2">
-            <Avatar>
-              <AvatarImage
-                alt="Fiona"
-                src="/placeholder.svg?height=40&width=40"
-              />
-              <AvatarFallback>FI</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-semibold">Fiona</p>
-              <p className="text-sm">
-                What is the warranty period for this product? My pet hamster has
-                a habit of &apos;testing&apos; things out.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-2">
-            <Avatar>
-              <AvatarImage
-                alt="George"
-                src="/placeholder.svg?height=40&width=40"
-              />
-              <AvatarFallback>GE</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-semibold">George</p>
-              <p className="text-sm">
-                Does this product require assembly? I once spent a whole day
-                assembling a puzzle only to find out it was a pizza box.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-2">
-            <Avatar>
-              <AvatarImage
-                alt="Hannah"
-                src="/placeholder.svg?height=40&width=40"
-              />
-              <AvatarFallback>HA</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="font-semibold">Hannah</p>
-              <p className="text-sm">
-                What are the care instructions for this product? I promise not
-                to use it as a hat for my cat again.
-              </p>
-            </div>
-          </div>
+          {comments ? (
+            comments.map((comment) => (
+              <div className="flex items-start space-x-2" key={comment._id}>
+                <Avatar>
+                  <AvatarImage
+                    alt={comment.User.Name}
+                    src={comment.User.Avatar}
+                  />
+                  <AvatarFallback>
+                    {comment.User.Name.substring(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-semibold">{comment.User.Name}</p>
+                  <p className="text-sm">{comment.Comment}</p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div>No Comments</div>
+          )}
         </div>
       </ScrollArea>
-      <Input
-        className="w-full rounded-md border border-gray-200 p-2 focus:outline-none focus:ring focus:ring-gray-300 dark:border-gray-800 dark:focus:ring-gray-600"
-        id="comment-input"
-        placeholder="Ask about the product..."
-      />
+      <form action={sendComment}>
+        <Input
+          className="w-full rounded-md border border-gray-200 p-2 focus:outline-none focus:ring focus:ring-gray-300 dark:border-gray-800 dark:focus:ring-gray-600"
+          id="comment-input"
+          placeholder="Ask about the product..."
+          name="content"
+          required
+        />
+      </form>
     </>
   );
 }

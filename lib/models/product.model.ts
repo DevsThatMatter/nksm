@@ -9,6 +9,10 @@ const productSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    Comments: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comments",
+    },
     Total_Quantity_Available: { type: Number, required: true },
     Product_Name: { type: String, required: true },
     Description: { type: String, required: true },

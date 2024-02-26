@@ -1,4 +1,3 @@
-import { Types } from "mongoose";
 import { Socket, Server as netServer } from "net";
 import { NextApiResponse } from "next";
 import { Server as socketIoServer } from "socket.io";
@@ -24,12 +23,28 @@ export interface Seller {
   Phone_Number: string;
   Avatar: string;
   Email: string;
-  First_Name: string;
-  Last_Name: string;
+  Name: string;
 }
+
+export interface User {
+  Username: string;
+  Email: string;
+  Avatar: string;
+  Name: string;
+  id: string;
+}
+export interface CommentsInterface {
+  _id: string;
+  Product: Product;
+  User: User;
+  Comment: string;
+}
+export type CommentsType = CommentsInterface[];
+
 export interface Product {
   _id: string;
   Seller: Seller;
+  Comments: CommentsType;
   Quantity: number;
   Product_Name: string;
   Description: string;

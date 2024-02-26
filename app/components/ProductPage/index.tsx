@@ -14,8 +14,15 @@ import {
   CarouselNext,
 } from "../ui/carousel";
 import { EmblaOptionsType } from "embla-carousel";
+import { Session } from "next-auth";
 
-const ProductPage = ({ productInfo }: { productInfo: Product }) => {
+const ProductPage = ({
+  productInfo,
+  userData,
+}: {
+  productInfo: Product;
+  userData: Session | null;
+}) => {
   const options: EmblaOptionsType = { loop: true, align: "center" };
   return (
     <div key="1" className="mx-auto max-w-full p-4">
@@ -41,7 +48,11 @@ const ProductPage = ({ productInfo }: { productInfo: Product }) => {
         <div className="col-span-1">
           <div className="sticky top-[6.3rem] mt-2">
             <SellerCard sellerInfo={productInfo.Seller} />
-            <CommentCard />
+            <CommentCard
+              comments={productInfo.Comments}
+              productId={productInfo._id}
+              userdata={userData}
+            />
           </div>
         </div>
       </div>

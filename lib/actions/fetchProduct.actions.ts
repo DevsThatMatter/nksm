@@ -1,5 +1,4 @@
 "use server";
-"use server";
 
 import { Product } from "../models/product.model";
 import { connectToDB } from "../database/mongoose";
@@ -7,6 +6,7 @@ import { FilterQuery, SortOrder } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { CategoryEnum } from "@/types";
 import { User } from "../models/user.model";
+import { Comments } from "../models/comments.model";
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -114,11 +114,20 @@ export const getSearchResults = async ({
 export const fetchProductDetails = async (productId: string) => {
   try {
     await connectToDB();
-    const productDetails = await Product.findById(productId).populate({
-      path: "Seller",
-      model: User,
-      select: "_id Username Phone_Number Avatar First_Name Last_Name",
-    });
+    const productDetails = await Product.findById(productId)
+      .populate({
+        path: "Seller",
+        model: User,
+        select: "_id Username Phone_Number Avatar First_Name Last_Name",
+      })
+      .populate({
+        path: "Comments",
+        populate: {
+          path: "User",
+          model: User,
+          select: "Name Avatar",
+        },
+      });
     if (!productDetails) {
       throw new Error("Product not found!");
     }
@@ -131,6 +140,7 @@ export const fetchProductDetails = async (productId: string) => {
       Condition: productDetails.Condition,
       Category: productDetails.Category,
       Seller: productDetails.Seller,
+      Comments: productDetails.Comments,
       Quantity: productDetails.Total_Quantity_Available,
       Expiry: productDetails.expires_in,
     };
