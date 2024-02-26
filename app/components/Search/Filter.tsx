@@ -73,11 +73,11 @@ const Filter = () => {
                   value={framework.value}
                   onSelect={(currentValue) => {
                     const label = frameworks.find(
-                      (framework) => framework.value === currentValue
+                      (framework) => framework.value === currentValue,
                     )?.label;
                     if (!label) return;
                     router.push(
-                      `?q=${q}&category=${label}&sort=${sort}&by=${sortBy}`
+                      `?q=${q}&category=${label}&sort=${sort}&by=${sortBy}`,
                     );
                     setOpen(false);
                   }}
@@ -85,7 +85,7 @@ const Filter = () => {
                   <CheckIcon
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === framework.label ? "opacity-100" : "opacity-0"
+                      value === framework.label ? "opacity-100" : "opacity-0",
                     )}
                   />
                   {framework.label}
@@ -96,7 +96,7 @@ const Filter = () => {
         </PopoverContent>
       </Popover>
       <Button
-        className="w-8 h-8 p-0 mt-2"
+        className="mt-2 h-8 w-8 p-0"
         onClick={() => router.push(`?q=${q}&sort=${sort}&by=${sortBy}`)}
         variant={"ghost"}
       >
@@ -105,7 +105,7 @@ const Filter = () => {
       <Switch
         onClick={() => {
           router.push(
-            `?q=${q}&category=${value}&sort=${-1 * sort}&by=${sortBy}`
+            `?q=${q}&category=${value}&sort=${-1 * sort}&by=${sortBy}`,
           );
           console.log("Switch Clicked");
         }}

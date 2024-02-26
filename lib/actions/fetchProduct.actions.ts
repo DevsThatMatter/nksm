@@ -33,7 +33,6 @@ export const fetchRecentProductS = async () => {
       Product_Name: product.Product_Name,
       Price: product.Price,
       Images: product.Images,
-      
     }));
     return modifiedProducts;
   } catch (error) {
@@ -112,16 +111,15 @@ export const getSearchResults = async ({
   }
 };
 
-export const fetchProductDetails = async (productId:string) => {
-  try{
+export const fetchProductDetails = async (productId: string) => {
+  try {
     await connectToDB();
-    const productDetails = await Product.findById(productId)
-    .populate({
-      path:"Seller",
-      model:User,
-      select:"_id Username Phone_Number Avatar First_Name Last_Name",
-      });
-    if(!productDetails){
+    const productDetails = await Product.findById(productId).populate({
+      path: "Seller",
+      model: User,
+      select: "_id Username Phone_Number Avatar First_Name Last_Name",
+    });
+    if (!productDetails) {
       throw new Error("Product not found!");
     }
     return {
@@ -135,9 +133,9 @@ export const fetchProductDetails = async (productId:string) => {
       Seller: productDetails.Seller,
       Quantity: productDetails.Total_Quantity_Available,
       Expiry: productDetails.expires_in,
-    } 
+    };
   } catch (error) {
     console.error("Error fetching product details:", error);
     throw error;
   }
-}
+};

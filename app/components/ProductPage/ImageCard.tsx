@@ -13,8 +13,8 @@ import Image from "next/image";
 
 export default function ImageCard({ images }: any) {
   return (
-    <div className="flex justify-end relative">
-      <div className="w-[15%] absolute left-0 top-0 bottom-0 overflow-auto space-y-2 pr-2">
+    <div className="relative flex justify-end">
+      <div className="absolute bottom-0 left-0 top-0 w-[15%] space-y-2 overflow-auto pr-2">
         {images.map((image: string, index: number) => (
           <Image
             key={index}
@@ -23,12 +23,11 @@ export default function ImageCard({ images }: any) {
             width={200}
             height={200}
             className="rounded-md"
-            
           />
         ))}
       </div>
 
-      <Carousel className="w-[85%] shadow-none rounded-lg">
+      <Carousel className="w-[85%] rounded-lg shadow-none">
         <CarouselContent>
           {images.map((image: string, index: number) => (
             <CarouselItem key={index} className="rounded-md">
@@ -37,7 +36,7 @@ export default function ImageCard({ images }: any) {
                 alt={`Image ${index + 1}`}
                 width={1920}
                 height={1080}
-                className="object-fill rounded-lg aspect-video w-full h-full"
+                className="aspect-video h-full w-full rounded-lg object-fill"
               />
             </CarouselItem>
           ))}

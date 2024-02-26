@@ -5,17 +5,18 @@ import { Icons } from "@/app/utils/icons";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/app/components/ui/dialog";
 
-import { StepOne } from "./StepOne";
-import { StepTwo } from "./StepTwo";
-import { StepThree } from "./StepThree";
-import { StepFour } from "./StepFour"; // Assuming you have a StepFour component
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "../ui/select";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 
 export function AddListing({
   children = (
@@ -27,52 +28,81 @@ export function AddListing({
 }: {
   children?: React.ReactNode;
 }) {
-  const [currentStep, setCurrentStep] = useState<number>(1);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const handleNext = () => {
-    setCurrentStep(currentStep + 1);
-  };
 
   const handleDialogOpen = () => {
     console.log("triggered");
     if (isDialogOpen) {
       setIsDialogOpen(false);
-      setCurrentStep(1);
     } else {
       setIsDialogOpen(true);
     }
   };
 
   // Define the content for each step
-  const stepContent: Record<number, JSX.Element> = {
-    1: <StepOne />,
-    2: <StepTwo />,
-    3: <StepThree />,
-    // 4: <StepFour />,
-  };
-
   return (
     <Dialog onOpenChange={handleDialogOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
-        <DialogHeader>
-          <div>{`Step ${currentStep} of 4.`}</div>
-          <DialogTitle>Add Listing</DialogTitle>
-          <DialogDescription>
-            Provide details for your new listing.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="rounded-lg bg-gray-50 p-6 shadow-2xl dark:bg-gray-950">
-          {stepContent[currentStep]}
+        <div className="grid grid-cols-2 gap-6">
+          <div className="flex flex-col">
+            <label className="mb-2 font-semibold text-gray-700">
+              Item Name
+            </label>
+            <Input
+              className="rounded border p-3"
+              placeholder="Acoustic Guitar"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="mb-2 font-semibold text-gray-700">
+              Condition
+            </label>
+            <Select>
+              <SelectTrigger id="condition">
+                <SelectValue placeholder="Like New" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectItem value="new">New</SelectItem>
+                <SelectItem value="like-new">Like New</SelectItem>
+                <SelectItem value="used">Used</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className=" col-span-2 flex flex-col">
+            <label className="mb-2 font-semibold text-gray-700">
+              Description
+            </label>
+            <Textarea
+              className="h-24 rounded border p-3"
+              placeholder="Cool Guitar"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="mb-2 font-semibold text-gray-700">Price</label>
+            <Input className="rounded border p-3" placeholder="8000" />
+          </div>
+          <div className="flex flex-col">
+            <label className="mb-2 font-semibold text-gray-700">Category</label>
+            <Select>
+              <SelectTrigger id="category">
+                <SelectValue placeholder="Instruments" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectItem value="instruments">Instruments</SelectItem>
+                <SelectItem value="accessories">Accessories</SelectItem>
+                <SelectItem value="music">Music</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="col-span-1 flex flex-col md:col-span-2">
+            <label className="mb-2 font-semibold text-gray-700">Image</label>
+            <Input className="rounded border p-1" type="file" />
+          </div>
         </div>
-        <DialogFooter className="mt-auto flex">
-          {currentStep < 4 && (
-            <Button type="button" onClick={handleNext}>
-              Next
-            </Button>
-          )}
-        </DialogFooter>
+        <div className="mt-6 flex justify-center">
+          <Button className="rounded px-4 py-2 font-bold">Submit</Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

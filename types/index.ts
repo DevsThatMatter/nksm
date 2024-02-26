@@ -1,4 +1,3 @@
-
 import { Types } from "mongoose";
 import { Socket, Server as netServer } from "net";
 import { NextApiResponse } from "next";
@@ -20,17 +19,17 @@ export type category = {
 };
 
 export interface Seller {
-  SellerId: string,
-    Username: string,
-    Phone_Number: string,
-    Avatar: string,
-    Email :string,
-    First_Name: string,
-    Last_Name: string,
+  SellerId: string;
+  Username: string;
+  Phone_Number: string;
+  Avatar: string;
+  Email: string;
+  First_Name: string;
+  Last_Name: string;
 }
 export interface Product {
   _id: string;
-  Seller: Seller,
+  Seller: Seller;
   Quantity: number;
   Product_Name: string;
   Description: string;

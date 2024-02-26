@@ -48,7 +48,8 @@ export default function SearchBar({
   };
 
   const handleFocusOut = () => {
-    setTimeout(() => { // Corrected syntax: added the missing arrow function '() => {'
+    setTimeout(() => {
+      // Corrected syntax: added the missing arrow function '() => {'
       if (dropdownRef.current) {
         setIsDropdownOpen(false);
       }
@@ -69,10 +70,10 @@ export default function SearchBar({
               pathname != "/search"
                 ? setIsDropdownOpen(!!e.target.value)
                 : router.push(
-                  "?q=" +
-                  e.target.value +
-                  `&category=${category}&sort=${sort}&by=${sortBy}`,
-                ); // Show dropdown when input is not empty
+                    "?q=" +
+                      e.target.value +
+                      `&category=${category}&sort=${sort}&by=${sortBy}`,
+                  ); // Show dropdown when input is not empty
             }, 1000)}
             onFocus={() => {
               pathname != "/search" && setIsDropdownOpen(true);
@@ -81,15 +82,13 @@ export default function SearchBar({
           />
         </div>
         {input &&
-          isDropdownOpen &&
-          filteredProducts &&
-          filteredProducts.length > 0 ? (
-          <div className="absolute left-0 right-0 mt-1 rounded-md shadow-lg z-50 max-h-60 overflow-auto bg-card border">
+        isDropdownOpen &&
+        filteredProducts &&
+        filteredProducts.length > 0 ? (
+          <div className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-auto rounded-md border bg-card shadow-lg">
             {filteredProducts.map((product) => (
               <Link href={`/product/${product._id}`} key={product._id}>
-                <li
-                  className="flex items-center justify-between px-4 py-2 hover:bg-accent border"
-                >
+                <li className="flex items-center justify-between border px-4 py-2 hover:bg-accent">
                   <div className="flex items-center">
                     <Image
                       alt={product.Product_Name}

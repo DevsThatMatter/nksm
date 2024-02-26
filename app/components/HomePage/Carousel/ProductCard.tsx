@@ -22,11 +22,16 @@ const ProductCard = ({
   description,
   productPageCarousel = false,
 }: ProductCardProps) => {
-
   return (
-    <CarouselItem className={productPageCarousel ? "basis-1/2 min-[200px]:basis-11/12 min-[300px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4" :"basis-1/2 min-[200px]:basis-11/12 min-[300px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"}>
+    <CarouselItem
+      className={
+        productPageCarousel
+          ? "basis-1/2 min-[200px]:basis-11/12 min-[300px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4"
+          : "basis-1/2 min-[200px]:basis-11/12 min-[300px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+      }
+    >
       <Card className="m-1 min-w-[120px]">
-        <CardContent className="flex relative justify-center items-center p-3 aspect-square">
+        <CardContent className="relative flex aspect-square items-center justify-center p-3">
           <Link href={`/product/${id}`}>
             <div className="flex flex-col justify-center">
               <Image
@@ -48,7 +53,7 @@ const ProductCard = ({
             </div>
           </Link>
           <ProductSaved
-            className="absolute top-0 right-0 p-1 mt-4 mr-4 bg-gray-200 rounded-full sm:mt-6 sm:mr-6 lg:mt-5 lg:mr-5 2xl:mt-5 2xl:mr-6"
+            className="absolute right-0 top-0 mr-4 mt-4 rounded-full bg-gray-200 p-1 sm:mr-6 sm:mt-6 lg:mr-5 lg:mt-5 2xl:mr-6 2xl:mt-5"
             id={id.toString()}
           />
         </CardContent>

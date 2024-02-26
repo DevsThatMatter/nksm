@@ -10,8 +10,8 @@ import { Input } from "../ui/input";
 function CommentCard() {
   return (
     <>
-      <h2 className="text-lg font-semibold mt-5">Comments</h2>
-      <ScrollArea className="h-72 w-full mt-2 rounded-md border p-2">
+      <h2 className="mt-5 text-lg font-semibold">Comments</h2>
+      <ScrollArea className="mt-2 h-72 w-full rounded-md border p-2">
         <div className="space-y-4">
           <div className="flex items-start space-x-2">
             <Avatar>
@@ -141,7 +141,7 @@ function CommentCard() {
         </div>
       </ScrollArea>
       <Input
-        className="w-full p-2 rounded-md border border-gray-200 focus:outline-none focus:ring focus:ring-gray-300 dark:border-gray-800 dark:focus:ring-gray-600"
+        className="w-full rounded-md border border-gray-200 p-2 focus:outline-none focus:ring focus:ring-gray-300 dark:border-gray-800 dark:focus:ring-gray-600"
         id="comment-input"
         placeholder="Ask about the product..."
       />

@@ -7,14 +7,19 @@ import CommentCard from "./CommentCard";
 import { cn } from "@/app/utils";
 import { Suspense } from "react";
 import ProductSkeleton from "../HomePage/Carousel/ProductSkeleton";
-import { Carousel, CarouselContent, CarouselPrevious, CarouselNext } from "../ui/carousel";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselPrevious,
+  CarouselNext,
+} from "../ui/carousel";
 import { EmblaOptionsType } from "embla-carousel";
 
 const ProductPage = ({ productInfo }: { productInfo: Product }) => {
   const options: EmblaOptionsType = { loop: true, align: "center" };
   return (
-    <div key="1" className="max-w-full mx-auto p-4">
-      <div className="lg:grid lg:grid-cols-3 gap-4">
+    <div key="1" className="mx-auto max-w-full p-4">
+      <div className="gap-4 lg:grid lg:grid-cols-3">
         <div className="col-span-2 h-auto">
           <ImageCard images={productInfo.Images} />
           <ProductDetails productInfo={productInfo} />
@@ -27,7 +32,7 @@ const ProductPage = ({ productInfo }: { productInfo: Product }) => {
                     <ProductSkeleton key={i} />
                   ))}
                 >
-                  <CarouselItems productPageCarousel/>
+                  <CarouselItems productPageCarousel />
                 </Suspense>
               </CarouselContent>
             </Carousel>

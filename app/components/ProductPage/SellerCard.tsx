@@ -12,7 +12,7 @@ function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
   return (
     <div>
       <h2 className="text-lg font-semibold">Seller Details</h2>
-      <div className="flex justify-between my-2">
+      <div className="my-2 flex justify-between">
         <div className="flex items-center">
           <Avatar className="h-[3rem] w-[3rem]">
             <AvatarImage alt="Seller" src={sellerInfo.Avatar} />
@@ -27,10 +27,9 @@ function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
         </div>
         <Button
           variant="default"
-          className="relative items-center justify-center my-auto bg-green-600 hover:bg-green-700"
-          
+          className="relative my-auto items-center justify-center bg-green-600 hover:bg-green-700"
         >
-          <Icons.sendIcon className="absolute left-2 m-auto top-0 bottom-0 h-4 w-4" />
+          <Icons.sendIcon className="absolute bottom-0 left-2 top-0 m-auto h-4 w-4" />
           <span className="pl-4">Message</span>
         </Button>
       </div>
