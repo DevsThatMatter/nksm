@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { SavedItems } from "./SavedItems";
 import { Separator } from "@/app/components/ui/separator";
-import UserChat from "@/app/components/Chat/ChatsPanel";
+import UserChat from "../Chat/chat-panel";
 import { AddListing } from "../AddListing";
 import SearchBar from "./SearchBar";
 import { ReactNode, Suspense } from "react";
@@ -16,7 +16,7 @@ const Navbar = async ({
   children = (
     <>
       <AddListing />
-      <UserChat />
+      <UserChat userId={"65c5e97aafe71c6df760f715"} />
       <SavedItems />
       <Separator orientation="vertical" className="h-10" />
       <UserProfile />
@@ -29,6 +29,9 @@ const Navbar = async ({
 }) => {
   const userData = await auth();
   const products = (await fetchRecentProducts()) || [];
+  const userId = userData?.user?.id || "65c5e97aafe71c6df760f717"
+  // 65c5e97aafe71c6df760f717
+  // 65c5e97aafe71c6df760f715
   return (
     <>
       <div className="sticky left-0 right-0 top-0 z-50 bg-background shadow-md">

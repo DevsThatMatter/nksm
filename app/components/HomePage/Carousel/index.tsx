@@ -36,7 +36,7 @@ const ProductCarousel = () => {
 
 const CarouselItems = async () => {
   const data = await fetchRecentProducts();
-  return data!.map((product) => (
+  return data?.map((product) => (
     <ProductCard
       image_url={product.Images[0]}
       key={product._id}

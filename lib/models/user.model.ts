@@ -14,4 +14,4 @@ const userSchema = new mongoose.Schema({
   Ordered_Products: [{ type: mongoose.Schema.Types.ObjectId, ref: "product" }],
 });
 
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.models.User || mongoose.model("User", userSchema);
