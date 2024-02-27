@@ -11,6 +11,7 @@ import { Product } from "../models/product.model";
 
 import { SellerBuyerChatType, chatDetails } from "@/types";
 import { Message } from "../models/message.model";
+import { client } from "../database/redis-config";
 
 
 function groupDocs(data: chatDetails[]): Map<string, chatDetails[]> {
@@ -284,7 +285,7 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
     }
 
     chat.Locked = true;
-    await chat.save(); 
+    await chat.save();
 
     console.log("Updated Chat:", chat);
 
@@ -361,12 +362,7 @@ async function computeUnreadMessages(
   return unreadCount;
 }
 
-const client = new Redis({
-  host: "redis-79955be-nksm.a.aivencloud.com",
-  port: 13733,
-  username: "default",
-  password: "AVNS_cOKhPptydLL93lFgKE3",
-});
+
 
 export async function countUnreadMessages(
   props: z.infer<typeof UnreadMessagesProps> & {
@@ -378,7 +374,7 @@ export async function countUnreadMessages(
   console.log("caller by =>", props.caller);
   try {
     let cachedValue = await new Promise<number>((resolve, reject) => {
-      client.get(cacheKey, (err, reply) => {
+      client?.get(cacheKey, (err, reply) => {
         if (err) {
           reject(err);
           return;
@@ -392,17 +388,17 @@ export async function countUnreadMessages(
         return cachedValue;
       } else {
         const unreadCount = await computeUnreadMessages(props);
-        client.setex(cacheKey, 1800, unreadCount.toString());
+        client?.setex(cacheKey, 1800, unreadCount.toString());
         return unreadCount;
       }
     } else {
       if (cachedValue !== -1) {
         cachedValue -= 1;
-        client.setex(cacheKey, 1800, cachedValue);
+        client?.setex(cacheKey, 1800, cachedValue);
         return cachedValue;
       } else {
         const unreadCount = await computeUnreadMessages(props);
-        client.setex(cacheKey, 1800, unreadCount.toString());
+        client?.setex(cacheKey, 1800, unreadCount.toString());
         await Message.updateOne({ _id: props.messageId }, { readStatus: true });
         return unreadCount;
       }
