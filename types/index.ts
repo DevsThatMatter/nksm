@@ -1,4 +1,4 @@
-import { mongo } from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import { Socket, Server as netServer } from "net";
 import { NextApiResponse } from "next";
 import { Server as socketIoServer } from "socket.io";
@@ -32,10 +32,10 @@ export interface User {
   Email: string;
   Avatar: string;
   Name: string;
-  id: string;
+  id: mongoose.Types.ObjectId;
 }
 export interface CommentsInterface {
-  _id?: string;
+  _id?: mongoose.Types.ObjectId;
   Product: Product;
   User: User;
   Comment: string;
@@ -43,7 +43,7 @@ export interface CommentsInterface {
 export type CommentsType = CommentsInterface[];
 
 export interface Product {
-  _id: string;
+  _id: mongoose.Types.ObjectId;
   Seller: Seller;
   Comments: CommentsType;
   Quantity: number;

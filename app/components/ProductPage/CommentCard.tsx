@@ -13,7 +13,11 @@ import mongoose from "mongoose";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 
-async function CommentCard({ productId }: { productId: string }) {
+async function CommentCard({
+  productId,
+}: {
+  productId: mongoose.Types.ObjectId;
+}) {
   const userdata = await auth();
 
   const comments = await listComments(productId);
@@ -39,7 +43,7 @@ async function CommentCard({ productId }: { productId: string }) {
         <div className="space-y-4">
           {comments ? (
             comments.map((comment) => (
-              <div className="flex items-start space-x-2" key={comment._id}>
+              <div className="flex items-start space-x-2" key={comment._id?.toString()}>
                 <Avatar>
                   <AvatarImage
                     alt={comment.User.Name}

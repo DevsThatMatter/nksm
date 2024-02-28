@@ -24,7 +24,7 @@ export const addComment = async (commentData: {
   }
 };
 
-export const listComments = async (productID: string) => {
+export const listComments = async (productID: mongoose.Types.ObjectId) => {
   try {
     await connectToDB();
     const comments: CommentsType = await Comments.aggregate([
