@@ -36,11 +36,12 @@ export default function AddListingForm() {
   }
 
   return (
-    <div className="border p-64">
+    <div className="flex justify-center items-center h-screen ">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex">
-            <div className="mb-4 mr-32">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="border p-4">
+          <div className="grid grid-cols-2 row-span-4 gap-4">
+            {/* line 1 */}
+            <div className="mb-4">
               <FormField //item name
                 control={form.control}
                 name="iname"
@@ -55,57 +56,61 @@ export default function AddListingForm() {
                 )}
               />
             </div>
-            <div className="mb-4 mr-32">
-              <FormField //item name
-                control={form.control}
-                name="quantity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>quantity</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="quantity"
-                        type="number"
-                        min="1"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="mb-4">
-              <FormField // category
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>category</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+            <div className="grid grid-cols-2 row-span-4 gap-4">
+              <div className="mb-4">
+                <FormField //qty
+                  control={form.control}
+                  name="quantity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>quantity</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
+                        <Input
+                          placeholder="quantity"
+                          type="number"
+                          min="1"
+                          {...field}
+                        />
                       </FormControl>
-                      <SelectContent>
-                        {Object.values(CategoryEnum).map((category) => (
-                          <SelectItem key={category} value={category}>
-                            {category}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="mb-4">
+                <FormField // category
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>category</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Object.values(CategoryEnum).map((category) => (
+                            <SelectItem key={category} value={category}>
+                              {category}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
           </div>
-          <div className="mb-4">
+
+          <div className="mb-4 col-span-2">
             <FormField //description
               control={form.control}
               name="Description"
@@ -124,8 +129,9 @@ export default function AddListingForm() {
               )}
             />
           </div>
-          <div className="flex">
-            <div className="mb-4 mr-32">
+
+          <div className="grid grid-cols-2 row-span-4 gap-4">
+            <div className="mb-4">
               <FormField //price
                 control={form.control}
                 name="Price"
@@ -140,6 +146,7 @@ export default function AddListingForm() {
                 )}
               />
             </div>
+
             <div className="mb-4">
               <FormField // condition
                 control={form.control}
@@ -170,7 +177,8 @@ export default function AddListingForm() {
               />
             </div>
           </div>
-          <div className="mb-4">
+
+          <div className="mb-4 col-span-2">
             <FormField // images
               control={form.control}
               name="images"
@@ -190,7 +198,7 @@ export default function AddListingForm() {
               )}
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 col-span-2">
             <Button type="submit">Submit</Button>
           </div>
         </form>
