@@ -37,27 +37,27 @@ export default function AddListingForm() {
 
   return (
     <div className="flex justify-center items-center h-screen ">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="border p-4">
-          <div className="grid grid-cols-2 row-span-4 gap-4">
-            {/* line 1 */}
-            <div className="mb-4">
-              <FormField //item name
-                control={form.control}
-                name="iname"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Item Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Item Name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="grid grid-cols-2 row-span-4 gap-4">
-              <div className="mb-4">
+      <div className="border p-8 max-w-md">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="grid grid-cols-2 mb-2">
+              <div className="col-span-2">
+                <FormField //item name
+                  control={form.control}
+                  name="iname"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Item Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Item Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/* Adjust the grid column spans */}
+              <div>
                 <FormField //qty
                   control={form.control}
                   name="quantity"
@@ -78,7 +78,7 @@ export default function AddListingForm() {
                 />
               </div>
 
-              <div className="mb-4">
+              <div>
                 <FormField // category
                   control={form.control}
                   name="category"
@@ -108,38 +108,20 @@ export default function AddListingForm() {
                 />
               </div>
             </div>
-          </div>
 
-          <div className="mb-4 col-span-2">
-            <FormField //description
-              control={form.control}
-              name="Description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Tell us a little bit about your product"
-                      className="resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 row-span-4 gap-4">
-            <div className="mb-4">
-              <FormField //price
+            <div className="col-span-2 mb-2">
+              <FormField
                 control={form.control}
-                name="Price"
+                name="Description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Price</FormLabel>
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Input {...field} type="number" min="0" />
+                      <Textarea
+                        placeholder="Tell us a little bit about your product"
+                        className="resize-none"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -147,62 +129,79 @@ export default function AddListingForm() {
               />
             </div>
 
-            <div className="mb-4">
-              <FormField // condition
+            <div className="grid grid-cols-2 mb-2">
+              <div>
+                <FormField //price
+                  control={form.control}
+                  name="Price"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Price</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="number" min="0" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div>
+                <FormField // condition
+                  control={form.control}
+                  name="condition"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Condition</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Object.values(ConditionEnum).map((condition) => (
+                            <SelectItem key={condition} value={condition}>
+                              {condition}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className=" col-span-2 mb-2">
+              <FormField // images
                 control={form.control}
-                name="condition"
+                name="images"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Condition</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.values(ConditionEnum).map((condition) => (
-                          <SelectItem key={condition} value={condition}>
-                            {condition}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormLabel>Image</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={(e) => field.onChange(e.target.files)}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-          </div>
-
-          <div className="mb-4 col-span-2">
-            <FormField // images
-              control={form.control}
-              name="images"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={(e) => field.onChange(e.target.files)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="mb-4 col-span-2">
-            <Button type="submit">Submit</Button>
-          </div>
-        </form>
-      </Form>
+            <div className="col-span-2 mb-2">
+              <Button type="submit">Submit</Button>
+            </div>
+          </form>
+        </Form>
+      </div>
     </div>
   );
 }
