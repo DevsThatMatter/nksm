@@ -14,8 +14,6 @@ import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 
 async function CommentCard({ productId }: { productId: string }) {
-  "use server";
-
   const userdata = await auth();
 
   const comments = await listComments(productId);
