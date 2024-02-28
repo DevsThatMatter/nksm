@@ -5,38 +5,35 @@ import {
   Avatar,
 } from "@/app/components/ui/avatar";
 import React from "react";
-import { Input } from "../ui/input";
-import { CommentsInterface, CommentsType } from "@/types";
-import { addComment } from "@/lib/actions/comment.actions";
-import { Session } from "next-auth";
-import { redirect } from "next/navigation";
-import mongoose, { mongo } from "mongoose";
+import { Input } from "@/app/components/ui/input";
 
-function CommentCard({
-  comments,
-  productId,
-  userdata,
-}: {
-  comments: CommentsType;
-  productId: string;
-  userdata: Session | null;
-}) {
+import { addComment, listComments } from "@/lib/actions/comment.actions";
+import { redirect } from "next/navigation";
+import mongoose from "mongoose";
+import { auth } from "@/auth";
+import { revalidatePath } from "next/cache";
+
+async function CommentCard({ productId }: { productId: string }) {
+  "use server";
+
+  const userdata = await auth();
+
+  const comments = await listComments(productId);
   const sendComment = async (formData: FormData) => {
     "use server";
-
     const comment = formData.get("content") as string;
-    if (comment.trim() !== "" && userdata?.user) {
-      const newcomment: CommentsInterface = {
-        Product: new mongo.ObjectId(productId),
-        User: new mongo.ObjectId(userdata.user.id),
+    if (userdata != null && userdata != undefined && comment.trim() !== "") {
+      const newcomment = {
+        Product: new mongoose.Types.ObjectId(productId),
+        User: new mongoose.Types.ObjectId(userdata?.user?.id),
         Comment: comment,
       };
       await addComment(newcomment);
+      revalidatePath(`/product/${productId}`);
     } else {
       redirect("/login");
     }
   };
-
   return (
     <>
       <h2 className="mt-5 text-lg font-semibold">Comments</h2>

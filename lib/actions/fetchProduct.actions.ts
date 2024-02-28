@@ -114,25 +114,16 @@ export const getSearchResults = async ({
 export const fetchProductDetails = async (productId: string) => {
   try {
     await connectToDB();
-    const productDetails = await Product.findById(productId)
-      .populate({
-        path: "Seller",
-        model: User,
-        select: "_id Username Phone_Number Avatar First_Name Last_Name",
-      })
-      .populate({
-        path: "Comments",
-        populate: {
-          path: "User",
-          model: User,
-          select: "Name Avatar",
-        },
-      });
+    const productDetails = await Product.findById(productId).populate({
+      path: "Seller",
+      model: User,
+      select: "_id Username Phone_Number Avatar First_Name Last_Name",
+    });
     if (!productDetails) {
       throw new Error("Product not found!");
     }
     return {
-      _id: productDetails._id.toString(),
+      _id: productDetails._id,
       Product_Name: productDetails.Product_Name,
       Price: productDetails.Price,
       Images: productDetails.Images,

@@ -1,5 +1,5 @@
 import ImageCard from "./ImageCard";
-import ProductCarousel, { CarouselItems } from "../HomePage/Carousel";
+import { CarouselItems } from "../HomePage/Carousel";
 import ProductDetails from "./ProductDetails";
 import { Product } from "@/types";
 import SellerCard from "./SellerCard";
@@ -7,22 +7,11 @@ import CommentCard from "./CommentCard";
 import { cn } from "@/app/utils";
 import { Suspense } from "react";
 import ProductSkeleton from "../HomePage/Carousel/ProductSkeleton";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselPrevious,
-  CarouselNext,
-} from "../ui/carousel";
+import { Carousel, CarouselContent } from "../ui/carousel";
 import { EmblaOptionsType } from "embla-carousel";
 import { Session } from "next-auth";
 
-const ProductPage = ({
-  productInfo,
-  userData,
-}: {
-  productInfo: Product;
-  userData: Session | null;
-}) => {
+const ProductPage = ({ productInfo }: { productInfo: Product }) => {
   const options: EmblaOptionsType = { loop: true, align: "center" };
   return (
     <div key="1" className="mx-auto max-w-full p-4">
@@ -48,11 +37,7 @@ const ProductPage = ({
         <div className="col-span-1">
           <div className="sticky top-[6.3rem] mt-2">
             <SellerCard sellerInfo={productInfo.Seller} />
-            <CommentCard
-              comments={productInfo.Comments}
-              productId={productInfo._id}
-              userdata={userData}
-            />
+            <CommentCard productId={productInfo._id} />
           </div>
         </div>
       </div>

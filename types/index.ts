@@ -1,3 +1,4 @@
+import { mongo } from "mongoose";
 import { Socket, Server as netServer } from "net";
 import { NextApiResponse } from "next";
 import { Server as socketIoServer } from "socket.io";
@@ -34,7 +35,7 @@ export interface User {
   id: string;
 }
 export interface CommentsInterface {
-  _id: string;
+  _id?: string;
   Product: Product;
   User: User;
   Comment: string;
