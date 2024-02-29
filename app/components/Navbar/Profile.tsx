@@ -63,9 +63,6 @@ export function Profile({ data, whichIcon }: UserProfileProps) {
       <DropdownMenuContent align="start">
         {data?.user && (
           <>
-            <DropdownMenuItem onClick={() => console.log("View Your Profile")}>
-              View Your Orders
-            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => console.log("Settings")}>
               Account Info
             </DropdownMenuItem>
