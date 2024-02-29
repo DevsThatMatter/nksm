@@ -22,6 +22,7 @@ import {
   SelectItem,
 } from "@/app/components/ui/select";
 import { Textarea } from "../ui/textarea";
+import { addProductFromListing } from "@/lib/actions/add-listing.action";
 
 type Inputs = z.infer<typeof FormDataSchema>;
 
@@ -43,8 +44,8 @@ export default function AddListingForm() {
     form.reset();
   }
 
-  function onSubmit(values: Inputs) {
-    console.log(values);
+  async function onSubmit() {
+    const { iname, price, quantity, category, condition, description, images } = form.getValues();
   }
 
   return (

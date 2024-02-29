@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Icons } from "@/app/utils/icons";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 const PlusBottomContainer = () => {
   console.log("PlusBottomContainer");
