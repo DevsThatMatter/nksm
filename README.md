@@ -29,4 +29,12 @@ _Greetings from the NIT Kurukshetra Student Marketplace team! While there's stil
 
 • **Vercel**
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+• **Socket.io**
+  
+=======
+• **Pusher**
+>>>>>>> 620f954 (Update README.md (#67))
+=======
 • **Pusher**
