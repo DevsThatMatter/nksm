@@ -19,10 +19,6 @@ export const addComment = async (commentData: {
       User: commentData.User,
       Comment: commentData.Comment,
     });
-    if (await Comments.find(newComment)) {
-      console.log("duplicate comment! Aborting...");
-      return;
-    }
     await newComment.save();
     console.log("Comment added successfully!");
   } catch (error) {
