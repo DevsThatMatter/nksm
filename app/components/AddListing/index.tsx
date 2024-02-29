@@ -5,7 +5,7 @@ import { Icons } from "@/app/utils/icons";
 export function AddListing() {
   return (
     <div>
-      <Link href="/ListingForm">
+      <Link href="/add-listing">
         <Button variant="default" className="relative">
           <Icons.add className="absolute bottom-0 left-2 top-0 m-auto h-5 w-5" />
           <span className="hidden pl-4 sm:inline-block"> Add Listing </span>

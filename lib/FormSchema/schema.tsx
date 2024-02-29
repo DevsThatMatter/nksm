@@ -7,11 +7,11 @@ const ACCEPTED_IMAGE_MIME_TYPES = [
 ];
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 export const FormDataSchema = z.object({
-  iname: z.string().min(1, "name is required"),
+  iname: z.string().min(1, "Name is required"),
 
-  condition: z.string().min(1, "condition is required"),
-  Description: z.string().min(1, "description is required"),
-  category: z.string().min(1, "category is required"),
+  condition: z.string().min(1, "Condition is required"),
+  description: z.string().min(1, "Description is required"),
+  category: z.string().min(1, "Category is required"),
 
   images: z
     .any()
@@ -29,9 +29,16 @@ export const FormDataSchema = z.object({
         ans = ans && ACCEPTED_IMAGE_MIME_TYPES.includes(files?.[i]?.type);
       }
       return ans;
-    }, ".jpg, .jpeg, .png and .webp files are accepted."),
+    }, "Only .jpg, .jpeg, .png and .webp files are accepted."),
 
-  Price: z.coerce.number().min(1, "Price can't be left empty"),
-  quantity: z.coerce.number().min(1, "Price can't be left empty"),
- 
+  price: z
+    .union([z.coerce.number(), z.literal('')])
+    .refine((value) => typeof value === 'number' ? value >= 1 : true, {
+      message: 'Price must be least ₹1',
+    }),
+  quantity: z
+  .union([z.coerce.number(), z.literal('')])
+  .refine((value) => typeof value === 'number' ? value >= 0 : true, {
+    message: 'Quantity must be atleast 1',
+  }),
 });
