@@ -31,8 +31,12 @@ NKSM is a vibrant online marketplace designed exclusively for students at NIT Ku
 • **Vercel**
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 • **Socket.io**
   
+=======
+• **Pusher**
+>>>>>>> 620f954 (Update README.md (#67))
 =======
 • **Pusher**
 >>>>>>> 620f954 (Update README.md (#67))
