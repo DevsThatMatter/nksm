@@ -13,13 +13,16 @@ export const addComment = async (commentData: {
   Comment: string;
 }) => {
   try {
-    console.log(commentData);
     await connectToDB();
     const newComment = new Comments({
       Product: commentData.Product,
       User: commentData.User,
       Comment: commentData.Comment,
     });
+    if (await Comments.find(newComment)) {
+      console.log("duplicate comment! Aborting...");
+      return;
+    }
     await newComment.save();
     console.log("Comment added successfully!");
   } catch (error) {
