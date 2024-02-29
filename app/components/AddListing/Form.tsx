@@ -21,7 +21,6 @@ import {
   SelectContent,
   SelectItem,
 } from "@/app/components/ui/select";
-import Link from "next/link";
 import { Textarea } from "../ui/textarea";
 
 type Inputs = z.infer<typeof FormDataSchema>;
@@ -29,7 +28,20 @@ type Inputs = z.infer<typeof FormDataSchema>;
 export default function AddListingForm() {
   const form = useForm<Inputs>({
     resolver: zodResolver(FormDataSchema),
+    defaultValues: {
+      iname: "",
+      quantity: "",
+      category: "",
+      description: "",
+      price: "",
+      condition: "",
+      images: [],
+    }
   });
+
+  function handleReset() {
+    form.reset();
+  }
 
   function onSubmit(values: Inputs) {
     console.log(values);
@@ -40,9 +52,9 @@ export default function AddListingForm() {
       <div className="border p-8 max-w-md rounded-md">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-2 my-2 ">
+            <div className="grid grid-cols-2 my-2">
               <div className="col-span-2">
-                <FormField //item name
+                <FormField
                   control={form.control}
                   name="iname"
                   render={({ field }) => (
@@ -55,10 +67,10 @@ export default function AddListingForm() {
                     </FormItem>
                   )}
                 />
-              </div>
-              {/* Adjust the grid column spans */}
-              <div>
-                <FormField //qty
+                </div>
+                <div className="col-span-2">
+                <div className="grid grid-cols-2 gap-x-3">
+                <FormField
                   control={form.control}
                   name="quantity"
                   render={({ field }) => (
@@ -76,10 +88,7 @@ export default function AddListingForm() {
                     </FormItem>
                   )}
                 />
-              </div>
-
-              <div>
-                <FormField // category
+                <FormField 
                   control={form.control}
                   name="category"
                   render={({ field }) => (
@@ -87,7 +96,6 @@ export default function AddListingForm() {
                       <FormLabel>Category</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -107,12 +115,12 @@ export default function AddListingForm() {
                   )}
                 />
               </div>
-            </div>
+              </div>
 
             <div className="col-span-2 mb-2">
               <FormField
                 control={form.control}
-                name="Description"
+                name="description"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Description</FormLabel>
@@ -128,11 +136,11 @@ export default function AddListingForm() {
                 )}
               />
             </div>
-
-            <div className="grid grid-cols-2 mb-2">
+            <div className="col-span-2 mb-2">
+            <div className="grid grid-cols-2 mb-2 gap-x-3">
               <FormField //price
                 control={form.control}
-                name="Price"
+                name="price"
                 render={({ field }) => (
                   <FormItem className="">
                     <FormLabel>Price</FormLabel>
@@ -156,7 +164,7 @@ export default function AddListingForm() {
                     <FormLabel>Condition</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -175,6 +183,7 @@ export default function AddListingForm() {
                   </FormItem>
                 )}
               />
+            </div>
             </div>
 
             <div className=" col-span-2 mb-2">
@@ -198,12 +207,13 @@ export default function AddListingForm() {
               />
             </div>
             <div className="flex justify-between col-span-2 mt-5 space-x-3">
-              <Button type="reset" variant="destructive" className="w-full">
+              <Button type="reset" variant="outline" className="w-full hover:border-red-500" onClick={handleReset}>
                 Reset
               </Button>
               <Button type="submit" className="w-full">
                 Submit
               </Button>
+            </div>
             </div>
           </form>
         </Form>
