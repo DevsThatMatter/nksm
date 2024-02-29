@@ -36,11 +36,11 @@ export default function AddListingForm() {
   }
 
   return (
-    <div className="flex justify-center items-center h-screen ">
-      <div className="border p-8 max-w-md">
+    <div className="flex justify-center items-center h-[85vh]">
+      <div className="border p-8 max-w-md rounded-md">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-2 mb-2">
+            <div className="grid grid-cols-2 my-2 ">
               <div className="col-span-2">
                 <FormField //item name
                   control={form.control}
@@ -63,10 +63,10 @@ export default function AddListingForm() {
                   name="quantity"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>quantity</FormLabel>
+                      <FormLabel>Quantity</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="quantity"
+                          placeholder="Quantity"
                           type="number"
                           min="1"
                           {...field}
@@ -84,7 +84,7 @@ export default function AddListingForm() {
                   name="category"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>category</FormLabel>
+                      <FormLabel>Category</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
@@ -130,50 +130,51 @@ export default function AddListingForm() {
             </div>
 
             <div className="grid grid-cols-2 mb-2">
-              <div>
-                <FormField //price
-                  control={form.control}
-                  name="Price"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Price</FormLabel>
+              <FormField //price
+                control={form.control}
+                name="Price"
+                render={({ field }) => (
+                  <FormItem className="">
+                    <FormLabel>Price</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="number"
+                        min="0"
+                        placeholder="Price"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField // condition
+                control={form.control}
+                name="condition"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Condition</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
-                        <Input {...field} type="number" min="0" />
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div>
-                <FormField // condition
-                  control={form.control}
-                  name="condition"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Condition</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Object.values(ConditionEnum).map((condition) => (
-                            <SelectItem key={condition} value={condition}>
-                              {condition}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                      <SelectContent>
+                        {Object.values(ConditionEnum).map((condition) => (
+                          <SelectItem key={condition} value={condition}>
+                            {condition}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
             <div className=" col-span-2 mb-2">
@@ -196,8 +197,13 @@ export default function AddListingForm() {
                 )}
               />
             </div>
-            <div className="col-span-2 mb-2">
-              <Button type="submit">Submit</Button>
+            <div className="flex justify-between col-span-2 mt-5 space-x-3">
+              <Button type="reset" variant="destructive" className="w-full">
+                Reset
+              </Button>
+              <Button type="submit" className="w-full">
+                Submit
+              </Button>
             </div>
           </form>
         </Form>

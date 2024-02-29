@@ -20,9 +20,9 @@ export default auth((req) => {
   }
 
   if (isAuthRoutes) {
-    // if (isLoggedIn) {
-    //   return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
-    // }
+    if (isLoggedIn) {
+      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    }
     return null;
   }
   if (!isLoggedIn && !isPublicRoute) {
@@ -35,5 +35,5 @@ export default auth((req) => {
 // Read more: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
 // regex matcher will make it so middleware is invoked for all routes, what it should do is defined above
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/ListingForm/:path*", "/dashboard/:path*"],
 };
