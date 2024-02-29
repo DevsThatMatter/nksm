@@ -10,6 +10,7 @@ import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import useChatStore from "@/hooks/useChatStore";
+import { createNewMessage } from "@/lib/actions/chat.actions";
 
 const messageSchema = z.object({
   content: z.string().min(1),
@@ -50,15 +51,10 @@ export default function ChatInput({
     try {
       const message = values.content;
       const sender = userId;
-      const fileUrl = ""; // Placeholder, we will update this with actual file URL
-      const data = { message, sender, fileUrl, dealDone: dealLock };
-      await axios.post(`/api/socket/messages?sellerId=${sellerDetails.id}&buyerId=${buyerDetails.id}&productId=${productId}`, data)
-        .then(function (res) {
-          console.log(`res ${res}`);
-        }).catch(function (err) {
-          console.log(`err ${err}`);
-        })
-
+      const sellerId = sellerDetails.id
+      const buyerId = buyerDetails.id
+      const dealDone = dealLock
+      await createNewMessage(message, sender, dealDone, sellerId, buyerId, productId);
       form.reset();
     } catch (error) {
       console.error(error);

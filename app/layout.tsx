@@ -3,7 +3,6 @@ import { inter } from "@/app/utils/fonts";
 import "./styles/globals.css";
 import { cn } from "@/app/utils";
 import { ThemeProvider } from "@/app/components/providers/theme-provider";
-import { SocketProvider } from "@/app/components/providers/socket-provider";
 import { QueryProvider } from "./components/providers/query-provider";
 
 export const metadata: Metadata = {
@@ -32,11 +31,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           enableSystem
           disableTransitionOnChange
         >
-          <SocketProvider>
-            <QueryProvider>
-              {children}
-            </QueryProvider>
-          </SocketProvider>
+          <QueryProvider>
+            {children}
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

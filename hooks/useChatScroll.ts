@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 
 type ChatScrollProps = {
-    chatRef: React.RefObject<HTMLDivElement>,
+    topRef: React.RefObject<HTMLDivElement>,
     bottomRef: React.RefObject<HTMLDivElement>,
     shouldLoadMore: boolean,
     loadMore: () => void,
@@ -9,26 +9,26 @@ type ChatScrollProps = {
 }
 
 export function useChatScroll({
-    chatRef, bottomRef, shouldLoadMore, loadMore, count
+    topRef, bottomRef, shouldLoadMore, loadMore, count
 }: ChatScrollProps) {
     const [hasInit, setHasInit] = useState(false)
     useEffect(() => {
-        const topDiv = chatRef?.current
+        const topDiv = topRef?.current
         function handelScroll() {
             const scrollTop = topDiv?.scrollTop
             if (scrollTop === 0 && shouldLoadMore) {
                 loadMore()
             }
         }
-        top?.addEventListener("scroll", handelScroll)
+        topDiv?.addEventListener("scroll", handelScroll)
         return () => {
             topDiv?.removeEventListener("scroll", handelScroll)
         }
 
-    }, [shouldLoadMore, loadMore, chatRef.current])
+    }, [shouldLoadMore, loadMore, topRef])
     useEffect(() => {
         const bottomDiv = bottomRef?.current
-        const topDiv = chatRef.current
+        const topDiv = topRef.current
         function shouldScrollBySelf() {
             if (!hasInit && bottomDiv) {
                 setHasInit(true)
@@ -48,5 +48,5 @@ export function useChatScroll({
                 });
             }, 100);
         }
-    }, [bottomRef, chatRef.current, count, hasInit])
+    }, [bottomRef, count, hasInit, topRef])
 }

@@ -9,9 +9,10 @@ import { connectToDB } from "../database/mongoose";
 import { Chat } from "../models/chats.model";
 import { Product } from "../models/product.model";
 
-import { SellerBuyerChatType, chatDetails } from "@/types";
+import { MessageTypes, SellerBuyerChatType, chatDetails } from "@/types";
 import { Message } from "../models/message.model";
 import { client } from "../database/redis-config";
+import { pusherServer } from "../pusher";
 
 
 function groupDocs(data: chatDetails[]): Map<string, chatDetails[]> {
@@ -267,45 +268,54 @@ const LockDealProps = z.object({
 
 export async function lockDeal(props: z.infer<typeof LockDealProps>) {
   try {
-    await connectToDB(); // Assuming connectToDB is defined elsewhere
-
+    await connectToDB();
     const validatedProps = LockDealProps.parse(props);
-    console.log("Validated Props:", validatedProps);
 
     let chat = await Chat.findOne(
       {
-        Seller: new mongo.ObjectId('65c5e97aafe71c6df760f715'),
-        Buyer: new mongo.ObjectId('65c5e97aafe71c6df760f717'),
-        ProductId: new mongo.ObjectId('65c5e97aafe71c6df760f722')
+        Seller: new mongo.ObjectId(validatedProps.seller),
+        Buyer: new mongo.ObjectId(validatedProps.buyer),
+        ProductId: new mongo.ObjectId(validatedProps.productId)
       },
     );
 
     if (!chat) {
-      throw new Error('No matching document found');
+      return {
+        content: null,
+        error: 'No matching chat found',
+        status: 404
+      }
     }
 
     chat.Locked = true;
     await chat.save();
 
-    console.log("Updated Chat:", chat);
-
     const messageUpdateQuery = {
       _id: new mongo.ObjectId(validatedProps.msgId),
     };
 
-    const messageUpdate = await Message.updateOne(
+    const res = await Message.updateOne(
       messageUpdateQuery,
       { $set: { accepted: validatedProps.caller === "yes" ? "accepted" : "rejected" } }
     );
+    const updatedMessage = await Message.findOne({ _id: new mongo.ObjectId(validatedProps.msgId) })
+    const updateKey = `chat${validatedProps.productId}productId${validatedProps.productId}sellerId${validatedProps.seller}buyerId${validatedProps.buyer}update`
+    await pusherServer.trigger(updateKey, 'messages:update', updatedMessage)
 
-    console.log("Message Update:", messageUpdate);
-
+    return {
+      content: res,
+      error: null,
+      status: 200
+    }
   } catch (error) {
     console.error("Error locking deal:", error);
-    throw error;
+    return {
+      content: null,
+      error: error,
+      status: 500
+    };
   }
 }
-
 
 const UnreadMessagesProps = z.object({
   productId: mongoId,
@@ -362,8 +372,6 @@ async function computeUnreadMessages(
   return unreadCount;
 }
 
-
-
 export async function countUnreadMessages(
   props: z.infer<typeof UnreadMessagesProps> & {
     caller: "get" | "update";
@@ -371,7 +379,6 @@ export async function countUnreadMessages(
   }
 ): Promise<number> {
   const cacheKey = `unreadCount:${props.sellerId}-${props.buyerId}-${props.productId}`;
-  console.log("caller by =>", props.caller);
   try {
     let cachedValue = await new Promise<number>((resolve, reject) => {
       client?.get(cacheKey, (err, reply) => {
@@ -406,5 +413,171 @@ export async function countUnreadMessages(
   } catch (error) {
     console.error("Error counting unread messages:", error);
     throw error;
+  }
+}
+
+const CreateNewMessage = z.object({
+  message: z
+    .string()
+    .min(1, { message: "No more than one message can be sent at a time" }),
+  sender: mongoId,
+  dealDone: z.boolean(),
+  sellerId: mongoId,
+  buyerId: mongoId,
+  productId: mongoId
+});
+
+export async function createNewMessage(message: string, sender: string, dealDone: boolean, sellerId: string, buyerId: string, productId: string) {
+  try {
+    const validatedProps = CreateNewMessage.parse({ message, sender, dealDone, sellerId, buyerId, productId })
+
+    const product = await Product.findById(productId);
+    if (!product) {
+      throw new Error(`No product with this id ${productId}`)
+    }
+
+    const currentTimeStamp = new Date();
+    let newMessage: MessageTypes;
+
+    if (dealDone) {
+      newMessage = {
+        Sender: validatedProps.sender,
+        Message: "Lets have a deal?",
+        options: true,
+        TimeStamp: currentTimeStamp.toISOString(),
+        accepted: "pending",
+        readStatus: false
+      };
+    } else {
+      newMessage = {
+        Sender: validatedProps.sender,
+        Message: validatedProps.message,
+        options: false,
+        TimeStamp: currentTimeStamp.toISOString(),
+        readStatus: false
+      };
+    }
+
+    const chat = await Chat.findOne({
+      Seller: validatedProps.sellerId,
+      Buyer: validatedProps.buyerId,
+      ProductId: validatedProps.productId,
+    });
+
+    const createdMessage = await Message.create({
+      ...newMessage,
+    });
+
+    if (chat) {
+      console.log("chat found")
+      chat.Messages.push(createdMessage._id);
+      await chat.save();
+    } else {
+      console.log("chat not found")
+      const newChat = new Chat({
+        Seller: validatedProps.sellerId,
+        Buyer: validatedProps.buyerId,
+        ProductId: validatedProps.productId,
+        Messages: [createdMessage._id],
+      });
+      await newChat.save();
+    }
+
+    const addKey = `chat${validatedProps.productId}productId${validatedProps.productId}sellerId${validatedProps.sellerId}buyerId${validatedProps.buyerId}add`;
+    await pusherServer.trigger(addKey, 'messages:new', newMessage)
+
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      throw new Error(`zod type error  ${error.message}`)
+    }
+  }
+}
+
+const GetmessageProps = z.object({
+  sellerId: mongoId,
+  buyerId: mongoId,
+  productId: mongoId,
+  currentUser: mongoId,
+  pageNo: z.number().optional(),
+});
+
+export async function getInitialMessages(props: z.infer<typeof GetmessageProps>) {
+  try {
+    const docPerPage = 10;
+    const pipeline = [
+      {
+        $match: {
+          Seller: new mongo.ObjectId(props.sellerId),
+          Buyer: new mongo.ObjectId(props.buyerId),
+          ProductId: new mongo.ObjectId(props.productId),
+        },
+      },
+      {
+        $lookup: {
+          from: "messages",
+          localField: "Messages",
+          foreignField: "_id",
+          as: "Messages",
+        },
+      },
+      {
+        $addFields: {
+          Messages: {
+            $map: {
+              input: "$Messages",
+              as: "msg",
+              in: {
+                msgId: {
+                  $toString: "$$msg._id",
+                },
+                Message: "$$msg.Message",
+                Sender: "$$msg.Sender",
+                accepted: "$$msg.accepted",
+                TimeStamp: "$$msg.TimeStamp",
+                options: "$$msg.options",
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          Messages: 1,
+          Locked: 1,
+        },
+      },
+    ];
+
+    const skipCount = props.pageNo !== undefined ? props.pageNo * docPerPage : 0
+    const { Messages, Locked } = (await Chat.aggregate(pipeline).limit(docPerPage).skip(skipCount))[0] as { Messages: MessageTypes[]; Locked: boolean }
+    console.log("total number of messages fetched", Messages.length)
+    Messages.sort((a, b) => {
+      const dateA = new Date(a.TimeStamp);
+      const dateB = new Date(b.TimeStamp);
+      return dateA.getTime() - dateB.getTime();
+    })
+    const nextPageNo =
+      Messages.length === docPerPage ? (props.pageNo ?? 0) + 1 : undefined;
+
+    return {
+      content: {
+        messages: Messages,
+        Locked,
+        nextPageNo
+      },
+      msg: "Success, the initial messages found",
+      status: 200,
+      err: null
+    }
+
+  } catch (error) {
+    console.log("Error in get initial messages", error)
+    return {
+      content: null,
+      msg: "Internal server error",
+      status: 500,
+      err: error
+    }
   }
 }

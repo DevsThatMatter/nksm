@@ -6,32 +6,34 @@ export const useChatObserver = ({
   sellerId,
   buyerId,
   productId,
+  currentUserId
 }: {
   unreadMessages: NodeListOf<Element>;
   sellerId: string;
   buyerId: string;
   productId: string;
+  currentUserId: string
 }) => {
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(async (entry) => {
         if (entry.isIntersecting && entry.target instanceof HTMLElement) {
-          const messageId = entry.target.id;
-          // console.log("message id is =>",messageId);
-          // try {
-          //   await countUnreadMessages({
-          //     sellerId,
-          //     buyerId,
-          //     productId,
-          //     messageId,
-          //     caller: "update",
-          //   });
-          // } catch (error) {
-          //   console.error("Error counting unread messages:", error);
-          // } finally {
-          //   observer.unobserve(entry.target);
-          // }
-        
+          const messageId = entry.target.id
+          try {
+            await countUnreadMessages({
+              productId,
+              sellerId,
+              buyerId,
+              messageId,
+              caller: "update",
+              currentUser: currentUserId
+            });
+          } catch (error) {
+            console.error("Error counting unread messages:", error);
+          } finally {
+            observer.unobserve(entry.target);
+          }
+
         }
       });
     }, {
@@ -45,5 +47,5 @@ export const useChatObserver = ({
     return () => {
       observer.disconnect();
     };
-  }, [unreadMessages, sellerId, buyerId, productId]);
+  }, [unreadMessages, sellerId, buyerId, productId, currentUserId]);
 };
