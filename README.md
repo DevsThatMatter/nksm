@@ -29,4 +29,4 @@ _Greetings from the NIT Kurukshetra Student Marketplace team! While there's stil
 
 • **Vercel**
 
-• **Socket.io**
+• **Pusher**
