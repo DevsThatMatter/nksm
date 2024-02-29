@@ -15,6 +15,11 @@ import { client } from "../database/redis-config";
 import { pusherServer } from "../pusher";
 
 
+const mongoId = z.string().refine((value) => Types.ObjectId.isValid(value), {
+  message: "Invalid ObjectId format",
+});
+
+
 function groupDocs(data: chatDetails[]): Map<string, chatDetails[]> {
   const groupDocsByProduct = new Map<string, chatDetails[]>();
 
@@ -30,13 +35,9 @@ function groupDocs(data: chatDetails[]): Map<string, chatDetails[]> {
   return groupDocsByProduct;
 }
 
-export async function getAllChats(userId: string) {
+export async function getAllChats(userId: z.infer<typeof mongoId>) {
   try {
     connectToDB();
-
-    if (!userId || typeof userId !== "string") {
-      throw new Error("Invalid userId provided");
-    }
 
     const matchStage0 = {
       $match: {
@@ -202,9 +203,6 @@ export async function chatBetweenSellerAndBuyerForProduct(
   }
 }
 
-const mongoId = z.string().refine((value) => Types.ObjectId.isValid(value), {
-  message: "Invalid ObjectId format",
-});
 
 const CreateMessagesProps = z.object({
   message: z
@@ -244,16 +242,13 @@ export async function createMessages(
     Timestamp: "",
   };
   await Chat.findOneAndUpdate(
-    // find
     {
       $or: [
         { sellerId: validatedProps.sellerId, buyerId: validatedProps.buyerId },
       ],
       ProductId: validatedProps.productId,
     },
-    // update
     { $push: { Messages: newMessage } },
-    // extra opt
     { $upsert: 1 }
   );
 }
