@@ -1,7 +1,11 @@
-import { CommentsInterface, CommentsType } from "@/types";
+"use server";
+import { CommentsType } from "@/types";
 import { connectToDB } from "../database/mongoose";
 import { Comments } from "../models/comments.model";
 import mongoose from "mongoose";
+import { Session } from "next-auth";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export const addComment = async (commentData: {
   Product: mongoose.Types.ObjectId;
@@ -60,5 +64,28 @@ export const listComments = async (productID: mongoose.Types.ObjectId) => {
     return comments;
   } catch (error) {
     console.error("Error fetching comments:", error);
+  }
+};
+
+export const sendComment = async (
+  formData: FormData,
+  userdata: Session | null,
+  productId: mongoose.Types.ObjectId | string,
+) => {
+  const comment = formData.get("content") as string;
+  try {
+    if (userdata != null && userdata != undefined && comment.trim() !== "") {
+      const newcomment = {
+        Product: new mongoose.Types.ObjectId(productId),
+        User: new mongoose.Types.ObjectId(userdata?.user?.id),
+        Comment: comment,
+      };
+      await addComment(newcomment);
+      revalidatePath(`/product/${productId}`);
+    } else {
+      redirect("/login");
+    }
+  } catch (error) {
+    console.error("Error adding a comment:", error);
   }
 };
