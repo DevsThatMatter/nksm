@@ -18,8 +18,11 @@ import PencilIcon from "@/app/components/ui/PencilIcon";
 import Link from "next/link";
 import { useState } from "react";
 
+
 export default function Component() {
+
   return (
+    
     <div className="h-screen w-screen">
       <div className="w-full rounded-lg p-8 shadow ">
         <h1 className="mb-4 text-center text-2xl font-bold sm:text-left">
