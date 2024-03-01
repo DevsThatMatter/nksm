@@ -22,7 +22,7 @@ function CommentForm({
       }}
     >
       <Input
-        className="w-full rounded-md border border-gray-200 p-2 focus:outline-none focus:ring focus:ring-gray-300 dark:border-gray-800 dark:focus:ring-gray-600"
+        className="w-full rounded-md border border-gray-200 p-2 focus-visible:outline-none focus-visible:ring-0"
         id="comment-input"
         placeholder="Ask about the product..."
         name="content"

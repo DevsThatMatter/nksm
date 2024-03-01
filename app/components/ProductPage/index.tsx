@@ -9,7 +9,6 @@ import { Suspense } from "react";
 import ProductSkeleton from "../HomePage/Carousel/ProductSkeleton";
 import { Carousel, CarouselContent } from "../ui/carousel";
 import { EmblaOptionsType } from "embla-carousel";
-import { Session } from "next-auth";
 
 const ProductPage = ({ productInfo }: { productInfo: Product }) => {
   const options: EmblaOptionsType = { loop: true, align: "center" };

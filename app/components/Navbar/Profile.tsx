@@ -38,7 +38,7 @@ export function Profile({ data, whichIcon }: UserProfileProps) {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="h-[1.7rem] w-[1.7rem] rounded-full outline-none focus:outline-none focus:ring-0"
+          className="h-[1.7rem] w-[1.7rem] rounded-full outline-none focus-visible:outline-none focus-visible:ring-0"
         >
           <Avatar className="h-[2.1rem] w-[2.1rem] rounded-full">
             <AvatarImage
