@@ -20,7 +20,7 @@ function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
           </Avatar>
           <div className="ml-2">
             <p className="font-semibold">{sellerInfo.Name}</p>
-            <p className="text-sm text-gray-500">{sellerInfo.Phone_Number}</p>
+            <p className="text-sm text-foreground">{sellerInfo.Phone_Number}</p>
           </div>
         </div>
         <Button
