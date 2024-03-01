@@ -9,12 +9,6 @@ const productSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    Comments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comments",
-      },
-    ],
     Total_Quantity_Available: { type: Number, required: true },
     Product_Name: { type: String, required: true },
     Description: { type: String, required: true },
@@ -30,7 +24,8 @@ const productSchema = new mongoose.Schema(
       enum: CategoryEnum,
       required: true,
     },
-    expires_in: { type: Date },
+    Negotiable: { type: Boolean, default: true },
+    expires_in: { type: Date, default: () => Date.now() + 604800000 }, // 7days from when field is created
     is_archived: { type: Boolean, default: false },
   },
   { timestamps: true },

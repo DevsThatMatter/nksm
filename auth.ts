@@ -25,7 +25,6 @@ export const {
       if (session.user) {
         const user = await User.findOne({ Email: session.user?.email });
         session.user.id = user._id;
-        session.user.username = user.Username;
       }
       return session;
     },
