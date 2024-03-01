@@ -31,14 +31,6 @@ export const FormDataSchema = z.object({
       return ans;
     }, "Only .jpg, .jpeg, .png and .webp files are accepted."),
 
-  price: z
-    .union([z.coerce.number(), z.literal('')])
-    .refine((value) => typeof value === 'number' ? value >= 1 : true, {
-      message: 'Price must be least ₹1',
-    }),
-  quantity: z
-  .union([z.coerce.number(), z.literal('')])
-  .refine((value) => typeof value === 'number' ? value >= 0 : true, {
-    message: 'Quantity must be atleast 1',
-  }),
+  price: z.coerce.number().min(0, "Price must be atleast 0"),
+  quantity: z.coerce.number().min(1, "Quantity must be atleast 1"),
 });

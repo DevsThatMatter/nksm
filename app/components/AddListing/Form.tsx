@@ -1,6 +1,11 @@
 "use client";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "../ui/input";
+import {
+  CardContent,
+  Card,
+} from "@/app/components/ui/card";
+import Image from "next/image";
 import { FormDataSchema } from "@/lib/FormSchema/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,19 +39,21 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/app/components/ui/alert-dialog"
+import { useState } from "react";
 
 
 type Inputs = z.infer<typeof FormDataSchema>;
 
 export default function AddListingForm() {
+  const [isPreview, setIsPreview] = useState(false);
   const form = useForm<Inputs>({
     resolver: zodResolver(FormDataSchema),
     defaultValues: {
       iname: "",
-      quantity: "",
+      quantity: undefined,
       category: "",
       description: "",
-      price: "",
+      price: undefined,
       condition: "",
       images: [],
     },
@@ -56,16 +63,19 @@ export default function AddListingForm() {
     form.reset();
   }
 
+  function handlePreview() {
+    setIsPreview(true);
+  }
+
   async function onSubmit() {
-    const { iname, price, quantity, category, condition, description, images } =
-      form.getValues();
+    console.log(form.getValues())
   }
 
   return (
     <div className="flex justify-center items-center h-[85vh]">
       <div className="border p-8 max-w-md rounded-md">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(handlePreview)}>
             <div className="grid grid-cols-2 my-2">
               <div className="col-span-2">
                 <FormField
@@ -122,7 +132,7 @@ export default function AddListingForm() {
                             ))}
                           </SelectContent>
                         </Select>
-                        <FormMessage />
+                        <FormMessage/>
                       </FormItem>
                     )}
                   />
@@ -224,27 +234,63 @@ export default function AddListingForm() {
                 >
                   Reset
                 </Button>
-                <Button type="submit" className="w-full">
-                  Submit
-                </Button>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="outline">Preview</Button>
+                    <Button variant="outline" type="submit">Preview</Button>
                   </AlertDialogTrigger>
+                  { isPreview ? <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        This is how your product will be displayed:
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        You can still make the changes after previewing
+                      </AlertDialogDescription>
+                      <Card>
+                        <CardContent className="relative flex items-start gap-6 p-6 @container">
+                          <div className="">
+                            <Image
+                              alt="Product Image"
+                              className="aspect-square overflow-hidden rounded-lg border border-gray-200 object-cover dark:border-gray-800"
+                              height={200}
+                              src={form.getValues().images.length > 0 ? URL.createObjectURL(form.getValues().images[0]) : ""}
+                              width={200}
+                            />
+                          </div>
+                          <div className="grid gap-2 text-base">
+                            <h2 className="font-extrabold leading-tight md:text-xl">{form.getValues().iname}</h2>
+                            <p className="text-base leading-normal">{form.getValues().description}</p>
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-bold">${form.getValues().price}</h4>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <ChevronRightIcon className="h-5 w-5 fill-muted" />
+                              <span className="text-sm text-muted-foreground">{form.getValues().condition}</span>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel onClick={() => setIsPreview(false)}>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => onSubmit()}>Continue</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                  : 
                   <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>
-                        this is what your product card will look like
+                        Incomplete Product Listing
                       </AlertDialogTitle>
                       <AlertDialogDescription>
-                        Product Card will be fetched n placed here
+                        Some fields are missing, please fill all the fields to continue
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction>Continue</AlertDialogAction>
+                      <AlertDialogCancel>Return</AlertDialogCancel>
                     </AlertDialogFooter>
                   </AlertDialogContent>
+                  }
                 </AlertDialog>
               </div>
             </div>
@@ -252,5 +298,23 @@ export default function AddListingForm() {
         </Form>
       </div>
     </div>
+  );
+}
+
+function ChevronRightIcon({ className }: { className: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m9 18 6-6-6-6" />
+    </svg>
   );
 }
