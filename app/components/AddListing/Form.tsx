@@ -23,6 +23,18 @@ import {
 } from "@/app/components/ui/select";
 import { Textarea } from "../ui/textarea";
 import { addProductFromListing } from "@/lib/actions/add-listing.action";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/app/components/ui/alert-dialog"
+
 
 type Inputs = z.infer<typeof FormDataSchema>;
 
@@ -37,7 +49,7 @@ export default function AddListingForm() {
       price: "",
       condition: "",
       images: [],
-    }
+    },
   });
 
   function handleReset() {
@@ -45,7 +57,8 @@ export default function AddListingForm() {
   }
 
   async function onSubmit() {
-    const { iname, price, quantity, category, condition, description, images } = form.getValues();
+    const { iname, price, quantity, category, condition, description, images } =
+      form.getValues();
   }
 
   return (
@@ -68,20 +81,65 @@ export default function AddListingForm() {
                     </FormItem>
                   )}
                 />
-                </div>
-                <div className="col-span-2">
+              </div>
+              <div className="col-span-2">
                 <div className="grid grid-cols-2 gap-x-3">
+                  <FormField
+                    control={form.control}
+                    name="quantity"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Quantity</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Quantity"
+                            type="number"
+                            min="1"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="category"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Category</FormLabel>
+                        <Select onValueChange={field.onChange}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Object.values(CategoryEnum).map((category) => (
+                              <SelectItem key={category} value={category}>
+                                {category}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="col-span-2 mb-2">
                 <FormField
                   control={form.control}
-                  name="quantity"
+                  name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Quantity</FormLabel>
+                      <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Quantity"
-                          type="number"
-                          min="1"
+                        <Textarea
+                          placeholder="Tell us a little bit about your product"
+                          className="resize-none"
                           {...field}
                         />
                       </FormControl>
@@ -89,132 +147,106 @@ export default function AddListingForm() {
                     </FormItem>
                   )}
                 />
-                <FormField 
+              </div>
+              <div className="col-span-2 mb-2">
+                <div className="grid grid-cols-2 mb-2 gap-x-3">
+                  <FormField //price
+                    control={form.control}
+                    name="price"
+                    render={({ field }) => (
+                      <FormItem className="">
+                        <FormLabel>Price</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="number"
+                            min="0"
+                            placeholder="Price"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField // condition
+                    control={form.control}
+                    name="condition"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Condition</FormLabel>
+                        <Select onValueChange={field.onChange}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Object.values(ConditionEnum).map((condition) => (
+                              <SelectItem key={condition} value={condition}>
+                                {condition}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className=" col-span-2 mb-2">
+                <FormField // images
                   control={form.control}
-                  name="category"
+                  name="images"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Category</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Object.values(CategoryEnum).map((category) => (
-                            <SelectItem key={category} value={category}>
-                              {category}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <FormLabel>Image</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          onChange={(e) => field.onChange(e.target.files)}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
+              <div className="flex justify-between col-span-2 mt-5 space-x-3">
+                <Button
+                  type="reset"
+                  variant="outline"
+                  className="w-full hover:border-red-500"
+                  onClick={handleReset}
+                >
+                  Reset
+                </Button>
+                <Button type="submit" className="w-full">
+                  Submit
+                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline">Preview</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        this is what your product card will look like
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Product Card will be fetched n placed here
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction>Continue</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
-
-            <div className="col-span-2 mb-2">
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Tell us a little bit about your product"
-                        className="resize-none"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="col-span-2 mb-2">
-            <div className="grid grid-cols-2 mb-2 gap-x-3">
-              <FormField //price
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>Price</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="number"
-                        min="0"
-                        placeholder="Price"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField // condition
-                control={form.control}
-                name="condition"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Condition</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.values(ConditionEnum).map((condition) => (
-                          <SelectItem key={condition} value={condition}>
-                            {condition}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            </div>
-
-            <div className=" col-span-2 mb-2">
-              <FormField // images
-                control={form.control}
-                name="images"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={(e) => field.onChange(e.target.files)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="flex justify-between col-span-2 mt-5 space-x-3">
-              <Button type="reset" variant="outline" className="w-full hover:border-red-500" onClick={handleReset}>
-                Reset
-              </Button>
-              <Button type="submit" className="w-full">
-                Submit
-              </Button>
-            </div>
             </div>
           </form>
         </Form>
