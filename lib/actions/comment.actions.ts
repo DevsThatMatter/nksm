@@ -59,7 +59,6 @@ export const listComments = async (productID: mongoose.Types.ObjectId) => {
         $unwind: "$User",
       },
     ]);
-    console.log(comments);
     return comments;
   } catch (error) {
     console.error("Error fetching comments:", error);

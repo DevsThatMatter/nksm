@@ -22,7 +22,7 @@ export default function ImageCard({ images }: any) {
             alt={`Image`}
             width={200}
             height={200}
-            className="rounded-md"
+            className="rounded-md cursor-pointer"
           />
         ))}
       </div>
@@ -36,7 +36,7 @@ export default function ImageCard({ images }: any) {
                 alt={`Image ${index + 1}`}
                 width={1920}
                 height={1080}
-                className="aspect-video h-full w-full rounded-lg object-fill"
+                className="aspect-video h-full w-full rounded-lg object-fill cursor-pointer"
               />
             </CarouselItem>
           ))}
