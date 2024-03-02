@@ -75,8 +75,8 @@ export default function AddListingForm({ userData }: { userData: Session | null 
       description,
       price,
       imagesArray,
-      negotiate,
-      condition,
+      negotiate : negotiate === 'Yes' ? true : false,
+      condition, 
       userId: userData?.user?.id
     });
   }
