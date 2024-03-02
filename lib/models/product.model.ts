@@ -27,7 +27,9 @@ const productSchema = new mongoose.Schema(
     Negotiable: { type: Boolean, default: true },
     expires_in: { type: Date, default: () => Date.now() + 604800000 }, // 7days from when field is created
     is_archived: { type: Boolean, default: false },
-  },{timestamps: true});
+  },
+  { timestamps: true },
+);
 
 // Create the 'product' model based on the schema
 export const Product =

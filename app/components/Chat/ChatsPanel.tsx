@@ -20,7 +20,7 @@ interface Chat {
 export default function UserChat({
   children = (
     <Button variant="ghost" size="icon">
-      <Icons.chaticon className="w-[1.32rem] h-[1.3rem]" />
+      <Icons.chaticon className="h-[1.3rem] w-[1.32rem]" />
     </Button>
   ),
 }: {

@@ -7,7 +7,7 @@ async function page() {
   if (!userData) {
     redirect("/login");
   }
-  return <AddListingForm userData={userData}/>;
+  return <AddListingForm userData={userData} />;
 }
 
 export default page;
