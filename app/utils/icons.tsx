@@ -12,6 +12,8 @@ import {
   Link2Icon,
   ChevronDownIcon,
   CrossCircledIcon,
+  CheckIcon,
+  Cross1Icon,
 } from "@radix-ui/react-icons";
 
 export const Icons = {
@@ -28,4 +30,6 @@ export const Icons = {
   fileLink: Link2Icon,
   image: ImageIcon,
   remove: CrossCircledIcon,
+  yes: CheckIcon,
+  no: Cross1Icon
 };

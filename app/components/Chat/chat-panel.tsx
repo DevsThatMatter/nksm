@@ -34,9 +34,7 @@ export default function UserChat({ userId }: { userId: string }) {
   const [activeTab, setActiveTab] = useState<"seller" | "buyer" | "invites">(
     "seller",
   );
-  const [userIdforSellerClick, setUserIdForSellerClick] = useState<
-    string | null
-  >();
+
 
   const { data, isFetching, status, error } = useQuery({
     queryKey: ["getAllChats", userId],
@@ -52,8 +50,7 @@ export default function UserChat({ userId }: { userId: string }) {
       setProductDiscussionsWhereUserIsBuyer(data.data.resultWhereUserIsBuyer);
     }
   }
-  //   getPrevProductDiscussions();
-  // }, [userId]);
+
 
   const handleTabChange = (tab: "seller" | "buyer" | "invites") => {
     setActiveTab(tab);
@@ -81,7 +78,7 @@ export default function UserChat({ userId }: { userId: string }) {
       if (!discussions) {
         throw new Error("Unable to set this chat");
       }
-      setUserIdForSellerClick(userId);
+
       createChat({
         discussions,
         otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "" },
@@ -107,7 +104,7 @@ export default function UserChat({ userId }: { userId: string }) {
             {(discussions.length === 0 ||
               activeTab === "buyer" ||
               activeTab === "invites") &&
-            otherUserDetails.id === "" ? (
+              otherUserDetails.id === "" ? (
               <Tabs defaultValue="Seller Chat" className="mt-2 w-full">
                 <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger
@@ -115,7 +112,7 @@ export default function UserChat({ userId }: { userId: string }) {
                     className={clsx(
                       "rounded-lg p-0.5",
                       activeTab === "seller" &&
-                        "bg-white text-black shadow-md transition-colors duration-300",
+                      "bg-white text-black shadow-md transition-colors duration-300",
                     )}
                     onClick={() => handleTabChange("seller")}
                   >
@@ -126,7 +123,7 @@ export default function UserChat({ userId }: { userId: string }) {
                     className={clsx(
                       "rounded-lg p-0.5",
                       activeTab === "buyer" &&
-                        "bg-white text-black shadow-md transition-colors duration-300",
+                      "bg-white text-black shadow-md transition-colors duration-300",
                     )}
                     onClick={() => handleTabChange("buyer")}
                   >
@@ -137,7 +134,7 @@ export default function UserChat({ userId }: { userId: string }) {
                     className={clsx(
                       "rounded-lg p-0.5",
                       activeTab === "invites" &&
-                        "bg-white text-black shadow-md transition-colors duration-300",
+                      "bg-white text-black shadow-md transition-colors duration-300",
                     )}
                     onClick={() => handleTabChange("invites")}
                   >
@@ -146,22 +143,24 @@ export default function UserChat({ userId }: { userId: string }) {
                 </TabsList>
               </Tabs>
             ) : (
-              <div className="flex items-center">
-                {/* <Button
-                      variant={'ghost'}
-                      size="icon"
-                      onClick={() => {
-                        if (otherUserDetails && otherUserDetails.id === '') {
-                          removeChat('chatPanel');
-                        } else if (otherUserDetails.id !== '') {
-                          removeChat('productPanel');
-                        }
-                      }}
-                    >
-                      <Icons.moveback />
-                    </Button>
-                    <h1 className="text-lg font-semibold dark:text-gray-50">{"Let's have some chats..."}</h1> */}
-              </div>
+              discussions.length !== 0 && otherUserDetails.id === "" && (
+                <div className="flex items-center">
+                  <Button
+                    className="rounded-full"
+                    variant={'ghost'}
+                    size="icon"
+                    onClick={() => {
+                      if (otherUserDetails && otherUserDetails.id === '') {
+                        removeChat('chatPanel');
+                      } else if (otherUserDetails.id !== '') {
+                        removeChat('productPanel');
+                      }
+                    }}
+                  >
+                    <Icons.moveback />
+                  </Button>
+                </div>
+              )
             )}
           </SheetHeader>
           {activeTab === "seller" &&

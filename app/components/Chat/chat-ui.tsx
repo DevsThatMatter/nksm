@@ -11,6 +11,8 @@ import { MessageTypes } from "@/types";
 import { pusherClient } from "@/lib/pusher";
 import { useChatObserver } from "@/hooks/useChatObserver";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Icons } from "@/app/utils/icons";
+import { toast } from "sonner";
 
 interface ChatUIProps {
   currentUserId: string;
@@ -34,7 +36,9 @@ export default function ChatUI({
   const queryKey = `chat${productId}productId${productId}sellerId${sellerId}buyerId${buyerId}query`;
   const addKey = `chat${productId}productId${productId}sellerId${sellerId}buyerId${buyerId}add`;
   const updateKey = `chat${productId}productId${productId}sellerId${sellerId}buyerId${buyerId}update`;
-  const { removeChat, createLockedStatus } = useChatStore();
+
+  const { createLockedStatus, otherUserDetails, createChat, removeChat } =
+    useChatStore();
 
   const topRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
@@ -136,11 +140,31 @@ export default function ChatUI({
     currentUserId,
   });
 
+
+
   return (
-    <div className=" flex h-[95vh] flex-col items-center">
+    <section className="absolute flex h-[100vh] flex-col items-center">
       <div className="relative h-[90%] w-full rounded-md border ">
         {/* User display */}
-        <div className="user-display z-10  mb-2 flex items-center space-x-3 rounded-t-md px-4 py-3 shadow-sm ">
+        <header className="user-display z-10  mb-2 flex items-center space-x-1 rounded-t-md pl-1 py-3 shadow-sm ">
+          {
+            otherUserDetails.id !== "" && (
+              <Button
+                className="rounded-full"
+                variant={'ghost'}
+                size="icon"
+                onClick={() => {
+                  if (otherUserDetails && otherUserDetails.id === '') {
+                    removeChat('chatPanel');
+                  } else if (otherUserDetails.id !== '') {
+                    removeChat('productPanel');
+                  }
+                }}
+              >
+                <Icons.moveback />
+              </Button>
+            )
+          }
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
@@ -148,11 +172,11 @@ export default function ChatUI({
           <span className="text-lg font-semibold text-gray-800 dark:text-white">
             {otherUserName}
           </span>
-        </div>
+        </header>
         {/* Messages */}
         <div
           className={clsx(
-            "no-scrollbar mx-auto flex h-[76.5%] max-w-md flex-1  flex-col overflow-y-auto px-2.5 pb-2",
+            "no-scrollbar mx-auto flex h-[70vh] max-w-md flex-1  flex-col overflow-y-auto px-2.5 pb-2",
           )}
         >
           {status === "pending" ? (
@@ -168,15 +192,15 @@ export default function ChatUI({
                   className={
                     msg.options
                       ? clsx(
-                          "mb-2 flex w-[60%] justify-center break-words rounded-lg border-2 p-2 text-white",
-                          msg.accepted === "accepted"
-                            ? "border-green-500"
-                            : msg.accepted == "rejected"
-                              ? "border-red-500"
-                              : msg.Sender === currentUserId
-                                ? "ml-auto border-yellow-500"
-                                : "border-yellow-400",
-                        )
+                        "mb-2 flex w-[80%] justify-center break-words p-2 border-2  text-white rounded-full",
+                        msg.accepted === "accepted"
+                          ? "border-green-300"
+                          : msg.accepted == "rejected"
+                            ? "border-red-300"
+                            : msg.Sender === currentUserId
+                              ? "ml-auto border-yellow-300"
+                              : "border-yellow-300",
+                      )
                       : `flex ${currentUserId === msg.Sender ? "justify-end" : "justify-start"} mb-2`
                   }
                 >
@@ -212,25 +236,32 @@ export default function ChatUI({
                         <h1 className="text-yellow-500">Deal pending</h1>
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center space-y-1">
-                        <h1 className="text-yellow-400">Do we have a deal?</h1>
+                      <section className="flex items-center space-x-1">
+                        <h1 className="text-yellow-500">Shall we proceed?</h1>
                         <div className="flex justify-end space-x-2">
                           <Button
                             disabled={currentUserId === msg.Sender}
-                            className={"bg-green-400 hover:bg-green-500"}
-                            onClick={() => lockTheDeal("yes", msg.msgId ?? "")}
+                            className={"bg-green-400 hover:bg-green-500 rounded-full"}
+                            onClick={() => {
+                              toast.error("This will make all your other chats for this product go stale", {
+                                action: {
+                                  label: 'Confirm',
+                                  onClick: () => lockTheDeal("yes", msg.msgId ?? "")
+                                }
+                              })
+                            }}
                           >
-                            {"Yes"}
+                            <Icons.yes />
                           </Button>
                           <Button
                             disabled={currentUserId === msg.Sender}
-                            className={"bg-red-400 hover:bg-red-500"}
+                            className={"bg-red-400 hover:bg-red-500 rounded-full"}
                             onClick={() => lockTheDeal("no", msg.msgId ?? "")}
                           >
-                            {"No"}
+                            <Icons.no />
                           </Button>
                         </div>
-                      </div>
+                      </section>
                     )
                   ) : (
                     <div
@@ -268,6 +299,6 @@ export default function ChatUI({
           />
         </div>
       </div>
-    </div>
+    </section >
   );
 }
