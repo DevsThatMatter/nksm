@@ -2,23 +2,22 @@
 
 import * as z from "zod";
 import { Types, mongo } from "mongoose";
-import { Redis } from "ioredis";
 
 import { User } from "../models/user.model";
 import { connectToDB } from "../database/mongoose";
 import { Chat } from "../models/chats.model";
 import { Product } from "../models/product.model";
 
-import { MessageTypes, SellerBuyerChatType, chatDetails } from "@/types";
+import { MessageTypes, IChat, chatDetails } from "@/types";
 import { Message } from "../models/message.model";
 import { client } from "../database/redis-config";
 import { pusherServer } from "../pusher";
+import { InviteStruct } from "@/app/components/Chat/buyer-invites";
 
 
 const mongoId = z.string().refine((value) => Types.ObjectId.isValid(value), {
   message: "Invalid ObjectId format",
 });
-
 
 function groupDocs(data: chatDetails[]): Map<string, chatDetails[]> {
   const groupDocsByProduct = new Map<string, chatDetails[]>();
@@ -42,12 +41,14 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
     const matchStage0 = {
       $match: {
         Seller: new mongo.ObjectId(userId),
+        // status: { $ne: "invite" },
       },
     };
 
     const matchStage1 = {
       $match: {
         Buyer: new mongo.ObjectId(userId),
+        // status: { $ne: "invite" },
       },
     };
 
@@ -191,7 +192,7 @@ export async function chatBetweenSellerAndBuyerForProduct(
     const chats = (await Chat.findOne({
       Buyer: buyerId,
       Product: productId,
-    })) as SellerBuyerChatType;
+    })) as IChat;
     if (!chats) {
       console.log("No recent chats");
       return [];
@@ -202,7 +203,6 @@ export async function chatBetweenSellerAndBuyerForProduct(
     throw new Error("Internal server error");
   }
 }
-
 
 const CreateMessagesProps = z.object({
   message: z
@@ -266,24 +266,17 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
     await connectToDB();
     const validatedProps = LockDealProps.parse(props);
 
-    let chat = await Chat.findOne(
+    await Chat.updateOne(
       {
         Seller: new mongo.ObjectId(validatedProps.seller),
         Buyer: new mongo.ObjectId(validatedProps.buyer),
         ProductId: new mongo.ObjectId(validatedProps.productId)
       },
+      {
+        status: "stale"
+      }
     );
 
-    if (!chat) {
-      return {
-        content: null,
-        error: 'No matching chat found',
-        status: 404
-      }
-    }
-
-    chat.Locked = true;
-    await chat.save();
 
     const messageUpdateQuery = {
       _id: new mongo.ObjectId(validatedProps.msgId),
@@ -546,7 +539,8 @@ export async function getInitialMessages(props: z.infer<typeof GetmessageProps>)
 
     const skipCount = props.pageNo !== undefined ? props.pageNo * docPerPage : 0
     const { Messages, Locked } = (await Chat.aggregate(pipeline).limit(docPerPage).skip(skipCount))[0] as { Messages: MessageTypes[]; Locked: boolean }
-    console.log("total number of messages fetched", Messages.length)
+
+
     Messages.sort((a, b) => {
       const dateA = new Date(a.TimeStamp);
       const dateB = new Date(b.TimeStamp);
@@ -574,5 +568,122 @@ export async function getInitialMessages(props: z.infer<typeof GetmessageProps>)
       status: 500,
       err: error
     }
+  }
+}
+
+export async function fecthInvites(userId: string) {
+
+  const pipeline = [
+    {
+      '$match': {
+        'Seller': new mongo.ObjectId(userId),
+        'status': 'invite'
+      }
+    }, {
+      '$lookup': {
+        'from': 'users',
+        'localField': 'Buyer',
+        'foreignField': '_id',
+        'as': 'buyerDetails'
+      }
+    }, {
+      '$lookup': {
+        'from': 'users',
+        'localField': 'Seller',
+        'foreignField': '_id',
+        'as': 'sellerDetails'
+      }
+    }, {
+      '$lookup': {
+        'from': 'products',
+        'localField': 'ProductId',
+        'foreignField': '_id',
+        'as': 'productDetails'
+      }
+    }, {
+      '$project': {
+        'buyerDetails': {
+          '$map': {
+            'input': '$buyerDetails',
+            'as': 'buyer',
+            'in': {
+              'Last_Name': '$$buyer.Last_Name',
+              'First_Name': '$$buyer.First_Name',
+              'Phone_Number': '$$buyer.Phone_Number',
+              'Avatar': '$$buyer.Avatar',
+              'address': '$$buyer.address',
+              'buyerId': {
+                '$toString': '$$buyer._id'
+              }
+            }
+          }
+        },
+        'sellerDetails': {
+          '$arrayElemAt': [
+            '$sellerDetails', 0
+          ]
+        },
+        'productDetails': {
+          '$arrayElemAt': [
+            '$productDetails', 0
+          ]
+        }
+      }
+    }, {
+      '$unset': '_id'
+    }, {
+      '$project': {
+        'buyerDetails': 1,
+        'sellerDetails.Avatar': 1,
+        'sellerDetails.address': 1,
+        'sellerDetails.Last_Name': 1,
+        'sellerDetails.First_Name': 1,
+        'sellerDetails.Phone_Number': 1,
+        'sellerId': {
+          '$toString': '$sellerDetails._id'
+        },
+        'productDetails.Product_Name': 1,
+        'productDetails.Images': 1,
+        'productId': {
+          '$toString': '$productDetails._id'
+        }
+      }
+    }
+  ]
+  const data = (await Chat.aggregate(pipeline)) as InviteStruct[]
+  data.sort((a: InviteStruct, b: InviteStruct) => {
+    const productNameA = a.productDetails.Product_Name.toLowerCase();
+    const productNameB = b.productDetails.Product_Name.toLowerCase();
+
+    if (productNameA < productNameB) {
+      return -1;
+    }
+    if (productNameA > productNameB) {
+      return 1;
+    }
+    return 0;
+  });
+
+  return data
+}
+
+const AcceptInviteSchema = z.object({
+  sellerId: mongoId,
+  buyerId: mongoId,
+  productId: mongoId
+})
+
+export async function acceptTheInvite(props: z.infer<typeof AcceptInviteSchema>) {
+  try {
+    connectToDB()
+    await Chat.updateOne({
+      Seller: props.sellerId,
+      Buyer: props.buyerId,
+      ProductId: props.productId
+    }, {
+      status: "active"
+    })
+  } catch (error) {
+    console.log("internal server error", error)
   }
 }

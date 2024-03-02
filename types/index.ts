@@ -40,11 +40,11 @@ export interface IProduct {
 }
 
 export interface IChat {
-  save(): unknown;
   Seller: string;
   Buyer: string;
   ProductId: string;
-  Messages: Array<MessageTypes>;
+  Messages: Array<ObjectId>;
+  status: "invite" | "active" | "stale"
 }
 
 interface userDetails {
@@ -79,13 +79,7 @@ export interface MessageTypes {
   readStatus: boolean;
 }
 
-export interface SellerBuyerChatType {
-  Seller: string;
-  Buyer: string;
-  ProductId: string; 
-  Messages: Array<ObjectId>;
-  Locked?: boolean;
-}
+
 
 
 

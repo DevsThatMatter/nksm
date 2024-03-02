@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { chatDetails } from "@/types";
 import Image from "next/image";
 import { countUnreadMessages } from "@/lib/actions/chat.actions";
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
+import clsx from "clsx";
 
 interface ProductPanelProps {
     userId: string;
@@ -25,6 +27,7 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
 
     const [productId, setProductId] = useState<string | null>(null);
     const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+    const [activeTab, setActiveTab] = useState<"invites" | "activeChats">("activeChats")
 
     // Extracted the logic to handle chat creation
     function handleSingleSellerChatSet(
@@ -48,7 +51,7 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
     }
 
     function handleChatItemClick(discussion: chatDetails) {
-        console.log(`buyer => ${discussion.buyerDetails.id}`,`seller => ${discussion.sellerDetails.id}`,`current user => ${userId}`)
+        console.log(`buyer => ${discussion.buyerDetails.id}`, `seller => ${discussion.sellerDetails.id}`, `current user => ${userId}`)
         const otherUserId =
             discussion.buyerDetails.id === userId ? discussion.sellerDetails.id : discussion.buyerDetails.id;
         const otherUserName =
@@ -102,6 +105,7 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
 
     }, [discussions, userId]);
 
+
     return (
         <SheetDescription className="mt-4 flex flex-col space-y-4 w-full">
             {otherUserDetails.id === "" ? (
@@ -118,14 +122,9 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                                 </h5>
                             </div>
                         </div>
-                        {
-                            (
-                                <div className="flex-shrink-0 px-1 rounded-full bg-lime-500 flex justify-center items-center text-lg">
-                                    <h3 className="text-white font-semibold">{productReadCounts[String(discussion.productDetails.productId)]}</h3>
-                                </div>
-                            )
-                        }
-
+                        <div className="flex-shrink-0 px-1 rounded-full bg-lime-500 flex justify-center items-center text-lg">
+                            <h3 className="text-white font-semibold">{productReadCounts[String(discussion.productDetails.productId)]}</h3>
+                        </div>
                     </div>
                 ))
             ) : (

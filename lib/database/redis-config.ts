@@ -4,16 +4,23 @@ const { REDIS_HOST,
     REDIS_PORT,
     REDIS_USERNAME,
     REDIS_PASSWORD } = process.env;
+class RedisManager {
+    private static client: null | Redis = null
 
-let client: null | Redis;
-
-if (REDIS_PORT !== undefined && REDIS_USERNAME !== undefined && REDIS_PASSWORD != undefined && REDIS_HOST !== undefined) {
-    client = new Redis({
-        host: REDIS_HOST,
-        port: parseInt(REDIS_PORT),
-        username: REDIS_USERNAME,
-        password: REDIS_PASSWORD
-    });
+    public static getRedisClientInstance(): Redis {
+        if (!RedisManager.client) {
+            RedisManager.client = new Redis({
+                host: REDIS_HOST!,
+                port: parseInt(REDIS_PORT!),
+                username: REDIS_USERNAME!,
+                password: REDIS_PASSWORD!
+            });
+            return RedisManager.client
+        } else {
+            return RedisManager.client
+        }
+    }
 }
 
-export { client };
+
+export const client = RedisManager.getRedisClientInstance()

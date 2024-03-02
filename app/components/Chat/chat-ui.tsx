@@ -104,10 +104,6 @@ export default function ChatUI({
   });
 
 
-  // useEffect(() => {
-
-  // }, [createLockedStatus, data])
-
   if (productId === "" && sellerId !== "" && buyerId !== "") {
     removeChat("chatUi")
   }
@@ -146,59 +142,69 @@ export default function ChatUI({
           ) : (
             <Fragment>
               <div ref={topRef} />
-              {messages?.map((msg: MessageTypes, j: number) => (
-                <div
-                  key={j}
-                  className={msg.options ?
-                    clsx(
-                      "flex justify-center w-[60%]  text-white rounded-md p-4 break-words border-2 border-amber-400 mb-2",
-                      currentUserId === msg.Sender && "ml-auto",
-                      msg.accepted === "accepted" ? "border-2 border-lime-500" : msg.accepted === "rejected" ? "border-2 border-rose-500" : "border-2 border-amber-500",
-                    ) :
-                    `flex ${currentUserId === msg.Sender ? "justify-end" : "justify-start"} mb-2`
-                  }
-                >
-                  {msg.options ? (
-                    <div id={msg.msgId} className={clsx(`user-message-${(msg.readStatus || msg.Sender === currentUserId) ? "true" : "false"}`, "flex flex-col space-y-2 items-center")}>
-                      <h1 className={clsx(
-                        " font-semibold",
-                        msg.accepted === "accepted" ? "text-lime-500" : msg.accepted === "rejected" ? "text-rose-400" : "text-amber-400"
-                      )}>{msg.accepted === "pending" ? `let's have a deal...` : msg.accepted === "rejected" ? "Deal was rejected" : "Deal locked"}</h1>
-                      <div className="flex space-x-2 justify-end">
-                        <Button
-                          disabled={currentUserId === msg.Sender || msg.accepted !== "pending"}
+              {
+                messages?.map((msg: MessageTypes, j: number) => (
+                  <section
+                    key={j}
+                    className={msg.options ? clsx(
+                      "flex justify-center w-[60%] text-white rounded-lg p-2 break-words border-2 mb-2",
+                      msg.accepted === "accepted" ? "border-lime-300" : msg.accepted == "rejected" ? "border-red-300" : msg.Sender === currentUserId ? "border-blue-500 ml-auto" : "border-blue-400"
+                    ) : `flex ${currentUserId === msg.Sender ? "justify-end" : "justify-start"} mb-2`}
+                  >
+                    {
+                      msg.options ? (
+                        msg.accepted === "accepted" ? (
+                          <div id={msg.msgId} className={clsx(`user-message-${(msg.readStatus || msg.Sender === currentUserId) ? "true" : "false"}`, "flex flex-col space-y-2 items-center")}>
+                            <h1 className="text-lime-300">Deal locked</h1>
+                          </div>
+                        ) : msg.accepted === "rejected" ? (
+                          <div id={msg.msgId} className={clsx(`user-message-${(msg.readStatus || msg.Sender === currentUserId) ? "true" : "false"}`, "flex flex-col space-y-2 items-center")}>
+                            <h1 className="text-red-300">Deal rejected</h1>
+                          </div>
+                        ) : (
+                          msg.Sender === currentUserId ? (
+                            <div id={msg.msgId} className={clsx(`user-message-${(msg.readStatus || msg.Sender === currentUserId) ? "true" : "false"}`, "flex flex-col space-y-2 items-center")}>
+                              <h1 className="text-blue-500">Deal pending</h1>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center space-y-1">
+                              <h1 className="text-blue-400">Do we have a deal?</h1>
+                              <div className="flex space-x-2 justify-end">
+                                <Button
+                                  disabled={currentUserId === msg.Sender}
+                                  className={"bg-blue-400 hover:bg-sky-400"}
+                                  onClick={() => lockTheDeal("yes", (msg.msgId ?? ""))}
+                                >
+                                  {"Yes"}
+                                </Button>
+                                <Button
+                                  disabled={currentUserId === msg.Sender}
+                                  className={"bg-blue-400 hover:bg-sky-400"}
+                                  onClick={() => lockTheDeal("no", (msg.msgId ?? ""))}
+                                >
+                                  {"No"}
+                                </Button>
+                              </div>
+                            </div>
+                          )
+                        )
+                      ) : (
+                        <div
+                          id={msg.msgId}
                           className={clsx(
-                            msg.accepted === "accepted" ? "bg-lime-500 hover:bg-lime-600" : msg.accepted === "rejected" ? "bg-rose-400 hover:bg-rose-500" : "bg-amber-400 hover:bg-amber-500"
+                            `user-message-${(msg.readStatus || msg.Sender === currentUserId) ? "true" : "false"}`,
+                            "max-w-[80%] text-white px-2 py-1 break-words rounded-t-full",
+                            currentUserId === msg.Sender ? "rounded-l-full rounded-tr-full" : "rounded-r-full rounded-br-full text-black",
+                            currentUserId === msg.Sender ? "bg-blue-500" : "bg-sky-200 "
                           )}
-                          onClick={() => lockTheDeal("yes", (msg.msgId ?? ""))}
                         >
-                          {"Yes"}
-                        </Button>
-                        <Button
-                          disabled={currentUserId === msg.Sender || msg.accepted !== "pending"}
-                          className={clsx(
-                            msg.accepted === "accepted" ? "bg-lime-500 hover:bg-lime-600" : msg.accepted === "rejected" ? "bg-rose-400 hover:bg-rose-500" : "bg-amber-400 hover:bg-amber-500"
-                          )}
-                          onClick={() => lockTheDeal("no", (msg.msgId ?? ""))}
-                        >
-                          {"No"}
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div
-                      id={msg.msgId}
-                      className={clsx(
-                        `user-message-${(msg.readStatus || msg.Sender === currentUserId) ? "true" : "false"}`,
-                        " max-w-[80%] text-white rounded-lg p-2 break-words",
-                        currentUserId === msg.Sender ? "bg-indigo-700" : "bg-pink-600"
-                      )}
-                    >
-                      {msg.Message}
-                    </div>
-                  )}
-                </div>
-              ))}
+                          {msg.Message}
+                        </div>
+                      )
+                    }
+                  </section>
+                ))
+              }
               <div ref={bottomRef} />
             </Fragment>
           )}
@@ -216,6 +222,6 @@ export default function ChatUI({
           />
         </div>
       </div>
-    </div>
+    </div >
   );
 }

@@ -76,35 +76,37 @@ export default function ChatInput({
               <div className="border p-1 rounded-md max-w-[97%] border-gray-400 dark:bg-gray-900 flex justify-between">
                 <Input
                   disabled={isLoading}
-                  className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none"
+                  className="w-full focus-visible:ring-0 focus-visible:ring-offset-0 border-none resize-none" // Add the 'resize-none' class
+                  style={{ height: 'auto', overflow: 'hidden' }} 
                   {...form.register("content")}
                 />
+
                 <Dialog>
                   <DialogTrigger asChild>
                     <button type="button" className="focus:outline-none">
                       <Button
                         disabled={lockStatus}
                         type="button"
-                        className="bg-amber-400 hover:bg-amber-500 transition-colors fade-out-0"
+                        className="bg-blue-600 hover:bg-blue-600 transition-colors fade-out-0"
                       >
                         Lock Deal
                       </Button>
                     </button>
                   </DialogTrigger>
                   <DialogContent className="bg-white rounded-lg shadow-lg overflow-hidden">
-                    <DialogHeader className="bg-amber-500 text-white py-3 px-4 mt-4 rounded-md">
+                    <DialogHeader className="bg-blue-600 text-white py-3 px-4 mt-4 rounded-md">
                       <DialogTitle className="text-lg font-bold">Lock your deal...</DialogTitle>
                     </DialogHeader>
                     <DialogDescription className="py-4 px-6 ">
-                      <h1 className="text-rose-400 font-semibold md:text-lg ">Warning:</h1> Are you sure you want to lock the deal? Once locked, the deal cannot be unlocked.
+                      <h1 className="text-yellow-400 font-semibold md:text-lg ">Warning:</h1> Are you sure you want to lock the deal? Once locked, the deal cannot be unlocked.
                     </DialogDescription>
                     <div className="flex justify-end py-4 px-6">
                       <DialogClose asChild>
                         <Button
                           type="button"
-                          className="mr-2 bg-amber-500 hover:bg-amber-600 text-white"
+                          className="mr-2 bg-blue-600 hover:bg-blue-600 text-white"
                           onClick={() => {
-                            setDealLock(true); // Update dealLock state here
+                            setDealLock(true);
                           }}
                         >
                           Lock
