@@ -16,7 +16,7 @@ const Navbar = async ({
   children = (
     <>
       <AddListing />
-      <UserChat userId={"65c5e97aafe71c6df760f715"} />
+      <UserChat userId={"65c5e97aafe71c6df760f717"} />
       <SavedItems />
       <Separator orientation="vertical" className="h-10" />
       <UserProfile />

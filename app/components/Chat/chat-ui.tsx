@@ -133,7 +133,7 @@ export default function ChatUI({
           </div>
         </div>
         {/* Messages */}
-        <div className={clsx("flex flex-col flex-1 overflow-y-auto mx-auto max-w-md  h-[76.5%] px-2.5 pb-2")}>
+        <div className={clsx("flex flex-col flex-1 overflow-y-auto mx-auto max-w-md  h-[65vh] px-2.5 pb-2")}>
 
           {status === "pending" ? (
             <div>Loading...</div>
@@ -148,7 +148,8 @@ export default function ChatUI({
                     key={j}
                     className={msg.options ? clsx(
                       "flex justify-center w-[60%] text-white rounded-lg p-2 break-words border-2 mb-2",
-                      msg.accepted === "accepted" ? "border-lime-300" : msg.accepted == "rejected" ? "border-red-300" : msg.Sender === currentUserId ? "border-blue-500 ml-auto" : "border-blue-400"
+                      msg.accepted === "accepted" ? "border-lime-300" : msg.accepted == "rejected" ? "border-red-300" : "border-yellow-500",
+                      msg.Sender === currentUserId && "ml-auto" 
                     ) : `flex ${currentUserId === msg.Sender ? "justify-end" : "justify-start"} mb-2`}
                   >
                     {
@@ -164,22 +165,22 @@ export default function ChatUI({
                         ) : (
                           msg.Sender === currentUserId ? (
                             <div id={msg.msgId} className={clsx(`user-message-${(msg.readStatus || msg.Sender === currentUserId) ? "true" : "false"}`, "flex flex-col space-y-2 items-center")}>
-                              <h1 className="text-blue-500">Deal pending</h1>
+                              <h1 className="text-yellow-500">Deal pending</h1>
                             </div>
                           ) : (
                             <div className="flex flex-col items-center space-y-1">
-                              <h1 className="text-blue-400">Do we have a deal?</h1>
+                              <h1 className="text-yellow-400">Do we have a deal?</h1>
                               <div className="flex space-x-2 justify-end">
                                 <Button
                                   disabled={currentUserId === msg.Sender}
-                                  className={"bg-blue-400 hover:bg-sky-400"}
+                                  className={"bg-yellow-400 hover:bg-yellow-500"}
                                   onClick={() => lockTheDeal("yes", (msg.msgId ?? ""))}
                                 >
                                   {"Yes"}
                                 </Button>
                                 <Button
                                   disabled={currentUserId === msg.Sender}
-                                  className={"bg-blue-400 hover:bg-sky-400"}
+                                  className={"bg-yellow-400 hover:bg-yellow-500"}
                                   onClick={() => lockTheDeal("no", (msg.msgId ?? ""))}
                                 >
                                   {"No"}
@@ -193,9 +194,9 @@ export default function ChatUI({
                           id={msg.msgId}
                           className={clsx(
                             `user-message-${(msg.readStatus || msg.Sender === currentUserId) ? "true" : "false"}`,
-                            "max-w-[80%] text-white px-2 py-1 break-words rounded-t-full",
-                            currentUserId === msg.Sender ? "rounded-l-full rounded-tr-full" : "rounded-r-full rounded-br-full text-black",
-                            currentUserId === msg.Sender ? "bg-blue-500" : "bg-sky-200 "
+                            "max-w-[80%]  px-2 py-1 break-words rounded-t-full",
+                            currentUserId === msg.Sender ? "rounded-l-full rounded-tr-full text-white" : "rounded-r-full rounded-br-full text-black",
+                            currentUserId === msg.Sender ? "bg-blue-500" : "bg-[#dce7ff] ",
                           )}
                         >
                           {msg.Message}
