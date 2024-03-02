@@ -90,7 +90,7 @@ export default function AddListingForm({
       description,
       price,
       imagesArray,
-      negotiate,
+      negotiate: negotiate === "Yes" ? true : false,
       condition,
       userId: userData?.user?.id,
     });

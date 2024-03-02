@@ -37,7 +37,6 @@ export type CommentsType = CommentsInterface[];
 export interface Product {
   _id: mongoose.Types.ObjectId;
   Seller: Seller;
-  Comments: CommentsType;
   Quantity: number;
   Product_Name: string;
   Description: string;
@@ -47,6 +46,7 @@ export interface Product {
   Condition: ConditionEnum;
   Category: CategoryEnum;
   Expiry: Date;
+  Negotiable: NegotiateEnum;
 }
 
 export enum CategoryEnum {
