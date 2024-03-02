@@ -6,6 +6,7 @@ import { User } from "../models/user.model";
 import { auth } from "@/auth";
 
 type formData = {
+  userId: string | undefined;
   iname: string;
   condition: string;
   description: string;
