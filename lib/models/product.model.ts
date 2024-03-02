@@ -6,7 +6,7 @@ const productSchema = new mongoose.Schema(
   {
     Seller: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User",
       required: true,
     },
     Total_Quantity_Available: { type: Number, required: true },
@@ -24,7 +24,8 @@ const productSchema = new mongoose.Schema(
       enum: CategoryEnum,
       required: true,
     },
-    expires_in: { type: Date },
+    Negotiable: { type: Boolean, default: true },
+    expires_in: { type: Date, default: () => Date.now() + 604800000 }, // 7days from when field is created
     is_archived: { type: Boolean, default: false },
   },
   { timestamps: true },
@@ -32,4 +33,5 @@ const productSchema = new mongoose.Schema(
 
 // Create the 'product' model based on the schema
 export const Product =
-  mongoose.models.Product || mongoose.model("Product", productSchema);
+  mongoose.models.Product ||
+  mongoose.model("Product", productSchema, "products");
