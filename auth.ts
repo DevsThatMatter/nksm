@@ -6,7 +6,6 @@ import { User } from "./lib/models/user.model";
 import { Product } from "./lib/models/product.model";
 import { connectToDB } from "./lib/database/mongoose";
 
-
 export const {
   handlers: { GET, POST },
   auth,

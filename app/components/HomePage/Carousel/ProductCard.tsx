@@ -4,7 +4,6 @@ import Link from "next/link";
 import { CarouselItem } from "../../ui/carousel";
 import { ObjectId } from "mongoose";
 import ProductSaved from "../../ProductSaved";
-import { cn } from "@/app/utils";
 
 interface ProductCardProps {
   id: ObjectId;

@@ -4,9 +4,7 @@ import { Product } from "../models/product.model";
 import { connectToDB } from "../database/mongoose";
 import { FilterQuery, SortOrder } from "mongoose";
 import { revalidatePath } from "next/cache";
-import { CategoryEnum } from "@/types";
 import { User } from "../models/user.model";
-import { Comments } from "../models/comments.model";
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
