@@ -102,10 +102,9 @@ export default function ChatInput({
                 />
 
                 <Dialog>
-                  <DialogTrigger asChild>
+                  <DialogTrigger asChild disabled={lockStatus}>
                     <button type="button" className="focus:outline-none">
                       <Button
-                        disabled={lockStatus}
                         type="button"
                         className="bg-blue-600 text-white transition-colors fade-out-0 hover:bg-blue-800"
                       >
@@ -129,6 +128,7 @@ export default function ChatInput({
                     <div className="flex justify-end px-6 py-4">
                       <DialogClose asChild>
                         <Button
+                          disabled={lockStatus}
                           type="button"
                           className="mr-2 bg-blue-600 text-white hover:bg-blue-600"
                           onClick={() => {
