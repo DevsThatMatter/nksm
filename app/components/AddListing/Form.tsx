@@ -1,16 +1,13 @@
 "use client";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "../ui/input";
-import {
-  CardContent,
-  Card,
-} from "@/app/components/ui/card";
+import { CardContent, Card } from "@/app/components/ui/card";
 import Image from "next/image";
 import { FormDataSchema } from "@/lib/FormSchema/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { CategoryEnum, ConditionEnum } from "@/types";
+import { CategoryEnum, ConditionEnum, Negotiate, NegotiateEnum } from "@/types";
 import {
   Form,
   FormControl,
@@ -38,9 +35,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/app/components/ui/alert-dialog"
+} from "@/app/components/ui/alert-dialog";
 import { useState } from "react";
-
 
 type Inputs = z.infer<typeof FormDataSchema>;
 
@@ -50,12 +46,13 @@ export default function AddListingForm() {
     resolver: zodResolver(FormDataSchema),
     defaultValues: {
       iname: "",
-      quantity: undefined,
+      quantity: 1,
       category: "",
       description: "",
-      price: undefined,
+      price: "",
       condition: "",
       images: [],
+      negotiate: "Yes",
     },
   });
 
@@ -68,7 +65,7 @@ export default function AddListingForm() {
   }
 
   async function onSubmit() {
-    console.log(form.getValues())
+    console.log(form.getValues());
   }
 
   return (
@@ -132,7 +129,7 @@ export default function AddListingForm() {
                             ))}
                           </SelectContent>
                         </Select>
-                        <FormMessage/>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -159,7 +156,7 @@ export default function AddListingForm() {
                 />
               </div>
               <div className="col-span-2 mb-2">
-                <div className="grid grid-cols-2 mb-2 gap-x-3">
+                <div className="grid grid-cols-3 mb-2 gap-x-3">
                   <FormField //price
                     control={form.control}
                     name="price"
@@ -167,13 +164,32 @@ export default function AddListingForm() {
                       <FormItem className="">
                         <FormLabel>Price</FormLabel>
                         <FormControl>
-                          <Input
-                            {...field}
-                            type="number"
-                            min="0"
-                            placeholder="Price"
-                          />
+                          <Input {...field} placeholder="Price" />
                         </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField // negotiate
+                    control={form.control}
+                    name="negotiate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Negotiable</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={"Yes"}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Object.values(NegotiateEnum).map((negotiate) => (
+                              <SelectItem key={negotiate} value={negotiate}>
+                                {negotiate}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -236,61 +252,83 @@ export default function AddListingForm() {
                 </Button>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="outline" type="submit">Preview</Button>
+                    <Button variant="outline" type="submit">
+                      Preview
+                    </Button>
                   </AlertDialogTrigger>
-                  { isPreview ? <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        This is how your product will be displayed:
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        You can still make the changes after previewing
-                      </AlertDialogDescription>
-                      <Card>
-                        <CardContent className="relative flex items-start gap-6 p-6 @container">
-                          <div className="">
-                            <Image
-                              alt="Product Image"
-                              className="aspect-square overflow-hidden rounded-lg border border-gray-200 object-cover dark:border-gray-800"
-                              height={200}
-                              src={form.getValues().images.length > 0 ? URL.createObjectURL(form.getValues().images[0]) : ""}
-                              width={200}
-                            />
-                          </div>
-                          <div className="grid gap-2 text-base">
-                            <h2 className="font-extrabold leading-tight md:text-xl max-w-48 line-clamp-2 overflow-ellipsis">{form.getValues().iname}</h2>
-                            <p className="text-base leading-normal max-w-48 overflow-ellipsis line-clamp-3">{form.getValues().description}</p>
-                            <div className="flex items-center gap-2">
-                              <h4 className="font-bold">₹{form.getValues().price}</h4>
+                  {isPreview ? (
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          This is how your product will be displayed:
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          You can still make the changes after previewing
+                        </AlertDialogDescription>
+                        <Card>
+                          <CardContent className="relative flex items-start gap-6 p-6 @container">
+                            <div className="">
+                              <Image
+                                alt="Product Image"
+                                className="aspect-square overflow-hidden rounded-lg border border-gray-200 object-cover dark:border-gray-800"
+                                height={200}
+                                src={
+                                  form.getValues().images.length > 0
+                                    ? URL.createObjectURL(
+                                        form.getValues().images[0]
+                                      )
+                                    : ""
+                                }
+                                width={200}
+                              />
                             </div>
-                            <div className="flex items-center gap-2">
-                              <ChevronRightIcon className="h-5 w-5 fill-muted" />
-                              <span className="text-sm text-muted-foreground">{form.getValues().condition}</span>
+                            <div className="grid gap-2 text-base">
+                              <h2 className="font-extrabold leading-tight md:text-xl max-w-48 line-clamp-2 overflow-ellipsis">
+                                {form.getValues().iname}
+                              </h2>
+                              <p className="text-base leading-normal max-w-48 overflow-ellipsis line-clamp-3">
+                                {form.getValues().description}
+                              </p>
+                              <div className="flex items-center gap-2">
+                                <h4 className="font-bold">
+                                  ₹{form.getValues().price}
+                                </h4>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <ChevronRightIcon className="h-5 w-5 fill-muted" />
+                                <span className="text-sm text-muted-foreground">
+                                  {form.getValues().condition}
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel onClick={() => setIsPreview(false)}>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => onSubmit()}>Continue</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                  : 
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Incomplete Product Listing
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Some fields are missing, please fill all the fields to continue
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Return</AlertDialogCancel>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                  }
+                          </CardContent>
+                        </Card>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setIsPreview(false)}>
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction onClick={() => onSubmit()}>
+                          Continue
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  ) : (
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Incomplete Product Listing
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Some fields are missing, please fill all the fields to
+                          continue
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Return</AlertDialogCancel>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  )}
                 </AlertDialog>
               </div>
             </div>

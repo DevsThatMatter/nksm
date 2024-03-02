@@ -33,3 +33,8 @@ export enum ConditionEnum {
   "Like New" = "Like New",
   "Used" = "Used",
 }
+
+export enum NegotiateEnum {
+  "Yes" = "Yes",
+  "No" = "No",
+}
