@@ -258,10 +258,10 @@ export default function AddListingForm() {
                             />
                           </div>
                           <div className="grid gap-2 text-base">
-                            <h2 className="font-extrabold leading-tight md:text-xl">{form.getValues().iname}</h2>
-                            <p className="text-base leading-normal">{form.getValues().description}</p>
+                            <h2 className="font-extrabold leading-tight md:text-xl max-w-48 line-clamp-2 overflow-ellipsis">{form.getValues().iname}</h2>
+                            <p className="text-base leading-normal max-w-48 overflow-ellipsis line-clamp-3">{form.getValues().description}</p>
                             <div className="flex items-center gap-2">
-                              <h4 className="font-bold">${form.getValues().price}</h4>
+                              <h4 className="font-bold">₹{form.getValues().price}</h4>
                             </div>
                             <div className="flex items-center gap-2">
                               <ChevronRightIcon className="h-5 w-5 fill-muted" />
