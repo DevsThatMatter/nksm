@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
-
 export const {
   handlers: { GET, POST },
   auth,
@@ -18,12 +17,13 @@ export const {
   ],
   callbacks: {
     async signIn({ user }) {
-      const isAllowedToSignIn = (user.email && user.email.endsWith('@nitkkr.ac.in'))
+      const isAllowedToSignIn =
+        user.email && user.email.endsWith("@nitkkr.ac.in");
       if (isAllowedToSignIn) {
-        return true
+        return true;
       } else {
         // Return false to display a default error message
-        return false
+        return false;
       }
     },
   },

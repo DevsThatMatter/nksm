@@ -28,19 +28,19 @@ export default function ChatUI() {
   const [completeUserDisplay, setCompleteUserDisplay] =
     useState<boolean>(false);
   return (
-    <div className="mt-10 h-full flex flex-col items-center">
+    <div className="mt-10 flex h-full flex-col items-center">
       {/* just added to check if the socket connection was correctly  getting setting up */}
       <SocketIOIndicator />
 
-      <div className="rounded-md border border-gray-300 dark:border-gray-600 h-[90%] p-4 relative w-full max-w-md md:max-w-xl lg:max-w-2xl xl:max-w-4xl">
+      <div className="relative h-[90%] w-full max-w-md rounded-md border border-gray-300 p-4 dark:border-gray-600 md:max-w-xl lg:max-w-2xl xl:max-w-4xl">
         {/* User display */}
         {!completeUserDisplay ? (
           (
             <div
               className="
-                    z-10 w-10 h-10 p-2 mb-4 border rounded-full
-                    flex items-center justify-center absolute -top-4 -left-4 
-                    bg-gray-300 hover:border-blue-500 hover:bg-blue-100 dark:hover:bg-white transition-all cursor-pointer"
+                    absolute -left-4 -top-4 z-10 mb-4 flex h-10
+                    w-10 cursor-pointer items-center justify-center rounded-full border 
+                    bg-gray-300 p-2 transition-all hover:border-blue-500 hover:bg-blue-100 dark:hover:bg-white"
               onClick={() => setCompleteUserDisplay(true)}
             >
               <span className="text-lg font-semibold dark:text-blue-900">
@@ -54,12 +54,12 @@ export default function ChatUI() {
               height={40}
               baseColor="#e2e8f0"
               highlightColor="#f7fafc"
-              className="absolute -top-8 -left-8 "
+              className="absolute -left-8 -top-8 "
             />
           )
         ) : (
           <div
-            className="user-display z-10 border p-2 bg-gray-200 dark:bg-gray-800 rounded-md flex items-center justify-between mb-4 cursor-pointer"
+            className="user-display z-10 mb-4 flex cursor-pointer items-center justify-between rounded-md border bg-gray-200 p-2 dark:bg-gray-800"
             onClick={() => setCompleteUserDisplay(false)}
           >
             <span className="text-lg font-semibold">
@@ -71,7 +71,7 @@ export default function ChatUI() {
           </div>
         )}
 
-        <div className="chat-display overflow-y-auto mt-4 max-h-[90%] my-auto">
+        <div className="chat-display my-auto mt-4 max-h-[90%] overflow-y-auto">
           <div className="flex flex-col space-y-4">
             {chatMessages.message.map((msg, id) => (
               <div
@@ -81,13 +81,13 @@ export default function ChatUI() {
                 <div className="p-2">
                   {msg.msg ? (
                     <div
-                      className={`max-w-md rounded-bl-md rounded-br-md p-2 overflow-hidden flex ${msg.mainUser ? "bg-green-500 rounded-tl-md text-white self-end items-end" : "bg-gray-300 rounded-tr text-black self-start items-start"}`}
+                      className={`flex max-w-md overflow-hidden rounded-bl-md rounded-br-md p-2 ${msg.mainUser ? "items-end self-end rounded-tl-md bg-green-500 text-white" : "items-start self-start rounded-tr bg-gray-300 text-black"}`}
                     >
-                      <span className="text-sm break-all">{msg.msg}</span>
-                      <Icons.replyIcon className="text-transparent group-hover:block hover:text-blue-500 " />
+                      <span className="break-all text-sm">{msg.msg}</span>
+                      <Icons.replyIcon className="text-transparent hover:text-blue-500 group-hover:block " />
                     </div>
                   ) : (
-                    <div className="bg-gray-400 animate-pulse p-4 rounded-md h-6 w-40 items-center flex justify-center" />
+                    <div className="flex h-6 w-40 animate-pulse items-center justify-center rounded-md bg-gray-400 p-4" />
                   )}
                 </div>
               </div>
@@ -96,7 +96,7 @@ export default function ChatUI() {
         </div>
 
         {/* Input and action buttons */}
-        <div className="flex flex-1 items-center space-x-2 absolute bottom-0 left-0 right-0 p-2">
+        <div className="absolute bottom-0 left-0 right-0 flex flex-1 items-center space-x-2 p-2">
           {<ChatInput userId1={""} userId2={""} /> || (
             <Skeleton
               width={200}

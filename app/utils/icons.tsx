@@ -1,4 +1,17 @@
-import { SunIcon, MoonIcon, ArrowLeftIcon, AvatarIcon, BookmarkIcon, ChatBubbleIcon, PlusIcon, MagnifyingGlassIcon, PaperPlaneIcon, ImageIcon, Link2Icon, ChevronDownIcon } from "@radix-ui/react-icons";
+import {
+  SunIcon,
+  MoonIcon,
+  ArrowLeftIcon,
+  AvatarIcon,
+  BookmarkIcon,
+  ChatBubbleIcon,
+  PlusIcon,
+  MagnifyingGlassIcon,
+  PaperPlaneIcon,
+  ImageIcon,
+  Link2Icon,
+  ChevronDownIcon,
+} from "@radix-ui/react-icons";
 
 export const Icons = {
   sun: SunIcon,
@@ -12,5 +25,5 @@ export const Icons = {
   moveback: ArrowLeftIcon,
   sendIcon: PaperPlaneIcon,
   fileLink: Link2Icon,
-  image: ImageIcon
+  image: ImageIcon,
 };

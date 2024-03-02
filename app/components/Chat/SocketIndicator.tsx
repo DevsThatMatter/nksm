@@ -7,7 +7,7 @@ export function SocketIOIndicator() {
   const { isConnected } = useSocket();
   if (!isConnected) {
     return (
-      <Badge variant="outline" className="bg-amber-500 text-white border-none">
+      <Badge variant="outline" className="border-none bg-amber-500 text-white">
         Fallback: Polling every second
       </Badge>
     );
@@ -15,7 +15,7 @@ export function SocketIOIndicator() {
     return (
       <Badge
         variant="outline"
-        className="bg-emerald-500 text-white border-none"
+        className="border-none bg-emerald-500 text-white"
       >
         live real-time updates
       </Badge>

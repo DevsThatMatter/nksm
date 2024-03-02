@@ -69,11 +69,11 @@ export default function AddListingForm() {
   }
 
   return (
-    <div className="flex justify-center items-center h-[85vh]">
-      <div className="border p-8 max-w-md rounded-md">
+    <div className="flex h-[85vh] items-center justify-center">
+      <div className="max-w-md rounded-md border p-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handlePreview)}>
-            <div className="grid grid-cols-2 my-2">
+            <div className="my-2 grid grid-cols-2">
               <div className="col-span-2">
                 <FormField
                   control={form.control}
@@ -156,7 +156,7 @@ export default function AddListingForm() {
                 />
               </div>
               <div className="col-span-2 mb-2">
-                <div className="grid grid-cols-3 mb-2 gap-x-3">
+                <div className="mb-2 grid grid-cols-3 gap-x-3">
                   <FormField //price
                     control={form.control}
                     name="price"
@@ -176,7 +176,10 @@ export default function AddListingForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Negotiable</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={"Yes"}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={"Yes"}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select" />
@@ -241,7 +244,7 @@ export default function AddListingForm() {
                   )}
                 />
               </div>
-              <div className="flex justify-between col-span-2 mt-5 space-x-3">
+              <div className="col-span-2 mt-5 flex justify-between space-x-3">
                 <Button
                   type="reset"
                   variant="outline"
@@ -275,7 +278,7 @@ export default function AddListingForm() {
                                 src={
                                   form.getValues().images.length > 0
                                     ? URL.createObjectURL(
-                                        form.getValues().images[0]
+                                        form.getValues().images[0],
                                       )
                                     : ""
                                 }
@@ -283,10 +286,10 @@ export default function AddListingForm() {
                               />
                             </div>
                             <div className="grid gap-2 text-base">
-                              <h2 className="font-extrabold leading-tight md:text-xl max-w-48 line-clamp-2 overflow-ellipsis">
+                              <h2 className="line-clamp-2 max-w-48 overflow-ellipsis font-extrabold leading-tight md:text-xl">
                                 {form.getValues().iname}
                               </h2>
-                              <p className="text-base leading-normal max-w-48 overflow-ellipsis line-clamp-3">
+                              <p className="line-clamp-3 max-w-48 overflow-ellipsis text-base leading-normal">
                                 {form.getValues().description}
                               </p>
                               <div className="flex items-center gap-2">
