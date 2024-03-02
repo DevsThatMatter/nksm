@@ -69,11 +69,11 @@ export default function UserChat({
               </SheetTitle>
             </SheetHeader>
             {chat === "" ? (
-              <SheetDescription className="mt-4 flex flex-col space-y-4 w-full">
+              <SheetDescription className="mt-4 flex w-full flex-col space-y-4">
                 {chats.map((chat) => (
                   <div
                     key={chat.phoneNumber}
-                    className="flex items-center justify-between p-2 border rounded-md shadow-md cursor-pointer hover:shadow-xl"
+                    className="flex cursor-pointer items-center justify-between rounded-md border p-2 shadow-md hover:shadow-xl"
                     onClick={() => handleSetChat(chat.phoneNumber)}
                   >
                     <div>

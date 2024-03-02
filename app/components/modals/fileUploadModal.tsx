@@ -60,7 +60,7 @@ export default function FileUploadModal() {
     <Dialog>
       <DialogTrigger asChild>
         <button type="button">
-          <Icons.fileLink className="w-5 h-5 text-blue-500 cursor-pointer hover:text-blue-700 transform hover:scale-105 transition-transform" />
+          <Icons.fileLink className="h-5 w-5 transform cursor-pointer text-blue-500 transition-transform hover:scale-105 hover:text-blue-700" />
         </button>
       </DialogTrigger>
       <DialogContent>

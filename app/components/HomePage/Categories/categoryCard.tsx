@@ -21,16 +21,16 @@ const CategoryCard: React.FC<CategoryProp> = ({
       href={""}
       key={name}
       className={cn(
-        "@container relative rounded-lg group sm:h-[30vh] md:h-[60vh] lg:h-auto aspect-square sm:aspect-auto overflow-hidden",
-        className
+        "group relative aspect-square overflow-hidden rounded-lg @container sm:aspect-auto sm:h-[30vh] md:h-[60vh] lg:h-auto",
+        className,
       )}
     >
       <Image
         src={imgUrl}
         alt={name}
         className={cn(
-          "rounded-lg object-cover group-hover:opacity-75 h-full w-full ",
-          imageClassName
+          "h-full w-full rounded-lg object-cover group-hover:opacity-75 ",
+          imageClassName,
         )}
         width={800}
         height={800}
@@ -38,9 +38,9 @@ const CategoryCard: React.FC<CategoryProp> = ({
 
       <h1
         className={cn(
-          "absolute w-fit h-fit group-hover:opacity-75 text-2xl @2xs:text-3xl @xs:text-4xl @sm:text-5xl @md:text-6xl font-semibold @md:font-medium text-gray-700",
+          "absolute h-fit w-fit text-2xl font-semibold text-gray-700 group-hover:opacity-75 @2xs:text-3xl @xs:text-4xl @sm:text-5xl @md:text-6xl @md:font-medium",
           textClassName,
-          spartan.className
+          spartan.className,
         )}
       >
         {name}
