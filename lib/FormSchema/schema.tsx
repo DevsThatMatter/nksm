@@ -31,6 +31,7 @@ export const FormDataSchema = z.object({
       return ans;
     }, "Only .jpg, .jpeg, .png and .webp files are accepted."),
 
-  price: z.coerce.number().min(0, "Price must be atleast 0"),
+  price: z.coerce.number().min(1, "Price must be atleast 1"),
   quantity: z.coerce.number().min(1, "Quantity must be atleast 1"),
+  negotiate: z.string(),
 });
