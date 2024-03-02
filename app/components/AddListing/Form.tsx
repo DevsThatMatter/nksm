@@ -7,7 +7,7 @@ import { FormDataSchema } from "@/lib/FormSchema/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { CategoryEnum, ConditionEnum, Negotiate, NegotiateEnum } from "@/types";
+import { CategoryEnum, ConditionEnum, NegotiateEnum } from "@/types";
 import {
   Form,
   FormControl,
@@ -42,7 +42,7 @@ type Inputs = z.infer<typeof FormDataSchema>;
 
 export default function AddListingForm() {
   const [isPreview, setIsPreview] = useState(false);
-  const form = useForm<Inputs>({
+  const form = useForm<z.infer<typeof FormDataSchema>>({
     resolver: zodResolver(FormDataSchema),
     defaultValues: {
       iname: "",
