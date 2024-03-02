@@ -37,7 +37,7 @@ function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
           <DialogTrigger asChild>
             <Button
               variant="default"
-              className="relative my-auto items-center justify-center bg-green-600 hover:bg-green-700"
+              className="relative my-auto items-center justify-center bg-green-600 hover:bg-green-700 dark:text-foreground"
             >
               <Icons.sendIcon className="absolute bottom-0 left-2 top-0 m-auto h-4 w-4" />
               <span className="pl-4">Send an Offer</span>
