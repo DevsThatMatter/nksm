@@ -37,10 +37,15 @@ import {
   AlertDialogTrigger,
 } from "@/app/components/ui/alert-dialog";
 import { useState } from "react";
+import { Session } from "next-auth";
 
 type Inputs = z.infer<typeof FormDataSchema>;
 
-export default function AddListingForm() {
+export default function AddListingForm({
+  userData,
+}: {
+  userData: Session | null;
+}) {
   const [isPreview, setIsPreview] = useState(false);
   const form = useForm<z.infer<typeof FormDataSchema>>({
     resolver: zodResolver(FormDataSchema),
@@ -65,7 +70,30 @@ export default function AddListingForm() {
   }
 
   async function onSubmit() {
-    console.log(form.getValues());
+    const {
+      iname,
+      quantity,
+      category,
+      description,
+      price,
+      condition,
+      images,
+      negotiate,
+    } = form.getValues();
+    const imagesArray = Object.values(images as Record<string, unknown>).map(
+      (image) => (image as { name: string }).name,
+    );
+    await addProductFromListing({
+      iname,
+      quantity,
+      category,
+      description,
+      price,
+      imagesArray,
+      negotiate,
+      condition,
+      userId: userData?.user?.id,
+    });
   }
 
   return (
