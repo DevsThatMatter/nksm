@@ -4,8 +4,7 @@ import "./styles/globals.css";
 import { cn } from "@/app/utils";
 import { ThemeProvider } from "@/app/components/providers/theme-provider";
 import { QueryProvider } from "./components/providers/query-provider";
-import { Toaster } from 'sonner'
-
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "NKSM",
@@ -33,10 +32,8 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           enableSystem
           disableTransitionOnChange
         >
-           <Toaster position="top-right" richColors />
-          <QueryProvider>
-            {children}
-          </QueryProvider>
+          <Toaster position="top-right" richColors />
+          <QueryProvider>{children}</QueryProvider>
         </ThemeProvider>
       </body>
     </html>

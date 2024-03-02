@@ -18,11 +18,15 @@ export const useChatQuery = ({
   productId,
   currentUser,
 }: ChatQueryProps) => {
-
-
   async function fetchMessages({ pageParam = 0 }) {
-    const res = await getInitialMessages({ sellerId, buyerId, productId, currentUser, pageNo: pageParam })
-    return res
+    const res = await getInitialMessages({
+      sellerId,
+      buyerId,
+      productId,
+      currentUser,
+      pageNo: pageParam,
+    });
+    return res;
   }
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useInfiniteQuery({

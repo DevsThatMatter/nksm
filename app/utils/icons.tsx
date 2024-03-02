@@ -27,5 +27,5 @@ export const Icons = {
   sendIcon: PaperPlaneIcon,
   fileLink: Link2Icon,
   image: ImageIcon,
-  remove: CrossCircledIcon
+  remove: CrossCircledIcon,
 };

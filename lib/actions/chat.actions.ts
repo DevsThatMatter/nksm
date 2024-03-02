@@ -14,7 +14,6 @@ import { client } from "../database/redis-config";
 import { pusherServer } from "../pusher";
 import { InviteStruct } from "@/app/components/Chat/buyer-invites";
 
-
 const mongoId = z.string().refine((value) => Types.ObjectId.isValid(value), {
   message: "Invalid ObjectId format",
 });
@@ -53,92 +52,90 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
     };
 
     const productLookup = {
-      '$lookup': {
-        'from': 'products',
-        'localField': 'ProductId',
-        'foreignField': '_id',
-        'as': 'ProductInfo'
-      }
+      $lookup: {
+        from: "products",
+        localField: "ProductId",
+        foreignField: "_id",
+        as: "ProductInfo",
+      },
     };
 
     const sellerLookup = {
-      '$lookup': {
-        'from': 'users',
-        'localField': 'Seller',
-        'foreignField': '_id',
-        'as': 'sellerInfo'
-      }
+      $lookup: {
+        from: "users",
+        localField: "Seller",
+        foreignField: "_id",
+        as: "sellerInfo",
+      },
     };
 
     const buyerLookup = {
-      '$lookup': {
-        'from': 'users',
-        'localField': 'Buyer',
-        'foreignField': '_id',
-        'as': 'buyerInfo'
-      }
+      $lookup: {
+        from: "users",
+        localField: "Buyer",
+        foreignField: "_id",
+        as: "buyerInfo",
+      },
     };
 
     const projectStage = {
-      '$project': {
-        'productDetails': {
-          '$let': {
-            'vars': {
-              'product': {
-                '$arrayElemAt': [
-                  '$ProductInfo', 0
-                ]
-              }
+      $project: {
+        productDetails: {
+          $let: {
+            vars: {
+              product: {
+                $arrayElemAt: ["$ProductInfo", 0],
+              },
             },
-            'in': {
-              'productId': {
-                '$toString': '$$product._id'
+            in: {
+              productId: {
+                $toString: "$$product._id",
               },
-              'Seller': {
-                '$toString': '$$product.Seller'
+              Seller: {
+                $toString: "$$product.Seller",
               },
-              'Total_Quantity_Available': '$$product.Total_Quantity_Available',
-              'Product_Name': '$$product.Product_Name',
-              'Images': '$$product.Images'
-            }
-          }
+              Total_Quantity_Available: "$$product.Total_Quantity_Available",
+              Product_Name: "$$product.Product_Name",
+              Images: "$$product.Images",
+            },
+          },
         },
-        'sellerDetails': {
-          '$first': {
-            '$map': {
-              'input': '$sellerInfo',
-              'as': 'seller',
-              'in': {
-                'First_Name': '$$seller.First_Name',
-                'Last_Name': '$$seller.Last_Name',
-                'Phone_Number': '$$seller.Phone_Number',
-                'id': {
-                  '$toString': '$$seller._id'
+        sellerDetails: {
+          $first: {
+            $map: {
+              input: "$sellerInfo",
+              as: "seller",
+              in: {
+                First_Name: "$$seller.First_Name",
+                Last_Name: "$$seller.Last_Name",
+                Phone_Number: "$$seller.Phone_Number",
+                id: {
+                  $toString: "$$seller._id",
                 },
-                'Avatar': '$$seller.Avatar'
-              }
-            }
-          }
+                Avatar: "$$seller.Avatar",
+              },
+            },
+          },
         },
-        'buyerDetails': {
-          '$first': {
-            '$map': {
-              'input': '$buyerInfo',
-              'as': 'buyer',
-              'in': {
-                'First_Name': '$$buyer.First_Name',
-                'Last_Name': '$$buyer.Last_Name',
-                'Phone_Number': '$$buyer.Phone_Number',
-                'id': {
-                  '$toString': '$$buyer._id'
+        buyerDetails: {
+          $first: {
+            $map: {
+              input: "$buyerInfo",
+              as: "buyer",
+              in: {
+                First_Name: "$$buyer.First_Name",
+                Last_Name: "$$buyer.Last_Name",
+                Phone_Number: "$$buyer.Phone_Number",
+                id: {
+                  $toString: "$$buyer._id",
                 },
-                'Avatar': '$$buyer.Avatar'
-              }
-            }
-          }
+                Avatar: "$$buyer.Avatar",
+              },
+            },
+          },
         },
-        '_id': 0
-      }
+        _id: 0,
+      },
     };
 
     const userIsSellerPipeline = [
@@ -177,7 +174,7 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
 export async function chatBetweenSellerAndBuyerForProduct(
   otherUserPhoneNumber: string,
   buyerId: string,
-  productId: string
+  productId: string,
 ) {
   try {
     if (!otherUserPhoneNumber || typeof otherUserPhoneNumber !== "string") {
@@ -216,7 +213,7 @@ const CreateMessagesProps = z.object({
 });
 
 export async function createMessages(
-  props: z.infer<typeof CreateMessagesProps>
+  props: z.infer<typeof CreateMessagesProps>,
 ) {
   const validatedProps = CreateMessagesProps.parse(props);
   const senderId = new Types.ObjectId(validatedProps.sender);
@@ -228,7 +225,7 @@ export async function createMessages(
 
   await checkUserExists(
     new Types.ObjectId(validatedProps.sellerId),
-    "sellerId"
+    "sellerId",
   );
   await checkUserExists(new Types.ObjectId(validatedProps.buyerId), "buyerId");
 
@@ -249,7 +246,7 @@ export async function createMessages(
       ProductId: validatedProps.productId,
     },
     { $push: { Messages: newMessage } },
-    { $upsert: 1 }
+    { $upsert: 1 },
   );
 }
 
@@ -270,37 +267,39 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
       {
         Seller: new mongo.ObjectId(validatedProps.seller),
         Buyer: new mongo.ObjectId(validatedProps.buyer),
-        ProductId: new mongo.ObjectId(validatedProps.productId)
+        ProductId: new mongo.ObjectId(validatedProps.productId),
       },
       {
-        status: "stale"
-      }
+        status: "stale",
+      },
     );
-
 
     const messageUpdateQuery = {
       _id: new mongo.ObjectId(validatedProps.msgId),
     };
 
-    const res = await Message.updateOne(
-      messageUpdateQuery,
-      { $set: { accepted: validatedProps.caller === "yes" ? "accepted" : "rejected" } }
-    );
-    const updatedMessage = await Message.findOne({ _id: new mongo.ObjectId(validatedProps.msgId) })
-    const updateKey = `chat${validatedProps.productId}productId${validatedProps.productId}sellerId${validatedProps.seller}buyerId${validatedProps.buyer}update`
-    await pusherServer.trigger(updateKey, 'messages:update', updatedMessage)
+    const res = await Message.updateOne(messageUpdateQuery, {
+      $set: {
+        accepted: validatedProps.caller === "yes" ? "accepted" : "rejected",
+      },
+    });
+    const updatedMessage = await Message.findOne({
+      _id: new mongo.ObjectId(validatedProps.msgId),
+    });
+    const updateKey = `chat${validatedProps.productId}productId${validatedProps.productId}sellerId${validatedProps.seller}buyerId${validatedProps.buyer}update`;
+    await pusherServer.trigger(updateKey, "messages:update", updatedMessage);
 
     return {
       content: res,
       error: null,
-      status: 200
-    }
+      status: 200,
+    };
   } catch (error) {
     console.error("Error locking deal:", error);
     return {
       content: null,
       error: error,
-      status: 500
+      status: 500,
     };
   }
 }
@@ -309,11 +308,11 @@ const UnreadMessagesProps = z.object({
   productId: mongoId,
   sellerId: mongoId,
   buyerId: mongoId,
-  currentUser: mongoId
+  currentUser: mongoId,
 });
 
 async function computeUnreadMessages(
-  props: z.infer<typeof UnreadMessagesProps>
+  props: z.infer<typeof UnreadMessagesProps>,
 ): Promise<number> {
   connectToDB();
   const validatedProps = UnreadMessagesProps.parse(props);
@@ -344,9 +343,9 @@ async function computeUnreadMessages(
               cond: {
                 $and: [
                   { $eq: ["$$msg.readStatus", false] },
-                  { $ne: ["$$msg.Sender", validatedProps.currentUser] }
-                ]
-              }
+                  { $ne: ["$$msg.Sender", validatedProps.currentUser] },
+                ],
+              },
             },
           },
         },
@@ -364,7 +363,7 @@ export async function countUnreadMessages(
   props: z.infer<typeof UnreadMessagesProps> & {
     caller: "get" | "update";
     messageId?: string;
-  }
+  },
 ): Promise<number> {
   const cacheKey = `unreadCount:${props.sellerId}-${props.buyerId}-${props.productId}`;
   try {
@@ -412,16 +411,30 @@ const CreateNewMessage = z.object({
   dealDone: z.boolean(),
   sellerId: mongoId,
   buyerId: mongoId,
-  productId: mongoId
+  productId: mongoId,
 });
 
-export async function createNewMessage(message: string, sender: string, dealDone: boolean, sellerId: string, buyerId: string, productId: string) {
+export async function createNewMessage(
+  message: string,
+  sender: string,
+  dealDone: boolean,
+  sellerId: string,
+  buyerId: string,
+  productId: string,
+) {
   try {
-    const validatedProps = CreateNewMessage.parse({ message, sender, dealDone, sellerId, buyerId, productId })
+    const validatedProps = CreateNewMessage.parse({
+      message,
+      sender,
+      dealDone,
+      sellerId,
+      buyerId,
+      productId,
+    });
 
     const product = await Product.findById(productId);
     if (!product) {
-      throw new Error(`No product with this id ${productId}`)
+      throw new Error(`No product with this id ${productId}`);
     }
 
     const currentTimeStamp = new Date();
@@ -434,7 +447,7 @@ export async function createNewMessage(message: string, sender: string, dealDone
         options: true,
         TimeStamp: currentTimeStamp.toISOString(),
         accepted: "pending",
-        readStatus: false
+        readStatus: false,
       };
     } else {
       newMessage = {
@@ -442,7 +455,7 @@ export async function createNewMessage(message: string, sender: string, dealDone
         Message: validatedProps.message,
         options: false,
         TimeStamp: currentTimeStamp.toISOString(),
-        readStatus: false
+        readStatus: false,
       };
     }
 
@@ -457,11 +470,11 @@ export async function createNewMessage(message: string, sender: string, dealDone
     });
 
     if (chat) {
-      console.log("chat found")
+      console.log("chat found");
       chat.Messages.push(createdMessage._id);
       await chat.save();
     } else {
-      console.log("chat not found")
+      console.log("chat not found");
       const newChat = new Chat({
         Seller: validatedProps.sellerId,
         Buyer: validatedProps.buyerId,
@@ -472,11 +485,10 @@ export async function createNewMessage(message: string, sender: string, dealDone
     }
 
     const addKey = `chat${validatedProps.productId}productId${validatedProps.productId}sellerId${validatedProps.sellerId}buyerId${validatedProps.buyerId}add`;
-    await pusherServer.trigger(addKey, 'messages:new', newMessage)
-
+    await pusherServer.trigger(addKey, "messages:new", newMessage);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new Error(`zod type error  ${error.message}`)
+      throw new Error(`zod type error  ${error.message}`);
     }
   }
 }
@@ -489,7 +501,9 @@ const GetmessageProps = z.object({
   pageNo: z.number().optional(),
 });
 
-export async function getInitialMessages(props: z.infer<typeof GetmessageProps>) {
+export async function getInitialMessages(
+  props: z.infer<typeof GetmessageProps>,
+) {
   try {
     const docPerPage = 10;
     const pipeline = [
@@ -537,15 +551,17 @@ export async function getInitialMessages(props: z.infer<typeof GetmessageProps>)
       },
     ];
 
-    const skipCount = props.pageNo !== undefined ? props.pageNo * docPerPage : 0
-    const { Messages, Locked } = (await Chat.aggregate(pipeline).limit(docPerPage).skip(skipCount))[0] as { Messages: MessageTypes[]; Locked: boolean }
-
+    const skipCount =
+      props.pageNo !== undefined ? props.pageNo * docPerPage : 0;
+    const { Messages, Locked } = (
+      await Chat.aggregate(pipeline).limit(docPerPage).skip(skipCount)
+    )[0] as { Messages: MessageTypes[]; Locked: boolean };
 
     Messages.sort((a, b) => {
       const dateA = new Date(a.TimeStamp);
       const dateB = new Date(b.TimeStamp);
       return dateA.getTime() - dateB.getTime();
-    })
+    });
     const nextPageNo =
       Messages.length === docPerPage ? (props.pageNo ?? 0) + 1 : undefined;
 
@@ -553,104 +569,104 @@ export async function getInitialMessages(props: z.infer<typeof GetmessageProps>)
       content: {
         messages: Messages,
         Locked,
-        nextPageNo
+        nextPageNo,
       },
       msg: "Success, the initial messages found",
       status: 200,
-      err: null
-    }
-
+      err: null,
+    };
   } catch (error) {
-    console.log("Error in get initial messages", error)
+    console.log("Error in get initial messages", error);
     return {
       content: null,
       msg: "Internal server error",
       status: 500,
-      err: error
-    }
+      err: error,
+    };
   }
 }
 
 export async function fecthInvites(userId: string) {
-
   const pipeline = [
     {
-      '$match': {
-        'Seller': new mongo.ObjectId(userId),
-        'status': 'invite'
-      }
-    }, {
-      '$lookup': {
-        'from': 'users',
-        'localField': 'Buyer',
-        'foreignField': '_id',
-        'as': 'buyerDetails'
-      }
-    }, {
-      '$lookup': {
-        'from': 'users',
-        'localField': 'Seller',
-        'foreignField': '_id',
-        'as': 'sellerDetails'
-      }
-    }, {
-      '$lookup': {
-        'from': 'products',
-        'localField': 'ProductId',
-        'foreignField': '_id',
-        'as': 'productDetails'
-      }
-    }, {
-      '$project': {
-        'buyerDetails': {
-          '$map': {
-            'input': '$buyerDetails',
-            'as': 'buyer',
-            'in': {
-              'Last_Name': '$$buyer.Last_Name',
-              'First_Name': '$$buyer.First_Name',
-              'Phone_Number': '$$buyer.Phone_Number',
-              'Avatar': '$$buyer.Avatar',
-              'address': '$$buyer.address',
-              'buyerId': {
-                '$toString': '$$buyer._id'
-              }
-            }
-          }
+      $match: {
+        Seller: new mongo.ObjectId(userId),
+        status: "invite",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "Buyer",
+        foreignField: "_id",
+        as: "buyerDetails",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "Seller",
+        foreignField: "_id",
+        as: "sellerDetails",
+      },
+    },
+    {
+      $lookup: {
+        from: "products",
+        localField: "ProductId",
+        foreignField: "_id",
+        as: "productDetails",
+      },
+    },
+    {
+      $project: {
+        buyerDetails: {
+          $map: {
+            input: "$buyerDetails",
+            as: "buyer",
+            in: {
+              Last_Name: "$$buyer.Last_Name",
+              First_Name: "$$buyer.First_Name",
+              Phone_Number: "$$buyer.Phone_Number",
+              Avatar: "$$buyer.Avatar",
+              address: "$$buyer.address",
+              buyerId: {
+                $toString: "$$buyer._id",
+              },
+            },
+          },
         },
-        'sellerDetails': {
-          '$arrayElemAt': [
-            '$sellerDetails', 0
-          ]
+        sellerDetails: {
+          $arrayElemAt: ["$sellerDetails", 0],
         },
-        'productDetails': {
-          '$arrayElemAt': [
-            '$productDetails', 0
-          ]
-        }
-      }
-    }, {
-      '$unset': '_id'
-    }, {
-      '$project': {
-        'buyerDetails': 1,
-        'sellerDetails.Avatar': 1,
-        'sellerDetails.address': 1,
-        'sellerDetails.Last_Name': 1,
-        'sellerDetails.First_Name': 1,
-        'sellerDetails.Phone_Number': 1,
-        'sellerId': {
-          '$toString': '$sellerDetails._id'
+        productDetails: {
+          $arrayElemAt: ["$productDetails", 0],
         },
-        'productDetails.Product_Name': 1,
-        'productDetails.Images': 1,
-        'productId': {
-          '$toString': '$productDetails._id'
-        }
-      }
-    }
-  ]
-  const data = (await Chat.aggregate(pipeline)) as InviteStruct[]
+      },
+    },
+    {
+      $unset: "_id",
+    },
+    {
+      $project: {
+        buyerDetails: 1,
+        "sellerDetails.Avatar": 1,
+        "sellerDetails.address": 1,
+        "sellerDetails.Last_Name": 1,
+        "sellerDetails.First_Name": 1,
+        "sellerDetails.Phone_Number": 1,
+        sellerId: {
+          $toString: "$sellerDetails._id",
+        },
+        "productDetails.Product_Name": 1,
+        "productDetails.Images": 1,
+        productId: {
+          $toString: "$productDetails._id",
+        },
+      },
+    },
+  ];
+  const data = (await Chat.aggregate(pipeline)) as InviteStruct[];
   data.sort((a: InviteStruct, b: InviteStruct) => {
     const productNameA = a.productDetails.Product_Name.toLowerCase();
     const productNameB = b.productDetails.Product_Name.toLowerCase();
@@ -664,26 +680,31 @@ export async function fecthInvites(userId: string) {
     return 0;
   });
 
-  return data
+  return data;
 }
 
 const AcceptInviteSchema = z.object({
   sellerId: mongoId,
   buyerId: mongoId,
-  productId: mongoId
-})
+  productId: mongoId,
+});
 
-export async function acceptTheInvite(props: z.infer<typeof AcceptInviteSchema>) {
+export async function acceptTheInvite(
+  props: z.infer<typeof AcceptInviteSchema>,
+) {
   try {
-    connectToDB()
-    await Chat.updateOne({
-      Seller: props.sellerId,
-      Buyer: props.buyerId,
-      ProductId: props.productId
-    }, {
-      status: "active"
-    })
+    connectToDB();
+    await Chat.updateOne(
+      {
+        Seller: props.sellerId,
+        Buyer: props.buyerId,
+        ProductId: props.productId,
+      },
+      {
+        status: "active",
+      },
+    );
   } catch (error) {
-    console.log("internal server error", error)
+    console.log("internal server error", error);
   }
 }

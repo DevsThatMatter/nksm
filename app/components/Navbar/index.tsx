@@ -29,7 +29,7 @@ const Navbar = async ({
 }) => {
   const userData = await auth();
   const products = (await fetchRecentProducts()) || [];
-  const userId = userData?.user?.id || "65c5e97aafe71c6df760f715"
+  const userId = userData?.user?.id || "65c5e97aafe71c6df760f715";
   // 65c5e97aafe71c6df760f717
   // 65c5e97aafe71c6df760f715
   return (

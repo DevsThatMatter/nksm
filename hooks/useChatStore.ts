@@ -77,7 +77,7 @@ const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
           ...state,
           discussions: [],
           otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "" },
-          lockStatus:false
+          lockStatus: false,
         };
       }
       return state;
