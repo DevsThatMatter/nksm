@@ -7,7 +7,7 @@ import { FormDataSchema } from "@/lib/FormSchema/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { CategoryEnum, ConditionEnum, Negotiate, NegotiateEnum } from "@/types";
+import { CategoryEnum, ConditionEnum, NegotiateEnum } from "@/types";
 import {
   Form,
   FormControl,
@@ -49,7 +49,7 @@ export default function AddListingForm() {
       quantity: 1,
       category: "",
       description: "",
-      price: "",
+      price: undefined,
       condition: "",
       images: [],
       negotiate: "Yes",
