@@ -7,7 +7,7 @@ export default async function Page({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) {
-  const valuesString = Object.values(searchParams).join(", ");
+  // const valuesString = Object.values(searchParams).join(", ");
   const result = await getSearchResults({
     searchString: searchParams.q || "",
     pageNumber: searchParams?.page ? +searchParams.page : 1,

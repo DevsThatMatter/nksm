@@ -59,7 +59,7 @@ function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
               </p>
             </CardContent>
             <CardFooter className="flex">
-              <Button className="w-full bg-green-600 hover:bg-green-700">
+              <Button className="w-full bg-green-600 hover:bg-green-700 dark:text-foreground">
                 Submit Offer
               </Button>
             </CardFooter>
