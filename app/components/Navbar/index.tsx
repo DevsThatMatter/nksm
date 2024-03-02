@@ -5,17 +5,22 @@ import Link from "next/link";
 import { SavedItems } from "./SavedItems";
 import { Separator } from "@/app/components/ui/separator";
 import UserChat from "@/app/components/Chat/ChatsPanel";
-import { AddListing } from "../AddListing";
 import SearchBar from "./SearchBar";
-import { ReactNode, Suspense } from "react";
-import { auth } from "@/auth";
+import { ReactNode } from "react";
 import { fetchRecentProductS } from "@/lib/actions/fetchProduct.actions";
 import { cn } from "@/app/utils";
+import { Button } from "../ui/button";
+import { Icons } from "@/app/utils/icons";
 
 const Navbar = async ({
   children = (
     <>
-      <AddListing />
+      <Link href="/add-listing">
+        <Button variant="default" className="relative">
+          <Icons.add className="absolute bottom-0 left-2 top-0 m-auto h-5 w-5" />
+          <span className="hidden pl-4 sm:inline-block"> Add Listing </span>
+        </Button>
+      </Link>
       <UserChat />
       <SavedItems />
       <Separator orientation="vertical" className="h-10" />
