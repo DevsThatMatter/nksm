@@ -10,12 +10,13 @@ import ProductCard from "@/app/components/HomePage/Carousel/ProductCard";
 import { fetchRecentProducts } from "@/lib/actions/fetchProduct.actions";
 import { Suspense } from "react";
 import ProductSkeleton from "./ProductSkeleton";
+import { cn } from "@/app/utils";
 
 const options: EmblaOptionsType = { loop: true, align: "center" };
 
-const ProductCarousel = () => {
+const ProductCarousel = ({ className }: { className?: string | undefined }) => {
   return (
-    <div className="p-4 lg:m-9 lg:mt-12">
+    <div className={cn("p-4 lg:m-9 lg:mt-12", className)}>
       <h1 className="pb-3 text-2xl font-semibold">Recent Items</h1>
       <Carousel className="w-full" opts={options}>
         <CarouselContent>
@@ -34,15 +35,21 @@ const ProductCarousel = () => {
   );
 };
 
-const CarouselItems = async () => {
+export const CarouselItems = async ({
+  productPageCarousel,
+}: {
+  productPageCarousel?: boolean;
+}) => {
   const data = await fetchRecentProducts();
   return data!.map((product) => (
     <ProductCard
       image_url={product.Images[0]}
       key={product._id}
+      id={product._id}
       name={product.Product_Name}
       price={product.Price}
       description={product.Description}
+      productPageCarousel={productPageCarousel}
     />
   ));
 };
