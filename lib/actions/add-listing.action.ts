@@ -1,6 +1,4 @@
 "use server";
-
-import mongoose from "mongoose";
 import { connectToDB } from "../database/mongoose";
 import { Product } from "../models/product.model";
 import { User } from "../models/user.model";
@@ -14,7 +12,7 @@ type formData = {
   price: number | "";
   quantity: number | "";
   imagesArray: string[];
-  negotiate: string;
+  negotiate: boolean;
 };
 export async function addProductFromListing(values: formData) {
   try {
@@ -31,11 +29,11 @@ export async function addProductFromListing(values: formData) {
       ],
       Condition: values.condition,
       Category: values.category,
-      Negotiable: values.negotiate == "yes" ? true : false,
+      Negotiable: values.negotiate,
     });
 
     await User.findByIdAndUpdate(values.userId, {
-      $push: { products: product._id },
+      $push: { Owned_Products: product._id },
     });
     console.log(product);
   } catch (error) {
