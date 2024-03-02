@@ -9,7 +9,7 @@ import { AddListing } from "../AddListing";
 import SearchBar from "./SearchBar";
 import { ReactNode, Suspense } from "react";
 import { auth } from "@/auth";
-import { fetchRecentProducts } from "@/lib/actions/fetchProduct.actions";
+import { fetchRecentProductS } from "@/lib/actions/fetchProduct.actions";
 import { cn } from "@/app/utils";
 
 const Navbar = async ({
@@ -27,8 +27,7 @@ const Navbar = async ({
   children?: ReactNode;
   className?: string;
 }) => {
-  const userData = await auth();
-  const products = (await fetchRecentProducts()) || [];
+  const products = (await fetchRecentProductS()) || [];
   return (
     <>
       <div className="sticky top-0 left-0 right-0 z-50 bg-background shadow-md">

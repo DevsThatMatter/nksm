@@ -1,28 +1,18 @@
 "use client";
 import { Input } from "@/app/components/ui/input";
 import { Icons } from "@/app/utils/icons";
-import { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useDebouncedCallback } from "use-debounce";
+import Link from "next/link";
 
-type Product = {
-  _id: any;
-  Seller: any;
-  Total_Quantity_Available: any;
-  Product_Name: any;
-  Description: any;
-  Price: any;
-  Images: any;
-  Condition: any;
-  Category: any;
-  expires_in: any;
-  is_archived: any;
-  createdAt: any;
-  updatedAt: any;
-};
-
-type ProductsArray = Product[];
+type ProductsArray = {
+  _id: string;
+  Product_Name: string;
+  Price: number;
+  Images: string[];
+}[];
 
 export default function SearchBar({
   products,
@@ -32,9 +22,20 @@ export default function SearchBar({
   className?: string;
 }) {
   const [input, setInput] = useState("");
+  const searchParams = useSearchParams();
+  const category = searchParams!.get("category") || "";
+  const sort = searchParams!.get("sort") || "";
+  const sortBy = searchParams!.get("by") || "";
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (pathname != "/search") {
+      setIsDropdownOpen(false);
+    }
+  }, [pathname]);
 
   const filteredProducts = products?.filter((product) =>
     product.Product_Name.toLowerCase().startsWith(input.toLowerCase())
@@ -43,12 +44,16 @@ export default function SearchBar({
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     router.push("/search?q=" + input);
+    setIsDropdownOpen(false);
   };
 
   const handleFocusOut = () => {
-    if (dropdownRef.current) {
-      setIsDropdownOpen(false);
-    }
+    setTimeout(() => {
+      // Corrected syntax: added the missing arrow function '() => {'
+      if (dropdownRef.current) {
+        setIsDropdownOpen(false);
+      }
+    }, 100); // Moved the timeout value (100) inside the setTimeout function call
   };
 
   return (
@@ -62,38 +67,45 @@ export default function SearchBar({
             onChange={useDebouncedCallback((e) => {
               // debounce can create artificial delay before querying db
               setInput(e.target.value);
-              setIsDropdownOpen(!!e.target.value); // Show dropdown when input is not empty
-            })}
-            onFocus={() => setIsDropdownOpen(true)}
-            onBlur={handleFocusOut}
+              pathname != "/search"
+                ? setIsDropdownOpen(!!e.target.value)
+                : router.push(
+                    "?q=" +
+                      e.target.value +
+                      `&category=${category}&sort=${sort}&by=${sortBy}`,
+                  ); // Show dropdown when input is not empty
+            }, 1000)}
+            onFocus={() => {
+              pathname != "/search" && setIsDropdownOpen(true);
+            }}
+            onBlurCapture={handleFocusOut}
           />
         </div>
         {input &&
         isDropdownOpen &&
         filteredProducts &&
         filteredProducts.length > 0 ? (
-          <div className="absolute left-0 right-0 mt-1 rounded-md shadow-lg z-50 max-h-60 overflow-auto bg-card border">
-            {filteredProducts.map((product, index) => (
-              <li
-                key={index}
-                className="flex items-center justify-between px-4 py-2 hover:bg-accent border"
-              >
-                <div className="flex items-center">
-                  <Image
-                    alt={product.Product_Name}
-                    className="rounded-md"
-                    src={product.Images[0]}
-                    height={56}
-                    width={56}
-                    style={{
-                      aspectRatio: "64/64",
-                      objectFit: "cover",
-                    }}
-                  />
-                  <span className="ml-4">{product.Product_Name}</span>
-                </div>
-                <span>₹ {product.Price}</span>
-              </li>
+          <div className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-auto rounded-md border bg-card shadow-lg">
+            {filteredProducts.map((product) => (
+              <Link href={`/product/${product._id}`} key={product._id}>
+                <li className="flex items-center justify-between border px-4 py-2 hover:bg-accent">
+                  <div className="flex items-center">
+                    <Image
+                      alt={product.Product_Name}
+                      className="rounded-md"
+                      src={product.Images[0]}
+                      height={56}
+                      width={56}
+                      style={{
+                        aspectRatio: "64/64",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <span className="ml-4">{product.Product_Name}</span>
+                  </div>
+                  <span>₹ {product.Price}</span>
+                </li>
+              </Link>
             ))}
           </div>
         ) : (

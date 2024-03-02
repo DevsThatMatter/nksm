@@ -1,29 +1,38 @@
-"use client";
 import Image from "next/image";
 import { Card, CardContent } from "../../ui/card";
 import Link from "next/link";
-import { BookmarkFilledIcon, BookmarkIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
 import { CarouselItem } from "../../ui/carousel";
+import { ObjectId } from "mongoose";
+import ProductSaved from "../../ProductSaved";
+import { cn } from "@/app/utils";
 
 interface ProductCardProps {
+  id: ObjectId;
   image_url: string;
   name: string;
   price: number;
   description: string;
+  productPageCarousel?: boolean;
 }
 const ProductCard = ({
+  id,
   image_url,
   name,
   price,
   description,
+  productPageCarousel = false,
 }: ProductCardProps) => {
-  const [isSaved, setIsSaved] = useState(false);
   return (
-    <CarouselItem className="basis-1/2 min-[200px]:basis-11/12 min-[300px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
+    <CarouselItem
+      className={
+        productPageCarousel
+          ? "basis-1/2 min-[200px]:basis-11/12 min-[300px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4"
+          : "basis-1/2 min-[200px]:basis-11/12 min-[300px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+      }
+    >
       <Card className="m-1 min-w-[120px]">
-        <CardContent className="flex relative justify-center items-center p-3 aspect-square">
-          <Link href={""}>
+        <CardContent className="relative flex aspect-square items-center justify-center p-3">
+          <Link href={`/product/${id}`}>
             <div className="flex flex-col justify-center">
               <Image
                 src={image_url}
@@ -43,18 +52,10 @@ const ProductCard = ({
               </p>
             </div>
           </Link>
-          <div
-            className="absolute top-0 right-0 p-1 mt-4 mr-4 bg-gray-200 rounded-full sm:mt-6 sm:mr-6 lg:mt-5 lg:mr-5 2xl:mt-5 2xl:mr-6"
-            onClick={() => {
-              setIsSaved(!isSaved);
-            }}
-          >
-            {!isSaved ? (
-              <BookmarkIcon className="w-4 h-4 text-gray-500" />
-            ) : (
-              <BookmarkFilledIcon className="w-4 h-4 text-gray-500" />
-            )}
-          </div>
+          <ProductSaved
+            className="absolute right-0 top-0 mr-4 mt-4 rounded-full bg-gray-200 p-1 sm:mr-6 sm:mt-6 lg:mr-5 lg:mt-5 2xl:mr-6 2xl:mt-5"
+            id={id.toString()}
+          />
         </CardContent>
       </Card>
     </CarouselItem>
