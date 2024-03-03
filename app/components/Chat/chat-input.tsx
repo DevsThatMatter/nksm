@@ -80,11 +80,30 @@ export default function ChatInput({
     }
   }
   useEffect(() => {
-    if (dealLock) {
-      onSend({ content: "Let's have a deal?" });
-      setDealLock(false);
+    async function onDealSend(values: z.infer<typeof messageSchema>) {
+      try {
+        const message = values.content;
+        const sender = userId;
+        const sellerId = sellerDetails.id;
+        const buyerId = buyerDetails.id;
+        const dealDone = dealLock;
+        await createNewMessage(
+          message,
+          sender,
+          dealDone,
+          sellerId,
+          buyerId,
+          productId,
+        );
+        form.reset();
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }, [dealLock]);
+    if (dealLock) {
+      onDealSend({ content: "Let's have a deal?" });
+    }
+  }, [buyerDetails.id, dealLock, form, productId, sellerDetails.id, userId]);
 
   return (
     <Form {...form}>
@@ -124,6 +143,7 @@ export default function ChatInput({
                       </h1>{" "}
                       Are you sure you want to lock the deal? Once locked, the
                       deal cannot be unlocked.
+                      <h1 >if the deal gets accepted by other user all of your chats related to this product will go stale except this one</h1>
                     </DialogDescription>
                     <div className="flex justify-end px-6 py-4">
                       <DialogClose asChild>
@@ -155,14 +175,14 @@ export default function ChatInput({
             <Icons.sendIcon className="h-9 w-9 transform cursor-pointer rounded-full bg-blue-200 p-2 text-blue-500 transition-transform  hover:scale-105 dark:bg-blue-300 dark:text-blue-700" />{" "}
           </button>
         ) || (
-          <Skeleton
-            circle
-            width={40}
-            height={40}
-            baseColor="#e2e8f0"
-            highlightColor="#f7fafc"
-          />
-        )}
+            <Skeleton
+              circle
+              width={40}
+              height={40}
+              baseColor="#e2e8f0"
+              highlightColor="#f7fafc"
+            />
+          )}
       </form>
     </Form>
   );

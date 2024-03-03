@@ -240,18 +240,7 @@ export default function ChatUI({
                             className={
                               "rounded-full bg-green-400 hover:bg-green-500"
                             }
-                            onClick={() => {
-                              toast.error(
-                                "This will make all your other chats for this product go stale",
-                                {
-                                  action: {
-                                    label: "Confirm",
-                                    onClick: () =>
-                                      lockTheDeal("yes", msg.msgId ?? ""),
-                                  },
-                                },
-                              );
-                            }}
+                            onClick={()=>lockTheDeal("yes", msg.msgId ?? "")}
                           >
                             <Icons.yes />
                           </Button>
