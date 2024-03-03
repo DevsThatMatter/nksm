@@ -140,31 +140,27 @@ export default function ChatUI({
     currentUserId,
   });
 
-
-
   return (
     <section className="absolute flex h-[100vh] flex-col items-center">
       <div className="relative h-[90%] w-full rounded-md border ">
         {/* User display */}
-        <header className="user-display z-10  mb-2 flex items-center space-x-1 rounded-t-md pl-1 py-3 shadow-sm ">
-          {
-            otherUserDetails.id !== "" && (
-              <Button
-                className="rounded-full"
-                variant={'ghost'}
-                size="icon"
-                onClick={() => {
-                  if (otherUserDetails && otherUserDetails.id === '') {
-                    removeChat('chatPanel');
-                  } else if (otherUserDetails.id !== '') {
-                    removeChat('productPanel');
-                  }
-                }}
-              >
-                <Icons.moveback />
-              </Button>
-            )
-          }
+        <header className="user-display z-10  mb-2 flex items-center space-x-1 rounded-t-md py-3 pl-1 shadow-sm ">
+          {otherUserDetails.id !== "" && (
+            <Button
+              className="rounded-full"
+              variant={"ghost"}
+              size="icon"
+              onClick={() => {
+                if (otherUserDetails && otherUserDetails.id === "") {
+                  removeChat("chatPanel");
+                } else if (otherUserDetails.id !== "") {
+                  removeChat("productPanel");
+                }
+              }}
+            >
+              <Icons.moveback />
+            </Button>
+          )}
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
@@ -192,15 +188,15 @@ export default function ChatUI({
                   className={
                     msg.options
                       ? clsx(
-                        "mb-2 flex w-[80%] justify-center break-words p-2 border-2  text-white rounded-full",
-                        msg.accepted === "accepted"
-                          ? "border-green-300"
-                          : msg.accepted == "rejected"
-                            ? "border-red-300"
-                            : msg.Sender === currentUserId
-                              ? "ml-auto border-yellow-300"
-                              : "border-yellow-300",
-                      )
+                          "mb-2 flex w-[80%] justify-center break-words rounded-full border-2  p-2 text-white",
+                          msg.accepted === "accepted"
+                            ? "border-green-300"
+                            : msg.accepted == "rejected"
+                              ? "border-red-300"
+                              : msg.Sender === currentUserId
+                                ? "ml-auto border-yellow-300"
+                                : "border-yellow-300",
+                        )
                       : `flex ${currentUserId === msg.Sender ? "justify-end" : "justify-start"} mb-2`
                   }
                 >
@@ -241,21 +237,29 @@ export default function ChatUI({
                         <div className="flex justify-end space-x-2">
                           <Button
                             disabled={currentUserId === msg.Sender}
-                            className={"bg-green-400 hover:bg-green-500 rounded-full"}
+                            className={
+                              "rounded-full bg-green-400 hover:bg-green-500"
+                            }
                             onClick={() => {
-                              toast.error("This will make all your other chats for this product go stale", {
-                                action: {
-                                  label: 'Confirm',
-                                  onClick: () => lockTheDeal("yes", msg.msgId ?? "")
-                                }
-                              })
+                              toast.error(
+                                "This will make all your other chats for this product go stale",
+                                {
+                                  action: {
+                                    label: "Confirm",
+                                    onClick: () =>
+                                      lockTheDeal("yes", msg.msgId ?? ""),
+                                  },
+                                },
+                              );
                             }}
                           >
                             <Icons.yes />
                           </Button>
                           <Button
                             disabled={currentUserId === msg.Sender}
-                            className={"bg-red-400 hover:bg-red-500 rounded-full"}
+                            className={
+                              "rounded-full bg-red-400 hover:bg-red-500"
+                            }
                             onClick={() => lockTheDeal("no", msg.msgId ?? "")}
                           >
                             <Icons.no />
@@ -268,10 +272,10 @@ export default function ChatUI({
                       id={msg.msgId}
                       className={clsx(
                         `user-message-${msg.readStatus || msg.Sender === currentUserId ? "true" : "false"}`,
-                        "max-w-[80%] break-words rounded-t-full px-3 py-2 pl-3 font-medium",
+                        "max-w-[80%] break-words rounded-t-lg px-3 py-2 pl-3 font-medium",
                         currentUserId === msg.Sender
-                          ? "rounded-l-full rounded-tr-full text-white"
-                          : "rounded-r-full rounded-br-full text-black dark:text-white",
+                          ? "rounded-l-lg rounded-tr-lg text-white"
+                          : "rounded-r-lg rounded-br-lg text-black dark:text-white",
                         currentUserId === msg.Sender
                           ? "bg-blue-500"
                           : "bg-[#dbe4fb] dark:bg-slate-600",
@@ -299,6 +303,6 @@ export default function ChatUI({
           />
         </div>
       </div>
-    </section >
+    </section>
   );
 }

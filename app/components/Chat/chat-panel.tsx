@@ -35,7 +35,6 @@ export default function UserChat({ userId }: { userId: string }) {
     "seller",
   );
 
-
   const { data, isFetching, status, error } = useQuery({
     queryKey: ["getAllChats", userId],
     queryFn: getPrevProductDiscussions,
@@ -50,7 +49,6 @@ export default function UserChat({ userId }: { userId: string }) {
       setProductDiscussionsWhereUserIsBuyer(data.data.resultWhereUserIsBuyer);
     }
   }
-
 
   const handleTabChange = (tab: "seller" | "buyer" | "invites") => {
     setActiveTab(tab);
@@ -104,7 +102,7 @@ export default function UserChat({ userId }: { userId: string }) {
             {(discussions.length === 0 ||
               activeTab === "buyer" ||
               activeTab === "invites") &&
-              otherUserDetails.id === "" ? (
+            otherUserDetails.id === "" ? (
               <Tabs defaultValue="Seller Chat" className="mt-2 w-full">
                 <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger
@@ -112,7 +110,7 @@ export default function UserChat({ userId }: { userId: string }) {
                     className={clsx(
                       "rounded-lg p-0.5",
                       activeTab === "seller" &&
-                      "bg-white text-black shadow-md transition-colors duration-300",
+                        "bg-white text-black shadow-md transition-colors duration-300",
                     )}
                     onClick={() => handleTabChange("seller")}
                   >
@@ -123,7 +121,7 @@ export default function UserChat({ userId }: { userId: string }) {
                     className={clsx(
                       "rounded-lg p-0.5",
                       activeTab === "buyer" &&
-                      "bg-white text-black shadow-md transition-colors duration-300",
+                        "bg-white text-black shadow-md transition-colors duration-300",
                     )}
                     onClick={() => handleTabChange("buyer")}
                   >
@@ -134,7 +132,7 @@ export default function UserChat({ userId }: { userId: string }) {
                     className={clsx(
                       "rounded-lg p-0.5",
                       activeTab === "invites" &&
-                      "bg-white text-black shadow-md transition-colors duration-300",
+                        "bg-white text-black shadow-md transition-colors duration-300",
                     )}
                     onClick={() => handleTabChange("invites")}
                   >
@@ -143,17 +141,18 @@ export default function UserChat({ userId }: { userId: string }) {
                 </TabsList>
               </Tabs>
             ) : (
-              discussions.length !== 0 && otherUserDetails.id === "" && (
+              discussions.length !== 0 &&
+              otherUserDetails.id === "" && (
                 <div className="flex items-center">
                   <Button
                     className="rounded-full"
-                    variant={'ghost'}
+                    variant={"ghost"}
                     size="icon"
                     onClick={() => {
-                      if (otherUserDetails && otherUserDetails.id === '') {
-                        removeChat('chatPanel');
-                      } else if (otherUserDetails.id !== '') {
-                        removeChat('productPanel');
+                      if (otherUserDetails && otherUserDetails.id === "") {
+                        removeChat("chatPanel");
+                      } else if (otherUserDetails.id !== "") {
+                        removeChat("productPanel");
                       }
                     }}
                   >
