@@ -4,9 +4,7 @@ import { Product } from "../models/product.model";
 import { connectToDB } from "../database/mongoose";
 import { FilterQuery, SortOrder } from "mongoose";
 import { revalidatePath } from "next/cache";
-import { CategoryEnum } from "@/types";
 import { User } from "../models/user.model";
-import { Comments } from "../models/comments.model";
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -117,11 +115,12 @@ export const fetchProductDetails = async (productId: string) => {
     const productDetails = await Product.findById(productId).populate({
       path: "Seller",
       model: User,
-      select: "_id Username Phone_Number Avatar First_Name Last_Name",
+      select: "_id Username Name Avatar First_Name Last_Name",
     });
     if (!productDetails) {
       throw new Error("Product not found!");
     }
+
     return {
       _id: productDetails._id,
       Product_Name: productDetails.Product_Name,
@@ -131,9 +130,9 @@ export const fetchProductDetails = async (productId: string) => {
       Condition: productDetails.Condition,
       Category: productDetails.Category,
       Seller: productDetails.Seller,
-      Comments: productDetails.Comments,
       Quantity: productDetails.Total_Quantity_Available,
       Expiry: productDetails.expires_in,
+      Negotiable: productDetails.Negotiable,
     };
   } catch (error) {
     console.error("Error fetching product details:", error);

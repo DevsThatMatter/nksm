@@ -9,8 +9,6 @@ import { Button } from "../ui/button";
 import { Icons } from "@/app/utils/icons";
 import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
 import {
-  Card,
-  CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
@@ -29,7 +27,7 @@ function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
             <AvatarFallback>{sellerInfo.Name}</AvatarFallback>
           </Avatar>
           <div className="ml-2">
-            <p className="font-semibold">{sellerInfo.Name}</p>
+            <p className="font-semibold">{sellerInfo.Username}</p>
             <p className="text-sm text-foreground">{sellerInfo.Phone_Number}</p>
           </div>
         </div>

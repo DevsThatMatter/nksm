@@ -45,7 +45,6 @@ export type CommentsType = CommentsInterface[];
 export interface Product {
   _id: mongoose.Types.ObjectId;
   Seller: Seller;
-  Comments: CommentsType;
   Quantity: number;
   Product_Name: string;
   Description: string;
@@ -54,20 +53,26 @@ export interface Product {
   Condition: ConditionEnum;
   Category: CategoryEnum;
   Expiry: Date;
+  Negotiable: NegotiateEnum;
 }
 export enum CategoryEnum {
-  Bicycles,
-  Coolers,
-  Stationery,
-  Miscellaneous,
-  Mattresses,
-  Kitchenware,
-  Instruments,
-  Electronics,
+  "Bicycles" = "Bicycles",
+  "Coolers" = "Coolers",
+  "Stationery" = "Stationery",
+  "Miscellaneous" = "Miscellaneous",
+  "Mattresses" = "Mattresses",
+  "Kitchenware" = "Kitchenware",
+  "Instruments" = "Instruments",
+  "Electronics" = "Electronics",
 }
 
 export enum ConditionEnum {
-  "Brand New",
-  "Like New",
-  "Used",
+  "Brand New" = "Brand New",
+  "Like New" = "Like New",
+  "Used" = "Used",
+}
+
+export enum NegotiateEnum {
+  "Yes" = "Yes",
+  "No" = "No",
 }
