@@ -54,7 +54,7 @@ export default function AddListingForm({
       quantity: 1,
       category: "",
       description: "",
-      price: "",
+      price: undefined,
       condition: "",
       images: [],
       negotiate: "Yes",
