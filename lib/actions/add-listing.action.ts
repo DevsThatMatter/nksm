@@ -36,7 +36,12 @@ export async function addProductFromListing(values: formData) {
       $push: { Owned_Products: product._id },
     });
     console.log(product);
+    return {
+      success: true,
+      message: "Product added successfully",
+      id: product._id,
+    };
   } catch (error) {
-    console.log(error);
+    return { success: false, message: "Server error has occured" };
   }
 }

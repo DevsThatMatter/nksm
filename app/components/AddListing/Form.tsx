@@ -50,6 +50,7 @@ export default function AddListingForm({ userData }: { userData: Session }) {
   });
   const category = form.watch("category");
   const condition = form.watch("condition");
+  const negotiate = form.watch("negotiate");
 
   function handleReset() {
     form.reset();
@@ -176,7 +177,8 @@ export default function AddListingForm({ userData }: { userData: Session }) {
                         <FormLabel>Negotiable</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={"Yes"}
+                          defaultValue={field.value}
+                          key={negotiate}
                         >
                           <FormControl>
                             <SelectTrigger>
