@@ -50,6 +50,7 @@ export default function AddListingForm({
   });
   const category = form.watch("category");
   const condition = form.watch("condition");
+  const negotiate = form.watch("negotiate");
 
   function handleReset() {
     form.reset();
