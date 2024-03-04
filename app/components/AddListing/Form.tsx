@@ -1,8 +1,7 @@
 "use client";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "../ui/input";
-import { CardContent, Card } from "@/app/components/ui/card";
-import Image from "next/image";
+
 import { FormDataSchema } from "@/lib/FormSchema/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,22 +23,11 @@ import {
   SelectItem,
 } from "@/app/components/ui/select";
 import { Textarea } from "../ui/textarea";
-import { addProductFromListing } from "@/lib/actions/add-listing.action";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/app/components/ui/alert-dialog";
 import { useState } from "react";
 import { Session } from "next-auth";
+import ListingPreview from "./ListingPreview";
 
-type Inputs = z.infer<typeof FormDataSchema>;
+export type PreviewInputs = z.infer<typeof FormDataSchema>;
 
 export default function AddListingForm({
   userData,
@@ -54,46 +42,24 @@ export default function AddListingForm({
       quantity: 1,
       category: "",
       description: "",
-      price: undefined,
+      price: "",
       condition: "",
       images: [],
       negotiate: "Yes",
     },
   });
+  const category = form.watch("category");
+  const condition = form.watch("condition");
 
   function handleReset() {
     form.reset();
   }
-
-  function handlePreview() {
-    setIsPreview(true);
+  function hidePreview() {
+    setIsPreview(null);
   }
 
-  async function onSubmit() {
-    const {
-      iname,
-      quantity,
-      category,
-      description,
-      price,
-      condition,
-      images,
-      negotiate,
-    } = form.getValues();
-    const imagesArray = Object.values(images as Record<string, unknown>).map(
-      (image) => (image as { name: string }).name,
-    );
-    await addProductFromListing({
-      iname,
-      quantity,
-      category,
-      description,
-      price,
-      imagesArray,
-      negotiate: negotiate === "Yes" ? true : false,
-      condition,
-      userId: userData?.user?.id,
-    });
+  function showPreview(data: PreviewInputs) {
+    setIsPreview(data);
   }
 
   return (
@@ -143,7 +109,11 @@ export default function AddListingForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Category</FormLabel>
-                        <Select onValueChange={field.onChange}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          key={category}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select" />
@@ -228,7 +198,11 @@ export default function AddListingForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Condition</FormLabel>
-                        <Select onValueChange={field.onChange}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          key={condition}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select" />
@@ -363,6 +337,13 @@ export default function AddListingForm({
           </form>
         </Form>
       </div>
+      {isPreview && (
+        <ListingPreview
+          data={isPreview}
+          userId={userData.user?.id as string}
+          hidePreview={hidePreview}
+        />
+      )}
     </div>
   );
 }
