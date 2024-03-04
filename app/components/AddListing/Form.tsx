@@ -1,8 +1,7 @@
 "use client";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "../ui/input";
-import { CardContent, Card } from "@/app/components/ui/card";
-import Image from "next/image";
+
 import { FormDataSchema } from "@/lib/FormSchema/schema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,83 +23,50 @@ import {
   SelectItem,
 } from "@/app/components/ui/select";
 import { Textarea } from "../ui/textarea";
-import { addProductFromListing } from "@/lib/actions/add-listing.action";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/app/components/ui/alert-dialog";
 import { useState } from "react";
 import { Session } from "next-auth";
+import ListingPreview from "./ListingPreview";
 
-type Inputs = z.infer<typeof FormDataSchema>;
+export type PreviewInputs = z.infer<typeof FormDataSchema>;
 
-export default function AddListingForm({
-  userData,
-}: {
-  userData: Session | null;
-}) {
-  const [isPreview, setIsPreview] = useState(false);
-  const form = useForm<z.infer<typeof FormDataSchema>>({
+export default function AddListingForm({ userData }: { userData: Session }) {
+  const [isPreview, setIsPreview] = useState<PreviewInputs | null>(null);
+  const form = useForm<
+    Omit<PreviewInputs, "price"> & { price: number | string },
+    void,
+    PreviewInputs
+  >({
     resolver: zodResolver(FormDataSchema),
     defaultValues: {
       iname: "",
       quantity: 1,
       category: "",
       description: "",
-      price: undefined,
+      price: "",
       condition: "",
       images: [],
       negotiate: "Yes",
     },
   });
+  const category = form.watch("category");
+  const condition = form.watch("condition");
 
   function handleReset() {
     form.reset();
   }
-
-  function handlePreview() {
-    setIsPreview(true);
+  function hidePreview() {
+    setIsPreview(null);
   }
 
-  async function onSubmit() {
-    const {
-      iname,
-      quantity,
-      category,
-      description,
-      price,
-      condition,
-      images,
-      negotiate,
-    } = form.getValues();
-    const imagesArray = Object.values(images as Record<string, unknown>).map(
-      (image) => (image as { name: string }).name,
-    );
-    await addProductFromListing({
-      iname,
-      quantity,
-      category,
-      description,
-      price,
-      imagesArray,
-      negotiate: negotiate === "Yes" ? true : false,
-      condition,
-      userId: userData?.user?.id,
-    });
+  function showPreview(data: PreviewInputs) {
+    setIsPreview(data);
   }
 
   return (
     <div className="flex h-[85vh] items-center justify-center">
       <div className="max-w-md rounded-md border p-8">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handlePreview)}>
+          <form onSubmit={form.handleSubmit(showPreview)}>
             <div className="my-2 grid grid-cols-2">
               <div className="col-span-2">
                 <FormField
@@ -143,7 +109,11 @@ export default function AddListingForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Category</FormLabel>
-                        <Select onValueChange={field.onChange}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          key={category}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select" />
@@ -231,7 +201,11 @@ export default function AddListingForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Condition</FormLabel>
-                        <Select onValueChange={field.onChange}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          key={condition}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select" />
@@ -281,91 +255,21 @@ export default function AddListingForm({
                 >
                   Reset
                 </Button>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="outline" type="submit">
-                      Preview
-                    </Button>
-                  </AlertDialogTrigger>
-                  {isPreview ? (
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          This is how your product will be displayed:
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          You can still make the changes after previewing
-                        </AlertDialogDescription>
-                        <Card>
-                          <CardContent className="relative flex items-start gap-6 p-6 @container">
-                            <div className="">
-                              <Image
-                                alt="Product Image"
-                                className="aspect-square overflow-hidden rounded-lg border border-gray-200 object-cover dark:border-gray-800"
-                                height={200}
-                                src={
-                                  form.getValues().images.length > 0
-                                    ? URL.createObjectURL(
-                                        form.getValues().images[0],
-                                      )
-                                    : ""
-                                }
-                                width={200}
-                              />
-                            </div>
-                            <div className="grid gap-2 text-base">
-                              <h2 className="line-clamp-2 max-w-48 overflow-ellipsis font-extrabold leading-tight md:text-xl">
-                                {form.getValues().iname}
-                              </h2>
-                              <p className="line-clamp-3 max-w-48 overflow-ellipsis text-base leading-normal">
-                                {form.getValues().description}
-                              </p>
-                              <div className="flex items-center gap-2">
-                                <h4 className="font-bold">
-                                  ₹{form.getValues().price}
-                                </h4>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <ChevronRightIcon className="h-5 w-5 fill-muted" />
-                                <span className="text-sm text-muted-foreground">
-                                  {form.getValues().condition}
-                                </span>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setIsPreview(false)}>
-                          Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction onClick={() => onSubmit()}>
-                          Continue
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  ) : (
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Incomplete Product Listing
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Some fields are missing, please fill all the fields to
-                          continue
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Return</AlertDialogCancel>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  )}
-                </AlertDialog>
+                <Button variant="outline" type="submit">
+                  Preview
+                </Button>
               </div>
             </div>
           </form>
         </Form>
       </div>
+      {isPreview && (
+        <ListingPreview
+          data={isPreview}
+          userId={userData.user?.id as string}
+          hidePreview={hidePreview}
+        />
+      )}
     </div>
   );
 }
