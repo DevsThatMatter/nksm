@@ -1,5 +1,5 @@
 import React from "react";
-import { ConditionEnum, Product } from "@/types";
+import { type ConditionEnum, Product } from "@/types";
 import { cn } from "@/app/utils";
 import { Icons } from "@/app/utils/icons";
 
@@ -10,13 +10,13 @@ const ProductDetails = ({
   productInfo: Product;
   className?: string;
 }) => {
-  const renderConditionIcon = (condition: ConditionEnum) => {
+  const renderConditionIcon = (condition: ConditionEnum | string) => {
     switch (condition) {
-      case ConditionEnum["Brand New"]:
+      case "Brand New":
         return <Icons.new className="mr-1 h-3 w-3" />;
-      case ConditionEnum["Like New"]:
+      case "Like New":
         return <Icons.likeNew className="mr-1 h-3 w-3" />;
-      case ConditionEnum.Used:
+      case "Used":
         return <Icons.used className="mr-1 h-3 w-3" />;
       default:
         return null;
@@ -35,7 +35,7 @@ const ProductDetails = ({
             {productInfo.Condition}
           </p>
           <p
-            className={`m-1 flex items-center justify-center rounded-3xl p-1 px-2 text-xs text-muted-foreground ${productInfo.Negotiable ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-green-800" : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-sky-900"}`}
+            className={`m-1 flex items-center justify-center rounded-3xl p-1 px-2 text-xs ${productInfo.Negotiable ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-green-800" : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-sky-900"}`}
           >
             {productInfo.Negotiable ? "Negotiable" : "Not Negotiable"}
           </p>

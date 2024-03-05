@@ -119,18 +119,19 @@ export const fetchProductDetails = async (productId: string) => {
       model: User,
       select: "_id Username Phone_Number Avatar Name",
     });
+    console.log("pOFSODGSAGASDG:", productDetails);
     if (!productDetails) {
       throw new Error("Product not found!");
     }
     return {
       _id: productDetails._id,
+      Negotiable: productDetails.Negotiable,
       Product_Name: productDetails.Product_Name,
       Price: productDetails.Price,
       Images: productDetails.Images,
       Description: productDetails.Description,
       Condition: productDetails.Condition,
       Category: productDetails.Category,
-      Negotiable: productDetails.Negotiable,
       Seller: productDetails.Seller,
       Comments: productDetails.Comments,
       Quantity: productDetails.Total_Quantity_Available,
