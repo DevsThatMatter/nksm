@@ -130,6 +130,7 @@ export const fetchProductDetails = async (productId: string) => {
       Description: productDetails.Description,
       Condition: productDetails.Condition,
       Category: productDetails.Category,
+      Negotiable: productDetails.Negotiable,
       Seller: productDetails.Seller,
       Comments: productDetails.Comments,
       Quantity: productDetails.Total_Quantity_Available,
