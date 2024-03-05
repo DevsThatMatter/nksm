@@ -117,7 +117,7 @@ export const fetchProductDetails = async (productId: string) => {
     const productDetails = await Product.findById(productId).populate({
       path: "Seller",
       model: User,
-      select: "_id Username Phone_Number Avatar First_Name Last_Name",
+      select: "_id Username Phone_Number Avatar Name",
     });
     if (!productDetails) {
       throw new Error("Product not found!");
