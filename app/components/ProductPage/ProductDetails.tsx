@@ -1,5 +1,5 @@
 import React from "react";
-import { Product } from "@/types";
+import { ConditionEnum, Product } from "@/types";
 import { cn } from "@/app/utils";
 import { Icons } from "@/app/utils/icons";
 
@@ -10,13 +10,13 @@ const ProductDetails = ({
   productInfo: Product;
   className?: string;
 }) => {
-  const renderConditionIcon = (condition: string) => {
+  const renderConditionIcon = (condition: ConditionEnum) => {
     switch (condition) {
-      case "Brand New":
+      case ConditionEnum["Brand New"]:
         return <Icons.new className="mr-1 h-3 w-3" />;
-      case "Like New":
+      case ConditionEnum["Like New"]:
         return <Icons.likeNew className="mr-1 h-3 w-3" />;
-      case "Used":
+      case ConditionEnum.Used:
         return <Icons.used className="mr-1 h-3 w-3" />;
       default:
         return null;
