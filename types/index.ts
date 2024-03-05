@@ -51,6 +51,7 @@ export interface Product {
   Description: string;
   Price: number;
   Images: string[];
+  Negotiable: boolean;
   Condition: ConditionEnum;
   Category: CategoryEnum;
   Expiry: Date;
