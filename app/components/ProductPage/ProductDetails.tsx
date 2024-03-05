@@ -45,9 +45,9 @@ const ProductDetails = ({
         </p>
       </div>
       <div>
-        <p className="my-2 break-words text-muted-foreground">
+        <pre className="my-2 whitespace-pre-line font-sans text-muted-foreground">
           {productInfo.Description}
-        </p>
+        </pre>
       </div>
     </div>
   );
