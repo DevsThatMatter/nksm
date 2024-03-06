@@ -7,6 +7,7 @@ interface ChatState {
     id: string;
     name: string;
     otherUserPhoneNumber: string;
+    avatar: string;
   };
   sellerDetails: {
     id: string;
@@ -22,6 +23,7 @@ interface ChatState {
       id: string;
       name: string;
       otherUserPhoneNumber: string;
+      avatar: string;
     };
     sellerDetails: {
       id: string;
@@ -39,7 +41,7 @@ interface ChatState {
 const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
   discussions: [],
   lockStatus: false,
-  otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "" },
+  otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "", avatar: "" },
   sellerDetails: { id: "" },
   buyerDetails: { id: "" },
   createChat: (to: {
@@ -48,6 +50,7 @@ const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
       id: string;
       name: string;
       otherUserPhoneNumber: string;
+      avatar: string;
     };
     sellerDetails: {
       id: string;
@@ -70,13 +73,23 @@ const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
       } else if (caller === "productPanel") {
         return {
           ...state,
-          otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "" },
+          otherUserDetails: {
+            id: "",
+            name: "",
+            otherUserPhoneNumber: "",
+            avatar: "",
+          },
         };
       } else if (caller === "chatUi") {
         return {
           ...state,
           discussions: [],
-          otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "" },
+          otherUserDetails: {
+            id: "",
+            name: "",
+            otherUserPhoneNumber: "",
+            avatar: "",
+          },
           lockStatus: false,
         };
       }

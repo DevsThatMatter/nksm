@@ -55,7 +55,12 @@ export default function UserChat({ userId }: { userId: string }) {
     if (tab === "seller") {
       createChat({
         discussions: [],
-        otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "" },
+        otherUserDetails: {
+          id: "",
+          name: "",
+          otherUserPhoneNumber: "",
+          avatar: "",
+        },
         sellerDetails: { id: "" },
         buyerDetails: { id: "" },
         lockStatus: false,
@@ -63,7 +68,12 @@ export default function UserChat({ userId }: { userId: string }) {
     } else if (tab === "buyer") {
       createChat({
         discussions: productDiscussionsWhereUserIsBuyer ?? [],
-        otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "" },
+        otherUserDetails: {
+          id: "",
+          name: "",
+          otherUserPhoneNumber: "",
+          avatar: "",
+        },
         sellerDetails: { id: "" },
         buyerDetails: { id: "" },
         lockStatus: false,
@@ -79,7 +89,12 @@ export default function UserChat({ userId }: { userId: string }) {
 
       createChat({
         discussions,
-        otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "" },
+        otherUserDetails: {
+          id: "",
+          name: "",
+          otherUserPhoneNumber: "",
+          avatar: "",
+        },
         sellerDetails: { id: "" },
         buyerDetails: { id: "" },
         lockStatus: false,

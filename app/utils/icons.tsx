@@ -31,5 +31,5 @@ export const Icons = {
   image: ImageIcon,
   remove: CrossCircledIcon,
   yes: CheckIcon,
-  no: Cross1Icon
+  no: Cross1Icon,
 };

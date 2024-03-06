@@ -143,7 +143,11 @@ export default function ChatInput({
                       </h1>{" "}
                       Are you sure you want to lock the deal? Once locked, the
                       deal cannot be unlocked.
-                      <h1 >if the deal gets accepted by other user all of your chats related to this product will go stale except this one</h1>
+                      <h1>
+                        if the deal gets accepted by other user all of your
+                        chats related to this product will go stale except this
+                        one
+                      </h1>
                     </DialogDescription>
                     <div className="flex justify-end px-6 py-4">
                       <DialogClose asChild>
@@ -175,14 +179,14 @@ export default function ChatInput({
             <Icons.sendIcon className="h-9 w-9 transform cursor-pointer rounded-full bg-blue-200 p-2 text-blue-500 transition-transform  hover:scale-105 dark:bg-blue-300 dark:text-blue-700" />{" "}
           </button>
         ) || (
-            <Skeleton
-              circle
-              width={40}
-              height={40}
-              baseColor="#e2e8f0"
-              highlightColor="#f7fafc"
-            />
-          )}
+          <Skeleton
+            circle
+            width={40}
+            height={40}
+            baseColor="#e2e8f0"
+            highlightColor="#f7fafc"
+          />
+        )}
       </form>
     </Form>
   );

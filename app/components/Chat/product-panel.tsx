@@ -37,13 +37,19 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
     id: string,
     name: string,
     phoneNumber: string,
+    avatar: string,
     seller: { id: string },
     buyer: { id: string },
   ) {
     try {
       createChat({
         discussions,
-        otherUserDetails: { id, name, otherUserPhoneNumber: phoneNumber },
+        otherUserDetails: {
+          id,
+          name,
+          otherUserPhoneNumber: phoneNumber,
+          avatar: avatar,
+        },
         sellerDetails: { id: seller.id },
         buyerDetails: { id: buyer.id },
         lockStatus: false,
@@ -71,11 +77,15 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
       discussion.buyerDetails.id === userId
         ? discussion.sellerDetails.Phone_Number
         : discussion.buyerDetails.Phone_Number;
-
+    const otherUserAvatar =
+      discussion.buyerDetails.id === userId
+        ? discussion.sellerDetails.Avatar
+        : discussion.buyerDetails.Avatar;
     handleSingleSellerChatSet(
       otherUserId,
       otherUserName,
       otherUserPhoneNumber,
+      otherUserAvatar,
       discussion.sellerDetails,
       discussion.buyerDetails,
     );
@@ -159,7 +169,7 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                 </h5>
               </div>
             </div>
-            <div className="flex flex-shrink-0 items-center justify-center rounded-full bg-lime-500 px-1 text-lg">
+            <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-lime-500 px-1 text-lg">
               <h3 className="font-semibold text-white">
                 {productReadCounts[String(discussion.productDetails.productId)]}
               </h3>
@@ -169,6 +179,7 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
       ) : (
         <div>
           <ChatUI
+            avatar={otherUserDetails.avatar}
             currentUserId={userId}
             sellerId={sellerDetails.id}
             buyerId={buyerDetails.id}

@@ -274,11 +274,14 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
       },
     );
 
-    await Chat.updateMany({
-      ProductId: new mongo.ObjectId(props.productId)
-    }, {
-      status: "stale"
-    })
+    await Chat.updateMany(
+      {
+        ProductId: new mongo.ObjectId(props.productId),
+      },
+      {
+        status: "stale",
+      },
+    );
 
     const messageUpdateQuery = {
       _id: new mongo.ObjectId(validatedProps.msgId),

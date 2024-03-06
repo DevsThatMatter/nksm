@@ -12,7 +12,7 @@ import { pusherClient } from "@/lib/pusher";
 import { useChatObserver } from "@/hooks/useChatObserver";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Icons } from "@/app/utils/icons";
-import { toast } from "sonner";
+import { cn } from "@/app/utils";
 
 interface ChatUIProps {
   currentUserId: string;
@@ -22,6 +22,7 @@ interface ChatUIProps {
   productId: string;
   otherUserName: string;
   otherUserPhoneNumber: string;
+  avatar: string;
 }
 
 export default function ChatUI({
@@ -32,6 +33,7 @@ export default function ChatUI({
   buyerId,
   otherUserName,
   otherUserPhoneNumber,
+  avatar,
 }: ChatUIProps) {
   const queryKey = `chat${productId}productId${productId}sellerId${sellerId}buyerId${buyerId}query`;
   const addKey = `chat${productId}productId${productId}sellerId${sellerId}buyerId${buyerId}add`;
@@ -141,15 +143,13 @@ export default function ChatUI({
   });
 
   return (
-    <section className="absolute flex h-[100vh] flex-col items-center">
+    <section className="absolute flex h-[100vh] w-[88%] flex-col items-center">
       <div className="relative h-[90%] w-full rounded-md border ">
         {/* User display */}
         <header className="user-display z-10  mb-2 flex items-center space-x-1 rounded-t-md py-3 pl-1 shadow-sm ">
           {otherUserDetails.id !== "" && (
-            <Button
+            <button
               className="rounded-full"
-              variant={"ghost"}
-              size="icon"
               onClick={() => {
                 if (otherUserDetails && otherUserDetails.id === "") {
                   removeChat("chatPanel");
@@ -159,13 +159,13 @@ export default function ChatUI({
               }}
             >
               <Icons.moveback />
-            </Button>
+            </button>
           )}
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={avatar} />
+            <AvatarFallback>{otherUserName[0].toUpperCase()}</AvatarFallback>
           </Avatar>
-          <span className="text-lg font-semibold text-gray-800 dark:text-white">
+          <span className=" font-semibold text-gray-800 dark:text-white">
             {otherUserName}
           </span>
         </header>
@@ -182,89 +182,66 @@ export default function ChatUI({
           ) : (
             <Fragment>
               <div ref={topRef} />
-              {messages?.map((msg: MessageTypes, j: number) => (
-                <section
-                  key={j}
-                  className={
-                    msg.options
-                      ? clsx(
-                          "mb-2 flex w-[80%] justify-center break-words rounded-full border-2  p-2 text-white",
-                          msg.accepted === "accepted"
-                            ? "border-green-300"
-                            : msg.accepted == "rejected"
-                              ? "border-red-300"
-                              : msg.Sender === currentUserId
-                                ? "ml-auto border-yellow-300"
-                                : "border-yellow-300",
-                        )
-                      : `flex ${currentUserId === msg.Sender ? "justify-end" : "justify-start"} mb-2`
-                  }
-                >
-                  {msg.options ? (
-                    msg.accepted === "accepted" ? (
-                      <div
-                        id={msg.msgId}
-                        className={clsx(
-                          `user-message-${msg.readStatus || msg.Sender === currentUserId ? "true" : "false"}`,
-                          "flex flex-col items-center space-y-2",
-                        )}
-                      >
-                        <h1 className="text-green-500">Deal locked</h1>
-                      </div>
-                    ) : msg.accepted === "rejected" ? (
-                      <div
-                        id={msg.msgId}
-                        className={clsx(
-                          `user-message-${msg.readStatus || msg.Sender === currentUserId ? "true" : "false"}`,
-                          "flex flex-col items-center space-y-2",
-                        )}
-                      >
-                        <h1 className="text-red-500">Deal rejected</h1>
-                      </div>
-                    ) : msg.Sender === currentUserId ? (
-                      <div
-                        id={msg.msgId}
-                        className={clsx(
-                          `user-message-${msg.readStatus || msg.Sender === currentUserId ? "true" : "false"}`,
-                          "flex flex-col items-center space-y-2",
-                        )}
-                      >
-                        <h1 className="text-yellow-500">Deal pending</h1>
-                      </div>
-                    ) : (
-                      <section className="flex items-center space-x-1">
-                        <h1 className="text-yellow-500">Shall we proceed?</h1>
-                        <div className="flex justify-end space-x-2">
-                          <Button
-                            disabled={currentUserId === msg.Sender}
-                            className={
-                              "rounded-full bg-green-400 hover:bg-green-500"
-                            }
-                            onClick={()=>lockTheDeal("yes", msg.msgId ?? "")}
-                          >
-                            <Icons.yes />
-                          </Button>
-                          <Button
-                            disabled={currentUserId === msg.Sender}
-                            className={
-                              "rounded-full bg-red-400 hover:bg-red-500"
-                            }
-                            onClick={() => lockTheDeal("no", msg.msgId ?? "")}
-                          >
-                            <Icons.no />
-                          </Button>
+              <section className="flex flex-col space-y-3">
+                {messages?.map((msg: MessageTypes, j: number) =>
+                  msg.options ? (
+                    <div
+                      className={cn(
+                        "max-w-[80%] break-words rounded-lg p-3 shadow-md",
+                        msg.accepted === "accepted"
+                          ? "bg-blue-600 text-white"
+                          : msg.accepted === "rejected"
+                            ? "bg-red-100 text-red-500"
+                            : "bg-[#dbe4fb]",
+                        msg.Sender === currentUserId ? "ml-auto" : "mr-auto",
+                      )}
+                    >
+                      {msg.accepted === "pending" &&
+                      msg.Sender !== currentUserId ? (
+                        <div className="flex flex-col bg-[#dbe4fb] p-3">
+                          <h1 className="font-semibold text-black">
+                            Do we have a deal?
+                          </h1>
+                          <div className="mt-3 flex justify-between space-x-2">
+                            <Button
+                              onClick={() =>
+                                lockTheDeal("yes", msg.msgId ?? "")
+                              }
+                              className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                            >
+                              Accept
+                            </Button>
+                            <Button
+                              onClick={() => lockTheDeal("no", msg.msgId ?? "")}
+                              className="rounded-md bg-white px-4 py-2 text-black hover:bg-gray-100"
+                            >
+                              Reject
+                            </Button>
+                          </div>
                         </div>
-                      </section>
-                    )
+                      ) : msg.accepted === "accepted" ? (
+                        <h1 className=" font-semibold text-white">
+                          Deal Accepted
+                        </h1>
+                      ) : msg.accepted === "rejected" ? (
+                        <h1 className=" font-semibold text-red-400">
+                          Deal Rejected
+                        </h1>
+                      ) : (
+                        <h1 className=" font-semibold text-black">
+                          Pending Deal
+                        </h1>
+                      )}
+                    </div>
                   ) : (
                     <div
                       id={msg.msgId}
                       className={clsx(
                         `user-message-${msg.readStatus || msg.Sender === currentUserId ? "true" : "false"}`,
-                        "max-w-[80%] break-words rounded-t-lg px-3 py-2 pl-3 font-medium",
+                        "max-w-[80%] break-words rounded-t-xl px-4 py-3  font-medium",
                         currentUserId === msg.Sender
-                          ? "rounded-l-lg rounded-tr-lg text-white"
-                          : "rounded-r-lg rounded-br-lg text-black dark:text-white",
+                          ? "ml-auto rounded-l-xl rounded-tr-xl text-white"
+                          : "mr-auto rounded-r-xl rounded-br-xl text-black dark:text-white",
                         currentUserId === msg.Sender
                           ? "bg-blue-500"
                           : "bg-[#dbe4fb] dark:bg-slate-600",
@@ -272,9 +249,10 @@ export default function ChatUI({
                     >
                       {msg.Message}
                     </div>
-                  )}
-                </section>
-              ))}
+                  ),
+                )}
+              </section>
+
               <div ref={bottomRef} />
             </Fragment>
           )}

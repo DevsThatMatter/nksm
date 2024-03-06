@@ -16,7 +16,7 @@ const Navbar = async ({
   children = (
     <>
       <AddListing />
-      <UserChat userId={"65c5e97aafe71c6df760f715"} />
+      <UserChat userId={"65c5e97aafe71c6df760f717"} />
       <SavedItems />
       <Separator orientation="vertical" className="h-10" />
       <UserProfile />
@@ -30,7 +30,7 @@ const Navbar = async ({
   const userData = await auth();
   const products = (await fetchRecentProducts()) || [];
   // const userId = userData?.user?.id || "65c5e97aafe71c6df760f715"; do not switch this uper dekho, use change karna hai
-   // 65c5e97aafe71c6df760f717
+  // 65c5e97aafe71c6df760f717
   // 65c5e97aafe71c6df760f715
   return (
     <>
