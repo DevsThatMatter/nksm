@@ -2,7 +2,7 @@ import UserProfile from "./UserProfile";
 
 import Image from "next/image";
 import Link from "next/link";
-import { SavedItems } from "./SavedItems";
+
 import { Separator } from "@/app/components/ui/separator";
 import UserChat from "@/app/components/Chat/ChatsPanel";
 import { AddListing } from "../AddListing";
@@ -11,6 +11,7 @@ import { ReactNode, Suspense } from "react";
 import { auth } from "@/auth";
 import { fetchRecentProductS } from "@/lib/actions/fetchProduct.actions";
 import { cn } from "@/app/utils";
+import SavedItems from "./SavedItems";
 
 const Navbar = async ({
   children = (

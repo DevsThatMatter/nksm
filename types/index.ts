@@ -43,6 +43,7 @@ export interface CommentsInterface {
 export type CommentsType = CommentsInterface[];
 
 export interface Product {
+  Negotiable: boolean;
   _id: mongoose.Types.ObjectId;
   Seller: Seller;
   Comments: CommentsType;
