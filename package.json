@@ -9,7 +9,8 @@
     "format:check": "prettier --check '**.{js,jsx,ts,tsx,json,css,md}'",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky"
   },
   "husky": {
     "hooks": {
