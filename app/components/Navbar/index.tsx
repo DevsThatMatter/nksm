@@ -9,7 +9,7 @@ import { AddListing } from "../AddListing";
 import SearchBar from "./SearchBar";
 import { ReactNode, Suspense } from "react";
 import { auth } from "@/auth";
-import { fetchRecentProducts } from "@/lib/actions/fetchProduct.actions";
+import { fetchRecentProductS } from "@/lib/actions/fetchProduct.actions";
 import { cn } from "@/app/utils";
 
 const Navbar = async ({
@@ -32,6 +32,7 @@ const Navbar = async ({
   // const userId = userData?.user?.id || "65c5e97aafe71c6df760f715"; do not switch this uper dekho, use change karna hai
   // 65c5e97aafe71c6df760f717
   // 65c5e97aafe71c6df760f715
+
   return (
     <>
       <div className="sticky left-0 right-0 top-0 z-50 bg-background shadow-md">
