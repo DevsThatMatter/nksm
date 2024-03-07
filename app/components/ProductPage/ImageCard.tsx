@@ -10,6 +10,7 @@ import {
   type CarouselApi,
 } from "@/app/components/ui/carousel";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function ImageCard({ images }: any) {
   return (
@@ -30,14 +31,21 @@ export default function ImageCard({ images }: any) {
       <Carousel className="w-[85%] rounded-lg shadow-none">
         <CarouselContent>
           {images.map((image: string, index: number) => (
-            <CarouselItem key={index} className="rounded-md">
-              <Image
-                src={image}
-                alt={`Image ${index + 1}`}
-                width={1920}
-                height={1080}
-                className="aspect-video h-full w-full cursor-pointer rounded-lg object-fill"
-              />
+            <CarouselItem key={index} className="rounded-md  ">
+              <Link
+                href={{
+                  pathname: `/product/preview/${index}`,
+                  query: { imageLink: image },
+                }}
+              >
+                <Image
+                  src={image}
+                  alt={`Image ${index + 1}`}
+                  width={1920}
+                  height={1080}
+                  className="aspect-video h-full w-full cursor-pointer rounded-lg object-fill"
+                />
+              </Link>
             </CarouselItem>
           ))}
         </CarouselContent>

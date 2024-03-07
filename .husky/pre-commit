@@ -1,9 +1,1 @@
-echo "Testing your code...🛠️"
-
-pnpm format:check ||
-(
-    echo 'Prettier Check Failed. Run pnpm format, add changes and try commit again.';
-    false;
-)
-
-echo 'Tests successful, Commiting the changes'
+pnpm test

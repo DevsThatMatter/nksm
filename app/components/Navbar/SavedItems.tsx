@@ -50,7 +50,6 @@ async function fetchSavedProduct(userId: z.infer<typeof mongoId>) {
         },
       },
     ]);
-    console.log("ownedProducts", res);
     return {
       content: res[0],
       status: 200,
@@ -69,8 +68,6 @@ export default async function SavedItems() {
   const userId = "65c5e979afe71c6df760f704";
 
   const data = (await fetchSavedProduct(userId)) as any;
-  console.log("data => ", data);
-  // data =>  { content: [ { savedProducts: [Array] } ], status: 200, error: null }
   return (
     <Sheet>
       <SheetTrigger asChild>
