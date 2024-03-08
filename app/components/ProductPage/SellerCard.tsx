@@ -26,11 +26,11 @@ function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
         <div className="flex items-center">
           <Avatar className="h-[3rem] w-[3rem]">
             <AvatarImage alt="Seller" src={sellerInfo.Avatar} />
-            <AvatarFallback>{sellerInfo.Name}</AvatarFallback>
+            <AvatarFallback>{sellerInfo.Name?.slice(0, 2)}</AvatarFallback>
           </Avatar>
           <div className="ml-2">
             <p className="font-semibold">{sellerInfo.Name}</p>
-            <p className="text-sm text-foreground">{sellerInfo.Phone_Number}</p>
+            <p className="text-sm text-foreground">{sellerInfo.Username}</p>
           </div>
         </div>
         <Dialog>
