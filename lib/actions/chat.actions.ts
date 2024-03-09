@@ -27,6 +27,7 @@ export async function getUserId({ email }: z.infer<typeof GetUserIdSchema>) {
     await connectToDB();
     const user = await User.findOne({ Email: email });
     const userId = user._id.toString();
+    // for test return "65c5e97aafe71c6df760f715"
     return userId;
   } catch (error) {
     console.log("there was an error while fething user id");

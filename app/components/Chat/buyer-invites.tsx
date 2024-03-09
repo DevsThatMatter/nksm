@@ -71,7 +71,7 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                   className="h-16 w-16 object-cover"
                 />
               </div>
-              <div className="flex w-full justify-between">
+              <div className="flex w-full space-x-5">
                 <div className="flex flex-grow flex-col">
                   <h1 className="text-xl font-semibold text-black dark:text-gray-300">
                     {`${buyer.First_Name} ${buyer.Last_Name}`}

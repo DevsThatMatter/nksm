@@ -13,7 +13,5 @@ const userSchema = new mongoose.Schema({
   Comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comments" }],
 });
 
-
 export const User =
   mongoose.models.User || mongoose.model("User", userSchema, "users");
-
