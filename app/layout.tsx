@@ -5,6 +5,7 @@ import { cn } from "@/app/utils";
 import { ThemeProvider } from "@/app/components/providers/theme-provider";
 import { QueryProvider } from "./components/providers/query-provider";
 import { Toaster } from "sonner";
+import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: "NKSM",
@@ -33,7 +34,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           disableTransitionOnChange
         >
           <Toaster position="bottom-left" richColors />
-          <QueryProvider>{children}</QueryProvider>
+          <SessionProvider>
+            <QueryProvider>{children}</QueryProvider>
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

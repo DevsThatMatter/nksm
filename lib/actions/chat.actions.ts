@@ -18,6 +18,22 @@ const mongoId = z.string().refine((value) => Types.ObjectId.isValid(value), {
   message: "Invalid ObjectId format",
 });
 
+const GetUserIdSchema = z.object({
+  email: z.string().email(),
+});
+
+export async function getUserId({ email }: z.infer<typeof GetUserIdSchema>) {
+  try {
+    await connectToDB();
+    const user = await User.findOne({ Email: email });
+    const userId = user._id.toString();
+    return userId;
+  } catch (error) {
+    console.log("there was an error while fething user id");
+    return undefined;
+  }
+}
+
 function groupDocs(data: chatDetails[]): Map<string, chatDetails[]> {
   const groupDocsByProduct = new Map<string, chatDetails[]>();
 
@@ -40,14 +56,14 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
     const matchStage0 = {
       $match: {
         Seller: new mongo.ObjectId(userId),
-        // status: { $ne: "invite" },
+        status: { $eq: "active" },
       },
     };
 
     const matchStage1 = {
       $match: {
         Buyer: new mongo.ObjectId(userId),
-        // status: { $ne: "invite" },
+        status: { $eq: "active" },
       },
     };
 
@@ -696,6 +712,7 @@ const AcceptInviteSchema = z.object({
   sellerId: mongoId,
   buyerId: mongoId,
   productId: mongoId,
+  caller: z.enum(["accept", "reject"]),
 });
 
 export async function acceptTheInvite(
@@ -703,17 +720,59 @@ export async function acceptTheInvite(
 ) {
   try {
     connectToDB();
-    await Chat.updateOne(
-      {
+    if (props.caller === "accept") {
+      await Chat.updateOne(
+        {
+          Seller: props.sellerId,
+          Buyer: props.buyerId,
+          ProductId: props.productId,
+        },
+        {
+          status: "active",
+        },
+      );
+    } else {
+      await Chat.updateOne(
+        {
+          Seller: props.sellerId,
+          Buyer: props.buyerId,
+          ProductId: props.productId,
+        },
+        {
+          status: "reject",
+        },
+      );
+    }
+  } catch (error) {
+    console.log("internal server error", error);
+  }
+}
+
+const ChatStatusProps = z.object({
+  sellerId: mongoId,
+  buyerId: mongoId,
+  productId: mongoId,
+});
+
+export async function getChatStatus(props: z.infer<typeof ChatStatusProps>) {
+  try {
+    const status = (
+      await Chat.findOne({
         Seller: props.sellerId,
         Buyer: props.buyerId,
         ProductId: props.productId,
-      },
-      {
-        status: "active",
-      },
-    );
+      })
+    ).status;
+    return {
+      error: null,
+      message: "status fetched successfuly",
+      status: status,
+    };
   } catch (error) {
-    console.log("internal server error", error);
+    return {
+      error: error,
+      message: "some internal server error",
+      status: null,
+    };
   }
 }

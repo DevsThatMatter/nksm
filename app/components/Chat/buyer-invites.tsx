@@ -41,6 +41,10 @@ export default function BuyerInvites({ userId }: { userId: string }) {
     null,
   );
 
+  const [selectedButton, setSellectedButton] = useState<
+    "accept" | "reject" | null
+  >(null);
+
   useEffect(() => {
     async function fetchData() {
       const data = await fecthInvites(userId);
@@ -48,7 +52,6 @@ export default function BuyerInvites({ userId }: { userId: string }) {
     }
     fetchData();
   }, [userId]);
-  console.log("hello from invites", activeInvites);
 
   return (
     <SheetDescription className="mt-4 flex w-full select-none flex-col space-y-4">
@@ -56,69 +59,123 @@ export default function BuyerInvites({ userId }: { userId: string }) {
         invites.buyerDetails.map((buyer, j) => (
           <section
             key={buyer.buyerId}
-            className="flex items-center space-x-1 rounded-lg border border-b-transparent p-2 shadow-md hover:border-b-2 hover:border-b-gray-300 dark:shadow-gray-700"
+            className="flex flex-col space-x-1 rounded-lg border border-b-transparent p-2 shadow-md hover:border-b-2 hover:border-b-gray-300 dark:shadow-gray-700"
           >
-            <article className="flex flex-1 items-center">
-              <div className="flex-shrink-0 overflow-hidden rounded-md">
+            <article className="flex space-x-2 rounded-md">
+              <div className="flex-shrink-0 overflow-hidden rounded-full">
                 <Image
                   src={buyer.Avatar}
                   alt={buyer.Phone_Number}
                   width={64}
                   height={64}
+                  className="h-16 w-16 object-cover"
                 />
               </div>
-              <div className="ml-3 flex flex-grow flex-col">
-                <h5 className="text-sm text-gray-500 dark:text-gray-600">
-                  {`For ${invites.productDetails.Product_Name}`}
-                </h5>
-                <h5 className="text-sm text-gray-500 dark:text-gray-600">
-                  {`By ${buyer.First_Name} ${buyer.Last_Name}`}
-                </h5>
+              <div className="flex w-full justify-between">
+                <div className="flex flex-grow flex-col">
+                  <h1 className="text-xl font-semibold text-black dark:text-gray-300">
+                    {`${buyer.First_Name} ${buyer.Last_Name}`}
+                  </h1>
+                  <h5 className="text-sm text-gray-600 dark:text-gray-400">
+                    {`For ${invites.productDetails.Product_Name}`}
+                  </h5>
+                </div>
+                <h2 className="mt-2 text-xl font-bold text-black">$400</h2>
               </div>
             </article>
-            <div className="mt-auto">
+            <div>
               <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    type="button"
-                    className="bg-blue-600 transition-colors fade-out-0 hover:bg-blue-600"
-                  >
-                    Accept
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="overflow-hidden rounded-lg bg-white shadow-lg">
-                  <DialogHeader className="mt-4 rounded-md bg-blue-600 px-4 py-3 text-white">
-                    <DialogTitle className="text-lg font-bold">
-                      Lock your deal...
-                    </DialogTitle>
-                  </DialogHeader>
-                  <DialogDescription className="px-6 py-4 ">
-                    <h1 className="font-semibold text-yellow-400 md:text-lg">
-                      Warning:
-                    </h1>
-                    <p>Are you sure you want to accept the invite?</p>
-                  </DialogDescription>
-                  <div className="flex justify-end px-6 py-4">
-                    <DialogClose asChild>
+                <DialogTitle className="ml-[5dvw]">
+                  <div className="flex space-x-5 ">
+                    <DialogTrigger asChild>
                       <Button
                         type="button"
-                        className="mr-2 bg-blue-600 text-white hover:bg-blue-600"
-                        onClick={() => {
-                          const prom = acceptTheInvite({
-                            productId: invites.productId,
-                            sellerId: invites.sellerId,
-                            buyerId: buyer.buyerId,
-                          });
-                          toast.promise(prom, {
-                            loading: "Accepting...",
-                            success: () =>
-                              "This chat was activated, reload to see changes",
-                            error: "Unable to accept the invite",
-                          });
-                        }}
+                        className="rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                        onClick={() => setSellectedButton("accept")}
                       >
                         Accept
                       </Button>
+                    </DialogTrigger>
+                    <DialogTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="rounded-lg bg-red-200 text-red-500 hover:bg-red-300 hover:text-red-600"
+                        onClick={() => setSellectedButton("reject")}
+                      >
+                        Reject
+                      </Button>
+                    </DialogTrigger>
+                  </div>
+                </DialogTitle>
+                <DialogContent className="overflow-hidden rounded-lg bg-white shadow-lg">
+                  <DialogHeader className="mt-4 rounded-t-lg bg-blue-600 px-4 py-3 text-white">
+                    <DialogTitle className="text-lg font-bold">
+                      {selectedButton === "reject"
+                        ? "Are you sure you want to reject this invite?"
+                        : "Are you sure you want to accept this invite?"}
+                    </DialogTitle>
+                  </DialogHeader>
+                  <DialogDescription className="px-6 py-4">
+                    <h1 className="font-semibold text-yellow-400 md:text-lg">
+                      Warning:
+                    </h1>
+                    <div>
+                      {selectedButton === "accept" ? (
+                        <h1>
+                          This invite will be accepted after this, and you will
+                          be able proceed chating
+                        </h1>
+                      ) : (
+                        <h1>Are you sure you want to reject this invite</h1>
+                      )}
+                    </div>
+                  </DialogDescription>
+                  <div className="flex justify-end px-6 py-4">
+                    <DialogClose asChild>
+                      {selectedButton === "accept" ? (
+                        <Button
+                          type="button"
+                          className="mr-2 bg-blue-600 text-white hover:bg-blue-700"
+                          onClick={() => {
+                            const prom = acceptTheInvite({
+                              productId: invites.productId,
+                              sellerId: invites.sellerId,
+                              buyerId: buyer.buyerId,
+                              caller: "accept",
+                            });
+                            toast.promise(prom, {
+                              loading: "Accepting...",
+                              success:
+                                "This invite was activated, reload to see changes",
+                              error: "Unable to accept the invite",
+                            });
+                          }}
+                        >
+                          Accept
+                        </Button>
+                      ) : (
+                        <Button
+                          type="button"
+                          className="mr-2 bg-red-600 text-white hover:bg-red-700"
+                          onClick={() => {
+                            const prom = acceptTheInvite({
+                              productId: invites.productId,
+                              sellerId: invites.sellerId,
+                              buyerId: buyer.buyerId,
+                              caller: "reject",
+                            });
+                            toast.promise(prom, {
+                              loading: "Rejecting...",
+                              success:
+                                "This invite was rejected, reload to see changes",
+                              error: "Unable to reject the invite",
+                            });
+                          }}
+                        >
+                          Reject
+                        </Button>
+                      )}
                     </DialogClose>
                     <DialogClose asChild>
                       <Button

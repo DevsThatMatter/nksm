@@ -8,7 +8,7 @@ const chatSchema = new mongoose.Schema({
   Messages: { type: [mongoose.Schema.Types.ObjectId], ref: "messages" }, // Store messages as an array of objects [{Sender, Message, Timestamp}]
   status: {
     type: String,
-    enum: ["invite", "active", "stale"],
+    enum: ["invite", "active", "stale", "reject"],
   },
 });
 

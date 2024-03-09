@@ -44,7 +44,7 @@ export interface IChat {
   Buyer: string;
   ProductId: string;
   Messages: Array<ObjectId>;
-  status: "invite" | "active" | "stale";
+  status: "invite" | "active" | "stale" | "reject";
 }
 
 interface userDetails {

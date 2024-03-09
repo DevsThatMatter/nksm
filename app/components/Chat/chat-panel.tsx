@@ -13,32 +13,42 @@ import {
 import { Button } from "@/app/components/ui/button";
 import { Icons } from "@/app/utils/icons";
 import { chatDetails } from "@/types";
-import { getAllChats } from "@/lib/actions/chat.actions";
+import { getAllChats, getUserId } from "@/lib/actions/chat.actions";
 import ProductPanel from "./product-panel";
 import UserUnauthorized from "./user-unauthorized";
 import useChatStore from "../../../hooks/useChatStore";
 import BuyerInvites from "./buyer-invites";
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
-export default function UserChat({ userId }: { userId: string }) {
+export default function UserChat() {
+  const { data: session } = useSession();
+  const email = session?.user?.email ?? "";
+  const [userId, setUserId] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    async function fetchUserId() {
+      const id = await getUserId({ email });
+      setUserId(id);
+    }
+    fetchUserId();
+  }, [email]);
+
   const { discussions, otherUserDetails, createChat, removeChat } =
     useChatStore();
+
   const [
     productDiscussionsWhereUserIsSeller,
     setProductDiscussionsWhereUserIsSeller,
   ] = useState<Map<string, chatDetails[]> | null>(null);
+
   const [
     productDiscussionsWhereUserIsBuyer,
     setProductDiscussionsWhereUserIsBuyer,
   ] = useState<chatDetails[] | null>(null);
+
   const [activeTab, setActiveTab] = useState<"seller" | "buyer" | "invites">(
     "seller",
   );
-
-  const { data, isFetching, status, error } = useQuery({
-    queryKey: ["getAllChats", userId],
-    queryFn: getPrevProductDiscussions,
-  });
 
   async function getPrevProductDiscussions() {
     if (userId) {
@@ -49,6 +59,12 @@ export default function UserChat({ userId }: { userId: string }) {
       setProductDiscussionsWhereUserIsBuyer(data.data.resultWhereUserIsBuyer);
     }
   }
+
+  const { data, isFetching, status, error } = useQuery({
+    queryKey: ["getAllChats", userId],
+    queryFn: getPrevProductDiscussions,
+    enabled: userId !== undefined,
+  });
 
   const handleTabChange = (tab: "seller" | "buyer" | "invites") => {
     setActiveTab(tab);
@@ -63,7 +79,7 @@ export default function UserChat({ userId }: { userId: string }) {
         },
         sellerDetails: { id: "" },
         buyerDetails: { id: "" },
-        lockStatus: false,
+        globalLockedStatus: false,
       });
     } else if (tab === "buyer") {
       createChat({
@@ -76,7 +92,7 @@ export default function UserChat({ userId }: { userId: string }) {
         },
         sellerDetails: { id: "" },
         buyerDetails: { id: "" },
-        lockStatus: false,
+        globalLockedStatus: false,
       });
     }
   };
@@ -97,7 +113,7 @@ export default function UserChat({ userId }: { userId: string }) {
         },
         sellerDetails: { id: "" },
         buyerDetails: { id: "" },
-        lockStatus: false,
+        globalLockedStatus: false,
       });
     } catch (error) {
       console.error(error);

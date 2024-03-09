@@ -15,10 +15,10 @@ interface ChatState {
   buyerDetails: {
     id: string;
   };
-  lockStatus: boolean;
+  globalLockedStatus: boolean;
   createChat: (to: {
     discussions: chatDetails[];
-    lockStatus: boolean;
+    globalLockedStatus: boolean;
     otherUserDetails: {
       id: string;
       name: string;
@@ -40,7 +40,7 @@ interface ChatState {
 
 const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
   discussions: [],
-  lockStatus: false,
+  globalLockedStatus: false,
   otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "", avatar: "" },
   sellerDetails: { id: "" },
   buyerDetails: { id: "" },
@@ -90,7 +90,7 @@ const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
             otherUserPhoneNumber: "",
             avatar: "",
           },
-          lockStatus: false,
+          globalLockedStatus: false,
         };
       }
       return state;
@@ -112,7 +112,7 @@ const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
   createLockedStatus: (status: boolean) =>
     set((state) => ({
       ...state,
-      lockStatus: status,
+      globalLockedStatus: status,
     })),
 });
 

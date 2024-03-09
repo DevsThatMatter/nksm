@@ -1,16 +1,10 @@
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-} from "@/app/components/ui/form";
+import { Form, FormControl, FormItem } from "@/app/components/ui/form";
 import { Icons } from "@/app/utils/icons";
 import { Input } from "@/app/components/ui/input";
 import Skeleton from "react-loading-skeleton";
-import axios from "axios";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import {
@@ -23,7 +17,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import useChatStore from "@/hooks/useChatStore";
-import { createNewMessage } from "@/lib/actions/chat.actions";
+import { createNewMessage, getChatStatus } from "@/lib/actions/chat.actions";
 
 const messageSchema = z.object({
   content: z.string().min(1),
@@ -57,7 +51,23 @@ export default function ChatInput({
 
   const isLoading = form.formState.isSubmitting;
   const [dealLock, setDealLock] = useState<boolean>(false);
-  const { lockStatus } = useChatStore();
+  const [gLockedStatus, setGlockedStatus] = useState(false);
+
+  useEffect(() => {
+    async function fetchChatStatus() {
+      const status = (
+        await getChatStatus({
+          sellerId: sellerDetails.id,
+          buyerId: buyerDetails.id,
+          productId,
+        })
+      ).status;
+      if (status === "stale") {
+        setGlockedStatus(true);
+      }
+    }
+    fetchChatStatus();
+  }, [sellerDetails, buyerDetails, productId]);
 
   async function onSend(values: z.infer<typeof messageSchema>) {
     try {
@@ -102,6 +112,7 @@ export default function ChatInput({
     }
     if (dealLock) {
       onDealSend({ content: "Let's have a deal?" });
+      setDealLock(false);
     }
   }, [buyerDetails.id, dealLock, form, productId, sellerDetails.id, userId]);
 
@@ -121,9 +132,10 @@ export default function ChatInput({
                 />
 
                 <Dialog>
-                  <DialogTrigger asChild disabled={lockStatus}>
+                  <DialogTrigger asChild disabled={gLockedStatus}>
                     <button type="button" className="focus:outline-none">
                       <Button
+                        disabled={gLockedStatus}
                         type="button"
                         className="bg-blue-600 text-white transition-colors fade-out-0 hover:bg-blue-800"
                       >
@@ -152,7 +164,6 @@ export default function ChatInput({
                     <div className="flex justify-end px-6 py-4">
                       <DialogClose asChild>
                         <Button
-                          disabled={lockStatus}
                           type="button"
                           className="mr-2 bg-blue-600 text-white hover:bg-blue-600"
                           onClick={() => {

@@ -7,8 +7,7 @@ import { Separator } from "@/app/components/ui/separator";
 import UserChat from "../Chat/chat-panel";
 import { AddListing } from "../AddListing";
 import SearchBar from "./SearchBar";
-import { ReactNode, Suspense } from "react";
-import { auth } from "@/auth";
+import { ReactNode } from "react";
 import { fetchRecentProducts } from "@/lib/actions/fetchProduct.actions";
 import { cn } from "@/app/utils";
 
@@ -16,7 +15,7 @@ const Navbar = async ({
   children = (
     <>
       <AddListing />
-      <UserChat userId={"65c5e97aafe71c6df760f717"} />
+      <UserChat />
       <SavedItems />
       <Separator orientation="vertical" className="h-10" />
       <UserProfile />
@@ -27,11 +26,7 @@ const Navbar = async ({
   children?: ReactNode;
   className?: string;
 }) => {
-  const userData = await auth();
   const products = (await fetchRecentProducts()) || [];
-  // const userId = userData?.user?.id || "65c5e97aafe71c6df760f715"; do not switch this uper dekho, use change karna hai
-  // 65c5e97aafe71c6df760f717
-  // 65c5e97aafe71c6df760f715
   return (
     <>
       <div className="sticky left-0 right-0 top-0 z-50 bg-background shadow-md">
