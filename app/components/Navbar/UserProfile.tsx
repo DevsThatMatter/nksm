@@ -6,7 +6,6 @@ export default async function UserProfile({
 }: {
   whichIcon?: boolean;
 }) {
-  console.log("UserProfile");
   const userData = await auth();
   return <Profile data={userData} whichIcon={whichIcon} />;
 }
