@@ -73,7 +73,9 @@ export function Profile({ data, whichIcon }: UserProfileProps) {
         )}
         <DropdownMenu>
           <DropdownMenuItem>
-            <DropdownMenuTrigger>Change Theme</DropdownMenuTrigger>
+            <DropdownMenuTrigger className="border-none focus:border-none focus:outline-none  ">
+              Change Theme
+            </DropdownMenuTrigger>
           </DropdownMenuItem>
           <DropdownMenuContent align="center">
             <DropdownMenuItem onClick={() => setTheme("light")}>

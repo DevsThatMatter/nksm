@@ -11,6 +11,10 @@ import {
   ImageIcon,
   Link2Icon,
   ChevronDownIcon,
+  StarFilledIcon,
+  StarIcon,
+  UpdateIcon,
+  Cross1Icon,
 } from "@radix-ui/react-icons";
 
 export const Icons = {
@@ -26,4 +30,8 @@ export const Icons = {
   sendIcon: PaperPlaneIcon,
   fileLink: Link2Icon,
   image: ImageIcon,
+  new: StarFilledIcon,
+  likeNew: StarIcon,
+  used: UpdateIcon,
+  cross: Cross1Icon,
 };
