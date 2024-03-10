@@ -17,7 +17,6 @@ export const insertUser = async (data: userData) => {
     const newUser = new User(data);
     await newUser.save();
     return newUser._id;
-    console.log("User inserted successfully!");
   } catch (error) {
     console.error("Error inserting a user!:", error);
     throw error;
