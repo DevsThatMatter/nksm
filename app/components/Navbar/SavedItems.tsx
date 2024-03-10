@@ -4,6 +4,7 @@ import {
   SheetClose,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -14,25 +15,41 @@ import { Badge } from "../ui/badge";
 import Image from "next/image";
 import { User } from "@/lib/models/user.model";
 import { auth } from "@/auth";
-import { Types, mongo } from "mongoose";
+import mongoose, { Types, mongo } from "mongoose";
 
 import * as z from "zod";
 import { connectToDB } from "@/lib/database/mongoose";
 import Link from "next/link";
 import clsx from "clsx";
 import { cn } from "@/app/utils";
+import { CategoryEnum, ConditionEnum } from "@/types";
 
-const mongoId = z.string().refine((value) => Types.ObjectId.isValid(value), {
-  message: "Invalid ObjectId format",
+const shema = z.object({
+  email: z.string().email(),
 });
 
-async function fetchSavedProduct(userId: z.infer<typeof mongoId>) {
+interface Product {
+  _id: mongoose.Types.ObjectId;
+  Images: string[];
+  Category: CategoryEnum;
+  Description: string;
+  Condition: ConditionEnum;
+  Seller: mongoose.Types.ObjectId;
+  Total_Quantity_Available: number;
+  Price: number;
+  is_archived: boolean;
+  Negotiable: boolean;
+  Product_Name: string;
+  expires_in: Date;
+}
+
+async function fetchSavedProduct({ email }: z.infer<typeof shema>) {
   try {
     await connectToDB();
-    const res = await User.aggregate([
+    let res = await User.aggregate([
       {
         $match: {
-          _id: new mongo.ObjectId(userId),
+          Email: "user1@example.com",
         },
       },
       {
@@ -50,8 +67,9 @@ async function fetchSavedProduct(userId: z.infer<typeof mongoId>) {
         },
       },
     ]);
+    const result = res[0] as { savedProducts: Product[] };
     return {
-      content: res[0],
+      content: result.savedProducts,
       status: 200,
       error: null,
     };
@@ -65,9 +83,9 @@ async function fetchSavedProduct(userId: z.infer<typeof mongoId>) {
 }
 
 export default async function SavedItems() {
-  const userId = "65c5e979afe71c6df760f704";
+  const email = (await auth())?.user?.email ?? "";
 
-  const data = (await fetchSavedProduct(userId)) as any;
+  const data = await fetchSavedProduct({ email });
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -75,12 +93,12 @@ export default async function SavedItems() {
           <Icons.saved className="h-[1.4rem] w-[1.4rem]" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="ld:w-[40vw] flex w-screen flex-col items-center sm:w-[40vw] md:w-[60vw]">
-        <SheetHeader>
+      <SheetContent className="ld:w-[40vw] flex w-screen flex-col items-start sm:w-[40vw] md:w-[60vw]">
+        <SheetHeader className="justify-start">
           <SheetTitle>Saved Products</SheetTitle>
           <SheetDescription>Manage your saved products</SheetDescription>
         </SheetHeader>
-        {data.content?.savedProducts?.map((product: any, i: number) => (
+        {data.content?.map((product, i) => (
           <Card key={i} className="w-full">
             <CardContent className="flex-1 p-2">
               <div className="flex space-x-5 p-4">
@@ -106,7 +124,7 @@ export default async function SavedItems() {
                   </div>
                 </div>
               </div>
-              <SheetClose className=" w-full">
+              <SheetFooter>
                 <Link
                   href={`/product/${String(product._id)}`}
                   className={cn(
@@ -114,9 +132,9 @@ export default async function SavedItems() {
                     "w-full rounded-full border border-gray-200 dark:border-gray-800",
                   )}
                 >
-                  View product
+                  <SheetClose className=" w-full">View product</SheetClose>
                 </Link>
-              </SheetClose>
+              </SheetFooter>
             </CardContent>
           </Card>
         ))}

@@ -119,7 +119,7 @@ export const fetchProductDetails = async (productId: string) => {
       model: User,
       select: "_id Username Phone_Number Avatar Name",
     });
-    console.log("pOFSODGSAGASDG:", productDetails);
+    // console.log("pOFSODGSAGASDG:", productDetails);
     if (!productDetails) {
       throw new Error("Product not found!");
     }

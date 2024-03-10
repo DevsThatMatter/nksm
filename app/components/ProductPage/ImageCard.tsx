@@ -17,21 +17,28 @@ export default function ImageCard({ images }: any) {
     <div className="relative flex justify-end">
       <div className="absolute bottom-0 left-0 top-0 w-[15%] space-y-2 overflow-auto pr-2">
         {images.map((image: string, index: number) => (
-          <Image
+          <Link
             key={index}
-            src={image}
-            alt={`Image`}
-            width={200}
-            height={200}
-            className="cursor-pointer rounded-md"
-          />
+            href={{
+              pathname: `/product/preview/${index}`,
+              query: { imageLink: image },
+            }}
+          >
+            <Image
+              src={image}
+              alt={`Image`}
+              width={200}
+              height={200}
+              className="cursor-pointer rounded-md"
+            />
+          </Link>
         ))}
       </div>
 
       <Carousel className="w-[85%] rounded-lg shadow-none">
         <CarouselContent>
           {images.map((image: string, index: number) => (
-            <CarouselItem key={index} className="rounded-md  ">
+            <CarouselItem key={index} className="rounded-md ">
               <Link
                 href={{
                   pathname: `/product/preview/${index}`,
