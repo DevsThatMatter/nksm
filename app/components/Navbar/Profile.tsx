@@ -84,6 +84,9 @@ export function Profile({ data, whichIcon }: UserProfileProps) {
             <DropdownMenuItem onClick={() => setTheme("dark")}>
               Dark
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme("system")}>
+              System
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         {!data?.user ? (
