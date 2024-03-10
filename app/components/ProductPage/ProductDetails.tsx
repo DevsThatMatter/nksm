@@ -30,7 +30,7 @@ const ProductDetails = ({
       </div>
       <div className="flex justify-between">
         <div className="flex ">
-          <p className="my-1 flex items-center justify-center rounded-2xl border border-muted-foreground p-1 px-2 text-xs text-muted-foreground">
+          <p className="my-1 flex items-center justify-center rounded-2xl border border-muted-foreground p-1 px-2 text-xs text-muted-foreground dark:font-semibold">
             {renderConditionIcon(productInfo.Condition)}
             {productInfo.Condition}
           </p>
