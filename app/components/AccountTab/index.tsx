@@ -3,6 +3,7 @@ import PencilIcon from "../ui/PencilIcon";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { auth } from "@/auth";
+import Image from "next/image";
 
 export default async function AccountTab() {
   const userData = (await auth())?.user;
@@ -10,10 +11,13 @@ export default async function AccountTab() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-start">
-        <Avatar>
-          <AvatarImage src={userData?.image!} alt="Profile picture" />
-          <AvatarFallback>{userData?.name?.trim()[0]}</AvatarFallback>
-        </Avatar>
+        <Image
+          src={userData?.image!}
+          alt="Profile picture"
+          width={45}
+          height={45}
+          className="rounded-full"
+        />
         <Button className="ml-0 mt-1 sm:ml-4 sm:mt-0" variant="secondary">
           Change
         </Button>

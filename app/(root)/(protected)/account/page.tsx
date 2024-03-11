@@ -1,4 +1,3 @@
-"use client";
 import {
   AvatarImage,
   AvatarFallback,
@@ -19,7 +18,7 @@ import Link from "next/link";
 
 import AccountTab from "@/app/components/AccountTab";
 
-export default async function Component() {
+export default function Component() {
   return (
     <div className="h-screen w-screen">
       <div className="w-full rounded-lg p-8 shadow ">
