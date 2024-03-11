@@ -38,16 +38,14 @@ const ListingPreview = ({
       images,
       negotiate,
     } = data;
-    const imagesArray = Object.values(images as Record<string, unknown>).map(
-      (image) => (image as { name: string }).name,
-    );
+
     const res = await addProductFromListing({
       iname,
       quantity,
       category,
       description,
       price,
-      imagesArray,
+      images,
       negotiate: negotiate === "Yes" ? true : false,
       condition,
       userId: userId,
@@ -86,11 +84,7 @@ const ListingPreview = ({
                     alt="Product Image"
                     className="aspect-square overflow-hidden rounded-lg border border-gray-200 object-cover dark:border-gray-800"
                     height={200}
-                    src={
-                      data.images.length > 0
-                        ? URL.createObjectURL(data.images[0])
-                        : ""
-                    }
+                    src={data.images.length > 0 ? data.images[0] : ""}
                     width={200}
                   />
                 </div>

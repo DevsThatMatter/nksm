@@ -11,9 +11,9 @@ type formData = {
   category: string;
   price: number | "";
   quantity: number | "";
-  imagesArray: string[];
+  images: string[];
   negotiate: boolean;
-};
+}; // to be updated to use zod schema when toggle is added
 export async function addProductFromListing(values: formData) {
   try {
     await connectToDB();
