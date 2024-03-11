@@ -1,4 +1,3 @@
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import PencilIcon from "../ui/PencilIcon";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -7,49 +6,55 @@ import Image from "next/image";
 
 export default async function AccountTab() {
   const userData = (await auth())?.user;
-  console.log("slfkjslfjslkflkdjfsldfjslfjslkfjslk");
+  const isOkay = false;
   return (
     <div className="space-y-6">
       <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-start">
-        <Image
-          src={userData?.image!}
-          alt="Profile picture"
-          width={45}
-          height={45}
-          className="rounded-full"
-        />
-        <Button className="ml-0 mt-1 sm:ml-4 sm:mt-0" variant="secondary">
+        <div className="flex h-[4.5rem] w-[4.5rem] items-center justify-center sm:h-16 sm:w-16">
+          <Image
+            src={userData?.image!}
+            alt="Profile picture"
+            width={100}
+            height={100}
+            className="rounded-full md:h-full md:w-full"
+          />
+        </div>
+        <Button className="ml-0 mt-2 sm:ml-1 sm:mt-0" variant="secondary">
           Change
         </Button>
       </div>
-      <div className="grid grid-cols-1 gap-6">
-        <div className="mt-4 flex items-center justify-center gap-4 sm:mt-0 sm:justify-start sm:gap-2">
+      <div className="relative top-2 grid grid-cols-1 gap-6">
+        <div className="flex items-center justify-center sm:justify-start sm:px-0">
           <Input
-            className="w-1/3"
+            className="w-3/5 sm:lg:w-1/3"
             placeholder="First Name"
             type="text"
             value={userData?.name?.trim()}
           />
-          <PencilIcon className="h-5 w-5 text-gray-400" />
         </div>
-        <div className="flex items-center justify-center px-14 sm:justify-start sm:px-0">
+
+        <div className="flex items-center justify-center  sm:justify-start sm:px-0">
           <Input
-            className="w-3/4 sm:w-1/3"
+            className="w-3/5 sm:lg:w-1/3"
             placeholder="Email"
             type="email"
             value={userData?.email?.trim()}
             disabled
           />
-          <PencilIcon className="ml-2 h-5 w-5 text-gray-400" />
         </div>
-        <div className="flex items-center justify-center px-14 sm:justify-start sm:px-0">
+        <div className="flex items-center justify-center  sm:justify-start sm:px-0">
           <Input
-            className="w-3/4 sm:w-1/3"
+            className="w-3/5 sm:lg:w-1/3"
             placeholder="Add a phone number"
             type="tel"
           />
-          <PencilIcon className="ml-2 h-5 w-5 text-gray-400" />
         </div>
+        <Button
+          className="mt-5 w-4/5 place-self-center sm:place-self-start sm:lg:w-1/3"
+          variant="secondary"
+        >
+          Edit Profile
+        </Button>
       </div>
     </div>
   );

@@ -30,13 +30,13 @@ export default function Component() {
             aria-label="Tabs"
             className="-mb-px flex justify-center space-x-8 text-center sm:justify-start"
           >
-            <a
+            <Link
               aria-current="page"
               className="whitespace-nowrap border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
               href="/account"
             >
               Account Info
-            </a>
+            </Link>
             <Link
               className="whitespace-nowrap border-b-2 border-blue-500 px-1 py-4 text-sm font-medium text-blue-600"
               href="#"

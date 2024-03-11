@@ -1,19 +1,4 @@
-import {
-  AvatarImage,
-  AvatarFallback,
-  Avatar,
-} from "@/app/components/ui/avatar";
-import { Button } from "@/app/components/ui/button";
-import { Input } from "@/app/components/ui/input";
-import {
-  CardTitle,
-  CardDescription,
-  CardHeader,
-  CardContent,
-  Card,
-} from "@/app/components/ui/card";
 import { Tabs } from "@/app/components/ui/tabs";
-import PencilIcon from "@/app/components/ui/PencilIcon";
 import Link from "next/link";
 
 import AccountTab from "@/app/components/AccountTab";
