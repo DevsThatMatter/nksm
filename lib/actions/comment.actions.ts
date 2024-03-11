@@ -5,7 +5,7 @@ import { Comments } from "../models/comments.model";
 import mongoose from "mongoose";
 import { Session } from "next-auth";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { RedirectType, redirect } from "next/navigation";
 
 export const addComment = async (commentData: {
   Product: mongoose.Types.ObjectId;
@@ -81,9 +81,10 @@ export const sendComment = async (
       await addComment(newcomment);
       revalidatePath(`/product/${productId}`);
     } else {
-      redirect("/login");
+      throw new Error("Invalid user data or comment!");
     }
   } catch (error) {
     console.error("Error adding a comment:", error);
+    redirect("/login", RedirectType.push);
   }
 };
