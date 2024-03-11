@@ -20,15 +20,18 @@ import Link from "next/link";
 import { cn } from "@/app/utils";
 import { CategoryEnum, ConditionEnum } from "@/types";
 import { useEffect, useState } from "react";
-import { fetchSavedProduct } from "@/lib/actions/fetchProduct.actions";
+import {
+  fetchSavedProduct,
+  removeSavedProduct,
+} from "@/lib/actions/fetchProduct.actions";
 
 export interface SavedProduct {
-  _id: mongoose.Types.ObjectId;
+  _id: string;
   Images: string[];
   Category: CategoryEnum;
   Description: string;
   Condition: ConditionEnum;
-  Seller: mongoose.Types.ObjectId;
+  Seller: string;
   Total_Quantity_Available: number;
   Price: number;
   is_archived: boolean;
@@ -110,7 +113,7 @@ export default function SavedItems() {
                           {product.Condition}
                         </p>
                         <p
-                          className={`m-1 flex items-center justify-center rounded-3xl p-1 text-xs ${
+                          className={`mx-1 flex items-center justify-center rounded-3xl p-1 text-xs ${
                             product.Negotiable
                               ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-green-800"
                               : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-sky-900"
@@ -122,6 +125,14 @@ export default function SavedItems() {
                       <Button
                         size="icon"
                         className="h-6 w-10 bg-red-300 text-foreground hover:bg-red-400"
+                        onClick={async (event) => {
+                          console.log("delete was triggered");
+                          event.stopPropagation();
+                          await removeSavedProduct({
+                            productId: product._id,
+                            email: email,
+                          });
+                        }}
                       >
                         <Icons.delete className="text-red-700" />
                       </Button>

@@ -2,7 +2,7 @@
 
 import { Product } from "../models/product.model";
 import { connectToDB } from "../database/mongoose";
-import { FilterQuery, SortOrder } from "mongoose";
+import { FilterQuery, SortOrder, mongo } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { CategoryEnum } from "@/types";
 import { User } from "../models/user.model";
@@ -163,7 +163,25 @@ export async function fetchSavedProduct({ email }: { email: string }) {
       },
       {
         $project: {
-          savedProducts: 1,
+          savedProducts: {
+            $map: {
+              input: "$savedProducts",
+              as: "product",
+              in: {
+                $mergeObjects: [
+                  "$$product",
+                  {
+                    Seller: {
+                      $toString: "$$product.Seller",
+                    },
+                    _id: {
+                      $toString: "$$product._id",
+                    },
+                  },
+                ],
+              },
+            },
+          },
           _id: 0,
         },
       },
@@ -180,5 +198,24 @@ export async function fetchSavedProduct({ email }: { email: string }) {
       status: 500,
       error: error,
     };
+  }
+}
+
+export async function removeSavedProduct({
+  productId,
+  email,
+}: {
+  productId: string;
+  email: string;
+}) {
+  try {
+    await connectToDB();
+    const res = await User.updateOne(
+      { Email: "user1@example.com" },
+      { $pull: { savedProducts: new mongo.ObjectId(productId) } },
+    );
+    console.log(res);
+  } catch (error) {
+    return error;
   }
 }
