@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   Card,
   CardHeader,
@@ -17,15 +18,11 @@ const OrderHistoryTab = () => {
           </CardHeader>
           <CardContent>
             <div className="flex items-center space-x-4">
-              <img
+              <Image
                 alt="Product image"
-                className="h-24 w-24 rounded-md bg-gray-200"
+                className="aspect-square h-24 w-24 rounded-md bg-gray-200 object-cover"
                 height="100"
                 src="/placeholder.svg"
-                style={{
-                  aspectRatio: "100/100",
-                  objectFit: "cover",
-                }}
                 width="100"
               />
               <div>
