@@ -10,6 +10,7 @@ const ProductSaved = ({ className, id }: { className: string; id: string }) => {
       className={className}
       onClick={() => {
         setIsSaved(!isSaved);
+        //add to saved products after checking the auth
       }}
     >
       {!isSaved ? (

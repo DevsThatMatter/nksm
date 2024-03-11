@@ -88,5 +88,6 @@ export const sendComment = async (
     }
   } catch (error) {
     console.error("Error adding a comment:", error);
+    redirect("/login", RedirectType.push);
   }
 };
