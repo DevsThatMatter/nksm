@@ -1,3 +1,4 @@
+import { EdgeStoreProvider } from "@/app/utils/edgestore";
 import Navbar from "@/app/components/Navbar";
 import getIsSsrMobile from "../components/mobile-detect";
 import BottomNav from "../components/BottomNav";
