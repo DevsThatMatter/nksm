@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import { CategoryEnum } from "@/types";
 import { User } from "../models/user.model";
 import { Comments } from "../models/comments.model";
+import { SavedProduct } from "@/app/components/Navbar/SavedItems";
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -142,3 +143,42 @@ export const fetchProductDetails = async (productId: string) => {
     throw error;
   }
 };
+
+export async function fetchSavedProduct({ email }: { email: string }) {
+  try {
+    await connectToDB();
+    let res = await User.aggregate([
+      {
+        $match: {
+          Email: "user1@example.com",
+        },
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "Saved_Products",
+          foreignField: "_id",
+          as: "savedProducts",
+        },
+      },
+      {
+        $project: {
+          savedProducts: 1,
+          _id: 0,
+        },
+      },
+    ]);
+    const result = res[0] as { savedProducts: SavedProduct[] };
+    return {
+      content: result.savedProducts,
+      status: 200,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      content: null,
+      status: 500,
+      error: error,
+    };
+  }
+}

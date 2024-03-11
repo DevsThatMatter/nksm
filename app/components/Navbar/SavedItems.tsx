@@ -1,34 +1,28 @@
+"use client";
 import { Icons } from "@/app/utils/icons";
 import {
   Sheet,
   SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import { Button, buttonVariants } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
-import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 import Image from "next/image";
 import { User } from "@/lib/models/user.model";
-import { auth } from "@/auth";
-import mongoose, { Types, mongo } from "mongoose";
+import mongoose from "mongoose";
 
 import * as z from "zod";
 import { connectToDB } from "@/lib/database/mongoose";
 import Link from "next/link";
-import clsx from "clsx";
 import { cn } from "@/app/utils";
 import { CategoryEnum, ConditionEnum } from "@/types";
+import { useEffect, useState } from "react";
+import { fetchSavedProduct } from "@/lib/actions/fetchProduct.actions";
 
-const shema = z.object({
-  email: z.string().email(),
-});
-
-interface Product {
+export interface SavedProduct {
   _id: mongoose.Types.ObjectId;
   Images: string[];
   Category: CategoryEnum;
@@ -43,49 +37,35 @@ interface Product {
   expires_in: Date;
 }
 
-async function fetchSavedProduct({ email }: z.infer<typeof shema>) {
-  try {
-    await connectToDB();
-    let res = await User.aggregate([
-      {
-        $match: {
-          Email: "user1@example.com",
-        },
-      },
-      {
-        $lookup: {
-          from: "products",
-          localField: "Saved_Products",
-          foreignField: "_id",
-          as: "savedProducts",
-        },
-      },
-      {
-        $project: {
-          savedProducts: 1,
-          _id: 0,
-        },
-      },
-    ]);
-    const result = res[0] as { savedProducts: Product[] };
-    return {
-      content: result.savedProducts,
-      status: 200,
-      error: null,
-    };
-  } catch (error) {
-    return {
-      content: null,
-      status: 500,
-      error: error,
-    };
-  }
-}
+const shema = z.object({
+  email: z.string().email(),
+});
 
-export default async function SavedItems() {
-  const email = (await auth())?.user?.email ?? "";
+export default function SavedItems() {
+  const email = "user1@example.com";
+  // (await auth())?.user?.email ??
+  const [data, setData] = useState<SavedProduct[] | null>(null);
+  useEffect(() => {
+    async function fetchData() {
+      const data = await fetchSavedProduct({ email });
+      setData(data.content);
+    }
+    fetchData();
+  }, [email]);
 
-  const data = await fetchSavedProduct({ email });
+  const renderConditionIcon = (condition: ConditionEnum | string) => {
+    switch (condition) {
+      case "Brand New":
+        return <Icons.new className="mr-1 h-3 w-3" />;
+      case "Like New":
+        return <Icons.likeNew className="mr-1 h-3 w-3" />;
+      case "Used":
+        return <Icons.used className="mr-1 h-3 w-3" />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -93,50 +73,64 @@ export default async function SavedItems() {
           <Icons.saved className="h-[1.4rem] w-[1.4rem]" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="ld:w-[40vw] flex w-screen flex-col items-start sm:w-[40vw] md:w-[60vw]">
-        <SheetHeader className="justify-start">
+      <SheetContent className="w-full sm:max-w-sm md:max-w-md">
+        <SheetHeader className="mb-6">
           <SheetTitle>Saved Products</SheetTitle>
           <SheetDescription>Manage your saved products</SheetDescription>
         </SheetHeader>
-        {data.content?.map((product, i) => (
-          <Card key={i} className="w-full">
-            <CardContent className="flex-1 p-2">
-              <div className="flex space-x-5 p-4">
-                <Image
-                  width={200}
-                  height={200}
-                  alt="Product Image"
-                  className="h-16 w-16 rounded-lg object-cover"
-                  src={product.Images[0]}
-                />
-                <div className="flex flex-col">
-                  <h1 className="font-semibold">{product.Product_Name}</h1>
-                  <div className="flex items-center gap-2 gap-x-5">
-                    <div className="text-body font-semibold">
-                      {"₹ "}
-                      {product.Price}
+        {data?.map((product, id) => (
+          <div key={id}>
+            <Link href={`/product/${String(product._id)}`}>
+              <div
+                className={cn(
+                  " w-full cursor-pointer border-b-2",
+                  id === 0 && "border-t-2",
+                )}
+              >
+                <div className="flex space-x-4 p-2">
+                  <Image
+                    width={200}
+                    height={200}
+                    alt="Product Image"
+                    className="h-16 w-16 rounded-lg object-cover"
+                    src={product.Images[0]}
+                  />
+                  <div className="ml-2 flex flex-grow flex-col">
+                    <div className="flex items-center justify-between">
+                      <h1 className="font-semibold">{product.Product_Name}</h1>
+                      <h1 className="font-semibold">
+                        {"₹ "}
+                        {product.Price}
+                      </h1>
                     </div>
-                    {!product.Negotiable && (
-                      <Badge className="flex items-center justify-center  rounded-full bg-blue-400 text-white">
-                        Negotiable
-                      </Badge>
-                    )}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <p className="my-1 flex items-center justify-center rounded-2xl border border-muted-foreground p-1 text-xs text-foreground">
+                          {renderConditionIcon(product.Condition)}
+                          {product.Condition}
+                        </p>
+                        <p
+                          className={`m-1 flex items-center justify-center rounded-3xl p-1 text-xs ${
+                            product.Negotiable
+                              ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-green-800"
+                              : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-sky-900"
+                          }`}
+                        >
+                          {product.Negotiable ? "Negotiable" : "Not Negotiable"}
+                        </p>
+                      </div>
+                      <Button
+                        size="icon"
+                        className="h-6 w-10 bg-red-300 text-foreground hover:bg-red-400"
+                      >
+                        <Icons.delete className="text-red-700" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
-              <SheetFooter>
-                <Link
-                  href={`/product/${String(product._id)}`}
-                  className={cn(
-                    buttonVariants({ variant: "outline" }),
-                    "w-full rounded-full border border-gray-200 dark:border-gray-800",
-                  )}
-                >
-                  <SheetClose className=" w-full">View product</SheetClose>
-                </Link>
-              </SheetFooter>
-            </CardContent>
-          </Card>
+            </Link>
+          </div>
         ))}
       </SheetContent>
     </Sheet>

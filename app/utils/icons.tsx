@@ -15,6 +15,7 @@ import {
   StarIcon,
   UpdateIcon,
   Cross1Icon,
+  TrashIcon,
 } from "@radix-ui/react-icons";
 
 export const Icons = {
@@ -34,4 +35,5 @@ export const Icons = {
   likeNew: StarIcon,
   used: UpdateIcon,
   cross: Cross1Icon,
+  delete: TrashIcon,
 };
