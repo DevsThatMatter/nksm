@@ -13,9 +13,9 @@ const WishlistTab = () => {
             <div className="flex items-center space-x-4">
               <Image
                 alt="Wishlist product image"
-                className="aspect-square h-24 w-24 rounded-md bg-gray-200 object-cover"
+                className="aspect-square h-24 w-24 rounded-md bg-gray-200 object-contain"
                 height="100"
-                src="/placeholder.svg"
+                src="/logon.svg"
                 width="100"
               />
               <div>

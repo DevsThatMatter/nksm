@@ -2,8 +2,10 @@ import { Tabs } from "@/app/components/ui/tabs";
 import Link from "next/link";
 
 import AccountTab from "@/app/components/AccountTab";
+import { auth } from "@/auth";
 
-export default function Component() {
+export default async function Component() {
+  const userData = (await auth())?.user;
   return (
     <div className="h-screen w-screen">
       <div className="w-full rounded-lg p-8 shadow ">
@@ -38,7 +40,7 @@ export default function Component() {
             </nav>
           </div>
           <div className="mt-6 pt-4">
-            <AccountTab />
+            <AccountTab userData={userData} />
           </div>
         </Tabs>
       </div>
