@@ -10,13 +10,13 @@ const AddListingPreview = (
     <Card>
       <CardContent className="relative flex items-start gap-6 p-6 @container">
         <div className="">
-          {/* <Image
+          <Image
             alt="Product Image"
             className="aspect-square overflow-hidden rounded-lg border border-gray-200 object-cover dark:border-gray-800"
             height={200}
             src={previewData.images.length > 0 ? previewData.images[0] : ""}
             width={200}
-          /> */}
+          />
         </div>
         <div className="grid gap-2 text-base">
           <h2 className="line-clamp-2 max-w-48 overflow-ellipsis font-extrabold leading-tight md:text-xl">
