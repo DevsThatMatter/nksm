@@ -1,5 +1,5 @@
 "use server";
-import { permanentRedirect } from "next/navigation";
+import { RedirectType, redirect } from "next/navigation";
 import { connectToDB } from "../database/mongoose";
 import { Product } from "../models/product.model";
 import { User } from "../models/user.model";
@@ -17,8 +17,7 @@ type formData = {
 }; // to be updated to use zod schema when toggle is added
 export async function addProductFromListing(values: formData) {
   const id = await update(values);
-  console.log(id);
-  permanentRedirect(`/product/${id}`);
+  redirect("/product/" + id, RedirectType.replace);
 }
 
 async function update(values: formData) {
@@ -32,9 +31,7 @@ async function update(values: formData) {
       Product_Name: values.iname,
       Description: values.description,
       Price: values.price,
-      Images: [
-        "https://img.freepik.com/free-vector/beauty-skin-care-background_52683-728.jpg?t=st=1709385459~exp=1709389059~hmac=183b3e043104f8b588aad1a901df1079015dc73367f17d9cdda3f55d19401e11&w=996",
-      ],
+      Images: values.images,
       Condition: values.condition,
       Category: values.category,
       Negotiable: values.negotiate,
