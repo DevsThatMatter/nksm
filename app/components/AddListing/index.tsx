@@ -31,12 +31,13 @@ import { Card, CardContent } from "../ui/card";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import AddListingPreview from "./AddListingPreview";
 import { addProductFromListing } from "@/lib/actions/add-listing.action";
+import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 
 export type PreviewInputs = z.infer<typeof FormDataSchema>;
 
 export function AddListing() {
   const [currentStep, setCurrentStep] = useState<number>(1);
-  let previewData = null;
   const form = useForm<
     Omit<PreviewInputs, "price"> & { price: number | string },
     void,
@@ -55,10 +56,6 @@ export function AddListing() {
     },
     mode: "onBlur",
   });
-
-  function handleReset() {
-    form.reset();
-  }
   type FieldName = keyof PreviewInputs;
   const field = [
     ["iname", "description"],
@@ -95,7 +92,7 @@ export function AddListing() {
       negotiate,
     } = data;
     console.log("gsddsfg");
-    await addProductFromListing({
+    const id = await addProductFromListing({
       iname,
       quantity,
       category,
