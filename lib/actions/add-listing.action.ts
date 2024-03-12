@@ -1,5 +1,5 @@
 "use server";
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import { connectToDB } from "../database/mongoose";
 import { Product } from "../models/product.model";
 import { User } from "../models/user.model";
@@ -18,7 +18,7 @@ type formData = {
 export async function addProductFromListing(values: formData) {
   const id = await update(values);
   console.log(id);
-  redirect(`/product/${id}`);
+  permanentRedirect(`/product/${id}`);
 }
 
 async function update(values: formData) {

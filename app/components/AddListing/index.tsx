@@ -53,6 +53,7 @@ export function AddListing() {
       images: [],
       negotiate: "Yes",
     },
+    mode: "onBlur",
   });
 
   function handleReset() {
@@ -127,6 +128,33 @@ export function AddListing() {
       return newFileStates;
     });
   }
+  const uploadFiles = async (addedFiles: FileState[]) => {
+    return await Promise.all(
+      addedFiles.map(async (addedFileState) => {
+        try {
+          console.log(addedFileState);
+          const res = await edgestore.publicImages.upload({
+            file: addedFileState.file as File,
+            input: { category: "profile" },
+            options: { temporary: true },
+            onProgressChange: async (progress) => {
+              updateFileProgress(addedFileState.key, progress);
+              if (progress === 100) {
+                // wait 1 second to set it to complete
+                // so that the user can see the progress bar at 100%
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+                updateFileProgress(addedFileState.key, "COMPLETE");
+              }
+            },
+          });
+          console.log(res);
+          return res.url;
+        } catch (err) {
+          updateFileProgress(addedFileState.key, "ERROR");
+        }
+      }),
+    );
+  };
   return (
     <>
       <DialogHeader>
@@ -226,7 +254,9 @@ export function AddListing() {
                 />
               </div>
             </div>
-          ) : currentStep === 3 ? (
+          ) : currentStep === 4 ? (
+            <AddListingPreview {...form.getValues()} />
+          ) : (
             <>
               <div className="col-span-2 mb-2">
                 <div className="mb-2 grid grid-cols-3 gap-x-3">
@@ -319,45 +349,14 @@ export function AddListing() {
                             setFileStates(files);
                           }}
                           onFilesAdded={async (addedFiles) => {
+                            setCurrentStep(9);
                             setFileStates([...fileStates, ...addedFiles]);
-                            await Promise.all(
-                              addedFiles.map(async (addedFileState) => {
-                                try {
-                                  console.log(addedFileState);
-                                  const res =
-                                    await edgestore.publicImages.upload({
-                                      file: addedFileState.file as File,
-                                      input: { category: "profile" },
-                                      options: { temporary: true },
-                                      onProgressChange: async (progress) => {
-                                        updateFileProgress(
-                                          addedFileState.key,
-                                          progress,
-                                        );
-                                        if (progress === 100) {
-                                          // wait 1 second to set it to complete
-                                          // so that the user can see the progress bar at 100%
-                                          await new Promise((resolve) =>
-                                            setTimeout(resolve, 1000),
-                                          );
-                                          updateFileProgress(
-                                            addedFileState.key,
-                                            "COMPLETE",
-                                          );
-                                        }
-                                      },
-                                    });
-                                  console.log(res);
-                                  field.onChange([...field.value, res.url]);
-                                  console.log(field.value);
-                                } catch (err) {
-                                  updateFileProgress(
-                                    addedFileState.key,
-                                    "ERROR",
-                                  );
-                                }
-                              }),
-                            );
+                            field.onChange([
+                              ...field.value,
+                              ...(await uploadFiles(addedFiles)),
+                            ]);
+                            setCurrentStep(3);
+                            console.log("hsdfj");
                           }}
                         />
                       </FormControl>
@@ -367,10 +366,6 @@ export function AddListing() {
                 />
               </div>
             </>
-          ) : currentStep === 4 ? (
-            <AddListingPreview {...form.getValues()} />
-          ) : (
-            <p>How did you!!!???</p>
           )}
         </form>
       </Form>
