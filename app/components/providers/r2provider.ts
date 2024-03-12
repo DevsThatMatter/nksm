@@ -66,6 +66,7 @@ export function AWSProvider(options?: AWSProviderOptions): Provider {
       "AWSProvider: accessKeyId, secretAccessKey, bucketName and region are required",
     );
   }
+  const pubUrl = process.env.EDGE_STORE_PUB_URL!;
   const credentials = {
     accessKeyId,
     secretAccessKey,
@@ -127,7 +128,7 @@ export function AWSProvider(options?: AWSProviderOptions): Provider {
         expiresIn: 60 * 60, // 1 hour
       });
 
-      const url = `${baseUrl}/${accessPath}`;
+      const url = `${pubUrl}/${accessPath}`;
       return {
         uploadUrl: signedUrl,
         accessUrl: url,
