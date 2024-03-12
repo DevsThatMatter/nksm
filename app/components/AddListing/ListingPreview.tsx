@@ -50,21 +50,21 @@ const ListingPreview = ({
       condition,
       userId: userId,
     });
-    if (res.success) {
-      toast({
-        title: res.message,
-        description: "Your product has been added to the marketplace",
-      });
-      setTimeout(() => {
-        router.push(`/product/${res.id}`);
-      }, 1000);
-    } else {
-      toast({
-        title: "Error",
-        description: res.message,
-        variant: "destructive",
-      });
-    }
+    // if (res.success) {
+    //   toast({
+    //     title: res.message,
+    //     description: "Your product has been added to the marketplace",
+    //   });
+    //   setTimeout(() => {
+    //     router.push(`/product/${res.id}`);
+    //   }, 1000);
+    // } else {
+    //   toast({
+    //     title: "Error",
+    //     description: res.message,
+    //     variant: "destructive",
+    //   });
+    // }
   }
   return (
     <>

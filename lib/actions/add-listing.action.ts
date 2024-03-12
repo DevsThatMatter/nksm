@@ -23,6 +23,7 @@ export async function addProductFromListing(values: formData) {
 
 async function update(values: formData) {
   try {
+    console.log("hi");
     await connectToDB();
     const userObj = await auth();
     if (!userObj?.user) {
