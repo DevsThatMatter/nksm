@@ -9,14 +9,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 
-const indianPhoneRegex: RegExp = /^[6-9]\d{9}$/;
+const indianPhoneRegex: RegExp = /^(?:[6-9]\d{9})?$/;
 
 const schema = z.object({
   name: z
     .string()
     .min(3, "Name must contain atleast 3 characters.")
     .max(30, "Name can only contain a maximum of 30 letters."),
-  phone: z.string().regex(indianPhoneRegex, "Enter a valid mobile number."),
+  phone: z
+    .string()
+    .regex(indianPhoneRegex, "Enter a valid mobile number.")
+    .optional()
+    .or(z.literal("")),
 });
 
 type FormFields = z.infer<typeof schema>;
@@ -40,9 +44,15 @@ export default function AccountTab({
     resolver: zodResolver(schema),
   });
 
-  const sendData: SubmitHandler<FormFields> = (data) => console.log(data);
+  const sendData: SubmitHandler<FormFields> = (data) => {
+    if (errors.name || errors.phone) setisEditing(true);
+    else {
+      isEditing && console.log(data);
+      setisEditing(!isEditing);
+    }
+  };
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-start">
         <div className="flex h-[4.5rem] w-[4.5rem] items-center justify-center sm:h-16 sm:w-16">
           <Image
@@ -67,8 +77,8 @@ export default function AccountTab({
       >
         <Input
           {...register("name")}
-          className="w-4/5 sm:lg:w-1/3"
-          placeholder="First Name"
+          className={`w-4/5 sm:lg:w-1/3 ${errors.name && "ring-2 !ring-red-500"}`}
+          placeholder="Full Name"
           type="text"
           disabled={!isEditing}
         />
@@ -86,7 +96,7 @@ export default function AccountTab({
 
         <Input
           {...register("phone")}
-          className="w-4/5 sm:lg:w-1/3"
+          className={`w-4/5 sm:lg:w-1/3 ${errors.phone && "ring-2 !ring-red-500"}`}
           placeholder="Add a phone number"
           type="text"
           disabled={!isEditing}
@@ -96,10 +106,9 @@ export default function AccountTab({
         )}
 
         <Button
-          type={isEditing ? "button" : "submit"}
+          type="submit"
           className="mt-5 w-4/5 place-self-center sm:place-self-start sm:lg:w-1/3"
           variant="secondary"
-          onClick={() => setisEditing(!isEditing)}
         >
           {!isEditing ? "Edit" : "Save"} Profile
         </Button>
