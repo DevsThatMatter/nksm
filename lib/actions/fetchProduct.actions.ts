@@ -66,8 +66,8 @@ export const getSearchResults = async ({
     const query: FilterQuery<typeof Product> = category
       ? { Category: category, is_archived: false }
       : {
-          is_archived: false,
-        };
+        is_archived: false,
+      };
 
     if (searchString.trim() !== "") {
       query.$or = [
@@ -118,7 +118,7 @@ export const fetchProductDetails = async (productId: string) => {
     const productDetails = await Product.findById(productId).populate({
       path: "Seller",
       model: User,
-      select: "_id Username Phone_Number Avatar Name",
+      select: "_id Username Phone_Number Avatar Name Email",
     });
     // console.log("pOFSODGSAGASDG:", productDetails);
     if (!productDetails) {

@@ -11,6 +11,7 @@ import { Carousel, CarouselContent } from "../ui/carousel";
 import { EmblaOptionsType } from "embla-carousel";
 
 const ProductPage = ({ productInfo }: { productInfo: Product }) => {
+  console.log("product info => ", productInfo)
   const options: EmblaOptionsType = { loop: true, align: "center" };
   return (
     <div key="1" className="mx-auto max-w-full p-4">
@@ -35,7 +36,7 @@ const ProductPage = ({ productInfo }: { productInfo: Product }) => {
         </div>
         <div className="col-span-1">
           <div className="sticky top-[6.3rem] mt-2">
-            <SellerCard sellerInfo={productInfo.Seller} />
+            <SellerCard sellerInfo={productInfo.Seller} productName={productInfo.Product_Name} productImage={productInfo.Images[0]} productId={productInfo._id} />
             <CommentCard productId={productInfo._id} />
           </div>
         </div>
