@@ -17,6 +17,7 @@ export default function Component() {
             className="-mb-px flex justify-center space-x-8 text-center sm:justify-start"
           >
             <Link
+              prefetch
               aria-current="page"
               className="whitespace-nowrap border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
               href="/account"
@@ -24,12 +25,14 @@ export default function Component() {
               Account Info
             </Link>
             <Link
+              prefetch
               className="whitespace-nowrap border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
               href="/orderhistory"
             >
               Order History
             </Link>
             <Link
+              prefetch
               className="whitespace-nowrap border-b-2 border-blue-500 px-1 py-4 text-sm font-medium text-blue-600"
               href="#"
             >

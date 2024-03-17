@@ -22,18 +22,21 @@ export default async function Component() {
                 aria-current="page"
                 className="whitespace-nowrap border-b-2 border-blue-500 px-1 py-4 text-sm font-medium text-blue-600"
                 href=""
+                prefetch
               >
                 Account Info
               </Link>
               <Link
                 className="whitespace-nowrap border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
                 href="/orderhistory"
+                prefetch
               >
                 Order History
               </Link>
               <Link
                 className="whitespace-nowrap border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
                 href="/wishlist"
+                prefetch
               >
                 Wishlist
               </Link>
