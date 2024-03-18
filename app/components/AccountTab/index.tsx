@@ -52,8 +52,8 @@ export default function AccountTab({
     }
   };
   return (
-    <div className="relative mt-10 flex w-4/5 flex-col rounded-xl bg-[#16213E] p-6 sm:w-3/5">
-      <div className="relative">
+    <div className="mt-10 flex w-11/12 scale-100 flex-col rounded-xl bg-[#16213E] p-6 sm:w-3/5">
+      <div>
         <div className="relative -top-14 flex flex-col items-center justify-center gap-4">
           <div className="flex h-[5.5rem] w-[5.5rem] items-center justify-center sm:h-[6rem] sm:w-[6rem]">
             <Image
@@ -65,7 +65,7 @@ export default function AccountTab({
               alt="Profile picture"
               width={100}
               height={100}
-              className=" rounded-full shadow-[0_6px_25px_-5px_rgba(0,0,0,0.3)] shadow-black md:h-full md:w-full"
+              className=" rounded-full shadow-[0_7px_25px_-3px_rgba(0,0,0,0.3)] shadow-black md:h-full md:w-full"
             />
           </div>
           <Button
@@ -77,7 +77,7 @@ export default function AccountTab({
         </div>
         <form
           onSubmit={handleSubmit(sendData)}
-          className="relative flex flex-col items-center justify-center gap-5 *:text-center *:text-base sm:items-start sm:px-0 sm:*:text-start"
+          className="relative flex flex-col items-center justify-center gap-4 *:text-center *:text-base sm:items-start sm:px-0 sm:*:text-start"
         >
           <Input
             {...register("name")}
