@@ -42,7 +42,7 @@ export default async function Component() {
               </Link>
             </nav>
           </div>
-          <div className="mt-6 pt-4">
+          <div className="mt-6 flex justify-center pt-4">
             <AccountTab userData={userData} />
           </div>
         </Tabs>

@@ -52,67 +52,72 @@ export default function AccountTab({
     }
   };
   return (
-    <div className="space-y-7">
-      <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-start">
-        <div className="flex h-[4.5rem] w-[4.5rem] items-center justify-center sm:h-16 sm:w-16">
-          <Image
-            src={
-              userData
-                ? userData?.image!
-                : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-            }
-            alt="Profile picture"
-            width={100}
-            height={100}
-            className="rounded-full md:h-full md:w-full"
-          />
+    <div className="relative mt-10 flex w-4/5 flex-col rounded-xl bg-[#16213E] p-6 sm:w-3/5">
+      <div className="relative">
+        <div className="relative -top-14 flex flex-col items-center justify-center gap-4">
+          <div className="flex h-[5.5rem] w-[5.5rem] items-center justify-center sm:h-[6rem] sm:w-[6rem]">
+            <Image
+              src={
+                userData
+                  ? userData?.image!
+                  : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+              }
+              alt="Profile picture"
+              width={100}
+              height={100}
+              className=" rounded-full shadow-[0_6px_25px_-5px_rgba(0,0,0,0.3)] shadow-black md:h-full md:w-full"
+            />
+          </div>
+          <Button
+            className={` ${isEditing ? "block" : "hidden"} ml-0 mt-2 sm:ml-1 sm:mt-2`}
+            variant="secondary"
+          >
+            Change
+          </Button>
         </div>
-        <Button className="ml-0 mt-2 sm:ml-1 sm:mt-0" variant="secondary">
-          Change
-        </Button>
-      </div>
-      <form
-        onSubmit={handleSubmit(sendData)}
-        className="flex flex-col items-center justify-center gap-5 sm:items-start sm:px-0"
-      >
-        <Input
-          {...register("name")}
-          className={`w-4/5 sm:lg:w-1/3 ${errors.name && "ring-2 !ring-red-500"}`}
-          placeholder="Full Name"
-          type="text"
-          disabled={!isEditing}
-        />
-        {errors.name && (
-          <div className="text-red-500">{errors.name.message}</div>
-        )}
-
-        <Input
-          className="w-4/5 sm:lg:w-1/3"
-          placeholder="Email"
-          type="email"
-          value={userData?.email?.trim()}
-          disabled
-        />
-
-        <Input
-          {...register("phone")}
-          className={`w-4/5 sm:lg:w-1/3 ${errors.phone && "ring-2 !ring-red-500"}`}
-          placeholder="Add a phone number"
-          type="text"
-          disabled={!isEditing}
-        />
-        {errors.phone && (
-          <div className="text-red-500">{errors.phone.message}</div>
-        )}
-
-        <Button
-          type="submit"
-          className="mt-5 w-4/5 place-self-center sm:place-self-start sm:lg:w-1/3"
-          variant="secondary"
+        <form
+          onSubmit={handleSubmit(sendData)}
+          className="relative flex flex-col items-center justify-center gap-5 *:text-center *:text-base sm:items-start sm:px-0 sm:*:text-start"
         >
-          {!isEditing ? "Edit" : "Save"} Profile
-        </Button>
-      </form>
+          <Input
+            {...register("name")}
+            className={`w-full ${!isEditing && "border-0"} sm:lg:w-3/5 ${errors.name && "ring-2 ring-red-500"}`}
+            placeholder="Full Name"
+            type="text"
+            disabled={!isEditing}
+          />
+          {errors.name && (
+            <div className="text-red-500">{errors.name.message}</div>
+          )}
+
+          <Input
+            className={`${!isEditing && "border-0"} w-full sm:lg:w-3/5`}
+            placeholder="Email"
+            type="email"
+            value={userData?.email?.trim()}
+            disabled
+          />
+
+          <Input
+            {...register("phone")}
+            className={`w-full  ${!isEditing && "border-0"} sm:lg:w-3/5 ${errors.phone && "ring-2 ring-red-500"}`}
+            placeholder="Add a phone number"
+            type="text"
+            disabled={!isEditing}
+          />
+          {errors.phone && (
+            <div className="text-red-500">{errors.phone.message}</div>
+          )}
+
+          <Button
+            type="submit"
+            className="mt-5 w-full place-self-center sm:place-self-start"
+            variant="outline"
+          >
+            {!isEditing ? "Edit" : "Save"} Profile
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }
