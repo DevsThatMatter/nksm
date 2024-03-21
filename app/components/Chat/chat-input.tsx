@@ -118,30 +118,30 @@ export default function ChatInput({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSend)} className="flex max-w-full">
+      <form
+        onSubmit={form.handleSubmit(onSend)}
+        className="flex max-w-full rounded-md border-none bg-gray-200 p-1"
+      >
         <FormItem>
           <FormControl>
-            <div className="flex flex-1">
-              <div className="flex max-w-[97%] justify-between rounded-md border p-1 dark:bg-gray-900">
+            <div className="flex flex-1 ">
+              <div className="flex max-w-[97%] justify-between rounded-md p-1 dark:bg-gray-900">
                 <Input
                   disabled={isLoading}
-                  className="w-full resize-none border-none text-foreground placeholder:text-accent-foreground focus-visible:ring-0 focus-visible:ring-offset-0" // Add the 'resize-none' class
+                  className="w-full resize-none text-foreground placeholder:text-accent-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
                   placeholder="Type a message"
-                  style={{ height: "auto", overflow: "hidden" }}
                   {...form.register("content")}
                 />
 
                 <Dialog>
                   <DialogTrigger asChild disabled={gLockedStatus}>
-                    <button type="button" className="focus:outline-none">
-                      <Button
-                        disabled={gLockedStatus}
-                        type="button"
-                        className="bg-blue-600 text-white transition-colors fade-out-0 hover:bg-blue-800"
-                      >
-                        Lock Deal
-                      </Button>
-                    </button>
+                    <Button
+                      disabled={gLockedStatus}
+                      type="button"
+                      className="bg-blue-600 text-white transition-colors fade-out-0 hover:bg-blue-800"
+                    >
+                      Lock Deal
+                    </Button>
                   </DialogTrigger>
                   <DialogContent className="overflow-hidden rounded-lg bg-white shadow-lg">
                     <DialogHeader className="mt-4 rounded-md bg-blue-600 px-4 py-3 text-white">
@@ -161,7 +161,7 @@ export default function ChatInput({
                         one
                       </h1>
                     </DialogDescription>
-                    <div className="flex justify-end px-6 py-4">
+                    <div className="flex justify-end px-6 py-2">
                       <DialogClose asChild>
                         <Button
                           type="button"
@@ -187,7 +187,7 @@ export default function ChatInput({
         </FormItem>
         {(
           <button type="submit">
-            <Icons.sendIcon className="h-9 w-9 transform cursor-pointer rounded-full bg-blue-200 p-2 text-blue-500 transition-transform  hover:scale-105 dark:bg-blue-300 dark:text-blue-700" />{" "}
+            <Icons.sendIcon className="h-9 w-9 transform cursor-pointer rounded-full p-2 transition-transform  hover:bg-gray-300" />{" "}
           </button>
         ) || (
           <Skeleton

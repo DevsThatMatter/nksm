@@ -17,9 +17,10 @@ import { getAllChats, getUserId } from "@/lib/actions/chat.actions";
 import ProductPanel from "./product-panel";
 import UserUnauthorized from "./user-unauthorized";
 import useChatStore from "../../../hooks/useChatStore";
-import BuyerInvites from "./buyer-invites";
+import BuyerInvites from "./invites";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function UserChat() {
   const { data: session } = useSession();
@@ -79,7 +80,6 @@ export default function UserChat() {
         },
         sellerDetails: { id: "" },
         buyerDetails: { id: "" },
-        globalLockedStatus: false,
       });
     } else if (tab === "buyer") {
       createChat({
@@ -92,7 +92,6 @@ export default function UserChat() {
         },
         sellerDetails: { id: "" },
         buyerDetails: { id: "" },
-        globalLockedStatus: false,
       });
     }
   };
@@ -113,7 +112,6 @@ export default function UserChat() {
         },
         sellerDetails: { id: "" },
         buyerDetails: { id: "" },
-        globalLockedStatus: false,
       });
     } catch (error) {
       console.error(error);
@@ -128,7 +126,7 @@ export default function UserChat() {
             <Icons.chaticon className="h-[1.3rem] w-[1.32rem]" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-screen sm:w-[60vw]  lg:w-[30vw]">
+        <SheetContent side="left" className="w-[90vw] sm:w-[60vw]  lg:w-[30vw]">
           <SheetHeader className="flex justify-between">
             {(discussions.length === 0 ||
               activeTab === "buyer" ||
@@ -159,7 +157,7 @@ export default function UserChat() {
                     As Buyer
                   </TabsTrigger>
                   <TabsTrigger
-                    value="Buyer Invites"
+                    value="Invites"
                     className={clsx(
                       "rounded-lg p-0.5",
                       activeTab === "invites" &&
@@ -167,7 +165,7 @@ export default function UserChat() {
                     )}
                     onClick={() => handleTabChange("invites")}
                   >
-                    Buyer Invites
+                    Invites
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
@@ -201,35 +199,46 @@ export default function UserChat() {
                   ([productId, discussions], idx) => (
                     <div
                       key={idx}
-                      className="cursor-pointer rounded-lg border border-b-transparent p-4 shadow-md hover:border-b-2 hover:border-b-gray-300 dark:shadow-gray-700 "
+                      className="cursor-pointer rounded-lg border border-b-gray-300 border-b-transparent p-2 shadow-md  hover:border-b-2 hover:border-b-gray-400 dark:shadow-gray-700 "
                       onClick={() => handleSetChat(discussions)}
                     >
-                      <div key={discussions[0].sellerDetails.Phone_Number}>
+                      <div
+                        key={discussions[0].sellerDetails.Phone_Number}
+                        className="flex space-x-4"
+                      >
+                        <div className="relative h-20 w-20">
+                          <Image
+                            src={discussions[0].productDetails.Images[0]}
+                            alt="product image"
+                            fill
+                            className="rounded-md"
+                          />
+                        </div>
                         <div>
                           <h1 className="mb-2 text-xl font-bold text-black dark:text-white">
                             {discussions[0].productDetails.Product_Name}
                           </h1>
-                        </div>
-                        <div className="flex flex-col">
-                          {discussions.map(
-                            (dis: chatDetails, idx: number) =>
-                              idx < 1 && (
-                                <div
-                                  key={idx}
-                                  className="text-sm text-gray-700 dark:text-gray-100"
-                                >
-                                  Buyers:{" "}
-                                  {dis.buyerDetails.First_Name +
-                                    " " +
-                                    dis.buyerDetails.Last_Name}
-                                </div>
-                              ),
-                          )}
-                          {discussions.length > 1 && (
-                            <div className="text-sm text-gray-700">
-                              ...{discussions.length - 1}more
-                            </div>
-                          )}
+                          <div className="flex flex-col">
+                            {discussions.map(
+                              (dis: chatDetails, idx: number) =>
+                                idx < 1 && (
+                                  <div
+                                    key={idx}
+                                    className="text-sm text-gray-700 dark:text-gray-100"
+                                  >
+                                    Buyers:{" "}
+                                    {dis.buyerDetails.First_Name +
+                                      " " +
+                                      dis.buyerDetails.Last_Name}
+                                  </div>
+                                ),
+                            )}
+                            {discussions.length > 1 && (
+                              <div className="text-sm text-gray-700">
+                                ...{discussions.length - 1}more
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>

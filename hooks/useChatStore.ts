@@ -15,10 +15,8 @@ interface ChatState {
   buyerDetails: {
     id: string;
   };
-  globalLockedStatus: boolean;
   createChat: (to: {
     discussions: chatDetails[];
-    globalLockedStatus: boolean;
     otherUserDetails: {
       id: string;
       name: string;
@@ -35,12 +33,10 @@ interface ChatState {
   removeChat: (caller: "productPanel" | "chatPanel" | "chatUi") => void;
   createSeller: (sellerId: string) => void;
   createBuyer: (buyerId: string) => void;
-  createLockedStatus: (status: boolean) => void;
 }
 
 const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
   discussions: [],
-  globalLockedStatus: false,
   otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "", avatar: "" },
   sellerDetails: { id: "" },
   buyerDetails: { id: "" },
@@ -90,7 +86,6 @@ const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
             otherUserPhoneNumber: "",
             avatar: "",
           },
-          globalLockedStatus: false,
         };
       }
       return state;
@@ -108,11 +103,6 @@ const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
       buyerDetails: {
         id: buyerId,
       },
-    })),
-  createLockedStatus: (status: boolean) =>
-    set((state) => ({
-      ...state,
-      globalLockedStatus: status,
     })),
 });
 

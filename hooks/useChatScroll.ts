@@ -20,7 +20,9 @@ export function useChatScroll({
     const topDiv = topRef?.current;
     function handelScroll() {
       const scrollTop = topDiv?.scrollTop;
+      // console.log("calling handel scroll => ", "scrollTop => ", scrollTop, "shouldLoadMore => ", shouldLoadMore)
       if (scrollTop === 0 && shouldLoadMore) {
+        // console.log("calling the fetch next")
         loadMore();
       }
     }

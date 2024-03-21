@@ -1,7 +1,6 @@
 "use client";
 import { Fragment, useRef, ElementRef, useEffect, useState } from "react";
 import ChatInput from "./chat-input";
-import clsx from "clsx";
 import { useChatQuery } from "@/hooks/useChatQuery";
 import { useChatScroll } from "@/hooks/useChatScroll";
 import useChatStore from "@/hooks/useChatStore";
@@ -39,8 +38,7 @@ export default function ChatUI({
   const addKey = `chat${productId}productId${productId}sellerId${sellerId}buyerId${buyerId}add`;
   const updateKey = `chat${productId}productId${productId}sellerId${sellerId}buyerId${buyerId}update`;
 
-  const { createLockedStatus, otherUserDetails, createChat, removeChat } =
-    useChatStore();
+  const { otherUserDetails, createChat, removeChat } = useChatStore();
 
   const topRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
@@ -68,8 +66,7 @@ export default function ChatUI({
       status: data?.pages?.[0].content?.Locked ?? false,
       accepted: "pending",
     });
-    createLockedStatus(data?.pages?.[0].content?.Locked ?? false);
-  }, [createLockedStatus, data]);
+  }, [data]);
 
   useEffect(() => {
     pusherClient.subscribe(addKey);
@@ -104,11 +101,17 @@ export default function ChatUI({
     };
   }, [addKey, updateKey, productId, sellerId, buyerId, messages]);
 
+  console.log(
+    "isFetchingNextPage => ",
+    isFetchingNextPage,
+    "hasNextPage => ",
+    hasNextPage,
+  );
   useChatScroll({
     topRef,
     bottomRef,
     loadMore: fetchNextPage,
-    shouldLoadMore: !isFetchingNextPage && !!hasNextPage,
+    shouldLoadMore: !isFetchingNextPage && hasNextPage,
     count: messages.length,
   });
 
@@ -126,7 +129,6 @@ export default function ChatUI({
     });
     if (caller === "yes") {
       setLockedStatus({ accepted: "accepted", status: true });
-      createLockedStatus(true);
     } else {
       setLockedStatus({ accepted: "rejected", status: false });
     }
@@ -134,19 +136,19 @@ export default function ChatUI({
 
   const messageElements = document.querySelectorAll(".user-message-false");
 
-  useChatObserver({
-    unreadMessages: messageElements,
-    sellerId,
-    buyerId,
-    productId,
-    currentUserId,
-  });
+  // useChatObserver({
+  //   unreadMessages: messageElements,
+  //   sellerId,
+  //   buyerId,
+  //   productId,
+  //   currentUserId,
+  // });
 
   return (
     <section className="absolute flex h-[100vh] w-[88%] flex-col items-center">
       <div className="relative h-[90%] w-full rounded-md border ">
         {/* User display */}
-        <header className="user-display z-10  mb-2 flex items-center space-x-1 rounded-t-md py-3 pl-1 shadow-sm ">
+        <header className="user-display z-10 mb-2 flex items-center space-x-1 rounded-t-md py-3 pl-1 shadow-sm ">
           {otherUserDetails.id !== "" && (
             <button
               className="rounded-full"
@@ -158,7 +160,7 @@ export default function ChatUI({
                 }
               }}
             >
-              <Icons.moveback />
+              <Icons.moveback className="h-6 w-6" />
             </button>
           )}
           <Avatar>
@@ -171,21 +173,39 @@ export default function ChatUI({
         </header>
         {/* Messages */}
         <div
-          className={clsx(
-            "no-scrollbar mx-auto flex h-[70vh] max-w-md flex-1  flex-col overflow-y-auto px-2.5 pb-2",
+          ref={topRef}
+          className={cn(
+            "no-scrollbar mx-autoflex h-[72vh] max-w-md flex-1 flex-col-reverse overflow-y-auto px-2.5 pb-2",
           )}
         >
           {status === "pending" ? (
-            <div>Loading...</div>
+            <section className="flex flex-col space-y-3 ">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((val, _) => (
+                <div
+                  className={cn(
+                    "w-[70%] animate-pulse rounded-md bg-gray-300",
+                    val % 3 === 0 ? "mr-auto" : "ml-auto",
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "animate-pulse rounded-md bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300 text-white",
+                      val % 5 === 0 ? "h-16" : val % 6 === 0 ? "h-10" : "h-6",
+                    )}
+                  />
+                </div>
+              ))}
+            </section>
           ) : status === "error" ? (
             <div>Error: Something went wrong</div>
           ) : (
             <Fragment>
-              <div ref={topRef} />
               <section className="flex flex-col space-y-3">
                 {messages?.map((msg: MessageTypes, j: number) =>
                   msg.options ? (
                     <div
+                      key={j}
+                      id={msg.msgId}
                       className={cn(
                         "max-w-[80%] break-words rounded-lg p-3 shadow-md",
                         msg.accepted === "accepted"
@@ -194,6 +214,9 @@ export default function ChatUI({
                             ? "bg-red-100 text-red-500"
                             : "bg-[#dbe4fb]",
                         msg.Sender === currentUserId ? "ml-auto" : "mr-auto",
+                        msg.readStatus && msg.Sender !== currentUserId
+                          ? "user-message-true"
+                          : "user-message-false",
                       )}
                     >
                       {msg.accepted === "pending" &&
@@ -235,13 +258,16 @@ export default function ChatUI({
                     </div>
                   ) : (
                     <div
+                      key={j}
                       id={msg.msgId}
-                      className={clsx(
-                        `user-message-${msg.readStatus || msg.Sender === currentUserId ? "true" : "false"}`,
-                        "max-w-[80%] break-words rounded-t-xl px-4 py-3  font-medium",
+                      className={cn(
+                        !msg.readStatus && msg.Sender !== currentUserId
+                          ? "user-message-false"
+                          : "user-message-true",
+                        "max-w-[80%] break-words rounded-t-3xl px-4 py-3  font-medium",
                         currentUserId === msg.Sender
-                          ? "ml-auto rounded-l-xl rounded-tr-xl text-white"
-                          : "mr-auto rounded-r-xl rounded-br-xl text-black dark:text-white",
+                          ? "ml-auto rounded-l-3xl rounded-tr-3xl text-white"
+                          : "mr-auto rounded-r-3xl rounded-br-3xl text-black dark:text-white",
                         currentUserId === msg.Sender
                           ? "bg-blue-500"
                           : "bg-[#dbe4fb] dark:bg-slate-600",
@@ -252,7 +278,6 @@ export default function ChatUI({
                   ),
                 )}
               </section>
-
               <div ref={bottomRef} />
             </Fragment>
           )}

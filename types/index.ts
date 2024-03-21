@@ -1,4 +1,4 @@
-import { ObjectId, Types } from "mongoose";
+import mongoose, { ObjectId, Types } from "mongoose";
 
 export type category = {
   name: string;

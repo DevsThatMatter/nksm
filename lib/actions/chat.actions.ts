@@ -12,7 +12,7 @@ import { MessageTypes, IChat, chatDetails } from "@/types";
 import { Message } from "../models/message.model";
 import { client } from "../database/redis-config";
 import { pusherServer } from "../pusher";
-import { InviteStruct } from "@/app/components/Chat/buyer-invites";
+import { InviteStruct } from "@/app/components/Chat/invites";
 
 const mongoId = z.string().refine((value) => Types.ObjectId.isValid(value), {
   message: "Invalid ObjectId format",
@@ -28,7 +28,7 @@ export async function getUserId({ email }: z.infer<typeof GetUserIdSchema>) {
     const user = await User.findOne({ Email: email });
     const userId = user._id.toString();
     // for test return "65c5e97aafe71c6df760f715"
-    return userId;
+    return "65c5e97aafe71c6df760f715";
   } catch (error) {
     console.log("there was an error while fething user id");
     return undefined;
@@ -287,36 +287,84 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
         ProductId: new mongo.ObjectId(validatedProps.productId),
       },
       {
-        status: "stale",
+        $set: { status: "stale" },
       },
     );
 
-    await Chat.updateMany(
-      {
-        ProductId: new mongo.ObjectId(props.productId),
-      },
-      {
-        status: "stale",
-      },
-    );
+    if (validatedProps.caller === "yes") {
+      const messageIds = await Chat.aggregate([
+        {
+          $match: {
+            Seller: new mongo.ObjectId(validatedProps.seller),
+            Buyer: new mongo.ObjectId(validatedProps.buyer),
+            ProductId: new mongo.ObjectId(validatedProps.productId),
+          },
+        },
+        {
+          $lookup: {
+            from: "messages",
+            localField: "Messages",
+            foreignField: "_id",
+            as: "chatMessages",
+          },
+        },
+        {
+          $unwind: "$chatMessages",
+        },
+        {
+          $match: {
+            "chatMessages.accepted": "pending",
+          },
+        },
+        {
+          $group: {
+            _id: "$_id",
+            chatMessages: {
+              $push: "$chatMessages",
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            "chatMessages._id": 1,
+          },
+        },
+      ]);
 
-    const messageUpdateQuery = {
-      _id: new mongo.ObjectId(validatedProps.msgId),
-    };
+      for (const msg of messageIds) {
+        const updatedMessage = await Message.findOneAndUpdate(
+          {
+            _id: new mongo.ObjectId(msg.chatMessages._id),
+          },
+          { new: true },
+        );
+        const updateKey = `chat${validatedProps.productId}productId${validatedProps.productId}sellerId${validatedProps.seller}buyerId${validatedProps.buyer}update`;
+        await pusherServer.trigger(
+          updateKey,
+          "messages:update",
+          msg.chatMessages,
+        );
+      }
+    } else {
+      const messageUpdateQuery = {
+        _id: new mongo.ObjectId(validatedProps.msgId),
+      };
+      await Message.updateOne(messageUpdateQuery, {
+        $set: {
+          accepted: "rejected",
+        },
+      });
 
-    const res = await Message.updateOne(messageUpdateQuery, {
-      $set: {
-        accepted: validatedProps.caller === "yes" ? "accepted" : "rejected",
-      },
-    });
-    const updatedMessage = await Message.findOne({
-      _id: new mongo.ObjectId(validatedProps.msgId),
-    });
-    const updateKey = `chat${validatedProps.productId}productId${validatedProps.productId}sellerId${validatedProps.seller}buyerId${validatedProps.buyer}update`;
-    await pusherServer.trigger(updateKey, "messages:update", updatedMessage);
+      const updatedMessage = await Message.findOne({
+        _id: new mongo.ObjectId(validatedProps.msgId),
+      });
+      const updateKey = `chat${validatedProps.productId}productId${validatedProps.productId}sellerId${validatedProps.seller}buyerId${validatedProps.buyer}update`;
+      await pusherServer.trigger(updateKey, "messages:update", updatedMessage);
+    }
 
     return {
-      content: res,
+      content: "Deal locked successfully",
       error: null,
       status: 200,
     };
@@ -324,7 +372,7 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
     console.error("Error locking deal:", error);
     return {
       content: null,
-      error: error,
+      error: error || "An error occurred",
       status: 500,
     };
   }
@@ -337,97 +385,97 @@ const UnreadMessagesProps = z.object({
   currentUser: mongoId,
 });
 
-async function computeUnreadMessages(
-  props: z.infer<typeof UnreadMessagesProps>,
-): Promise<number> {
-  connectToDB();
-  const validatedProps = UnreadMessagesProps.parse(props);
+// async function computeUnreadMessages(
+//   props: z.infer<typeof UnreadMessagesProps>,
+// ): Promise<number> {
+//   connectToDB();
+//   const validatedProps = UnreadMessagesProps.parse(props);
 
-  const result = await Chat.aggregate([
-    {
-      $match: {
-        Seller: new mongo.ObjectId(validatedProps.sellerId),
-        Buyer: new mongo.ObjectId(validatedProps.buyerId),
-        ProductId: new mongo.ObjectId(validatedProps.productId),
-      },
-    },
-    {
-      $lookup: {
-        from: "messages",
-        localField: "Messages",
-        foreignField: "_id",
-        as: "Messages",
-      },
-    },
-    {
-      $project: {
-        unreadCount: {
-          $size: {
-            $filter: {
-              input: "$Messages",
-              as: "msg",
-              cond: {
-                $and: [
-                  { $eq: ["$$msg.readStatus", false] },
-                  { $ne: ["$$msg.Sender", validatedProps.currentUser] },
-                ],
-              },
-            },
-          },
-        },
-        _id: 0,
-      },
-    },
-  ]);
+//   const result = await Chat.aggregate([
+//     {
+//       $match: {
+//         Seller: new mongo.ObjectId(validatedProps.sellerId),
+//         Buyer: new mongo.ObjectId(validatedProps.buyerId),
+//         ProductId: new mongo.ObjectId(validatedProps.productId),
+//       },
+//     },
+//     {
+//       $lookup: {
+//         from: "messages",
+//         localField: "Messages",
+//         foreignField: "_id",
+//         as: "Messages",
+//       },
+//     },
+//     {
+//       $project: {
+//         unreadCount: {
+//           $size: {
+//             $filter: {
+//               input: "$Messages",
+//               as: "msg",
+//               cond: {
+//                 $and: [
+//                   { $eq: ["$$msg.readStatus", false] },
+//                   { $ne: ["$$msg.Sender", validatedProps.currentUser] },
+//                 ],
+//               },
+//             },
+//           },
+//         },
+//         _id: 0,
+//       },
+//     },
+//   ]);
 
-  const unreadCount = result.length > 0 ? result[0].unreadCount : 0;
+//   const unreadCount = result.length > 0 ? result[0].unreadCount : 0;
 
-  return unreadCount;
-}
+//   return unreadCount;
+// }
 
-export async function countUnreadMessages(
-  props: z.infer<typeof UnreadMessagesProps> & {
-    caller: "get" | "update";
-    messageId?: string;
-  },
-): Promise<number> {
-  const cacheKey = `unreadCount:${props.sellerId}-${props.buyerId}-${props.productId}`;
-  try {
-    let cachedValue = await new Promise<number>((resolve, reject) => {
-      client?.get(cacheKey, (err, reply) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(reply ? parseInt(reply, 10) : -1);
-      });
-    });
+// export async function countUnreadMessages(
+//   props: z.infer<typeof UnreadMessagesProps> & {
+//     caller: "get" | "update";
+//     messageId?: string;
+//   },
+// ): Promise<number> {
+//   const cacheKey = `unreadCount:${props.sellerId}-${props.buyerId}-${props.productId}`;
+//   try {
+//     let cachedValue = await new Promise<number>((resolve, reject) => {
+//       client?.get(cacheKey, (err, reply) => {
+//         if (err) {
+//           reject(err);
+//           return;
+//         }
+//         resolve(reply ? parseInt(reply, 10) : -1);
+//       });
+//     });
 
-    if (props.caller === "get") {
-      if (cachedValue !== -1) {
-        return cachedValue;
-      } else {
-        const unreadCount = await computeUnreadMessages(props);
-        client?.setex(cacheKey, 1800, unreadCount.toString());
-        return unreadCount;
-      }
-    } else {
-      if (cachedValue !== -1) {
-        cachedValue -= 1;
-        client?.setex(cacheKey, 1800, cachedValue);
-        return cachedValue;
-      } else {
-        const unreadCount = await computeUnreadMessages(props);
-        client?.setex(cacheKey, 1800, unreadCount.toString());
-        await Message.updateOne({ _id: props.messageId }, { readStatus: true });
-        return unreadCount;
-      }
-    }
-  } catch (error) {
-    console.error("Error counting unread messages:", error);
-    throw error;
-  }
-}
+//     if (props.caller === "get") {
+//       if (cachedValue !== -1) {
+//         return cachedValue;
+//       } else {
+//         const unreadCount = await computeUnreadMessages(props);
+//         client?.setex(cacheKey, 1800, unreadCount.toString());
+//         return unreadCount;
+//       }
+//     } else {
+//       if (cachedValue !== -1) {
+//         cachedValue -= 1;
+//         client?.setex(cacheKey, 1800, cachedValue);
+//         return cachedValue;
+//       } else {
+//         const unreadCount = await computeUnreadMessages(props);
+//         client?.setex(cacheKey, 1800, unreadCount.toString());
+//         await Message.updateOne({ _id: props.messageId }, { readStatus: true });
+//         return unreadCount;
+//       }
+//     }
+//   } catch (error) {
+//     console.error("Error counting unread messages:", error);
+//     throw error;
+//   }
+// }
 
 const CreateNewMessage = z.object({
   message: z
@@ -776,4 +824,92 @@ export async function getChatStatus(props: z.infer<typeof ChatStatusProps>) {
       status: null,
     };
   }
+}
+
+export async function getAllUserSentInvites(userId: string) {
+  try {
+    await connectToDB();
+    const sentInvites = await Chat.aggregate([
+      {
+        $match: {
+          Buyer: new mongo.ObjectId(userId),
+          status: "invite",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          let: { sellerId: "$Seller" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$_id", "$$sellerId"],
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                "Seller.Avatar": "$Avatar",
+              },
+            },
+          ],
+          as: "SellerInfo",
+        },
+      },
+      {
+        $lookup: {
+          from: "products",
+          let: { productId: "$ProductId" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$_id", "$$productId"],
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                "Product.Name": "$Product_Name",
+              },
+            },
+          ],
+          as: "ProductInfo",
+        },
+      },
+      {
+        $unwind: "$SellerInfo",
+      },
+      {
+        $unwind: "$ProductInfo",
+      },
+      {
+        $project: {
+          "Seller.Avatar": "$SellerInfo.Seller.Avatar",
+          "Seller.Name": "$SellerInfo.Name",
+          "Product.Name": "$ProductInfo.Product.Name",
+          _id: 0,
+        },
+      },
+    ]);
+
+    console.log(sentInvites);
+    return sentInvites;
+  } catch (error) {
+    console.log("Error while fetching sent invites:", error);
+    throw error;
+  }
+}
+
+export async function getLastMessages(
+  productId: string,
+  sellerId: string,
+  buyerId: string,
+) {
+  try {
+    await connectToDB();
+  } catch (error) {}
 }

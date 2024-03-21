@@ -1,6 +1,5 @@
 import { getInitialMessages } from "@/lib/actions/chat.actions";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import qs from "query-string";
 
 interface ChatQueryProps {
   queryKey: string;
@@ -19,6 +18,7 @@ export const useChatQuery = ({
   currentUser,
 }: ChatQueryProps) => {
   async function fetchMessages({ pageParam = 0 }) {
+    console.log("fetch function called with pageParam => ", pageParam);
     const res = await getInitialMessages({
       sellerId,
       buyerId,
