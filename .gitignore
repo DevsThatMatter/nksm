@@ -40,3 +40,7 @@ next-env.d.ts
 /.vscode
 pnpm-lock.yaml
 
+app/(root)/(protected)/test/page.tsx
+app/(root)/(protected)/urltest/page.tsx
+app/(root)/propstest/page.tsx
+app/(root)/(protected)/test2/page.tsx

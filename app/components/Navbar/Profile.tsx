@@ -32,6 +32,9 @@ export function Profile({ data, whichIcon }: UserProfileProps) {
   const handleLogin = () => {
     router.push("/login");
   };
+  const handleAccountInfoClick = () => {
+    router.push("/account");
+  };
 
   return (
     <DropdownMenu>
@@ -66,7 +69,7 @@ export function Profile({ data, whichIcon }: UserProfileProps) {
             <DropdownMenuItem onClick={() => console.log("View Your Profile")}>
               View Your Orders
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => console.log("Settings")}>
+            <DropdownMenuItem onClick={handleAccountInfoClick}>
               Account Info
             </DropdownMenuItem>
           </>
