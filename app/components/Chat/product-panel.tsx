@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 import { chatDetails } from "@/types";
 import Image from "next/image";
 import {
+  countUnreadMessages,
   getAllUserSentInvites,
   getLastMessages,
 } from "@/lib/actions/chat.actions";
+import { useQueries } from "@tanstack/react-query";
 // import { countUnreadMessages } from "@/lib/actions/chat.actions";
 
 interface ProductPanelProps {
@@ -15,7 +17,6 @@ interface ProductPanelProps {
 }
 
 export default function ProductPanel({ userId }: ProductPanelProps) {
-  // Destructuring state from useChatStore
   const {
     discussions,
     otherUserDetails,
@@ -59,11 +60,6 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
   }
 
   function handleChatItemClick(discussion: chatDetails) {
-    console.log(
-      `buyer => ${discussion.buyerDetails.id}`,
-      `seller => ${discussion.sellerDetails.id}`,
-      `current user => ${userId}`,
-    );
     const otherUserId =
       discussion.buyerDetails.id === userId
         ? discussion.sellerDetails.id
@@ -93,55 +89,51 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
     setSelectedProductId(discussion.productDetails.productId);
     setProductId(discussion.productDetails.productId);
   }
+  const [productReadCounts, setProductReadCounts] = useState<Map<string, number> | null>(null);
 
-  const [productReadCounts, setProductReadCounts] = useState<{
-    [productId: string]: number;
-  }>({});
+  const results = useQueries({
+    queries: discussions.map((chat) => {
+      const sellerId = chat.sellerDetails.id;
+      const buyerId = chat.buyerDetails.id;
+      const productId = String(chat.productDetails.productId);
+      return {
+        queryKey: ['last-messages', sellerId, buyerId, productId],
+        queryFn: () => getLastMessages({ sellerId: sellerId, buyerId: buyerId, productId: productId }),
+        enabled: discussions.length > 0,
+        refetchInterval: 10000
+      }
+    }),
+  })
+
+  const unreadResults = useQueries({
+    queries: discussions.map((chat) => {
+      const sellerId = chat.sellerDetails.id;
+      const buyerId = chat.buyerDetails.id;
+      const productId = String(chat.productDetails.productId);
+      console.log("calling")
+      return {
+        queryKey: ['unreadCount', sellerId, buyerId, productId],
+        queryFn: () => countUnreadMessages({ sellerId: sellerId, buyerId: buyerId, productId: productId, caller: "get", currentUser: userId }),
+        enabled: discussions.length > 0,
+      }
+    }),
+  })
+
   useEffect(() => {
-    // Commenting out the unread count logic for now
-    // async function getUnreadCount(
-    //   pId: string,
-    //   sellerId: string,
-    //   buyerId: string,
-    // ) {
-    //   if (pId && sellerId && buyerId) {
-    //     const count = await countUnreadMessages({
-    //       sellerId,
-    //       buyerId,
-    //       productId: pId,
-    //       caller: "get",
-    //       currentUser: userId,
-    //     });
-    //     return count;
-    //   } else {
-    //     return 0;
-    //   }
-    // }
-
-    Promise.all(
-      discussions.map(async (chat) => {
-        const sellerId = chat.sellerDetails.id;
-        const buyerId = chat.buyerDetails.id;
-        const productId = String(chat.productDetails.productId);
-        const lastMessages = await getLastMessages(
-          productId,
-          sellerId,
-          buyerId,
-        );
-        // const unreadCount = await getUnreadCount(productId, sellerId, buyerId);
-        return { productId: productId, unreadCount: 0 };
-      }),
-    ).then((updatedProductPanelInfo) => {
-      const productReadCountsObj = updatedProductPanelInfo.reduce(
-        (acc: { [key: string]: number }, cur) => {
-          acc[cur.productId] = cur.unreadCount;
-          return acc;
-        },
-        {},
-      );
-      setProductReadCounts(productReadCountsObj);
+    unreadResults.forEach((result) => {
+      console.log(result.data)
+      const { productId, cachedVal } = result.data ?? { productId: undefined, cachedVal: null }
+      if (productId && cachedVal) {
+        setProductReadCounts((prevCounts) => {
+          const updatedCounts = new Map<string, number>(prevCounts || []);
+          updatedCounts.set(productId, cachedVal);
+          return updatedCounts;
+        });
+      }
     });
-  }, [discussions, userId]);
+  }, [discussions]);
+
+
 
   return (
     <SheetDescription className="mt-4 flex h-full w-full flex-col space-y-4">
@@ -157,38 +149,58 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                 }}
               >
                 <div className="flex-shrink-0 overflow-hidden rounded-full">
-                  <Image
-                    src={discussion.sellerDetails.Avatar}
-                    alt={discussion.productDetails.Product_Name}
-                    width={64}
-                    height={64}
-                  />
+                  {
+                    discussion.sellerDetails.Avatar ? (
+                      <Image
+                        src={discussion.sellerDetails.Avatar}
+                        alt={discussion.productDetails.Product_Name}
+                        width={64}
+                        height={64}
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-gradient-to-tr from-gray-300 via-gray-400 to-gray-300 animate-pulse rounded-full" />
+                    )
+                  }
                 </div>
                 <div className="flex-grow cursor-pointer">
                   <div className="flex justify-between">
-                    <h4 className="text-lg font-semibold text-black dark:text-white ">
-                      {discussion.buyerDetails.id === userId
-                        ? discussion.sellerDetails.First_Name +
-                          " " +
-                          discussion.sellerDetails.Last_Name
-                        : discussion.buyerDetails.First_Name +
-                          " " +
-                          discussion.buyerDetails.Last_Name}
-                    </h4>
-                    <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-lg">
+                    {
+                      discussion.buyerDetails ?
+                        (
+                          <h4 className="text-lg font-semibold text-black dark:text-white ">
+                            {discussion.buyerDetails.id === userId
+                              ? discussion.sellerDetails.First_Name +
+                              " " +
+                              discussion.sellerDetails.Last_Name
+                              : discussion.buyerDetails.First_Name +
+                              " " +
+                              discussion.buyerDetails.Last_Name}
+                          </h4>
+                        )
+                        : (
+                          <h5 className="bg-gradient-to-tr h-4 from-gray-300 via-gray-400 to-gray-300 animate-pulse w-36 rounded-sm" />
+                        )
+                    }
+                    <div className="flex w-6 h-6 text-sm flex-shrink-0 items-center justify-center rounded-full bg-blue-500">
                       <h3 className="font-semibold text-white">
                         {
-                          productReadCounts[
-                            String(discussion.productDetails.productId)
-                          ]
+                          String(productReadCounts?.get(discussion.productDetails.productId) ?? 0)
                         }
                       </h3>
                     </div>
                   </div>
                   <div className="flex justify-between">
-                    <h5 className="text-sm text-gray-400 dark:text-gray-500">
-                      {"Last message"}
-                    </h5>
+                    {
+                      results[idx].data?.lastMsg ?
+                        (
+                          <h5 className="text-sm text-gray-400 dark:text-gray-500">
+                            {results[idx].data?.lastMsg}
+                          </h5>
+                        )
+                        : (
+                          <h5 className="bg-gradient-to-tr h-3 from-gray-300 via-gray-400 to-gray-300 animate-pulse w-24 rounded-sm" />
+                        )
+                    }
                   </div>
                 </div>
               </div>

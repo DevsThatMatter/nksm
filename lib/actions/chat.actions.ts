@@ -28,7 +28,7 @@ export async function getUserId({ email }: z.infer<typeof GetUserIdSchema>) {
     const user = await User.findOne({ Email: email });
     const userId = user._id.toString();
     // for test return "65c5e97aafe71c6df760f715"
-    return "65c5e97aafe71c6df760f715";
+    return "65c5e97aafe71c6df760f717";
   } catch (error) {
     console.log("there was an error while fething user id");
     return undefined;
@@ -279,19 +279,17 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
   try {
     await connectToDB();
     const validatedProps = LockDealProps.parse(props);
-
-    await Chat.updateOne(
-      {
-        Seller: new mongo.ObjectId(validatedProps.seller),
-        Buyer: new mongo.ObjectId(validatedProps.buyer),
-        ProductId: new mongo.ObjectId(validatedProps.productId),
-      },
-      {
-        $set: { status: "stale" },
-      },
-    );
-
     if (validatedProps.caller === "yes") {
+      await Chat.updateOne(
+        {
+          Seller: new mongo.ObjectId(validatedProps.seller),
+          Buyer: new mongo.ObjectId(validatedProps.buyer),
+          ProductId: new mongo.ObjectId(validatedProps.productId),
+        },
+        {
+          $set: { status: "stale" },
+        },
+      );
       const messageIds = await Chat.aggregate([
         {
           $match: {
@@ -331,11 +329,15 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
           },
         },
       ]);
-
-      for (const msg of messageIds) {
+      console.log("msg.chatMessages._id => ", messageIds)
+      for (const msg of messageIds[0].chatMessages) {
+        console.log("msg.chatMessages._id => ", msg)
         const updatedMessage = await Message.findOneAndUpdate(
           {
-            _id: new mongo.ObjectId(msg.chatMessages._id),
+            _id: new mongo.ObjectId(msg._id),
+          },
+          {
+            $set: { accepted: "accepted" }
           },
           { new: true },
         );
@@ -343,7 +345,7 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
         await pusherServer.trigger(
           updateKey,
           "messages:update",
-          msg.chatMessages,
+          updatedMessage,
         );
       }
     } else {
@@ -385,97 +387,129 @@ const UnreadMessagesProps = z.object({
   currentUser: mongoId,
 });
 
-// async function computeUnreadMessages(
-//   props: z.infer<typeof UnreadMessagesProps>,
-// ): Promise<number> {
-//   connectToDB();
-//   const validatedProps = UnreadMessagesProps.parse(props);
+async function computeUnreadMessages(
+  props: z.infer<typeof UnreadMessagesProps>,
+): Promise<number> {
+  connectToDB();
+  const validatedProps = UnreadMessagesProps.parse(props);
 
-//   const result = await Chat.aggregate([
-//     {
-//       $match: {
-//         Seller: new mongo.ObjectId(validatedProps.sellerId),
-//         Buyer: new mongo.ObjectId(validatedProps.buyerId),
-//         ProductId: new mongo.ObjectId(validatedProps.productId),
-//       },
-//     },
-//     {
-//       $lookup: {
-//         from: "messages",
-//         localField: "Messages",
-//         foreignField: "_id",
-//         as: "Messages",
-//       },
-//     },
-//     {
-//       $project: {
-//         unreadCount: {
-//           $size: {
-//             $filter: {
-//               input: "$Messages",
-//               as: "msg",
-//               cond: {
-//                 $and: [
-//                   { $eq: ["$$msg.readStatus", false] },
-//                   { $ne: ["$$msg.Sender", validatedProps.currentUser] },
-//                 ],
-//               },
-//             },
-//           },
-//         },
-//         _id: 0,
-//       },
-//     },
-//   ]);
+  const result = await Chat.aggregate([
+    {
+      $match: {
+        Seller: new mongo.ObjectId(validatedProps.sellerId),
+        Buyer: new mongo.ObjectId(validatedProps.buyerId),
+        ProductId: new mongo.ObjectId(validatedProps.productId),
+      },
+    },
+    {
+      $lookup: {
+        from: "messages",
+        localField: "Messages",
+        foreignField: "_id",
+        as: "Messages",
+      },
+    },
+    {
+      $project: {
+        unreadCount: {
+          $size: {
+            $filter: {
+              input: "$Messages",
+              as: "msg",
+              cond: {
+                $and: [
+                  { $eq: ["$$msg.readStatus", false] },
+                  { $ne: ["$$msg.Sender", validatedProps.currentUser] },
+                ],
+              },
+            },
+          },
+        },
+        _id: 0,
+      },
+    },
+  ]);
 
-//   const unreadCount = result.length > 0 ? result[0].unreadCount : 0;
+  const unreadCount = result.length > 0 ? result[0].unreadCount : 0;
 
-//   return unreadCount;
-// }
+  return unreadCount;
+}
 
-// export async function countUnreadMessages(
-//   props: z.infer<typeof UnreadMessagesProps> & {
-//     caller: "get" | "update";
-//     messageId?: string;
-//   },
-// ): Promise<number> {
-//   const cacheKey = `unreadCount:${props.sellerId}-${props.buyerId}-${props.productId}`;
-//   try {
-//     let cachedValue = await new Promise<number>((resolve, reject) => {
-//       client?.get(cacheKey, (err, reply) => {
-//         if (err) {
-//           reject(err);
-//           return;
-//         }
-//         resolve(reply ? parseInt(reply, 10) : -1);
-//       });
-//     });
+export async function countUnreadMessages(
+  props: z.infer<typeof UnreadMessagesProps> & {
+    caller: "get" | "update";
+    messageId?: string;
+  },
+) {
+  try {
+    const cacheKey = `unreadCount-${props.sellerId}-${props.buyerId}-${props.productId}`;
+    const value = await client.get(cacheKey);
+    if (props.caller === "get") {
+      if (value === null) {
+        const unreadCount = await computeUnreadMessages(props);
+        await client.setex(cacheKey, 1800, unreadCount);
+        return {
+          productId: props.productId,
+          cachedVal: unreadCount,
+          error: null,
+          status: 200
+        };
+      } else {
+        console.log('Cached value:', value);
+        return {
+          productId: props.productId,
+          cachedVal: Number(value),
+          error: null,
+          status: 200
+        };
+      }
+    } else {
+      const updatedMessage = await Message.updateOne({
+        _id: new mongo.ObjectId(props.messageId)
+      }, {
+        $set: { readStatus: true }
+      })
+      const updateKey = `chat${props.productId}productId${props.productId}sellerId${props.sellerId}buyerId${props.buyerId}update`;
+      await pusherServer.trigger(
+        updateKey,
+        "messages:update",
+        updatedMessage,
+      );
+      console.log("message's read status changed")
 
-//     if (props.caller === "get") {
-//       if (cachedValue !== -1) {
-//         return cachedValue;
-//       } else {
-//         const unreadCount = await computeUnreadMessages(props);
-//         client?.setex(cacheKey, 1800, unreadCount.toString());
-//         return unreadCount;
-//       }
-//     } else {
-//       if (cachedValue !== -1) {
-//         cachedValue -= 1;
-//         client?.setex(cacheKey, 1800, cachedValue);
-//         return cachedValue;
-//       } else {
-//         const unreadCount = await computeUnreadMessages(props);
-//         client?.setex(cacheKey, 1800, unreadCount.toString());
-//         await Message.updateOne({ _id: props.messageId }, { readStatus: true });
-//         return unreadCount;
-//       }
-//     }
-//   } catch (error) {
-//     console.error("Error counting unread messages:", error);
-//     throw error;
-//   }
-// }
+      if (value === null) {
+        console.log('Key not found in cache');
+        let unreadCount = await computeUnreadMessages(props);
+        unreadCount--;
+        await client.setex(cacheKey, 1800, unreadCount);
+        return {
+          productId: props.productId,
+          cachedVal: unreadCount,
+          status: 200,
+          error: null,
+        };
+      } else {
+        console.log('Cached value:', value);
+        const unreadCount = Number(value) ?? 1 - 1;
+        await client.setex(cacheKey, 1800, unreadCount);
+        return {
+          productId: props.productId,
+          cachedVal: unreadCount,
+          error: null,
+          status: 200
+        };
+      }
+    }
+  } catch (error) {
+    console.error("Error counting unread messages:", error);
+    return {
+      cachedVal: null,
+      error: error,
+      status: 500
+    };
+  }
+}
+
 
 const CreateNewMessage = z.object({
   message: z
@@ -904,12 +938,56 @@ export async function getAllUserSentInvites(userId: string) {
   }
 }
 
-export async function getLastMessages(
-  productId: string,
-  sellerId: string,
-  buyerId: string,
-) {
+export async function getLastMessages({ productId,
+  sellerId,
+  buyerId, }: {
+    productId: string,
+    sellerId: string,
+    buyerId: string,
+  }) {
   try {
     await connectToDB();
-  } catch (error) {}
+    const pipeline: any[] = [
+      {
+        '$match': {
+          'Seller': new mongo.ObjectId(sellerId),
+          'Buyer': new mongo.ObjectId(buyerId),
+          'ProductId': new mongo.ObjectId(productId)
+        }
+      }, {
+        '$lookup': {
+          'from': 'messages',
+          'localField': 'Messages',
+          'foreignField': '_id',
+          'as': 'foreignMessages'
+        }
+      }, {
+        '$unwind': '$foreignMessages'
+      }, {
+        '$sort': {
+          'foreignMessages.TimeStamp': -1
+        }
+      }, {
+        '$limit': 1
+      }, {
+        '$project': {
+          'lastSentForeignMessage': '$foreignMessages.Message',
+          '_id': 0
+        }
+      }
+    ]
+    const lastMsg = (await Chat.aggregate(pipeline))[0].lastSentForeignMessage as string
+    console.log("lastmsg => ", lastMsg)
+    return {
+      lastMsg: lastMsg,
+      status: 200,
+      error: null
+    }
+  } catch (error) {
+    return {
+      lastMsg: null,
+      status: 500,
+      error: error
+    }
+  }
 }

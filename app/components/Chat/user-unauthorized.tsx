@@ -20,20 +20,13 @@ export default function UserUnauthorized() {
           <div className="flex justify-between space-x-4">
             <div className="space-y-1">
               <h4 className="text-sm font-semibold">Please get authorized</h4>
-              <div className="flex space-x-4 p-2">
-                <Link
-                  href={"/login"}
-                  className={buttonVariants({ variant: "default" })}
-                >
-                  Sign in
-                </Link>
-                <Link
-                  href={"/login"}
-                  className={buttonVariants({ variant: "default" })}
-                >
-                  Sign up
-                </Link>
-              </div>
+
+              <Link
+                href={"/login"}
+                className={buttonVariants({ variant: "default" })}
+              >
+                Sign in
+              </Link>
             </div>
           </div>
         </HoverCardContent>

@@ -211,10 +211,10 @@ export default function BuyerInvites({ userId }: { userId: string }) {
         )}
       </section>
       <section className="h-1/2 overflow-y-auto">
-        <div className="grid grid-cols-3 items-center gap-1">
-          <div className="rounded-full border-b-2 border-b-gray-300"></div>
-          <h1 className="col-span-1 text-center">Pending Invites</h1>
-          <div className="rounded-full border-b-2 border-b-gray-300"></div>
+        <div className="flex w-full items-center justify-between">
+          <div className="rounded-full border-b-2 border-b-gray-300 w-24 h-1" />
+          <h1 className="col-span-1 text-center md:text-lg">Pending Invites</h1>
+          <div className="rounded-full border-b-2 border-b-gray-300 w-24 h-1" />
         </div>
         <div>
           {currentUserSentInvites.map((invites, idx) => (
@@ -232,7 +232,7 @@ export default function BuyerInvites({ userId }: { userId: string }) {
               </div>
               <div className="flex flex-col">
                 <h1 className="text-lg font-semibold text-foreground">
-                  {invites.Seller.Name ?? "Moni"}
+                  {invites.Seller.Name}
                 </h1>
                 <h4>{invites.Product.Name}</h4>
               </div>

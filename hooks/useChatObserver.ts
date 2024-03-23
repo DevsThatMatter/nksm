@@ -1,4 +1,5 @@
 // import { countUnreadMessages } from "@/lib/actions/chat.actions";
+import { countUnreadMessages } from "@/lib/actions/chat.actions";
 import { useEffect } from "react";
 
 export const useChatObserver = ({
@@ -14,22 +15,24 @@ export const useChatObserver = ({
   productId: string;
   currentUserId: string;
 }) => {
+  console.log("from observer => ", unreadMessages.length)
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(async (entry) => {
+
           if (entry.isIntersecting && entry.target instanceof HTMLElement) {
             const messageId = entry.target.id;
+            console.log("message id => ", messageId)
             try {
-              // await countUnreadMessages({
-              //   productId,
-              //   sellerId,
-              //   buyerId,
-              //   messageId,
-              //   caller: "update",
-              //   currentUser: currentUserId,
-              // });
-              console.log("hello");
+              await countUnreadMessages({
+                productId,
+                sellerId,
+                buyerId,
+                messageId,
+                caller: "update",
+                currentUser: currentUserId,
+              });
             } catch (error) {
               console.error("Error counting unread messages:", error);
             } finally {
