@@ -464,17 +464,23 @@ export async function countUnreadMessages(
         };
       }
     } else {
-      const updatedMessage = await Message.updateOne(
+      console.log("message => ", props.messageId);
+      await Message.updateOne(
         {
           _id: new mongo.ObjectId(props.messageId),
         },
         {
           $set: { readStatus: true },
         },
+        { new: true },
       );
+      const updatedMessage = await Message.findOne({
+        _id: new mongo.ObjectId(props.messageId),
+      });
+      // console.log("updated => ", updatedMessage)
       const updateKey = `chat${props.productId}productId${props.productId}sellerId${props.sellerId}buyerId${props.buyerId}update`;
       await pusherServer.trigger(updateKey, "messages:update", updatedMessage);
-      console.log("message's read status changed");
+      // console.log("message's read status changed");
 
       if (value === null) {
         console.log("Key not found in cache");

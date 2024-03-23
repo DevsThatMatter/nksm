@@ -15,6 +15,7 @@ interface ChatState {
   buyerDetails: {
     id: string;
   };
+  asSellerChat: boolean;
   createChat: (to: {
     discussions: chatDetails[];
     otherUserDetails: {
@@ -33,6 +34,8 @@ interface ChatState {
   removeChat: (caller: "productPanel" | "chatPanel" | "chatUi") => void;
   createSeller: (sellerId: string) => void;
   createBuyer: (buyerId: string) => void;
+  setAsSellerChat: () => void;
+  removeAsSellerChat: () => void;
 }
 
 const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
@@ -40,6 +43,7 @@ const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
   otherUserDetails: { id: "", name: "", otherUserPhoneNumber: "", avatar: "" },
   sellerDetails: { id: "" },
   buyerDetails: { id: "" },
+  asSellerChat: false,
   createChat: (to: {
     discussions: chatDetails[];
     otherUserDetails: {
@@ -104,6 +108,8 @@ const chatStore = (set: (arg0: (state: ChatState) => ChatState) => void) => ({
         id: buyerId,
       },
     })),
+  setAsSellerChat: () => set((state) => ({ ...state, asSellerChat: true })),
+  removeAsSellerChat: () => set((state) => ({ ...state, asSellerChat: false })),
 });
 
 const useChatStore = create<ChatState>(chatStore);

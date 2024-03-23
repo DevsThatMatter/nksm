@@ -22,7 +22,7 @@ export const useChatObserver = ({
         entries.forEach(async (entry) => {
           if (entry.isIntersecting && entry.target instanceof HTMLElement) {
             const messageId = entry.target.id;
-            console.log("message id => ", messageId);
+            console.log("message id in observer=> ", messageId);
             try {
               await countUnreadMessages({
                 productId,
@@ -32,6 +32,8 @@ export const useChatObserver = ({
                 caller: "update",
                 currentUser: currentUserId,
               });
+              entry.target.classList.remove("user-message-false");
+              entry.target.classList.remove("user-message-true");
             } catch (error) {
               console.error("Error counting unread messages:", error);
             } finally {

@@ -34,8 +34,13 @@ export default function UserChat() {
     fetchUserId();
   }, [email]);
 
-  const { discussions, otherUserDetails, createChat, removeChat } =
-    useChatStore();
+  const {
+    discussions,
+    otherUserDetails,
+    createChat,
+    removeChat,
+    setAsSellerChat,
+  } = useChatStore();
 
   const [
     productDiscussionsWhereUserIsSeller,
@@ -47,9 +52,9 @@ export default function UserChat() {
     setProductDiscussionsWhereUserIsBuyer,
   ] = useState<chatDetails[] | null>(null);
 
-  const [activeTab, setActiveTab] = useState<"seller" | "buyer" | "invites">(
-    "seller",
-  );
+  const [activeTab, setActiveTab] = useState<
+    "seller" | "buyer" | "invites" | ""
+  >("seller");
 
   async function getPrevProductDiscussions() {
     if (userId) {
@@ -61,7 +66,7 @@ export default function UserChat() {
     }
   }
 
-  const { data, isFetching, status, error } = useQuery({
+  useQuery({
     queryKey: ["getAllChats", userId],
     queryFn: getPrevProductDiscussions,
     enabled: userId !== undefined,
@@ -130,66 +135,47 @@ export default function UserChat() {
           <SheetHeader className="flex justify-between">
             {(discussions.length === 0 ||
               activeTab === "buyer" ||
-              activeTab === "invites") &&
-            otherUserDetails.id === "" ? (
-              <Tabs defaultValue="Seller Chat" className="mt-2 w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger
-                    value="Seller Chats"
-                    className={clsx(
-                      "rounded-lg p-0.5",
-                      activeTab === "seller" &&
-                        "bg-white text-black shadow-md transition-colors duration-300",
-                    )}
-                    onClick={() => handleTabChange("seller")}
-                  >
-                    As Seller
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="Buyer Chats"
-                    className={clsx(
-                      "rounded-lg p-0.5",
-                      activeTab === "buyer" &&
-                        "bg-white text-black shadow-md transition-colors duration-300",
-                    )}
-                    onClick={() => handleTabChange("buyer")}
-                  >
-                    As Buyer
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="Invites"
-                    className={clsx(
-                      "rounded-lg p-0.5",
-                      activeTab === "invites" &&
-                        "bg-white text-black shadow-md transition-colors duration-300",
-                    )}
-                    onClick={() => handleTabChange("invites")}
-                  >
-                    Invites
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-            ) : (
-              discussions.length !== 0 &&
+              activeTab === "invites" ||
+              activeTab === "") &&
               otherUserDetails.id === "" && (
-                <div className="flex items-center">
-                  <Button
-                    className="rounded-full"
-                    variant={"ghost"}
-                    size="icon"
-                    onClick={() => {
-                      if (otherUserDetails && otherUserDetails.id === "") {
-                        removeChat("chatPanel");
-                      } else if (otherUserDetails.id !== "") {
-                        removeChat("productPanel");
-                      }
-                    }}
-                  >
-                    <Icons.moveback />
-                  </Button>
-                </div>
-              )
-            )}
+                <Tabs defaultValue="Seller Chat" className="mt-2 w-full">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger
+                      value="Seller Chats"
+                      className={clsx(
+                        "rounded-lg p-0.5",
+                        activeTab === "seller" &&
+                          "bg-white text-black shadow-md transition-colors duration-300",
+                      )}
+                      onClick={() => handleTabChange("seller")}
+                    >
+                      As Seller
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="Buyer Chats"
+                      className={clsx(
+                        "rounded-lg p-0.5",
+                        activeTab === "buyer" &&
+                          "bg-white text-black shadow-md transition-colors duration-300",
+                      )}
+                      onClick={() => handleTabChange("buyer")}
+                    >
+                      As Buyer
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="Invites"
+                      className={clsx(
+                        "rounded-lg p-0.5",
+                        activeTab === "invites" &&
+                          "bg-white text-black shadow-md transition-colors duration-300",
+                      )}
+                      onClick={() => handleTabChange("invites")}
+                    >
+                      Invites
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              )}
           </SheetHeader>
           {activeTab === "seller" &&
             productDiscussionsWhereUserIsSeller &&
@@ -200,7 +186,10 @@ export default function UserChat() {
                     <div
                       key={idx}
                       className="cursor-pointer rounded-lg border border-b-gray-300 border-b-transparent p-2 shadow-md  hover:border-b-2 hover:border-b-gray-400 dark:shadow-gray-700 "
-                      onClick={() => handleSetChat(discussions)}
+                      onClick={() => {
+                        handleSetChat(discussions);
+                        setActiveTab("");
+                      }}
                     >
                       <div
                         key={discussions[0].sellerDetails.Phone_Number}
