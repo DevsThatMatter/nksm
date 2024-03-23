@@ -15,15 +15,14 @@ export const useChatObserver = ({
   productId: string;
   currentUserId: string;
 }) => {
-  console.log("from observer => ", unreadMessages.length)
+  console.log("from observer => ", unreadMessages.length);
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(async (entry) => {
-
           if (entry.isIntersecting && entry.target instanceof HTMLElement) {
             const messageId = entry.target.id;
-            console.log("message id => ", messageId)
+            console.log("message id => ", messageId);
             try {
               await countUnreadMessages({
                 productId,

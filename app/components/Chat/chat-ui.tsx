@@ -79,11 +79,11 @@ export default function ChatUI({
     }
 
     function updateMessageHandler(message: any) {
-      console.log("updateMessage => ", message)
+      console.log("updateMessage => ", message);
       setMessages((prevMessages) => {
         return prevMessages.map((msg) => {
           if (msg.msgId === String(message._id)) {
-            console.log("msg => ", msg, " message => ", message)
+            console.log("msg => ", msg, " message => ", message);
             return { ...msg, accepted: message.accepted };
           } else {
             return msg;
@@ -218,12 +218,13 @@ export default function ChatUI({
                         msg.Sender === currentUserId ? "ml-auto" : "mr-auto",
                         msg.readStatus
                           ? "user-message-true"
-                          : msg.Sender !== currentUserId && "user-message-false",
+                          : msg.Sender !== currentUserId &&
+                              "user-message-false",
                       )}
                     >
                       {msg.accepted === "pending" &&
-                        msg.Sender !== currentUserId ? (
-                        <div className="flex flex-col bg-[#dbe4fb] p-3 items-center">
+                      msg.Sender !== currentUserId ? (
+                        <div className="flex flex-col items-center bg-[#dbe4fb] p-3">
                           <h1 className="font-semibold text-black">
                             Do we have a deal?
                           </h1>
@@ -265,7 +266,8 @@ export default function ChatUI({
                       className={cn(
                         msg.readStatus
                           ? "user-message-true"
-                          : msg.Sender !== currentUserId && "user-message-false",
+                          : msg.Sender !== currentUserId &&
+                              "user-message-false",
                         "max-w-[80%] break-words rounded-t-3xl px-4 py-3  font-medium",
                         currentUserId === msg.Sender
                           ? "ml-auto rounded-l-3xl rounded-tr-3xl text-white"

@@ -89,7 +89,10 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
     setSelectedProductId(discussion.productDetails.productId);
     setProductId(discussion.productDetails.productId);
   }
-  const [productReadCounts, setProductReadCounts] = useState<Map<string, number> | null>(null);
+  const [productReadCounts, setProductReadCounts] = useState<Map<
+    string,
+    number
+  > | null>(null);
 
   const results = useQueries({
     queries: discussions.map((chat) => {
@@ -97,32 +100,47 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
       const buyerId = chat.buyerDetails.id;
       const productId = String(chat.productDetails.productId);
       return {
-        queryKey: ['last-messages', sellerId, buyerId, productId],
-        queryFn: () => getLastMessages({ sellerId: sellerId, buyerId: buyerId, productId: productId }),
+        queryKey: ["last-messages", sellerId, buyerId, productId],
+        queryFn: () =>
+          getLastMessages({
+            sellerId: sellerId,
+            buyerId: buyerId,
+            productId: productId,
+          }),
         enabled: discussions.length > 0,
-        refetchInterval: 10000
-      }
+        refetchInterval: 10000,
+      };
     }),
-  })
+  });
 
   const unreadResults = useQueries({
     queries: discussions.map((chat) => {
       const sellerId = chat.sellerDetails.id;
       const buyerId = chat.buyerDetails.id;
       const productId = String(chat.productDetails.productId);
-      console.log("calling")
+      console.log("calling");
       return {
-        queryKey: ['unreadCount', sellerId, buyerId, productId],
-        queryFn: () => countUnreadMessages({ sellerId: sellerId, buyerId: buyerId, productId: productId, caller: "get", currentUser: userId }),
+        queryKey: ["unreadCount", sellerId, buyerId, productId],
+        queryFn: () =>
+          countUnreadMessages({
+            sellerId: sellerId,
+            buyerId: buyerId,
+            productId: productId,
+            caller: "get",
+            currentUser: userId,
+          }),
         enabled: discussions.length > 0,
-      }
+      };
     }),
-  })
+  });
 
   useEffect(() => {
     unreadResults.forEach((result) => {
-      console.log(result.data)
-      const { productId, cachedVal } = result.data ?? { productId: undefined, cachedVal: null }
+      console.log(result.data);
+      const { productId, cachedVal } = result.data ?? {
+        productId: undefined,
+        cachedVal: null,
+      };
       if (productId && cachedVal) {
         setProductReadCounts((prevCounts) => {
           const updatedCounts = new Map<string, number>(prevCounts || []);
@@ -132,8 +150,6 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
       }
     });
   }, [discussions]);
-
-
 
   return (
     <SheetDescription className="mt-4 flex h-full w-full flex-col space-y-4">
@@ -149,58 +165,50 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                 }}
               >
                 <div className="flex-shrink-0 overflow-hidden rounded-full">
-                  {
-                    discussion.sellerDetails.Avatar ? (
-                      <Image
-                        src={discussion.sellerDetails.Avatar}
-                        alt={discussion.productDetails.Product_Name}
-                        width={64}
-                        height={64}
-                      />
-                    ) : (
-                      <div className="w-10 h-10 bg-gradient-to-tr from-gray-300 via-gray-400 to-gray-300 animate-pulse rounded-full" />
-                    )
-                  }
+                  {discussion.sellerDetails.Avatar ? (
+                    <Image
+                      src={discussion.sellerDetails.Avatar}
+                      alt={discussion.productDetails.Product_Name}
+                      width={64}
+                      height={64}
+                    />
+                  ) : (
+                    <div className="h-10 w-10 animate-pulse rounded-full bg-gradient-to-tr from-gray-300 via-gray-400 to-gray-300" />
+                  )}
                 </div>
                 <div className="flex-grow cursor-pointer">
                   <div className="flex justify-between">
-                    {
-                      discussion.buyerDetails ?
-                        (
-                          <h4 className="text-lg font-semibold text-black dark:text-white ">
-                            {discussion.buyerDetails.id === userId
-                              ? discussion.sellerDetails.First_Name +
-                              " " +
-                              discussion.sellerDetails.Last_Name
-                              : discussion.buyerDetails.First_Name +
-                              " " +
-                              discussion.buyerDetails.Last_Name}
-                          </h4>
-                        )
-                        : (
-                          <h5 className="bg-gradient-to-tr h-4 from-gray-300 via-gray-400 to-gray-300 animate-pulse w-36 rounded-sm" />
-                        )
-                    }
-                    <div className="flex w-6 h-6 text-sm flex-shrink-0 items-center justify-center rounded-full bg-blue-500">
+                    {discussion.buyerDetails ? (
+                      <h4 className="text-lg font-semibold text-black dark:text-white ">
+                        {discussion.buyerDetails.id === userId
+                          ? discussion.sellerDetails.First_Name +
+                            " " +
+                            discussion.sellerDetails.Last_Name
+                          : discussion.buyerDetails.First_Name +
+                            " " +
+                            discussion.buyerDetails.Last_Name}
+                      </h4>
+                    ) : (
+                      <h5 className="h-4 w-36 animate-pulse rounded-sm bg-gradient-to-tr from-gray-300 via-gray-400 to-gray-300" />
+                    )}
+                    <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-sm">
                       <h3 className="font-semibold text-white">
-                        {
-                          String(productReadCounts?.get(discussion.productDetails.productId) ?? 0)
-                        }
+                        {String(
+                          productReadCounts?.get(
+                            discussion.productDetails.productId,
+                          ) ?? 0,
+                        )}
                       </h3>
                     </div>
                   </div>
                   <div className="flex justify-between">
-                    {
-                      results[idx].data?.lastMsg ?
-                        (
-                          <h5 className="text-sm text-gray-400 dark:text-gray-500">
-                            {results[idx].data?.lastMsg}
-                          </h5>
-                        )
-                        : (
-                          <h5 className="bg-gradient-to-tr h-3 from-gray-300 via-gray-400 to-gray-300 animate-pulse w-24 rounded-sm" />
-                        )
-                    }
+                    {results[idx].data?.lastMsg ? (
+                      <h5 className="text-sm text-gray-400 dark:text-gray-500">
+                        {results[idx].data?.lastMsg}
+                      </h5>
+                    ) : (
+                      <h5 className="h-3 w-24 animate-pulse rounded-sm bg-gradient-to-tr from-gray-300 via-gray-400 to-gray-300" />
+                    )}
                   </div>
                 </div>
               </div>

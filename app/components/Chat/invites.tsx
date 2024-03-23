@@ -212,9 +212,9 @@ export default function BuyerInvites({ userId }: { userId: string }) {
       </section>
       <section className="h-1/2 overflow-y-auto">
         <div className="flex w-full items-center justify-between">
-          <div className="rounded-full border-b-2 border-b-gray-300 w-24 h-1" />
+          <div className="h-1 w-24 rounded-full border-b-2 border-b-gray-300" />
           <h1 className="col-span-1 text-center md:text-lg">Pending Invites</h1>
-          <div className="rounded-full border-b-2 border-b-gray-300 w-24 h-1" />
+          <div className="h-1 w-24 rounded-full border-b-2 border-b-gray-300" />
         </div>
         <div>
           {currentUserSentInvites.map((invites, idx) => (

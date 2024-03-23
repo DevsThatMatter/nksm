@@ -131,7 +131,7 @@ export default function UserChat() {
             {(discussions.length === 0 ||
               activeTab === "buyer" ||
               activeTab === "invites") &&
-              otherUserDetails.id === "" ? (
+            otherUserDetails.id === "" ? (
               <Tabs defaultValue="Seller Chat" className="mt-2 w-full">
                 <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger
@@ -139,7 +139,7 @@ export default function UserChat() {
                     className={clsx(
                       "rounded-lg p-0.5",
                       activeTab === "seller" &&
-                      "bg-white text-black shadow-md transition-colors duration-300",
+                        "bg-white text-black shadow-md transition-colors duration-300",
                     )}
                     onClick={() => handleTabChange("seller")}
                   >
@@ -150,7 +150,7 @@ export default function UserChat() {
                     className={clsx(
                       "rounded-lg p-0.5",
                       activeTab === "buyer" &&
-                      "bg-white text-black shadow-md transition-colors duration-300",
+                        "bg-white text-black shadow-md transition-colors duration-300",
                     )}
                     onClick={() => handleTabChange("buyer")}
                   >
@@ -161,7 +161,7 @@ export default function UserChat() {
                     className={clsx(
                       "rounded-lg p-0.5",
                       activeTab === "invites" &&
-                      "bg-white text-black shadow-md transition-colors duration-300",
+                        "bg-white text-black shadow-md transition-colors duration-300",
                     )}
                     onClick={() => handleTabChange("invites")}
                   >

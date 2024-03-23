@@ -7,7 +7,6 @@ import Link from "next/link";
 export default function NoOneToTalk() {
   return (
     <div className="flex flex-col items-center justify-center ">
-
       <Image
         src="/monoUseImages/noWork.png"
         alt="No chats"
@@ -24,9 +23,7 @@ export default function NoOneToTalk() {
           check out some products?
         </p>
         <SheetClose className={buttonVariants({ variant: "outline" })}>
-          <Link href={'/'}>
-            Browse Products
-          </Link>
+          <Link href={"/"}>Browse Products</Link>
         </SheetClose>
       </div>
     </div>
