@@ -13,14 +13,16 @@ export default async function Page({
   if (!(searchParams.q || searchParams.category)) {
     redirect("/");
   }
+  const pageSize = 5;
   const result = await getSearchResults({
     searchString: searchParams.q || "",
     pageNumber: 1,
-    pageSize: 5,
+    pageSize: pageSize,
     sortOrder: searchParams?.sort === "1" ? 1 : -1,
     sortBy: searchParams?.by === "Price" ? "Price" : "createdAt",
     category: searchParams?.category,
   });
+  const loadMoreKey = JSON.stringify(searchParams);
 
   return (
     <main className="m-auto max-w-screen-md">
@@ -32,7 +34,7 @@ export default async function Page({
       </p>
       <SearchShell>
         {result.productsData}
-        {result.isNext && <LoadMore pages={2} />}
+        {result.isNext && <LoadMore key={loadMoreKey} pageSize={pageSize} />}
       </SearchShell>
       <br />
     </main>

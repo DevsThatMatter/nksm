@@ -7,18 +7,16 @@ import { useInView } from "react-intersection-observer";
 import Image from "next/image";
 
 export type SearchCard = JSX.Element;
-
+let page = 2;
 function LoadMore({
-  pages,
   datas = [],
+  pageSize,
 }: {
-  pages: number;
   datas?: SearchCard[];
+  pageSize: number;
 }) {
   const { ref, inView } = useInView();
-  let page = pages;
   const [data, setData] = useState<SearchCard[]>(datas);
-  const [isLoading, setIsLoading] = useState(true);
   const [isNext, setIsNext] = useState(true);
   const searchParams = useSearchParams();
   const search = searchParams!.get("q") || "";
@@ -28,7 +26,6 @@ function LoadMore({
 
   useEffect(() => {
     if (inView) {
-      setIsLoading(true);
       // Add a delay of 500 milliseconds
       const delay = 500;
 
@@ -36,7 +33,7 @@ function LoadMore({
         getSearchResults({
           searchString: search || "",
           pageNumber: page,
-          pageSize: 5,
+          pageSize: pageSize,
           sortOrder: sort === "1" ? 1 : -1,
           sortBy: sortBy === "Price" ? "Price" : "createdAt",
           category: category === null ? undefined : category,
@@ -46,13 +43,12 @@ function LoadMore({
           page++;
           res.isNext === false && setIsNext(false);
         });
-        setIsLoading(false);
       }, delay);
 
       // Clear the timeout if the component is unmounted or inView becomes false
       return () => clearTimeout(timeoutId);
     }
-  }, [inView, data, isLoading]);
+  }, [inView, data]);
 
   return (
     <>
@@ -60,7 +56,7 @@ function LoadMore({
 
       {isNext && (
         <div ref={ref} id="load" className="self-center">
-          {inView && isLoading && (
+          {inView && (
             <Image
               src="./spinner.svg"
               alt="spinner"
