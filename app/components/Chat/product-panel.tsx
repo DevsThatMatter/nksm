@@ -1,16 +1,13 @@
 import useChatStore from "@/hooks/useChatStore";
-import { SheetDescription } from "../ui/sheet";
 import ChatUI from "./chat-ui";
 import { useEffect, useState } from "react";
 import { chatDetails } from "@/types";
 import Image from "next/image";
 import {
   countUnreadMessages,
-  getAllUserSentInvites,
   getLastMessages,
 } from "@/lib/actions/chat.actions";
 import { useQueries } from "@tanstack/react-query";
-// import { countUnreadMessages } from "@/lib/actions/chat.actions";
 
 interface ProductPanelProps {
   userId: string;
@@ -118,7 +115,6 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
       const sellerId = chat.sellerDetails.id;
       const buyerId = chat.buyerDetails.id;
       const productId = String(chat.productDetails.productId);
-      console.log("calling");
       return {
         queryKey: ["unreadCount", sellerId, buyerId, productId],
         queryFn: () =>
@@ -136,7 +132,6 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
 
   useEffect(() => {
     unreadResults.forEach((result) => {
-      console.log(result.data);
       const { productId, cachedVal } = result.data ?? {
         productId: undefined,
         cachedVal: null,
@@ -152,14 +147,14 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
   }, [discussions]);
 
   return (
-    <SheetDescription className="mt-4 flex h-full w-full flex-col space-y-4">
+    <div className="mt-4 flex h-full w-full flex-col">
       {otherUserDetails.id === "" ? (
         <div className="flex h-full flex-col">
-          <section className="h-full overflow-y-auto">
+          <section className="h-full space-y-4 overflow-y-auto">
             {discussions.map((discussion: chatDetails, idx) => (
               <div
                 key={idx}
-                className="flex h-[100px] cursor-pointer items-center space-x-5 rounded-lg border-b-2 border-b-gray-300 p-2 shadow-md hover:border-b-gray-400 dark:shadow-gray-700"
+                className="flex h-[82px] cursor-pointer items-center space-x-5 rounded-lg border-b-2 border-b-transparent p-2 shadow-md hover:border-b-gray-400 dark:bg-[#323741] dark:shadow-gray-700"
                 onClick={() => {
                   handleChatItemClick(discussion);
                 }}
@@ -169,8 +164,8 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                     <Image
                       src={discussion.sellerDetails.Avatar}
                       alt={discussion.productDetails.Product_Name}
-                      width={64}
-                      height={64}
+                      width={50}
+                      height={50}
                     />
                   ) : (
                     <div className="h-10 w-10 animate-pulse rounded-full bg-gradient-to-tr from-gray-300 via-gray-400 to-gray-300" />
@@ -229,6 +224,6 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
           />
         </div>
       )}
-    </SheetDescription>
+    </div>
   );
 }

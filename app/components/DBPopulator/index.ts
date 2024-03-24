@@ -117,10 +117,10 @@ export const DBPopulator = async () => {
       },
     ];
 
-    for (const user of userData) {
-      const newUser = new User(user);
-      await newUser.save();
-    }
+    // for (const user of userData) {
+    //   const newUser = new User(user);
+    //   await newUser.save();
+    // }
 
     const users = await User.find({});
 

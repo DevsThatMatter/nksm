@@ -34,41 +34,16 @@ export default function UserChat() {
     fetchUserId();
   }, [email]);
 
-  const {
-    discussions,
-    otherUserDetails,
-    createChat,
-    removeChat,
-    setAsSellerChat,
-  } = useChatStore();
-
-  const [
-    productDiscussionsWhereUserIsSeller,
-    setProductDiscussionsWhereUserIsSeller,
-  ] = useState<Map<string, chatDetails[]> | null>(null);
-
-  const [
-    productDiscussionsWhereUserIsBuyer,
-    setProductDiscussionsWhereUserIsBuyer,
-  ] = useState<chatDetails[] | null>(null);
+  const { discussions, otherUserDetails, createChat, removeChat } =
+    useChatStore();
 
   const [activeTab, setActiveTab] = useState<
     "seller" | "buyer" | "invites" | ""
   >("seller");
 
-  async function getPrevProductDiscussions() {
-    if (userId) {
-      const data = await getAllChats(userId);
-      setProductDiscussionsWhereUserIsSeller(
-        data.data.resultWhereUserIsSeller1,
-      );
-      setProductDiscussionsWhereUserIsBuyer(data.data.resultWhereUserIsBuyer);
-    }
-  }
-
-  useQuery({
+  const { data, status } = useQuery({
     queryKey: ["getAllChats", userId],
-    queryFn: getPrevProductDiscussions,
+    queryFn: () => getAllChats(userId ?? ""),
     enabled: userId !== undefined,
   });
 
@@ -88,7 +63,7 @@ export default function UserChat() {
       });
     } else if (tab === "buyer") {
       createChat({
-        discussions: productDiscussionsWhereUserIsBuyer ?? [],
+        discussions: data?.data.resultWhereUserIsBuyer ?? [],
         otherUserDetails: {
           id: "",
           name: "",
@@ -131,7 +106,7 @@ export default function UserChat() {
             <Icons.chaticon className="h-[1.3rem] w-[1.32rem]" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-[90vw] sm:w-[60vw]  lg:w-[30vw]">
+        <SheetContent side="left" className="w-[90vw] sm:w-[60vw]  lg:w-[90vw]">
           <SheetHeader className="flex justify-between">
             {(discussions.length === 0 ||
               activeTab === "buyer" ||
@@ -178,14 +153,14 @@ export default function UserChat() {
               )}
           </SheetHeader>
           {activeTab === "seller" &&
-            productDiscussionsWhereUserIsSeller &&
+            data?.data.resultWhereUserIsSeller1 &&
             (discussions.length === 0 ? (
-              <SheetDescription className="mt-4 flex w-full select-none flex-col space-y-4">
-                {Array.from(productDiscussionsWhereUserIsSeller.entries()).map(
+              <div className="mt-4 flex w-full select-none flex-col space-y-4">
+                {Array.from(data?.data.resultWhereUserIsSeller1.entries()).map(
                   ([productId, discussions], idx) => (
                     <div
                       key={idx}
-                      className="cursor-pointer rounded-lg border border-b-gray-300 border-b-transparent p-2 shadow-md  hover:border-b-2 hover:border-b-gray-400 dark:shadow-gray-700 "
+                      className="cursor-pointer rounded-lg border border-b-gray-300 border-b-transparent p-2 shadow-md  hover:border-b-gray-400 dark:bg-[#323741] dark:shadow-gray-700 "
                       onClick={() => {
                         handleSetChat(discussions);
                         setActiveTab("");
@@ -195,12 +170,13 @@ export default function UserChat() {
                         key={discussions[0].sellerDetails.Phone_Number}
                         className="flex space-x-4"
                       >
-                        <div className="relative h-20 w-20">
+                        <div className="relative h-16 w-16">
                           <Image
                             src={discussions[0].productDetails.Images[0]}
                             alt="product image"
                             fill
                             className="rounded-md"
+                            sizes="100"
                           />
                         </div>
                         <div>
@@ -224,7 +200,7 @@ export default function UserChat() {
                             )}
                             {discussions.length > 1 && (
                               <div className="text-sm text-gray-700">
-                                ...{discussions.length - 1}more
+                                ...{discussions.length}more
                               </div>
                             )}
                           </div>
@@ -233,7 +209,7 @@ export default function UserChat() {
                     </div>
                   ),
                 )}
-              </SheetDescription>
+              </div>
             ) : (
               <ProductPanel userId={userId} />
             ))}

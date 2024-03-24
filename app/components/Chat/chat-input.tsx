@@ -120,15 +120,15 @@ export default function ChatInput({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSend)}
-        className="flex max-w-full rounded-md border-none bg-gray-200 p-1"
+        className="flex max-w-full rounded-md border-none bg-gray-200 p-1 dark:bg-[#323741]"
       >
         <FormItem>
           <FormControl>
             <div className="flex flex-1 ">
-              <div className="flex max-w-[97%] justify-between rounded-md p-1 dark:bg-gray-900">
-                <Input
+              <div className="flex max-w-[97%] justify-between rounded-md  dark:bg-gray-900">
+                <input
                   disabled={isLoading}
-                  className="w-full resize-none text-foreground placeholder:text-accent-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="w-full resize-none bg-gray-200 p-1 text-foreground placeholder:text-accent-foreground focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#323741]"
                   placeholder="Type a message"
                   {...form.register("content")}
                 />
@@ -151,16 +151,15 @@ export default function ChatInput({
                     </DialogHeader>
                     <DialogDescription className="px-6 py-4 ">
                       <h1 className="font-semibold text-yellow-400 md:text-lg ">
-                        Warning:
+                        Attention:
                       </h1>{" "}
-                      Are you sure you want to lock the deal? Once locked, the
-                      deal cannot be unlocked.
-                      <h1>
-                        if the deal gets accepted by other user all of your
-                        chats related to this product will go stale except this
-                        one
-                      </h1>
+                      Confirm locking the deal? Once locked, it's irreversible.
+                      <p>
+                        If another user accepts the deal, all other chats about
+                        this product will become inactive, except this one.
+                      </p>
                     </DialogDescription>
+
                     <div className="flex justify-end px-6 py-2">
                       <DialogClose asChild>
                         <Button

@@ -79,11 +79,9 @@ export default function ChatUI({
     }
 
     function updateMessageHandler(message: any) {
-      console.log("updateMessage => ", message);
       setMessages((prevMessages) => {
         return prevMessages.map((msg) => {
           if (msg.msgId === String(message._id)) {
-            console.log("msg => ", msg, " message => ", message);
             return { ...msg, accepted: message.accepted };
           } else {
             return msg;
@@ -103,12 +101,6 @@ export default function ChatUI({
     };
   }, [addKey, updateKey, productId, sellerId, buyerId, messages]);
 
-  console.log(
-    "isFetchingNextPage => ",
-    isFetchingNextPage,
-    "hasNextPage => ",
-    hasNextPage,
-  );
   useChatScroll({
     topRef,
     bottomRef,
@@ -150,7 +142,7 @@ export default function ChatUI({
     <section className="absolute flex h-[100vh] w-[88%] flex-col items-center">
       <div className="relative h-[90%] w-full rounded-md border ">
         {/* User display */}
-        <header className="user-display z-10 mb-2 flex items-center space-x-1 rounded-t-md py-3 pl-1 shadow-sm ">
+        <header className="user-display z-10 mb-2 flex items-center space-x-1 rounded-t-md py-3 pl-1 shadow-sm dark:bg-[#272D3A]">
           {otherUserDetails.id !== "" && (
             <button
               className="rounded-full"
@@ -184,6 +176,7 @@ export default function ChatUI({
             <section className="flex flex-col space-y-3 ">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((val, _) => (
                 <div
+                  key={val}
                   className={cn(
                     "w-[70%] animate-pulse rounded-md bg-gray-300",
                     val % 3 === 0 ? "mr-auto" : "ml-auto",
@@ -239,7 +232,7 @@ export default function ChatUI({
                             </Button>
                             <Button
                               onClick={() => lockTheDeal("no", msg.msgId ?? "")}
-                              className="rounded-md bg-white px-4 py-2 text-black hover:bg-gray-100"
+                              className="rounded-md bg-red-100 px-4 py-2  text-red-500  hover:bg-red-200"
                             >
                               Reject
                             </Button>

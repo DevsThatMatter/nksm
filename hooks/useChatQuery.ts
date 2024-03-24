@@ -18,7 +18,6 @@ export const useChatQuery = ({
   currentUser,
 }: ChatQueryProps) => {
   async function fetchMessages({ pageParam = 0 }) {
-    console.log("fetch function called with pageParam => ", pageParam);
     const res = await getInitialMessages({
       sellerId,
       buyerId,

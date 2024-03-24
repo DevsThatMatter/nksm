@@ -26,11 +26,11 @@ export async function getUserId({ email }: z.infer<typeof GetUserIdSchema>) {
   try {
     await connectToDB();
     const user = await User.findOne({ Email: email });
-    const userId = user._id.toString();
+    const userId = user?._id?.toString();
     // for test return "65c5e97aafe71c6df760f715"
     return "65c5e97aafe71c6df760f717";
   } catch (error) {
-    console.log("there was an error while fething user id");
+    throw error;
     return undefined;
   }
 }
@@ -180,7 +180,6 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
 
     return {
       data: { resultWhereUserIsBuyer, resultWhereUserIsSeller1 },
-      fetchComplete: true,
     };
   } catch (error) {
     console.error("Error in chatHandler:", error);
@@ -208,12 +207,10 @@ export async function chatBetweenSellerAndBuyerForProduct(
       Product: productId,
     })) as IChat;
     if (!chats) {
-      console.log("No recent chats");
       return [];
     }
     return chats;
   } catch (error) {
-    console.log(error);
     throw new Error("Internal server error");
   }
 }
@@ -329,9 +326,7 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
           },
         },
       ]);
-      console.log("msg.chatMessages._id => ", messageIds);
       for (const msg of messageIds[0].chatMessages) {
-        console.log("msg.chatMessages._id => ", msg);
         const updatedMessage = await Message.findOneAndUpdate(
           {
             _id: new mongo.ObjectId(msg._id),
@@ -348,6 +343,23 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
           updatedMessage,
         );
       }
+
+      await Chat.updateMany(
+        {
+          $and: [
+            {
+              Seller: new mongo.ObjectId(validatedProps.seller),
+              ProductId: new mongo.ObjectId(validatedProps.productId),
+            },
+            {
+              $nor: [{ Buyer: new mongo.ObjectId(validatedProps.buyer) }],
+            },
+          ],
+        },
+        {
+          $set: { status: "dead" },
+        },
+      );
     } else {
       const messageUpdateQuery = {
         _id: new mongo.ObjectId(validatedProps.msgId),
@@ -442,77 +454,95 @@ export async function countUnreadMessages(
   },
 ) {
   try {
-    const cacheKey = `unreadCount-${props.sellerId}-${props.buyerId}-${props.productId}`;
-    const value = await client.get(cacheKey);
-    if (props.caller === "get") {
-      if (value === null) {
-        const unreadCount = await computeUnreadMessages(props);
-        await client.setex(cacheKey, 1800, unreadCount);
-        return {
-          productId: props.productId,
-          cachedVal: unreadCount,
-          error: null,
-          status: 200,
-        };
-      } else {
-        console.log("Cached value:", value);
-        return {
-          productId: props.productId,
-          cachedVal: Number(value),
-          error: null,
-          status: 200,
-        };
-      }
-    } else {
-      console.log("message => ", props.messageId);
-      await Message.updateOne(
-        {
-          _id: new mongo.ObjectId(props.messageId),
-        },
-        {
-          $set: { readStatus: true },
-        },
-        { new: true },
-      );
-      const updatedMessage = await Message.findOne({
-        _id: new mongo.ObjectId(props.messageId),
-      });
-      // console.log("updated => ", updatedMessage)
-      const updateKey = `chat${props.productId}productId${props.productId}sellerId${props.sellerId}buyerId${props.buyerId}update`;
-      await pusherServer.trigger(updateKey, "messages:update", updatedMessage);
-      // console.log("message's read status changed");
+    const unreadCount = await computeUnreadMessages(props);
 
-      if (value === null) {
-        console.log("Key not found in cache");
-        let unreadCount = await computeUnreadMessages(props);
-        unreadCount--;
-        await client.setex(cacheKey, 1800, unreadCount);
-        return {
-          productId: props.productId,
-          cachedVal: unreadCount,
-          status: 200,
-          error: null,
-        };
-      } else {
-        console.log("Cached value:", value);
-        const unreadCount = Number(value) ?? 1 - 1;
-        await client.setex(cacheKey, 1800, unreadCount);
-        return {
-          productId: props.productId,
-          cachedVal: unreadCount,
-          error: null,
-          status: 200,
-        };
-      }
-    }
-  } catch (error) {
-    console.error("Error counting unread messages:", error);
     return {
-      cachedVal: null,
-      error: error,
-      status: 500,
+      productId: props.productId,
+      cachedVal: unreadCount,
+      error: null,
+      status: 200,
+    };
+  } catch (error) {
+    return {
+      productId: props.productId,
+      cachedVal: 0,
+      error: null,
+      status: 200,
     };
   }
+
+  // try {
+  // const cacheKey = `unreadCount-${props.sellerId}-${props.buyerId}-${props.productId}`;
+  // const value = await client.get(cacheKey);
+  // if (props.caller === "get") {
+  //   if (value === null) {
+
+  //     //   await client.setex(cacheKey, 1800, unreadCount);
+  //     //   return {
+  //     //     productId: props.productId,
+  //     //     cachedVal: unreadCount,
+  //     //     error: null,
+  //     //     status: 200,
+  //     //   };
+  //     // } else {
+  //     //   console.log("Cached value:", value);
+  //     //   return {
+  //     //     productId: props.productId,
+  //     //     cachedVal: Number(value),
+  //     //     error: null,
+  //     //     status: 200,
+  //     //   };
+  //     // }
+  //   } else {
+  //     console.log("message => ", props.messageId);
+  //     await Message.updateOne(
+  //       {
+  //         _id: new mongo.ObjectId(props.messageId),
+  //       },
+  //       {
+  //         $set: { readStatus: true },
+  //       },
+  //       { new: true },
+  //     );
+  //     const updatedMessage = await Message.findOne({
+  //       _id: new mongo.ObjectId(props.messageId),
+  //     });
+  //     // console.log("updated => ", updatedMessage)
+  //     const updateKey = `chat${props.productId}productId${props.productId}sellerId${props.sellerId}buyerId${props.buyerId}update`;
+  //     await pusherServer.trigger(updateKey, "messages:update", updatedMessage);
+  //     // console.log("message's read status changed");
+
+  //     if (value === null) {
+  //       console.log("Key not found in cache");
+  //       let unreadCount = await computeUnreadMessages(props);
+  //       unreadCount--;
+  //       await client.setex(cacheKey, 1800, unreadCount);
+  //       return {
+  //         productId: props.productId,
+  //         cachedVal: unreadCount,
+  //         status: 200,
+  //         error: null,
+  //       };
+  //     } else {
+  //       console.log("Cached value:", value);
+  //       const unreadCount = Number(value) ?? 1 - 1;
+  //       await client.setex(cacheKey, 1800, unreadCount);
+  //       return {
+  //         productId: props.productId,
+  //         cachedVal: unreadCount,
+  //         error: null,
+  //         status: 200,
+  //       };
+  //     }
+  //   }
+  // } catch (error) {
+  //   console.error("Error counting unread messages:", error);
+  //   return {
+  //     cachedVal: null,
+  //     error: error,
+  //     status: 500,
+  //   };
+  // }
 }
 
 const CreateNewMessage = z.object({
@@ -582,11 +612,9 @@ export async function createNewMessage(
     });
 
     if (chat) {
-      console.log("chat found");
       chat.Messages.push(createdMessage._id);
       await chat.save();
     } else {
-      console.log("chat not found");
       const newChat = new Chat({
         Seller: validatedProps.sellerId,
         Buyer: validatedProps.buyerId,
@@ -688,7 +716,6 @@ export async function getInitialMessages(
       err: null,
     };
   } catch (error) {
-    console.log("Error in get initial messages", error);
     return {
       content: null,
       msg: "Internal server error",
@@ -699,100 +726,104 @@ export async function getInitialMessages(
 }
 
 export async function fecthInvites(userId: string) {
-  const pipeline = [
-    {
-      $match: {
-        Seller: new mongo.ObjectId(userId),
-        status: "invite",
+  try {
+    const pipeline = [
+      {
+        $match: {
+          Seller: new mongo.ObjectId(userId),
+          status: "invite",
+        },
       },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "Buyer",
-        foreignField: "_id",
-        as: "buyerDetails",
+      {
+        $lookup: {
+          from: "users",
+          localField: "Buyer",
+          foreignField: "_id",
+          as: "buyerDetails",
+        },
       },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "Seller",
-        foreignField: "_id",
-        as: "sellerDetails",
+      {
+        $lookup: {
+          from: "users",
+          localField: "Seller",
+          foreignField: "_id",
+          as: "sellerDetails",
+        },
       },
-    },
-    {
-      $lookup: {
-        from: "products",
-        localField: "ProductId",
-        foreignField: "_id",
-        as: "productDetails",
+      {
+        $lookup: {
+          from: "products",
+          localField: "ProductId",
+          foreignField: "_id",
+          as: "productDetails",
+        },
       },
-    },
-    {
-      $project: {
-        buyerDetails: {
-          $map: {
-            input: "$buyerDetails",
-            as: "buyer",
-            in: {
-              Last_Name: "$$buyer.Last_Name",
-              First_Name: "$$buyer.First_Name",
-              Phone_Number: "$$buyer.Phone_Number",
-              Avatar: "$$buyer.Avatar",
-              address: "$$buyer.address",
-              buyerId: {
-                $toString: "$$buyer._id",
+      {
+        $project: {
+          buyerDetails: {
+            $map: {
+              input: "$buyerDetails",
+              as: "buyer",
+              in: {
+                Last_Name: "$$buyer.Last_Name",
+                First_Name: "$$buyer.First_Name",
+                Phone_Number: "$$buyer.Phone_Number",
+                Avatar: "$$buyer.Avatar",
+                address: "$$buyer.address",
+                buyerId: {
+                  $toString: "$$buyer._id",
+                },
               },
             },
           },
-        },
-        sellerDetails: {
-          $arrayElemAt: ["$sellerDetails", 0],
-        },
-        productDetails: {
-          $arrayElemAt: ["$productDetails", 0],
-        },
-      },
-    },
-    {
-      $unset: "_id",
-    },
-    {
-      $project: {
-        buyerDetails: 1,
-        "sellerDetails.Avatar": 1,
-        "sellerDetails.address": 1,
-        "sellerDetails.Last_Name": 1,
-        "sellerDetails.First_Name": 1,
-        "sellerDetails.Phone_Number": 1,
-        sellerId: {
-          $toString: "$sellerDetails._id",
-        },
-        "productDetails.Product_Name": 1,
-        "productDetails.Images": 1,
-        productId: {
-          $toString: "$productDetails._id",
+          sellerDetails: {
+            $arrayElemAt: ["$sellerDetails", 0],
+          },
+          productDetails: {
+            $arrayElemAt: ["$productDetails", 0],
+          },
         },
       },
-    },
-  ];
-  const data = (await Chat.aggregate(pipeline)) as InviteStruct[];
-  data.sort((a: InviteStruct, b: InviteStruct) => {
-    const productNameA = a.productDetails.Product_Name.toLowerCase();
-    const productNameB = b.productDetails.Product_Name.toLowerCase();
+      {
+        $unset: "_id",
+      },
+      {
+        $project: {
+          buyerDetails: 1,
+          "sellerDetails.Avatar": 1,
+          "sellerDetails.address": 1,
+          "sellerDetails.Last_Name": 1,
+          "sellerDetails.First_Name": 1,
+          "sellerDetails.Phone_Number": 1,
+          sellerId: {
+            $toString: "$sellerDetails._id",
+          },
+          "productDetails.Product_Name": 1,
+          "productDetails.Images": 1,
+          productId: {
+            $toString: "$productDetails._id",
+          },
+        },
+      },
+    ];
+    const data = (await Chat.aggregate(pipeline)) as InviteStruct[];
+    data.sort((a: InviteStruct, b: InviteStruct) => {
+      const productNameA = a.productDetails.Product_Name.toLowerCase();
+      const productNameB = b.productDetails.Product_Name.toLowerCase();
 
-    if (productNameA < productNameB) {
-      return -1;
-    }
-    if (productNameA > productNameB) {
-      return 1;
-    }
-    return 0;
-  });
+      if (productNameA < productNameB) {
+        return -1;
+      }
+      if (productNameA > productNameB) {
+        return 1;
+      }
+      return 0;
+    });
 
-  return data;
+    return data;
+  } catch (error) {
+    throw error;
+  }
 }
 
 const AcceptInviteSchema = z.object({
@@ -831,7 +862,7 @@ export async function acceptTheInvite(
       );
     }
   } catch (error) {
-    console.log("internal server error", error);
+    throw error;
   }
 }
 
@@ -864,10 +895,20 @@ export async function getChatStatus(props: z.infer<typeof ChatStatusProps>) {
   }
 }
 
+interface IAllUserSentInvites {
+  Seller: {
+    Avatar: string;
+    Name: string;
+  };
+  Product: {
+    Name: string;
+  };
+}
+
 export async function getAllUserSentInvites(userId: string) {
   try {
     await connectToDB();
-    const sentInvites = await Chat.aggregate([
+    const sentInvites: IAllUserSentInvites[] = await Chat.aggregate([
       {
         $match: {
           Buyer: new mongo.ObjectId(userId),
@@ -890,6 +931,7 @@ export async function getAllUserSentInvites(userId: string) {
               $project: {
                 _id: 0,
                 "Seller.Avatar": "$Avatar",
+                "Seller.Name": "$Name",
               },
             },
           ],
@@ -927,17 +969,14 @@ export async function getAllUserSentInvites(userId: string) {
       {
         $project: {
           "Seller.Avatar": "$SellerInfo.Seller.Avatar",
-          "Seller.Name": "$SellerInfo.Name",
+          "Seller.Name": "$SellerInfo.Seller.Name",
           "Product.Name": "$ProductInfo.Product.Name",
           _id: 0,
         },
       },
     ]);
-
-    console.log(sentInvites);
     return sentInvites;
   } catch (error) {
-    console.log("Error while fetching sent invites:", error);
     throw error;
   }
 }
@@ -989,7 +1028,6 @@ export async function getLastMessages({
     ];
     const lastMsg = (await Chat.aggregate(pipeline))[0]
       .lastSentForeignMessage as string;
-    console.log("lastmsg => ", lastMsg);
     return {
       lastMsg: lastMsg,
       status: 200,
