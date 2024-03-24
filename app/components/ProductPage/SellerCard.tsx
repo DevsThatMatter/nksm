@@ -8,13 +8,18 @@ import React from "react";
 import { Button } from "../ui/button";
 import { Icons } from "@/app/utils/icons";
 import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
-
-import { auth } from "@/auth";
 import OfferForm from "./offer-form";
+import { auth } from "@/auth";
+import mongoose from "mongoose";
+interface SellerCardProps {
+  sellerInfo: Seller;
+  productName: string;
+  productImage: string;
+  productId: mongoose.Types.ObjectId
+}
 
-async function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
+async function SellerCard({ sellerInfo, productName, productImage, productId }: SellerCardProps) {
   const senderEmail = (await auth())?.user?.email;
-
   return (
     <div>
       <h2 className="text-lg font-semibold">Seller Details</h2>
@@ -43,6 +48,9 @@ async function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
             <OfferForm
               reciverEmail={sellerInfo.Email}
               senderEmail={senderEmail ?? ""}
+              productImage={productImage}
+              productName={productName}
+              productId={productId}
             />
           </DialogContent>
         </Dialog>

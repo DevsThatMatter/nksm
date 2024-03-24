@@ -1,7 +1,5 @@
 "use client";
 import {
-  Card,
-  CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
@@ -14,6 +12,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/button";
 import { sendEmail } from "@/lib/actions/email.actions";
+import { toast } from "sonner";
+import { DialogClose } from "@radix-ui/react-dialog";
+import mongoose from "mongoose";
 
 const OfferSchema = z.object({
   price: z.number().min(1, { message: "Zero values are not accepted" }),
@@ -21,15 +22,19 @@ const OfferSchema = z.object({
 interface OfferFormProps {
   reciverEmail: string;
   senderEmail: string;
+  productImage: string;
+  productId: mongoose.Types.ObjectId;
+  productName: string;
 }
 export default function OfferForm({
   reciverEmail,
   senderEmail,
+  productImage,
+  productId,
+  productName
 }: OfferFormProps) {
-  function sendEmailWithDetails(formData: FormData) {
-    console.log("hello from sn");
-    sendEmail(senderEmail, reciverEmail, formData);
-  }
+  const sendEmailWithDetails = (formData: FormData) =>
+    sendEmail(senderEmail, reciverEmail, productName, productImage, productId, formData);
 
   const form = useForm({
     resolver: zodResolver(OfferSchema),
@@ -58,12 +63,14 @@ export default function OfferForm({
           </FormItem>
         </CardContent>
         <CardFooter className="flex">
-          <Button
-            type="submit"
-            className="w-full bg-green-600 hover:bg-green-700 dark:text-foreground"
-          >
-            Submit Offer
-          </Button>
+          <DialogClose>
+            <Button
+              type="submit"
+              className="w-full bg-green-600 hover:bg-green-700 dark:text-foreground"
+            >
+              Submit Offer
+            </Button>
+          </DialogClose>
         </CardFooter>
       </form>
     </Form>
