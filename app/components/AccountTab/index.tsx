@@ -7,11 +7,23 @@ import { User } from "next-auth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { updateProfile } from "@/lib/actions/updateProfile.actions";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/app/components/ui/form";
+import RadixPencil from "../ui/radixpencil";
 
 const indianPhoneRegex: RegExp = /^(?:[6-9]\d{9})?$/;
 
-const schema = z.object({
+type FormFields = z.infer<typeof editProfileSchema>;
+const editProfileSchema = z.object({
   name: z
     .string()
     .min(3, "Name must contain atleast 3 characters.")
@@ -20,47 +32,46 @@ const schema = z.object({
     .string()
     .regex(indianPhoneRegex, "Enter a valid mobile number.")
     .optional()
-    .or(z.literal("")),
+    .or(z.literal("")), //Allows for no phone numbers to exist, since phone numbers aren't fetched by default from GoogleProvider
 });
 
-type FormFields = z.infer<typeof schema>;
-
-export default function AccountTab({
-  userData,
-}: {
-  userData: User | undefined;
-}) {
-  const [isEditing, setisEditing] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm<FormFields>({
+export default function AccountTab({ ...props }) {
+  const [isEditing, setisEditing] = useState<boolean>(false);
+  const form = useForm<FormFields>({
     defaultValues: {
-      name: userData?.name?.trim(),
+      name: props.Name,
+      phone: props.Phone,
     },
-    resolver: zodResolver(schema),
+    disabled: !isEditing,
+    resolver: zodResolver(editProfileSchema),
   });
 
-  const sendData: SubmitHandler<FormFields> = (data) => {
-    if (errors.name || errors.phone) setisEditing(true);
-    else {
-      isEditing && console.log(data);
-      setisEditing(!isEditing);
+  const sendData: SubmitHandler<FormFields> = async (data) => {
+    if (!isEditing) {
+      setisEditing((prev) => !prev);
+
+      return;
     }
+    const { name, phone } = data;
+    const email = props.Email;
+    const response = await updateProfile({ name, phone, email });
+    if (response?.error) {
+      alert(`Something went wrong:\n ${response.error}`);
+      console.log(data);
+      return;
+    }
+    setisEditing(false);
   };
+
   return (
-    <div className="mt-10 flex w-11/12 scale-100 flex-col rounded-xl bg-[#16213E] p-6 sm:w-3/5">
+    <div className="mt-10 flex w-11/12 scale-100 flex-col rounded-xl bg-[#9bd6cc] p-6 dark:bg-[#16213E] sm:w-3/5">
       <div>
         <div className="relative -top-14 flex flex-col items-center justify-center gap-4">
           <div className="flex h-[5.5rem] w-[5.5rem] items-center justify-center sm:h-[6rem] sm:w-[6rem]">
             <Image
               src={
-                userData
-                  ? userData?.image!
-                  : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                props.Avatar ||
+                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
               }
               alt="Profile picture"
               width={100}
@@ -75,48 +86,84 @@ export default function AccountTab({
             Change
           </Button>
         </div>
-        <form
-          onSubmit={handleSubmit(sendData)}
-          className="relative flex flex-col items-center justify-center gap-4 *:text-center *:text-base sm:items-start sm:px-0 sm:*:text-start"
-        >
-          <Input
-            {...register("name")}
-            className={`w-full ${!isEditing && "border-0"} sm:lg:w-3/5 ${errors.name && "ring-2 ring-red-500"}`}
-            placeholder="Full Name"
-            type="text"
-            disabled={!isEditing}
-          />
-          {errors.name && (
-            <div className="text-red-500">{errors.name.message}</div>
-          )}
-
-          <Input
-            className={`${!isEditing && "border-0"} w-full sm:lg:w-3/5`}
-            placeholder="Email"
-            type="email"
-            value={userData?.email?.trim()}
-            disabled
-          />
-
-          <Input
-            {...register("phone")}
-            className={`w-full  ${!isEditing && "border-0"} sm:lg:w-3/5 ${errors.phone && "ring-2 ring-red-500"}`}
-            placeholder="Add a phone number"
-            type="text"
-            disabled={!isEditing}
-          />
-          {errors.phone && (
-            <div className="text-red-500">{errors.phone.message}</div>
-          )}
-
-          <Button
-            type="submit"
-            className="mt-5 w-full place-self-center sm:place-self-start"
-            variant="outline"
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(sendData)}
+            className="relative flex flex-col items-center justify-center gap-4 *:text-center *:text-base sm:items-start sm:px-0 sm:*:text-start"
           >
-            {!isEditing ? "Edit" : "Save"} Profile
-          </Button>
-        </form>
+            <FormField
+              name="name"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="w-full *:text-base">
+                  <FormLabel>Name:</FormLabel>
+                  <FormControl>
+                    <Input
+                      className={`w-full border-slate-500 text-center disabled:border-0 sm:w-3/5 sm:text-start`}
+                      placeholder="Full Name"
+                      disabled={!isEditing || form.formState.isSubmitting}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="phone"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="w-full *:text-base">
+                  <FormLabel>Phone:</FormLabel>
+                  <FormControl>
+                    <Input
+                      className={`w-full border-slate-500 text-center disabled:border-0 sm:w-3/5 sm:text-start`}
+                      placeholder="Add a phone number"
+                      disabled={!isEditing || form.formState.isSubmitting}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="email"
+              render={({ field }) => (
+                <FormItem className="w-full *:text-base">
+                  <FormLabel>Email:</FormLabel>
+                  <Input
+                    className={`${!isEditing && "border-0"} w-full border-slate-600 text-center sm:w-3/5 sm:text-start`}
+                    placeholder="Email"
+                    type="email"
+                    value={props.Email}
+                    name="email"
+                    disabled
+                  />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              className="mt-5 w-full place-self-center sm:place-self-start"
+              variant="outline"
+              disabled={form.formState.isSubmitting}
+            >
+              {!isEditing ? (
+                <>
+                  Edit Profile <RadixPencil className="ml-2" />
+                </>
+              ) : form.formState.isSubmitting ? (
+                "Saving..."
+              ) : (
+                "Save Profile"
+              )}{" "}
+            </Button>
+          </form>
+        </Form>
       </div>
     </div>
   );

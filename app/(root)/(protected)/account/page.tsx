@@ -3,9 +3,11 @@ import Link from "next/link";
 
 import AccountTab from "@/app/components/AccountTab";
 import { auth } from "@/auth";
+import { User } from "@/lib/models/user.model";
 
 export default async function Component() {
   const userData = (await auth())?.user;
+  const userInfo = await User.find({ Email: userData?.email?.trim() });
   return (
     <div className="h-screen w-screen">
       <div className="w-full rounded-lg p-8 shadow ">
@@ -43,7 +45,12 @@ export default async function Component() {
             </nav>
           </div>
           <div className="mt-6 flex justify-center pt-4">
-            <AccountTab userData={userData} />
+            <AccountTab
+              Name={userInfo[0].Name}
+              Email={userInfo[0].Email}
+              Phone={userInfo[0].Phone_Number}
+              Avatar={userInfo[0].Avatar}
+            />
           </div>
         </Tabs>
       </div>

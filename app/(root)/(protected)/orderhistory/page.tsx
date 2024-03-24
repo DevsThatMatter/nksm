@@ -54,7 +54,8 @@ export default function Component() {
             </Link>
           </nav>
         </div>
-        <div className="mt-6 pt-4">
+        <div className="pt-3">
+          <OrderHistoryTab />
           <OrderHistoryTab />
         </div>
       </Tabs>
