@@ -38,7 +38,7 @@ const ProductCard = ({
                 </h1>
                 <span className="text-gray-500">₹{price}</span>
               </div>
-              <p className="line-clamp-2 h-8 w-full overflow-ellipsis break-words text-gray-500 min-[300px]:text-xs md:h-10 md:text-sm lg:h-8 lg:text-xs">
+              <p className="line-clamp-2 h-8 w-full overflow-ellipsis break-words text-gray-500 min-[300px]:max-w-28 min-[300px]:text-xs min-[430px]:max-w-40 md:h-10 md:max-w-48 md:text-sm lg:h-8 lg:text-xs 2xl:max-w-60">
                 {description}
               </p>
             </div>

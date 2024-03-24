@@ -31,7 +31,7 @@ const Navbar = async ({
   const products = (await fetchRecentProductS()) || [];
   return (
     <>
-      <div className="sticky left-0 right-0 top-0 z-[100] bg-background shadow-md">
+      <div className="sticky left-0 right-0 top-0 z-50 bg-background shadow-md">
         <nav className="max-h-30 flex justify-center lg:justify-between">
           {!className && (
             <div className="h-[4.769rem]">
