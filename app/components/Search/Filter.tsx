@@ -49,7 +49,7 @@ const Filter = () => {
   const sortBy = searchParams!.get("by") || "createdAt";
 
   return (
-    <div className="my-2 w-[20vw] text-center">
+    <div className="my-2 w-[20%] text-center">
       <h1 className="font-bold">Browse by filters</h1>
       <section className="flex justify-center p-2">
         <Popover open={open} onOpenChange={setOpen}>
@@ -108,15 +108,7 @@ const Filter = () => {
         </Button>
       </section>
       <section>
-        Sort by:
-        <Switch
-          onClick={() => {
-            router.push(
-              `?q=${q}&category=${value}&sort=${-1 * sort}&by=${sortBy}`,
-            );
-            console.log("Switch Clicked");
-          }}
-        />
+        <h3 className=" pl-3 text-start">Sort by:</h3>
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -126,7 +118,7 @@ const Filter = () => {
                 passHref
               >
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Created
+                  Date of Listing
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
@@ -143,6 +135,21 @@ const Filter = () => {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
+        {sortBy === "createdAt"
+          ? sort == 1
+            ? "Recent to Old"
+            : "Old to Recent"
+          : sort == 1
+            ? "Low to High"
+            : "High to Low"}
+        <Switch
+          onClick={() => {
+            router.push(
+              `?q=${q}&category=${value}&sort=${-1 * sort}&by=${sortBy}`,
+            );
+          }}
+          className="ml-8 mt-1"
+        />
       </section>
     </div>
   );

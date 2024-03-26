@@ -25,18 +25,19 @@ export default async function Page({
   const loadMoreKey = JSON.stringify(searchParams);
 
   return (
-    <main className="m-auto max-w-screen-md">
+    <main className="container m-auto flex justify-center">
       <Filter />
-
-      <p className="mb-4 text-xl font-semibold">
-        Showing results for &quot;{searchParams.q || "All"}&quot;
-        {searchParams.category ? ` in ${searchParams.category}` : ""}
-      </p>
-      <SearchShell>
-        {result.productsData}
-        {result.isNext && <LoadMore key={loadMoreKey} pageSize={pageSize} />}
-      </SearchShell>
-      <br />
+      <div className="w-[80%] pt-4">
+        <p className="mb-4 text-xl font-semibold">
+          Showing results for &quot;{searchParams.q || "All"}&quot;
+          {searchParams.category ? ` in ${searchParams.category}` : ""}
+        </p>
+        <SearchShell>
+          {result.productsData}
+          {result.isNext && <LoadMore key={loadMoreKey} pageSize={pageSize} />}
+        </SearchShell>
+        <br />
+      </div>
     </main>
   );
 }
