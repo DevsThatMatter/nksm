@@ -10,7 +10,6 @@ import { Product } from "../models/product.model";
 
 import { MessageTypes, IChat, chatDetails } from "@/types";
 import { Message } from "../models/message.model";
-import { client } from "../database/redis-config";
 import { pusherServer } from "../pusher";
 import { InviteStruct } from "@/app/components/Chat/invites";
 
@@ -638,14 +637,14 @@ const GetmessageProps = z.object({
   buyerId: mongoId,
   productId: mongoId,
   currentUser: mongoId,
-  pageNo: z.number().optional(),
+  pageNo: z.number(),
 });
 
 export async function getInitialMessages(
   props: z.infer<typeof GetmessageProps>,
 ) {
   try {
-    const docPerPage = 10;
+    const docPerPage = 15;
     const pipeline = [
       {
         $match: {
@@ -669,9 +668,7 @@ export async function getInitialMessages(
               input: "$Messages",
               as: "msg",
               in: {
-                msgId: {
-                  $toString: "$$msg._id",
-                },
+                msgId: { $toString: "$$msg._id" },
                 Message: "$$msg.Message",
                 Sender: "$$msg.Sender",
                 accepted: "$$msg.accepted",
@@ -684,31 +681,41 @@ export async function getInitialMessages(
       },
       {
         $project: {
-          _id: 0,
+          _id: props.pageNo,
           Messages: 1,
           Locked: 1,
         },
       },
+      { $unwind: "$Messages" },
+      { $sort: { "Messages.TimeStamp": -1 as const } },
+      { $skip: (props.pageNo ?? 0) * docPerPage },
+      { $limit: docPerPage },
+      {
+        $group: {
+          _id: 1,
+          Messages: { $push: "$Messages" },
+        },
+      },
     ];
 
-    const skipCount =
-      props.pageNo !== undefined ? props.pageNo * docPerPage : 0;
-    const { Messages, Locked } = (
-      await Chat.aggregate(pipeline).limit(docPerPage).skip(skipCount)
-    )[0] as { Messages: MessageTypes[]; Locked: boolean };
+    const [chat, messages] = await Promise.all([
+      Chat.findOne({
+        Seller: new mongo.ObjectId(props.sellerId),
+        Buyer: new mongo.ObjectId(props.buyerId),
+        ProductId: new mongo.ObjectId(props.productId),
+      }),
+      Chat.aggregate(pipeline),
+    ]);
 
-    Messages.sort((a, b) => {
-      const dateA = new Date(a.TimeStamp);
-      const dateB = new Date(b.TimeStamp);
-      return dateA.getTime() - dateB.getTime();
-    });
     const nextPageNo =
-      Messages.length === docPerPage ? (props.pageNo ?? 0) + 1 : undefined;
+      messages && messages.length === docPerPage
+        ? (props.pageNo ?? 0) + 1
+        : undefined;
 
     return {
       content: {
-        messages: Messages,
-        Locked,
+        messages: messages ? messages[0].Messages : [],
+        Locked: chat?.status === "stale",
         nextPageNo,
       },
       msg: "Success, the initial messages found",
@@ -724,7 +731,6 @@ export async function getInitialMessages(
     };
   }
 }
-
 export async function fecthInvites(userId: string) {
   try {
     const pipeline = [

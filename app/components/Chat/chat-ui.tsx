@@ -60,10 +60,17 @@ export default function ChatUI({
 
   useEffect(() => {
     if (data?.pages?.[0]?.content?.messages) {
-      setMessages(data.pages[0].content.messages);
+      setMessages((prevMessages) => {
+        const newMessages = data?.pages?.[0]?.content?.messages;
+        const filteredNewMessages = newMessages.filter(
+          (newMsg: any) =>
+            !prevMessages.some((prevMsg) => prevMsg.msgId === newMsg.msgId),
+        );
+        return [...filteredNewMessages, ...prevMessages];
+      });
     }
     setLockedStatus({
-      status: data?.pages?.[0].content?.Locked ?? false,
+      status: data?.pages?.[0]?.content?.Locked ?? false,
       accepted: "pending",
     });
   }, [data]);
@@ -74,7 +81,7 @@ export default function ChatUI({
 
     function newMessageHandler(message: MessageTypes) {
       setMessages((msg) => {
-        return [...msg, message];
+        return [message, ...msg];
       });
     }
 
@@ -130,17 +137,17 @@ export default function ChatUI({
 
   const messageElements = document.querySelectorAll(".user-message-false");
 
-  useChatObserver({
-    unreadMessages: messageElements,
-    sellerId,
-    buyerId,
-    productId,
-    currentUserId,
-  });
+  // useChatObserver({
+  //   unreadMessages: messageElements,
+  //   sellerId,
+  //   buyerId,
+  //   productId,
+  //   currentUserId,
+  // });
 
   return (
-    <section className="absolute flex h-[100vh] w-[88%] flex-col items-center">
-      <div className="relative h-[90%] w-full rounded-md border ">
+    <section className="absolute left-0 top-0 h-[100vh] w-[100%] flex-col items-center">
+      <div className="relative h-[100%] w-full">
         {/* User display */}
         <header className="user-display z-10 mb-2 flex items-center space-x-1 rounded-t-md py-3 pl-1 shadow-sm dark:bg-[#272D3A]">
           {otherUserDetails.id !== "" && (
@@ -169,9 +176,18 @@ export default function ChatUI({
         <div
           ref={topRef}
           className={cn(
-            "no-scrollbar mx-autoflex h-[72vh] max-w-md flex-1 flex-col-reverse overflow-y-auto px-2.5 pb-2",
+            "no-scrollbar mx-auto flex h-[83vh] max-w-md flex-1 flex-col overflow-y-auto px-2.5 pb-2",
           )}
         >
+          {isFetchingNextPage && hasNextPage && (
+            <div className="mx-auto">
+              <h4>...Loading</h4>
+              <h4>
+                {isFetchingNextPage ? "isFetchinh true" : "isFetching false"}
+              </h4>
+              <h4>{hasNextPage ? "true" : "false"}</h4>
+            </div>
+          )}
           {status === "pending" ? (
             <section className="flex flex-col space-y-3 ">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((val, _) => (
@@ -195,14 +211,14 @@ export default function ChatUI({
             <div>Error: Something went wrong</div>
           ) : (
             <Fragment>
-              <section className="flex flex-col space-y-3">
+              <section className="flex flex-col-reverse ">
                 {messages?.map((msg: MessageTypes, j: number) =>
                   msg.options ? (
                     <div
                       key={j}
                       id={msg.msgId}
                       className={cn(
-                        "max-w-[80%] break-words rounded-lg p-3 shadow-md",
+                        "mt-3 max-w-[80%] break-words rounded-lg p-3 shadow-md",
                         msg.accepted === "accepted"
                           ? "bg-blue-600 text-white"
                           : msg.accepted === "rejected"
@@ -261,7 +277,7 @@ export default function ChatUI({
                           ? "user-message-true"
                           : msg.Sender !== currentUserId &&
                               "user-message-false",
-                        "max-w-[80%] break-words rounded-t-3xl px-4 py-3  font-medium",
+                        "mt-3 max-w-[80%] break-words rounded-t-3xl px-4  py-3 font-medium",
                         currentUserId === msg.Sender
                           ? "ml-auto rounded-l-3xl rounded-tr-3xl text-white"
                           : "mr-auto rounded-r-3xl rounded-br-3xl text-black dark:text-white",

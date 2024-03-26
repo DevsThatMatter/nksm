@@ -18,6 +18,7 @@ import {
 } from "../ui/dialog";
 import useChatStore from "@/hooks/useChatStore";
 import { createNewMessage, getChatStatus } from "@/lib/actions/chat.actions";
+import { cn } from "@/app/utils";
 
 const messageSchema = z.object({
   content: z.string().min(1),
@@ -125,16 +126,14 @@ export default function ChatInput({
         <FormItem>
           <FormControl>
             <div className="flex flex-1 ">
-              <div className="flex max-w-[97%] justify-between rounded-md  dark:bg-gray-900">
+              <div className="items flex max-w-[97%] justify-between  rounded-md dark:bg-gray-900">
                 <input
-                  disabled={isLoading}
-                  className="w-full resize-none bg-gray-200 p-1 text-foreground placeholder:text-accent-foreground focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#323741]"
+                  className="max-h-[200px] min-h-[40px] w-full resize-y overflow-y-auto bg-gray-200 p-1 text-foreground placeholder:text-accent-foreground focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#323741]"
                   placeholder="Type a message"
                   {...form.register("content")}
                 />
-
                 <Dialog>
-                  <DialogTrigger asChild disabled={gLockedStatus}>
+                  <DialogTrigger asChild>
                     <Button
                       disabled={gLockedStatus}
                       type="button"
@@ -186,7 +185,12 @@ export default function ChatInput({
         </FormItem>
         {(
           <button type="submit">
-            <Icons.sendIcon className="h-9 w-9 transform cursor-pointer rounded-full p-2 transition-transform  hover:bg-gray-300" />{" "}
+            <Icons.sendIcon
+              className={cn(
+                "h-9 w-9 transform cursor-pointer rounded-full p-2 transition-transform  hover:bg-gray-300",
+                isLoading && "text-gray-500",
+              )}
+            />{" "}
           </button>
         ) || (
           <Skeleton
