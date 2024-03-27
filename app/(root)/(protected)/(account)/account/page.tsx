@@ -1,18 +1,22 @@
+import AccountTab from "@/app/components/AccountTab";
 import { auth } from "@/auth";
-import AccountComponent from "../../../components/Account/page";
 import { User } from "@/lib/models/user.model";
 
-export default async function MainAccountContainer() {
+const page = async () => {
   const userData = (await auth())?.user;
   const userInfo = await User.find({ Email: userData?.email?.trim() });
+
+  console.log(userInfo);
+
   return (
-    <div>
-      <AccountComponent
+    <main className="mt-8 flex justify-center">
+      <AccountTab
         Name={userInfo[0].Name}
-        Email={userInfo[0].Email}
         Phone={userInfo[0].Phone_Number}
+        Email={userInfo[0].Email}
         Avatar={userInfo[0].Avatar}
       />
-    </div>
+    </main>
   );
-}
+};
+export default page;

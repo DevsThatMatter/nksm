@@ -142,3 +142,25 @@ export const fetchProductDetails = async (productId: string) => {
     throw error;
   }
 };
+
+export const fetchOrderHistory = async (email: string) => {
+  try {
+    await connectToDB();
+
+    const userInfo = await User.find({ Email: email })
+      .select({
+        Ordered_Products: true,
+      })
+      .populate({
+        path: "Ordered_Products",
+        model: Product,
+        select:
+          "Total_Quantity_Available Product_Name Price Images Condition Category Description",
+      });
+
+    return userInfo;
+  } catch (e: unknown) {
+    console.log("Something went wrong.");
+    throw e;
+  }
+};
