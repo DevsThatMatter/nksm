@@ -160,7 +160,7 @@ export default function UserChat() {
                   ([productId, discussions], idx) => (
                     <div
                       key={idx}
-                      className="cursor-pointer rounded-lg border border-b-gray-300 border-b-transparent p-2 shadow-md  hover:border-b-gray-400 dark:bg-[#323741] dark:shadow-gray-700 "
+                      className="cursor-pointer rounded-lg border bg-muted p-2 hover:drop-shadow-lg drop-shadow-md"
                       onClick={() => {
                         handleSetChat(discussions);
                         setActiveTab("");
@@ -179,7 +179,7 @@ export default function UserChat() {
                             sizes="100"
                           />
                         </div>
-                        <div>
+                        <div className="flex flex-col justify-center">
                           <h1 className="mb-2 text-xl font-bold text-black dark:text-white">
                             {discussions[0].productDetails.Product_Name}
                           </h1>
@@ -189,7 +189,7 @@ export default function UserChat() {
                                 idx < 1 && (
                                   <div
                                     key={idx}
-                                    className="text-sm text-gray-700 dark:text-gray-100"
+                                    className="text-sm text-muted-foreground"
                                   >
                                     Buyers:{" "}
                                     {dis.buyerDetails.First_Name +

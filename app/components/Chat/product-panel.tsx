@@ -154,27 +154,27 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
             {discussions.map((discussion: chatDetails, idx) => (
               <div
                 key={idx}
-                className="flex h-[82px] cursor-pointer items-center space-x-5 rounded-lg border-b-2 border-b-transparent p-2 shadow-md hover:border-b-gray-400 dark:bg-[#323741] dark:shadow-gray-700"
+                className="flex cursor-pointer rounded-lg border bg-muted p-2 drop-shadow-md hover:drop-shadow-lg"
                 onClick={() => {
                   handleChatItemClick(discussion);
                 }}
               >
-                <div className="flex-shrink-0 overflow-hidden rounded-full">
+                <div className="flex-shrink-0 overflow-hidden rounded-full mx-2">
                   {discussion.sellerDetails.Avatar ? (
                     <Image
                       src={discussion.sellerDetails.Avatar}
                       alt={discussion.productDetails.Product_Name}
-                      width={50}
-                      height={50}
+                      width={64}
+                      height={64}
                     />
                   ) : (
-                    <div className="h-10 w-10 animate-pulse rounded-full bg-gradient-to-tr from-gray-300 via-gray-400 to-gray-300" />
+                    <div className="h-16 w-16 animate-pulse rounded-full bg-gradient-to-tr from-gray-300 via-gray-400 to-gray-300" />
                   )}
                 </div>
-                <div className="flex-grow cursor-pointer">
+                <div className="flex-grow cursor-pointer mt-1 ml-3">
                   <div className="flex justify-between">
                     {discussion.buyerDetails ? (
-                      <h4 className="text-lg font-semibold text-black dark:text-white ">
+                      <h4 className="text-xl font-semibold text-black dark:text-white ">
                         {discussion.buyerDetails.id === userId
                           ? discussion.sellerDetails.First_Name +
                             " " +
@@ -186,7 +186,7 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                     ) : (
                       <h5 className="h-4 w-36 animate-pulse rounded-sm bg-gradient-to-tr from-gray-300 via-gray-400 to-gray-300" />
                     )}
-                    <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-sm">
+                    <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-xs dark:bg-blue-700">
                       <h3 className="font-semibold text-white">
                         {String(
                           productReadCounts?.get(
@@ -198,7 +198,7 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                   </div>
                   <div className="flex justify-between">
                     {results[idx].data?.lastMsg ? (
-                      <h5 className="text-sm text-gray-400 dark:text-gray-500">
+                      <h5 className="text-sm text-muted-foreground mt-2">
                         {results[idx].data?.lastMsg}
                       </h5>
                     ) : (
