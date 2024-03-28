@@ -3,7 +3,7 @@ import PencilIcon from "../ui/PencilIcon";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { User } from "next-auth";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -12,7 +12,6 @@ import { updateProfile } from "@/lib/actions/updateProfile.actions";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,

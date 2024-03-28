@@ -20,28 +20,6 @@ export default function AccountLayout({
         <ActiveLinks />
       </div>
       {children}
-      {/* {activeTab === "account" ? (
-          <div className="mt-8 flex justify-center">
-            <AccountTab
-              Name={props.Name}
-              Email={props.Email}
-              Phone={props.Phone}
-              Avatar={props.Avatar}
-            />
-          </div>
-        ) : activeTab === "orderhistory" ? (
-          <div>
-            <Suspense fallback="Loading...">
-              <OrderHistoryTab />
-            </Suspense>
-          </div>
-        ) : (
-          activeTab === "wishlist" && (
-            <div className="mt-8">
-              <WishlistTab />
-            </div>
-          )
-        )} */}
     </div>
   );
 }
