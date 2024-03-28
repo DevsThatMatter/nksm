@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/app/components/ui/form";
 import RadixPencil from "../ui/radixpencil";
+import Loader from "../ui/loader";
 
 const indianPhoneRegex: RegExp = /^(?:[6-9]\d{9})?$/;
 
@@ -144,7 +145,6 @@ export default function AccountTab({ ...props }) {
               </FormItem>
             )}
           />
-
           <Button
             type="submit"
             className="mt-5 place-self-center p-5 sm:mt-3 sm:place-self-end"
@@ -156,10 +156,12 @@ export default function AccountTab({ ...props }) {
                 Edit Profile <RadixPencil className="ml-2" />
               </>
             ) : form.formState.isSubmitting ? (
-              "Saving..."
+              <>
+                <Loader className="mr-2 h-4 w-4" /> Saving
+              </>
             ) : (
               "Save Profile"
-            )}{" "}
+            )}
           </Button>
         </form>
       </Form>

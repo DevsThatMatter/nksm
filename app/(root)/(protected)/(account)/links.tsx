@@ -1,4 +1,12 @@
 "use client";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/app/components/ui/breadcrumb";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -8,7 +16,7 @@ const ActiveLinks = () => {
   return (
     <nav
       aria-label="Tabs"
-      className="-mb-px flex justify-center space-x-8 text-center sm:justify-start"
+      className="relative -mb-px flex justify-center space-x-8 text-center sm:justify-start"
     >
       <Link
         href="/account"
@@ -29,6 +37,27 @@ const ActiveLinks = () => {
       >
         Wishlist
       </Link>
+      <div className="absolute hidden self-center lg:right-[13rem] lg:block xl:right-[3rem]">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/">Home</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>My Account</BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>
+                {pathname
+                  ? pathname?.charAt(1).toUpperCase() + pathname.slice(2)
+                  : ""}
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
     </nav>
   );
 };
