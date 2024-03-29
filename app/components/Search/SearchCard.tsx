@@ -33,13 +33,17 @@ const SearchCard = ({
             width={200}
           />
           <ProductSaved
-            className="absolute right-0 top-0 mr-5 mt-6 rounded-full bg-gray-200 p-1 "
+            className="absolute right-0 top-0 mr-5 mt-6 cursor-pointer rounded-full bg-gray-200 p-1"
             id={id.toString()}
           />
         </div>
-        <div className="grid gap-2 text-base">
-          <h2 className="font-extrabold leading-tight md:text-xl">{name}</h2>
-          <p className="text-base leading-normal">{description}</p>
+        <div className="grid max-w-[75%] gap-2 text-base">
+          <h2 className="break-all font-extrabold leading-tight md:text-xl">
+            {name}
+          </h2>
+          <p className="line-clamp-3 overflow-ellipsis text-base leading-normal">
+            {description}
+          </p>
           <div className="flex items-center gap-2">
             <h4 className="font-bold">${price}</h4>
           </div>

@@ -19,15 +19,6 @@ import {
 } from "@/app/components/ui/popover";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Switch } from "../ui/switch";
-import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  navigationMenuTriggerStyle,
-} from "@/app/components/ui/navigation-menu";
-import Link from "next/link";
 
 const frameworks = [
   { label: "Bicycles" },
@@ -50,7 +41,7 @@ const Filter = () => {
 
   return (
     <div className="my-2 w-[20%] text-center">
-      <h1 className="font-bold">Browse by filters</h1>
+      <h1 className="font-bold">Browse by Category</h1>
       <section className="flex justify-center p-2">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
@@ -106,50 +97,6 @@ const Filter = () => {
         >
           <Cross1Icon />
         </Button>
-      </section>
-      <section>
-        <h3 className=" pl-3 text-start">Sort by:</h3>
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <Link
-                href={`?q=${q}&category=${value}&sort=${sort}&by=createdAt`}
-                legacyBehavior
-                passHref
-              >
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Date of Listing
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link
-                href={`?q=${q}&category=${value}&sort=${sort}&by=Price`}
-                legacyBehavior
-                passHref
-              >
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Price
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-        {sortBy === "createdAt"
-          ? sort == 1
-            ? "Recent to Old"
-            : "Old to Recent"
-          : sort == 1
-            ? "Low to High"
-            : "High to Low"}
-        <Switch
-          onClick={() => {
-            router.push(
-              `?q=${q}&category=${value}&sort=${-1 * sort}&by=${sortBy}`,
-            );
-          }}
-          className="ml-8 mt-1"
-        />
       </section>
     </div>
   );

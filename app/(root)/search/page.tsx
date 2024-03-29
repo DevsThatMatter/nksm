@@ -1,7 +1,6 @@
 import Filter from "@/app/components/Search/Filter";
 import LoadMore from "@/app/components/Search/LoadMore";
-import SearchShell from "@/app/components/Search/SearchShell";
-
+import SortFilter from "@/app/components/Search/SortFilter";
 import { getSearchResults } from "@/lib/actions/fetchProduct.actions";
 import { redirect } from "next/navigation";
 
@@ -32,10 +31,9 @@ export default async function Page({
           Showing results for &quot;{searchParams.q || "All"}&quot;
           {searchParams.category ? ` in ${searchParams.category}` : ""}
         </p>
-        <SearchShell>
-          {result.productsData}
-          {result.isNext && <LoadMore key={loadMoreKey} pageSize={pageSize} />}
-        </SearchShell>
+        <SortFilter q={searchParams?.q!} />
+        {result.productsData}
+        {result.isNext && <LoadMore key={loadMoreKey} pageSize={pageSize} />}
         <br />
       </div>
     </main>
