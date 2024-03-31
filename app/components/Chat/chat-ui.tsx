@@ -149,7 +149,7 @@ export default function ChatUI({
     <section className="absolute left-0 top-0 h-[100vh] w-[100%] flex-col items-center">
       <div className="relative h-[100%] w-full">
         {/* User display */}
-        <header className="user-display z-10 mb-2 flex items-center space-x-1 rounded-t-md py-3 pl-1 shadow-sm dark:bg-[#272D3A]">
+        <header className="user-display z-10 mb-2 flex items-center space-x-1 py-3 pl-1 shadow-sm dark:bg-[#272D3A]">
           {otherUserDetails.id !== "" && (
             <button
               className="rounded-full"
@@ -296,7 +296,7 @@ export default function ChatUI({
           )}
         </div>
         {/* Input and action buttons */}
-        <div className="absolute bottom-0 flex-1 p-1">
+        <div className="absolute bottom-0 left-0 right-0">
           <ChatInput
             otherUserPhoneNumber={otherUserPhoneNumber}
             userId={currentUserId}

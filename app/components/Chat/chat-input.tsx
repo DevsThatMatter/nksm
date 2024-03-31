@@ -121,12 +121,12 @@ export default function ChatInput({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSend)}
-        className="flex max-w-full rounded-md border-none bg-gray-200 p-1 dark:bg-[#323741]"
+        className="bottom-0 right-0 flex w-full border-none bg-gray-200 p-1 dark:bg-[#323741]"
       >
         <FormItem>
           <FormControl>
-            <div className="flex flex-1 ">
-              <div className="items flex max-w-[97%] justify-between  rounded-md dark:bg-gray-900">
+            <div className="flex flex-1">
+              <div className="items flex max-w-[97%] justify-between  rounded-md dark:bg-[#323741]">
                 <input
                   className="max-h-[200px] min-h-[40px] w-full resize-y overflow-y-auto bg-gray-200 p-1 text-foreground placeholder:text-accent-foreground focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#323741]"
                   placeholder="Type a message"
@@ -137,7 +137,7 @@ export default function ChatInput({
                     <Button
                       disabled={gLockedStatus}
                       type="button"
-                      className="bg-blue-600 text-white transition-colors fade-out-0 hover:bg-blue-800"
+                      className="h-full bg-blue-600 text-white transition-colors fade-out-0 hover:bg-blue-800"
                     >
                       Lock Deal
                     </Button>

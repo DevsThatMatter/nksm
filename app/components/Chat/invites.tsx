@@ -64,50 +64,56 @@ export default function BuyerInvites({ userId }: { userId: string }) {
           invites.buyerDetails.map((buyer, j) => (
             <section
               key={j}
-              className="flex h-[130px] flex-col rounded-lg shadow-md hover:shadow-lg dark:bg-[#323741]"
+              className="flex  flex-col rounded-lg p-2 shadow-md hover:shadow-lg dark:bg-[#323741]"
             >
-              <div className="flex items-center justify-between px-4 py-2">
-                <div className="flex items-center space-x-4">
-                  <div className="flex-shrink-0 overflow-hidden rounded-full">
+              <div className="flex items-center justify-between p-2 ">
+                <div className="flex items-center space-x-4 ">
+                  <div className="relative h-12 w-12 overflow-hidden rounded-full">
                     <Image
                       src={buyer.Avatar}
                       alt={buyer.Phone_Number}
-                      width={50}
-                      height={50}
+                      fill
                       className="h-16 w-16 object-cover"
                     />
                   </div>
                   <div className="flex flex-col">
-                    <h1 className="text-lg font-semibold text-black dark:text-gray-300">
+                    <h1 className="text-lg font-semibold text-black dark:text-white">
                       {`${buyer.First_Name} ${buyer.Last_Name}`}
                     </h1>
-                    <h5 className="text-sm text-gray-600 dark:text-gray-400">
+                    <h5 className="text-sm text-gray-600 dark:text-gray-100">
                       {`For ${invites.productDetails.Product_Name}`}
                     </h5>
                   </div>
                 </div>
-                <h2 className="text-xl font-bold text-black">$400</h2>
+                <h2 className="text-xl font-bold text-black dark:text-white">
+                  ₹400
+                </h2>
               </div>
-              <div className="flex justify-center p-1">
+              <div className="ml-[18%] flex md:ml-[17%]">
                 <Dialog>
                   <DialogTitle className="ml-4">
                     <div className="flex space-x-4">
                       <DialogTrigger asChild>
-                        <Button
-                          className="rounded-md bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
-                          onClick={() => setSellectedButton("accept")}
+                        <button
+                          className="rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 dark:text-black"
+                          onClick={() => {
+                            console.log("accepted was clicked");
+                            setSellectedButton("accept");
+                          }}
                         >
                           Accept
-                        </Button>
+                        </button>
                       </DialogTrigger>
                       <DialogTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="rounded-md bg-red-200 px-3 py-1 text-sm text-red-500 hover:bg-red-300 hover:text-red-600"
-                          onClick={() => setSellectedButton("reject")}
+                        <button
+                          className="rounded-lg bg-red-100 px-4 py-1 text-sm text-red-500 hover:text-red-600  dark:bg-gray-800"
+                          onClick={() => {
+                            console.log("rejected was clicked");
+                            setSellectedButton("reject");
+                          }}
                         >
                           Reject
-                        </Button>
+                        </button>
                       </DialogTrigger>
                     </div>
                   </DialogTitle>
@@ -145,16 +151,28 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                               productId: invites.productId,
                               sellerId: invites.sellerId,
                               buyerId: buyer.buyerId,
-                              caller: "accept",
+                              caller:
+                                selectedButton === "accept"
+                                  ? "accept"
+                                  : "reject",
                             });
                             toast.promise(prom, {
-                              loading: "Accepting...",
-                              success: "Invite accepted.",
-                              error: "Unable to accept the invite.",
+                              loading:
+                                selectedButton === "accept"
+                                  ? "Accepting..."
+                                  : "Rejecting...",
+                              success:
+                                selectedButton === "accept"
+                                  ? "Invite accepted."
+                                  : "Invite rejected",
+                              error:
+                                selectedButton === "accept"
+                                  ? "Unable to accept the invite."
+                                  : "Unable to reject the invite.",
                             });
                           }}
                         >
-                          Accept
+                          {selectedButton === "accept" ? "Accept" : "Reject"}
                         </Button>
                       </DialogClose>
                       <DialogClose asChild>
