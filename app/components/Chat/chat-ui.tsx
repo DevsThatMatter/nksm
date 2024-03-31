@@ -149,7 +149,7 @@ export default function ChatUI({
     <section className="absolute left-0 top-0 h-[100vh] w-[100%] flex-col items-center">
       <div className="relative h-[100%] w-full">
         {/* User display */}
-        <header className="user-display z-10 mb-2 flex items-center space-x-1 py-3 pl-1 shadow-sm dark:bg-[#272D3A]">
+        <header className="user-display z-10 mb-2 flex items-center space-x-3 rounded-t-md bg-muted py-3 pl-2 shadow-sm">
           {otherUserDetails.id !== "" && (
             <button
               className="rounded-full"
@@ -168,9 +168,14 @@ export default function ChatUI({
             <AvatarImage src={avatar} />
             <AvatarFallback>{otherUserName[0].toUpperCase()}</AvatarFallback>
           </Avatar>
-          <span className=" font-semibold text-gray-800 dark:text-white">
-            {otherUserName}
-          </span>
+          <div className="flex flex-col justify-start">
+            <span className="font-semibold text-foreground">
+              {otherUserName}
+            </span>
+            <span className="text-sm text-muted-foreground">
+              {otherUserPhoneNumber}
+            </span>
+          </div>
         </header>
         {/* Messages */}
         <div
@@ -222,8 +227,8 @@ export default function ChatUI({
                         msg.accepted === "accepted"
                           ? "bg-blue-600 text-white"
                           : msg.accepted === "rejected"
-                            ? "bg-red-100 text-red-500"
-                            : "bg-[#dbe4fb]",
+                            ? "bg-red-100 text-red-500 dark:bg-muted"
+                            : "bg-[#dbe4fb] dark:bg-muted",
                         msg.Sender === currentUserId ? "ml-auto" : "mr-auto",
                         msg.readStatus
                           ? "user-message-true"
@@ -233,8 +238,8 @@ export default function ChatUI({
                     >
                       {msg.accepted === "pending" &&
                       msg.Sender !== currentUserId ? (
-                        <div className="flex flex-col items-center bg-[#dbe4fb] p-3">
-                          <h1 className="font-semibold text-black">
+                        <div className="flex flex-col items-center bg-[#dbe4fb] p-3 dark:bg-muted">
+                          <h1 className="text-lg font-bold text-foreground">
                             Do we have a deal?
                           </h1>
                           <div className="mt-3 flex justify-between space-x-2">
@@ -248,7 +253,7 @@ export default function ChatUI({
                             </Button>
                             <Button
                               onClick={() => lockTheDeal("no", msg.msgId ?? "")}
-                              className="rounded-md bg-red-100 px-4 py-2  text-red-500  hover:bg-red-200"
+                              className="rounded-md bg-red-100 px-4 py-2  text-red-400 hover:bg-red-200 dark:bg-background/20"
                             >
                               Reject
                             </Button>
@@ -263,8 +268,8 @@ export default function ChatUI({
                           Deal Rejected
                         </h1>
                       ) : (
-                        <h1 className=" font-semibold text-black">
-                          Pending Deal
+                        <h1 className=" font-semibold text-foreground">
+                          Deal Pending
                         </h1>
                       )}
                     </div>
@@ -283,7 +288,7 @@ export default function ChatUI({
                           : "mr-auto rounded-r-3xl rounded-br-3xl text-black dark:text-white",
                         currentUserId === msg.Sender
                           ? "bg-blue-500"
-                          : "bg-[#dbe4fb] dark:bg-slate-600",
+                          : "bg-[#dbe4fb] dark:bg-muted/80",
                       )}
                     >
                       {msg.Message}
@@ -296,7 +301,7 @@ export default function ChatUI({
           )}
         </div>
         {/* Input and action buttons */}
-        <div className="absolute bottom-0 left-0 right-0">
+        <div className="absolute bottom-0 left-0 right-0 mt-2">
           <ChatInput
             otherUserPhoneNumber={otherUserPhoneNumber}
             userId={currentUserId}
