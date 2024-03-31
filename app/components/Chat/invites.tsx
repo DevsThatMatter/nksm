@@ -64,7 +64,7 @@ export default function BuyerInvites({ userId }: { userId: string }) {
           invites.buyerDetails.map((buyer, j) => (
             <section
               key={j}
-              className="flex  flex-col rounded-lg p-2 shadow-md hover:shadow-lg dark:bg-[#323741]"
+              className="flex flex-col rounded-lg p-2 border drop-shadow-md hover:drop-shadow-lg bg-muted"
             >
               <div className="flex items-center justify-between p-2 ">
                 <div className="flex items-center space-x-4 ">
@@ -95,7 +95,7 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                     <div className="flex space-x-4">
                       <DialogTrigger asChild>
                         <button
-                          className="rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 dark:text-black"
+                          className="rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
                           onClick={() => {
                             console.log("accepted was clicked");
                             setSellectedButton("accept");
@@ -106,7 +106,7 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                       </DialogTrigger>
                       <DialogTrigger asChild>
                         <button
-                          className="rounded-lg bg-red-100 px-4 py-1 text-sm text-red-500 hover:text-red-600  dark:bg-gray-800"
+                          className="rounded-lg bg-red-100 px-4 py-1 text-sm text-red-500 hover:text-red-600  dark:bg-background/20"
                           onClick={() => {
                             console.log("rejected was clicked");
                             setSellectedButton("reject");
@@ -193,16 +193,16 @@ export default function BuyerInvites({ userId }: { userId: string }) {
       </section>
 
       <div className="flex w-full items-center justify-between">
-        <div className="h-1 w-24 rounded-full border-b-2 border-b-gray-300" />
-        <h1 className="col-span-1 text-center md:text-lg">Pending Invites</h1>
-        <div className="h-1 w-24 rounded-full border-b-2 border-b-gray-300" />
+        <div className="h-1 w-20 rounded-full border-b-2 border-b-gray-300" />
+        <h1 className="text-center text-xl font-bold col-span-1">Pending Invites</h1>
+        <div className="h-1 w-20 rounded-full border-b-2 border-b-gray-300" />
       </div>
       <section className="h-1/2 overflow-y-auto">
         <div className="flex flex-col space-y-2">
           {currentUserSent?.map((invites, idx) => (
             <div
               key={idx}
-              className="flex h-[80px] items-center space-x-4 rounded-lg p-2 shadow-md dark:bg-[#323741] dark:shadow-gray-700"
+              className="flex h-[80px] cursor-not-allowed items-center space-x-4 rounded-lg border bg-muted p-2 opacity-70 drop-shadow-md hover:drop-shadow-lg"
             >
               <div className="flex-shrink-0">
                 <Image
