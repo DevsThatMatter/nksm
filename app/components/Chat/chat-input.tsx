@@ -171,7 +171,7 @@ export default function ChatInput({
                       </Button>
                     </DialogClose>
                     <DialogClose asChild>
-                      <Button className="text-red-400 border border-red-500 bg-transparent hover:bg-transparent">
+                      <Button className="border border-red-500 bg-transparent text-red-400 hover:bg-transparent">
                         Cancel
                       </Button>
                     </DialogClose>
