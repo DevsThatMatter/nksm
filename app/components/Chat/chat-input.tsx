@@ -141,7 +141,7 @@ export default function ChatInput({
                     Lock Deal
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="overflow-hidden rounded-lg bg-white shadow-lg">
+                <DialogContent className="overflow-hidden rounded-lg bg-muted shadow-lg">
                   <DialogHeader className="mt-4 rounded-md bg-blue-600 px-4 py-3 text-white">
                     <DialogTitle className="text-lg font-bold">
                       Lock your deal...
@@ -151,7 +151,7 @@ export default function ChatInput({
                     <h1 className="font-semibold text-yellow-400 md:text-lg ">
                       Attention:
                     </h1>{" "}
-                    <p className="text-gray-600">
+                    <p className="text-accent-foreground">
                       Confirm locking the deal? Once locked, it is irreversible.
                       If another user accepts the deal, all other chats about
                       this product will become inactive, except this one.
@@ -171,7 +171,7 @@ export default function ChatInput({
                       </Button>
                     </DialogClose>
                     <DialogClose asChild>
-                      <Button className="bg-gray-300 text-gray-800 hover:bg-gray-400">
+                      <Button className="text-red-400 border border-red-500 bg-transparent hover:bg-transparent">
                         Cancel
                       </Button>
                     </DialogClose>

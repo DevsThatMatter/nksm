@@ -19,6 +19,7 @@ import {
 } from "@/lib/actions/chat.actions";
 import { Badge } from "../ui/badge";
 import { useQuery } from "@tanstack/react-query";
+import { cn } from "@/app/utils";
 
 interface UserDetails {
   Avatar: string;
@@ -117,8 +118,17 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                       </DialogTrigger>
                     </div>
                   </DialogTitle>
-                  <DialogContent className="rounded-lg bg-white shadow-lg">
-                    <DialogHeader className="rounded-t-lg bg-blue-600 px-4 py-3 text-white">
+                  <DialogContent className="rounded-lg bg-muted shadow-lg">
+                    <DialogHeader
+                      className={cn(
+                        "rounded-t-lg",
+                        selectedButton === "reject"
+                          ? "bg-red-600"
+                          : "bg-blue-600",
+                        "px-4 py-3",
+                        "text-white",
+                      )}
+                    >
                       <DialogTitle className="text-lg font-bold">
                         {selectedButton === "reject"
                           ? "Reject this invite?"
@@ -131,12 +141,12 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                       </h1>
                       <div>
                         {selectedButton === "accept" ? (
-                          <h1 className="dark:gray-200 text-gray-600">
+                          <h1 className="text-foreground">
                             This invite will be accepted, and you will be able
                             to proceed chatting.
                           </h1>
                         ) : (
-                          <h1 className="dark:gray-200 text-gray-600">
+                          <h1 className="text-foreground">
                             Are you sure you want to reject this invite?
                           </h1>
                         )}
@@ -145,7 +155,13 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                     <div className="flex justify-end px-6 py-3">
                       <DialogClose asChild>
                         <Button
-                          className="mr-2 bg-blue-600 text-white hover:bg-blue-700"
+                          className={cn(
+                            "mr-2",
+                            selectedButton === "reject"
+                              ? "bg-red-600 hover:bg-red-600"
+                              : "bg-blue-600",
+                            "",
+                          )}
                           onClick={() => {
                             const prom = acceptTheInvite({
                               productId: invites.productId,
@@ -177,7 +193,7 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                       </DialogClose>
                       <DialogClose asChild>
                         <Button
-                          className="bg-gray-300 text-gray-800 hover:bg-gray-400"
+                          className="border border-red-500 bg-transparent text-red-400 hover:bg-transparent"
                           onClick={() => toast.info("No changes made")}
                         >
                           Cancel
@@ -210,16 +226,16 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                 <Image
                   src={invites.Seller.Avatar}
                   alt={invites.Seller.Name ?? invites.Product.Name}
-                  width={50}
-                  height={50}
+                  width={64}
+                  height={64}
                   className="rounded-full"
                 />
               </div>
               <div className="flex flex-col">
-                <h1 className="text-lg font-semibold text-foreground">
+                <h1 className="text-xl font-semibold text-foreground">
                   {invites.Seller.Name ?? "Moni"}
                 </h1>
-                <h4 className="text-sm text-gray-400">
+                <h4 className="text-sm text-muted-foreground">
                   {invites.Product.Name}
                 </h4>
               </div>
