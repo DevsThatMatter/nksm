@@ -14,7 +14,7 @@ const BottomNav = async () => {
   return (
     <BottomNavContainer>
       <ButtonContainer>
-        <UserChat userId={userId} />
+        <UserChat />
         <CategoriesDrawer>
           <NavButton>
             <svg

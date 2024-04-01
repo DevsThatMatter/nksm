@@ -22,27 +22,33 @@ const OfferSchema = z.object({
 interface OfferFormProps {
   reciverEmail: string;
   senderEmail: string;
-  productImage: string;
-  productId: mongoose.Types.ObjectId;
+  productImages: string[];
+  productId: string;
   productName: string;
 }
 export default function OfferForm({
   reciverEmail,
   senderEmail,
-  productImage,
+  productImages,
   productId,
   productName,
 }: OfferFormProps) {
-  const sendEmailWithDetails = (formData: FormData) =>
-    sendEmail(
+  const sendEmailWithDetails = (formData: FormData) => {
+    const prom = sendEmail(
       senderEmail,
       reciverEmail,
       productName,
-      productImage,
+      productImages,
       productId,
       formData,
     );
-
+    toast.promise(prom, {
+      loading: "Sending...",
+      success: (data) => {
+        return "An invite email has been sent.";
+      },
+    });
+  };
   const form = useForm({
     resolver: zodResolver(OfferSchema),
     defaultValues: {

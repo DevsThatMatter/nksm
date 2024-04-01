@@ -39,7 +39,7 @@ const ProductPage = ({ productInfo }: { productInfo: Product }) => {
             <SellerCard
               sellerInfo={productInfo.Seller}
               productName={productInfo.Product_Name}
-              productImage={productInfo.Images[0]}
+              productImages={productInfo.Images}
               productId={productInfo._id}
             />
             <CommentCard productId={productInfo._id} />

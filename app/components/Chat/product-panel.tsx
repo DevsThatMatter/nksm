@@ -130,21 +130,21 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
     }),
   });
 
-  useEffect(() => {
-    unreadResults.forEach((result) => {
-      const { productId, cachedVal } = result.data ?? {
-        productId: undefined,
-        cachedVal: null,
-      };
-      if (productId && cachedVal) {
-        setProductReadCounts((prevCounts) => {
-          const updatedCounts = new Map<string, number>(prevCounts || []);
-          updatedCounts.set(productId, cachedVal);
-          return updatedCounts;
-        });
-      }
-    });
-  }, [discussions]);
+  // useEffect(() => {
+  //   unreadResults.forEach((result) => {
+  //     const { productId, cachedVal } = result.data ?? {
+  //       productId: undefined,
+  //       cachedVal: null,
+  //     };
+  //     if (productId && cachedVal) {
+  //       setProductReadCounts((prevCounts) => {
+  //         const updatedCounts = new Map<string, number>(prevCounts || []);
+  //         updatedCounts.set(productId, cachedVal);
+  //         return updatedCounts;
+  //       });
+  //     }
+  //   });
+  // }, [discussions]);
 
   return (
     <div className="flex h-full w-full flex-col">

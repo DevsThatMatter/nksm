@@ -14,14 +14,14 @@ import mongoose from "mongoose";
 interface SellerCardProps {
   sellerInfo: Seller;
   productName: string;
-  productImage: string;
+  productImages: string[];
   productId: mongoose.Types.ObjectId;
 }
 
 async function SellerCard({
   sellerInfo,
   productName,
-  productImage,
+  productImages,
   productId,
 }: SellerCardProps) {
   const senderEmail = (await auth())?.user?.email;
@@ -53,9 +53,9 @@ async function SellerCard({
             <OfferForm
               reciverEmail={sellerInfo.Email}
               senderEmail={senderEmail ?? ""}
-              productImage={productImage}
+              productImages={productImages}
               productName={productName}
-              productId={productId}
+              productId={String(productId)}
             />
           </DialogContent>
         </Dialog>

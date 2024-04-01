@@ -21,8 +21,8 @@ export async function sendEmail(
   senderEmail: string,
   receiverEmail: string,
   productName: string,
-  productImage: string,
-  productId: mongoose.Types.ObjectId,
+  productImages: string[],
+  productId: string,
   formData: FormData,
 ) {
   let priceString = formData.get("price")?.toString();
@@ -34,13 +34,13 @@ export async function sendEmail(
   try {
     await connectToDB();
     console.log("prodcut = > ", productId);
-    await Chat.create({
-      Seller: new mongo.ObjectId("65c5e97aafe71c6df760f715"),
-      Buyer: new mongo.ObjectId("65c5e97aafe71c6df760f717"),
-      ProductId: productId,
-      status: "invite",
-      Messages: [],
-    });
+    // await Chat.create({
+    //   Seller: new mongo.ObjectId("65c5e97aafe71c6df760f715"),
+    //   Buyer: new mongo.ObjectId("65c5e97aafe71c6df760f717"),
+    //   ProductId: productId,
+    //   status: "invite",
+    //   Messages: [],
+    // });
 
     const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -48,9 +48,9 @@ export async function sendEmail(
       from: "Acme <onboarding@resend.dev>",
       to: "rajankamboj853@gmail.com",
       subject: "Bid offer",
-      react: EmailTemplate({ senderEmail, price, productName, productImage }),
+      react: EmailTemplate({ senderEmail, price, productName, productImages }),
     });
-
+    console.log("response => ", response);
     if (response.error) {
       console.log(response.error);
     }

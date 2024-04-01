@@ -731,6 +731,7 @@ export async function getInitialMessages(
 }
 export async function fecthInvites(userId: string) {
   try {
+    await connectToDB();
     const pipeline = [
       {
         $match: {
@@ -842,7 +843,7 @@ export async function acceptTheInvite(
   props: z.infer<typeof AcceptInviteSchema>,
 ) {
   try {
-    connectToDB();
+    await connectToDB();
     if (props.caller === "accept") {
       await Chat.updateOne(
         {
