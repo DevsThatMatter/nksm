@@ -58,13 +58,13 @@ export default function BuyerInvites({ userId }: { userId: string }) {
   }).data;
 
   return (
-    <div className="mt-4 flex h-[93%] w-full select-none flex-col space-y-4">
+    <div className="mt-4 flex h-[93%] w-full select-none flex-col space-y-4 px-6">
       <section className="h-1/2 space-y-2 overflow-y-auto">
         {data?.map((invites, i) =>
           invites.buyerDetails.map((buyer, j) => (
             <section
               key={j}
-              className="flex flex-col rounded-lg p-2 border drop-shadow-md hover:drop-shadow-lg bg-muted"
+              className="flex flex-col rounded-lg border bg-muted p-2 drop-shadow-md hover:drop-shadow-lg"
             >
               <div className="flex items-center justify-between p-2 ">
                 <div className="flex items-center space-x-4 ">
@@ -194,7 +194,9 @@ export default function BuyerInvites({ userId }: { userId: string }) {
 
       <div className="flex w-full items-center justify-between">
         <div className="h-1 w-20 rounded-full border-b-2 border-b-gray-300" />
-        <h1 className="text-center text-xl font-bold col-span-1">Pending Invites</h1>
+        <h1 className="col-span-1 text-center text-xl font-bold">
+          Pending Invites
+        </h1>
         <div className="h-1 w-20 rounded-full border-b-2 border-b-gray-300" />
       </div>
       <section className="h-1/2 overflow-y-auto">

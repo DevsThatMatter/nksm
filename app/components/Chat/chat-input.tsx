@@ -63,7 +63,7 @@ export default function ChatInput({
           productId,
         })
       ).status;
-      if (status === "stale") {
+      if (status === "stale" || status === "dead") {
         setGlockedStatus(true);
       }
     }
@@ -121,73 +121,71 @@ export default function ChatInput({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSend)}
-        className="bottom-0 right-0 flex w-full border-none bg-muted p-1"
+        className="flex w-full border-none bg-muted p-1 "
       >
-        <FormItem>
+        <FormItem className="w-full">
           <FormControl>
-            <div className="flex flex-1">
-              <div className="items flex max-w-[97%] justify-between  rounded-md bg-muted">
-                <input
-                  className="max-h-[200px] min-h-[40px] w-full resize-y overflow-y-auto bg-muted p-2 text-foreground placeholder:text-accent-foreground focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                  placeholder="Type a message"
-                  {...form.register("content")}
-                />
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      disabled={gLockedStatus}
-                      type="button"
-                      className="ml-3 h-full bg-blue-600 text-white transition-colors fade-out-0 hover:bg-blue-800"
-                    >
-                      Lock Deal
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="overflow-hidden rounded-lg bg-white shadow-lg">
-                    <DialogHeader className="mt-4 rounded-md bg-blue-600 px-4 py-3 text-white">
-                      <DialogTitle className="text-lg font-bold">
-                        Lock your deal...
-                      </DialogTitle>
-                    </DialogHeader>
-                    <DialogDescription className="px-6 py-4 ">
-                      <h1 className="font-semibold text-yellow-400 md:text-lg ">
-                        Attention:
-                      </h1>{" "}
+            <div className="items flex w-full max-w-[97%] items-center justify-between  rounded-md bg-muted">
+              <input
+                className="max-h-[200px] min-h-[40px] w-full resize-y overflow-y-auto bg-muted p-2 text-foreground placeholder:text-accent-foreground focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 "
+                placeholder="Type a message"
+                {...form.register("content")}
+              />
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    disabled={gLockedStatus}
+                    type="button"
+                    className="ml-3 h-full bg-blue-600 text-white transition-colors fade-out-0 hover:bg-blue-800"
+                  >
+                    Lock Deal
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="overflow-hidden rounded-lg bg-white shadow-lg">
+                  <DialogHeader className="mt-4 rounded-md bg-blue-600 px-4 py-3 text-white">
+                    <DialogTitle className="text-lg font-bold">
+                      Lock your deal...
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="px-6 py-4 ">
+                    <h1 className="font-semibold text-yellow-400 md:text-lg ">
+                      Attention:
+                    </h1>{" "}
+                    <p className="text-gray-600">
                       Confirm locking the deal? Once locked, it is irreversible.
-                      <p>
-                        If another user accepts the deal, all other chats about
-                        this product will become inactive, except this one.
-                      </p>
-                    </DialogDescription>
+                      If another user accepts the deal, all other chats about
+                      this product will become inactive, except this one.
+                    </p>
+                  </div>
 
-                    <div className="flex justify-end px-6 py-2">
-                      <DialogClose asChild>
-                        <Button
-                          type="button"
-                          className="mr-2 bg-blue-600 text-white hover:bg-blue-600"
-                          onClick={() => {
-                            setDealLock(true);
-                          }}
-                        >
-                          Lock
-                        </Button>
-                      </DialogClose>
-                      <DialogClose asChild>
-                        <Button className="bg-gray-300 text-gray-800 hover:bg-gray-400">
-                          Cancel
-                        </Button>
-                      </DialogClose>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
+                  <div className="flex justify-end px-6 py-2">
+                    <DialogClose asChild>
+                      <Button
+                        type="button"
+                        className="mr-2 bg-blue-600 text-white hover:bg-blue-600"
+                        onClick={() => {
+                          setDealLock(true);
+                        }}
+                      >
+                        Lock
+                      </Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button className="bg-gray-300 text-gray-800 hover:bg-gray-400">
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </FormControl>
         </FormItem>
         {(
-          <button type="submit">
+          <button type="submit" disabled={isLoading}>
             <Icons.sendIcon
               className={cn(
-                "h-5 w-5 transform cursor-pointer rounded-full transition-transform  hover:text-blue-500 mx-1",
+                "mx-1 h-5 w-5 transform cursor-pointer rounded-full  transition-transform hover:text-blue-500",
                 isLoading && "text-gray-500",
               )}
             />{" "}

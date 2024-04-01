@@ -27,7 +27,7 @@ export async function getUserId({ email }: z.infer<typeof GetUserIdSchema>) {
     const user = await User.findOne({ Email: email });
     const userId = user?._id?.toString();
     // for test return "65c5e97aafe71c6df760f715"
-    return "65c5e97aafe71c6df760f717";
+    return "65c5e97aafe71c6df760f715";
   } catch (error) {
     throw error;
     return undefined;
@@ -56,7 +56,7 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
     const matchStage0 = {
       $match: {
         Seller: new mongo.ObjectId(userId),
-        status: { $eq: "active" },
+        status: { $in: ["active", "stale"] },
       },
     };
 
@@ -343,20 +343,24 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
         );
       }
 
+      User;
       await Chat.updateMany(
         {
-          $and: [
-            {
-              Seller: new mongo.ObjectId(validatedProps.seller),
-              ProductId: new mongo.ObjectId(validatedProps.productId),
-            },
-            {
-              $nor: [{ Buyer: new mongo.ObjectId(validatedProps.buyer) }],
-            },
-          ],
+          Seller: new mongo.ObjectId(validatedProps.seller),
+          ProductId: new mongo.ObjectId(validatedProps.productId),
         },
         {
           $set: { status: "dead" },
+        },
+      );
+      await Chat.updateMany(
+        {
+          Seller: new mongo.ObjectId(validatedProps.seller),
+          ProductId: new mongo.ObjectId(validatedProps.productId),
+          BuyerId: new mongo.ObjectId(validatedProps.buyer),
+        },
+        {
+          $set: { status: "stale" },
         },
       );
     } else {
@@ -378,14 +382,12 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
 
     return {
       content: "Deal locked successfully",
-      error: null,
       status: 200,
     };
   } catch (error) {
     console.error("Error locking deal:", error);
     return {
       content: null,
-      error: error || "An error occurred",
       status: 500,
     };
   }
@@ -458,14 +460,12 @@ export async function countUnreadMessages(
     return {
       productId: props.productId,
       cachedVal: unreadCount,
-      error: null,
       status: 200,
     };
   } catch (error) {
     return {
       productId: props.productId,
       cachedVal: 0,
-      error: null,
       status: 200,
     };
   }
@@ -720,14 +720,12 @@ export async function getInitialMessages(
       },
       msg: "Success, the initial messages found",
       status: 200,
-      err: null,
     };
   } catch (error) {
     return {
       content: null,
       msg: "Internal server error",
       status: 500,
-      err: error,
     };
   }
 }
@@ -738,6 +736,7 @@ export async function fecthInvites(userId: string) {
         $match: {
           Seller: new mongo.ObjectId(userId),
           status: "invite",
+          ProductId: { $exists: true },
         },
       },
       {
@@ -813,7 +812,7 @@ export async function fecthInvites(userId: string) {
       },
     ];
     const data = (await Chat.aggregate(pipeline)) as InviteStruct[];
-    data.sort((a: InviteStruct, b: InviteStruct) => {
+    data?.sort((a: InviteStruct, b: InviteStruct) => {
       const productNameA = a.productDetails.Product_Name.toLowerCase();
       const productNameB = b.productDetails.Product_Name.toLowerCase();
 
@@ -1037,13 +1036,11 @@ export async function getLastMessages({
     return {
       lastMsg: lastMsg,
       status: 200,
-      error: null,
     };
   } catch (error) {
     return {
       lastMsg: null,
       status: 500,
-      error: error,
     };
   }
 }

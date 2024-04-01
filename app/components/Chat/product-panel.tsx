@@ -147,9 +147,9 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
   }, [discussions]);
 
   return (
-    <div className="mt-4 flex h-full w-full flex-col">
+    <div className="flex h-full w-full flex-col">
       {otherUserDetails.id === "" ? (
-        <div className="flex h-full flex-col">
+        <div className="flex h-full flex-col px-6 pt-4">
           <section className="h-full space-y-4 overflow-y-auto">
             {discussions.map((discussion: chatDetails, idx) => (
               <div
@@ -159,7 +159,7 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                   handleChatItemClick(discussion);
                 }}
               >
-                <div className="flex-shrink-0 overflow-hidden rounded-full mx-2">
+                <div className="mx-2 flex-shrink-0 overflow-hidden rounded-full">
                   {discussion.sellerDetails.Avatar ? (
                     <Image
                       src={discussion.sellerDetails.Avatar}
@@ -171,7 +171,7 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                     <div className="h-16 w-16 animate-pulse rounded-full bg-gradient-to-tr from-gray-300 via-gray-400 to-gray-300" />
                   )}
                 </div>
-                <div className="flex-grow cursor-pointer mt-1 ml-3">
+                <div className="ml-3 mt-1 flex-grow cursor-pointer">
                   <div className="flex justify-between">
                     {discussion.buyerDetails ? (
                       <h4 className="text-xl font-semibold text-black dark:text-white ">
@@ -198,7 +198,7 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                   </div>
                   <div className="flex justify-between">
                     {results[idx].data?.lastMsg ? (
-                      <h5 className="text-sm text-muted-foreground mt-2">
+                      <h5 className="mt-2 text-sm text-muted-foreground">
                         {results[idx].data?.lastMsg}
                       </h5>
                     ) : (
@@ -211,18 +211,16 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
           </section>
         </div>
       ) : (
-        <div>
-          <ChatUI
-            avatar={otherUserDetails.avatar}
-            currentUserId={userId}
-            sellerId={sellerDetails.id}
-            buyerId={buyerDetails.id}
-            otherUserId={otherUserDetails.id}
-            productId={productId || ""}
-            otherUserName={otherUserDetails.name}
-            otherUserPhoneNumber={otherUserDetails.otherUserPhoneNumber}
-          />
-        </div>
+        <ChatUI
+          avatar={otherUserDetails.avatar}
+          currentUserId={userId}
+          sellerId={sellerDetails.id}
+          buyerId={buyerDetails.id}
+          otherUserId={otherUserDetails.id}
+          productId={productId || ""}
+          otherUserName={otherUserDetails.name}
+          otherUserPhoneNumber={otherUserDetails.otherUserPhoneNumber}
+        />
       )}
     </div>
   );

@@ -97,17 +97,30 @@ export default function UserChat() {
       console.error(error);
     }
   }
-
+  function resetChat() {
+    createChat({
+      discussions: [],
+      otherUserDetails: {
+        id: "",
+        name: "",
+        otherUserPhoneNumber: "",
+        avatar: "",
+      },
+      sellerDetails: { id: "" },
+      buyerDetails: { id: "" },
+    });
+    setActiveTab("seller");
+  }
   return userId ? (
     <div>
-      <Sheet>
+      <Sheet onOpenChange={resetChat}>
         <SheetTrigger asChild>
           <Button variant="ghost" size="icon">
             <Icons.chaticon className="h-[1.3rem] w-[1.32rem]" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-[90vw] sm:w-[60vw]  lg:w-[90vw]">
-          <SheetHeader className="flex justify-between">
+        <SheetContent side="left" className="w-[90vw] sm:w-[50vw]  lg:w-[90vw]">
+          <SheetHeader className="flex justify-between px-4">
             {(discussions.length === 0 ||
               activeTab === "buyer" ||
               activeTab === "invites" ||
@@ -155,12 +168,12 @@ export default function UserChat() {
           {activeTab === "seller" &&
             data?.data.resultWhereUserIsSeller1 &&
             (discussions.length === 0 ? (
-              <div className="mt-4 flex w-full select-none flex-col space-y-4">
+              <div className="mt-4 flex w-full select-none flex-col space-y-4 px-6">
                 {Array.from(data?.data.resultWhereUserIsSeller1.entries()).map(
                   ([productId, discussions], idx) => (
                     <div
                       key={idx}
-                      className="cursor-pointer rounded-lg border bg-muted p-2 hover:drop-shadow-lg drop-shadow-md"
+                      className="cursor-pointer rounded-lg border bg-muted p-2 drop-shadow-md hover:drop-shadow-lg"
                       onClick={() => {
                         handleSetChat(discussions);
                         setActiveTab("");
