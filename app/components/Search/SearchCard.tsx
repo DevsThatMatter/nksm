@@ -3,7 +3,6 @@ import { ConditionEnum } from "@/types";
 import { ObjectId } from "mongoose";
 import ProductSaved from "../ProductSaved";
 import Image from "next/image";
-import Link from "next/link";
 
 interface ProductCardProps {
   id: ObjectId;
@@ -23,9 +22,9 @@ const SearchCard = ({
   condition,
 }: ProductCardProps) => {
   return (
-    <Link href={`/product/${id}`}>
-      <Card>
-        <CardContent className="flex items-start gap-6 p-6">
+    <Card>
+      <CardContent className="relative flex items-start gap-6 p-6 @container">
+        <div className="">
           <Image
             alt="Product Image"
             className="aspect-square overflow-hidden rounded-lg border border-gray-200 object-cover dark:border-gray-800"
@@ -33,24 +32,28 @@ const SearchCard = ({
             src={image_url}
             width={200}
           />
-          <div className="grid gap-2 text-base">
-            <h2 className="text-xl font-extrabold leading-tight">{name}</h2>
-            <p className="text-base leading-normal">{description}</p>
-            <div className="flex items-center gap-2">
-              <h4 className="font-bold">${price}</h4>
-            </div>
-            <div className="flex items-center gap-2">
-              <ChevronRightIcon className="h-5 w-5 fill-muted" />
-              <span className="text-sm text-muted-foreground">{condition}</span>
-            </div>
-          </div>
           <ProductSaved
-            className="absolute right-0 top-0 mr-4 mt-4 rounded-full bg-gray-200 p-1 sm:mr-6 sm:mt-6 lg:mr-5 lg:mt-5 2xl:mr-6 2xl:mt-5"
+            className="absolute right-0 top-0 mr-5 mt-6 cursor-pointer rounded-full bg-gray-200 p-1"
             id={id.toString()}
           />
-        </CardContent>
-      </Card>
-    </Link>
+        </div>
+        <div className="grid max-w-[75%] gap-2 text-base">
+          <h2 className="break-all font-extrabold leading-tight md:text-xl">
+            {name}
+          </h2>
+          <p className="line-clamp-3 overflow-ellipsis text-base leading-normal">
+            {description}
+          </p>
+          <div className="flex items-center gap-2">
+            <h4 className="font-bold">${price}</h4>
+          </div>
+          <div className="flex items-center gap-2">
+            <ChevronRightIcon className="h-5 w-5 fill-muted" />
+            <span className="text-sm text-muted-foreground">{condition}</span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

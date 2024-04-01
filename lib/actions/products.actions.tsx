@@ -3,10 +3,8 @@
 import { Product } from "../models/product.model";
 import { connectToDB } from "../database/mongoose";
 import { FilterQuery, SortOrder } from "mongoose";
-import { revalidatePath } from "next/cache";
-import { CategoryEnum } from "@/types";
+import SearchCard from "@/app/components/Search/SearchCard";
 import { User } from "../models/user.model";
-import { Comments } from "../models/comments.model";
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -59,6 +57,8 @@ export const getSearchResults = async ({
     connectToDB();
 
     const skipAmount = (pageNumber - 1) * pageSize;
+    console.log("pageNumber", pageNumber);
+    console.log("skipAmount", skipAmount);
 
     const regex = new RegExp(searchString, "i");
 
@@ -87,23 +87,30 @@ export const getSearchResults = async ({
     const sortOptions = { [sortBy]: sortOrder };
 
     const searchQuery = Product.find(query)
-      .sort(sortOptions)
-      .skip(skipAmount)
       .select(select)
-      .limit(pageSize);
+      .sort(sortOptions)
+      .limit(pageSize)
+      .skip(skipAmount);
 
     const totalProductsCount = await Product.countDocuments(query);
 
     const products = await searchQuery.exec();
+    const productsData = products.map((product) => (
+      <SearchCard
+        key={product._id}
+        id={product._id}
+        image_url={product.Images[0]}
+        name={product.Product_Name}
+        price={product.Price}
+        description={product.Description}
+        condition={product.Condition}
+      />
+    ));
 
     const isNext = totalProductsCount > skipAmount + products.length;
-    revalidatePath("/search");
     return {
-      products,
+      productsData,
       isNext,
-      totalProductsCount,
-      productsCount: products.length,
-      skipAmount,
     };
   } catch (error) {
     console.error("Error fetching users:", error);

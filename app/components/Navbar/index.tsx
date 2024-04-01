@@ -9,7 +9,7 @@ import { AddListing } from "../AddListing";
 import SearchBar from "./SearchBar";
 import { ReactNode, Suspense } from "react";
 import { auth } from "@/auth";
-import { fetchRecentProductS } from "@/lib/actions/fetchProduct.actions";
+import { fetchRecentProductS } from "@/lib/actions/products.actions";
 import { cn } from "@/app/utils";
 
 const Navbar = async ({
