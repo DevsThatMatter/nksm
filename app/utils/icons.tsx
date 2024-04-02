@@ -11,6 +11,9 @@ import {
   ImageIcon,
   Link2Icon,
   ChevronDownIcon,
+  StarFilledIcon,
+  StarIcon,
+  UpdateIcon,
   CrossCircledIcon,
   CheckIcon,
   Cross1Icon,
@@ -33,4 +36,7 @@ export const Icons = {
   remove: CrossCircledIcon,
   yes: CheckIcon,
   no: Cross1Icon,
+  new: StarFilledIcon,
+  likeNew: StarIcon,
+  used: UpdateIcon,
 };
