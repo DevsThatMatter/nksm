@@ -23,12 +23,12 @@ const SortFilter = ({
       : "newest";
   return (
     <section className="relative w-56 px-2">
-      <button className="peer z-40 w-56 cursor-pointer rounded-lg border p-1 text-center">
+      <button className="peer z-40 w-[13.5rem] rounded-lg border p-1 text-center">
         {" "}
         Sort by: {sortFilterObject[selectedSorting]}
       </button>
 
-      <ul className="absolute z-20 hidden w-full rounded-b-lg border bg-background hover:block peer-hover:block">
+      <ul className="absolute z-20 hidden w-[13.5rem] rounded-lg border bg-background hover:block peer-hover:block">
         {Object.entries(sortFilterObject).map(([key, value]) => {
           if (key === selectedSorting) return null;
           return (
