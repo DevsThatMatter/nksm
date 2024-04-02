@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import Image from "next/image";
+import { CategoryEnum, SortBy } from "@/types";
 
 export type SearchCard = JSX.Element;
 let page = 2;
@@ -20,9 +21,8 @@ function LoadMore({
   const [isNext, setIsNext] = useState(true);
   const searchParams = useSearchParams();
   const search = searchParams!.get("q") || "";
-  const category = searchParams?.get("category");
-  const sort = searchParams!.get("sort") || "";
-  const sortBy = searchParams!.get("by") || "";
+  const category = searchParams?.get("category") as CategoryEnum | undefined;
+  const sortBy = searchParams!.get("sortBy") as SortBy;
 
   useEffect(() => {
     if (inView) {
@@ -34,8 +34,7 @@ function LoadMore({
           searchString: search || "",
           pageNumber: page,
           pageSize: pageSize,
-          sortOrder: sort === "1" ? 1 : -1,
-          sortBy: sortBy === "Price" ? "Price" : "createdAt",
+          sortBy: sortBy,
           category: category === null ? undefined : category,
         }).then((res) => {
           console.log(res);

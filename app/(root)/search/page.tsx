@@ -2,40 +2,52 @@ import Filter from "@/app/components/Search/Filter";
 import LoadMore from "@/app/components/Search/LoadMore";
 import SortFilter from "@/app/components/Search/SortFilter";
 import { getSearchResults } from "@/lib/actions/products.actions";
+import { CategoryEnum, SortBy } from "@/types";
 import { redirect } from "next/navigation";
 
 export default async function Page({
-  searchParams,
+  searchParams: { q, category, sortBy },
 }: {
-  searchParams: { [key: string]: string | undefined };
+  searchParams: {
+    q: string;
+    category?: CategoryEnum;
+    sortBy?: SortBy;
+  };
 }) {
-  if (!(searchParams.q || searchParams.category)) {
+  if (!q) {
     redirect("/");
   }
+  const selectedCategory = (
+    category && Object.values(CategoryEnum).includes(category)
+      ? category
+      : undefined
+  ) as CategoryEnum | undefined;
+  console.log(selectedCategory);
   const pageSize = 5;
   const result = await getSearchResults({
-    searchString: searchParams.q || "",
+    searchString: q,
     pageNumber: 1,
     pageSize: pageSize,
-    sortOrder: searchParams?.sort === "1" ? 1 : -1,
-    sortBy: searchParams?.by === "Price" ? "Price" : "createdAt",
-    category: searchParams?.category,
+    category: selectedCategory,
+    sortBy: sortBy,
   });
-  const loadMoreKey = JSON.stringify(searchParams);
+  const loadMoreKey = JSON.stringify(q + category + sortBy);
 
   return (
     <main className="container m-auto flex justify-center">
       <Filter />
-      <div className="w-[80%] pt-4">
-        <p className="mb-4 text-xl font-semibold">
-          Showing results for &quot;{searchParams.q || "All"}&quot;
-          {searchParams.category ? ` in ${searchParams.category}` : ""}
-        </p>
-        <SortFilter q={searchParams?.q!} />
+      <section className="w-[80%] pt-4">
+        <span className="flex justify-between">
+          <p className="mb-4 text-xl font-semibold">
+            Showing results for &quot;{q}&quot;
+            {selectedCategory ? ` in ${selectedCategory}` : ""}
+          </p>
+          <SortFilter query={q} sorting={sortBy} category={selectedCategory} />
+        </span>
         {result.productsData}
         {result.isNext && <LoadMore key={loadMoreKey} pageSize={pageSize} />}
         <br />
-      </div>
+      </section>
     </main>
   );
 }

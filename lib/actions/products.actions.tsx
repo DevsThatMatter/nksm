@@ -5,6 +5,7 @@ import { connectToDB } from "../database/mongoose";
 import { FilterQuery, SortOrder } from "mongoose";
 import SearchCard from "@/app/components/Search/SearchCard";
 import { User } from "../models/user.model";
+import { CategoryEnum, SortBy, category } from "@/types";
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -38,20 +39,36 @@ export const fetchRecentProductS = async () => {
   }
 };
 
+const sortOptions = (
+  sortBy?: SortBy,
+): { createdAt: SortOrder } | { Price: SortOrder } => {
+  switch (sortBy) {
+    case "newest":
+      return { createdAt: -1 };
+    case "oldest":
+      return { createdAt: 1 };
+    case "high":
+      return { Price: -1 };
+    case "low":
+      return { Price: 1 };
+    default:
+      console.error("Invalid sortBy value:", sortBy);
+      return { createdAt: 1 };
+  }
+};
+
 export const getSearchResults = async ({
   searchString,
   pageNumber = 1,
   pageSize = 20,
-  sortBy = "createdAt",
-  sortOrder = "desc",
+  sortBy = "newest",
   category,
 }: {
   searchString: string;
   pageNumber?: number;
   pageSize?: number;
-  sortBy?: "createdAt" | "Price";
-  sortOrder?: SortOrder;
-  category?: string;
+  sortBy?: SortBy;
+  category?: CategoryEnum;
 }) => {
   try {
     connectToDB();
@@ -84,11 +101,9 @@ export const getSearchResults = async ({
       Condition: 1,
     };
 
-    const sortOptions = { [sortBy]: sortOrder };
-
     const searchQuery = Product.find(query)
       .select(select)
-      .sort(sortOptions)
+      .sort(sortOptions(sortBy))
       .limit(pageSize)
       .skip(skipAmount);
 

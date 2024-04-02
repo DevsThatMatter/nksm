@@ -1,63 +1,58 @@
-"use client";
-
+import { CategoryEnum, SortBy, category } from "@/types";
 import Link from "next/link";
-import { useState } from "react";
 
+const sortFilterObject = {
+  low: "Price: Low to High",
+  high: "Price: High to Low",
+  newest: "Date: Newest",
+  oldest: "Date: Oldest",
+};
 interface SortFilterProps {
-  q: string;
+  query: string;
+  sorting?: SortBy;
+  category?: CategoryEnum;
 }
-const SortFilter = ({ q }: SortFilterProps) => {
-  const sortFilter = [
-    {
-      name: "Price: Low to High",
-      sortBy: "Price",
-      sort: 1,
-    },
-    {
-      name: "Price: High to Low",
-      sortBy: "Price",
-      sort: -1,
-    },
-    {
-      name: "Date: Newest",
-      sortBy: "createdAt",
-      sort: -1,
-    },
-    {
-      name: "Date: Oldest",
-      sortBy: "createdAt",
-      sort: 1,
-    },
-  ];
-  const [openList, setOpenList] = useState(false);
-  const [value, setValue] = useState(sortFilter[2].name);
-
+const SortFilter = ({
+  query,
+  sorting = "newest",
+  category,
+}: SortFilterProps) => {
+  const selectedSorting =
+    sorting && Object.keys(sortFilterObject).includes(sorting)
+      ? sorting
+      : "newest";
   return (
-    <div className="relative px-2">
-      <section
-        className={`absolute right-0 top-[-2.7rem] z-40 w-[14rem] cursor-pointer rounded-lg border p-1 text-center`}
-        onMouseEnter={() => setOpenList(true)}
-        onMouseLeave={() => setOpenList(false)}
-      >
-        Sort by: {value}
-        <ul className="flex flex-col">
-          {sortFilter.map((filter, index) => (
-            <li key={index} className={openList ? "" : "hidden"}>
+    <section className="relative w-56 px-2">
+      <button className="peer z-40 w-56 cursor-pointer rounded-lg border p-1 text-center">
+        {" "}
+        Sort by: {sortFilterObject[selectedSorting]}
+      </button>
+
+      <ul className="absolute z-20 hidden w-full rounded-b-lg border bg-background hover:block peer-hover:block">
+        {Object.entries(sortFilterObject).map(([key, value]) => {
+          if (key === selectedSorting) return null;
+          return (
+            <li key={key}>
               <Link
-                href={`/search?q=${q}&sort=${filter.sort}&by=${filter.sortBy}`}
+                href={{
+                  query: {
+                    q: query,
+                    sortBy: key,
+                    category: category,
+                  },
+                }}
+                shallow
+                replace
               >
-                <div
-                  className="w-full bg-background p-2 hover:bg-gray-200"
-                  onClick={() => setValue(filter.name)}
-                >
-                  {filter.name}
-                </div>
+                <button className="w-full bg-background p-2 hover:bg-gray-200">
+                  {value}
+                </button>
               </Link>
             </li>
-          ))}
-        </ul>
-      </section>
-    </div>
+          );
+        })}
+      </ul>
+    </section>
   );
 };
 

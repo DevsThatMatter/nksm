@@ -35,9 +35,8 @@ const Filter = () => {
   const searchParams = useSearchParams();
   const [open, setOpen] = React.useState(false);
   const value = searchParams!.get("category") || "";
-  const sort = Number(searchParams!.get("sort")) || -1;
   const q = searchParams!.get("q") || "";
-  const sortBy = searchParams!.get("by") || "createdAt";
+  const sortBy = searchParams!.get("SortBy") || "newest";
 
   return (
     <div className="my-2 w-[20%] text-center">
@@ -70,9 +69,7 @@ const Filter = () => {
                           framework.label.toLowerCase() === currentValue,
                       )?.label;
                       if (!label) return;
-                      router.push(
-                        `?q=${q}&category=${label}&sort=${sort}&by=${sortBy}`,
-                      );
+                      router.push(`?q=${q}&category=${label}&sortBy=${sortBy}`);
                       setOpen(false);
                     }}
                   >
@@ -92,7 +89,7 @@ const Filter = () => {
         <Button
           title="Clear Category"
           className=""
-          onClick={() => router.push(`?q=${q}&sort=${sort}&by=${sortBy}`)}
+          onClick={() => router.push(`?q=${q}&sortBy=${sortBy}`)}
           variant={"ghost"}
         >
           <Cross1Icon />
