@@ -25,6 +25,7 @@ async function SellerCard({
   productId,
 }: SellerCardProps) {
   const senderEmail = (await auth())?.user?.email;
+  console.log(sellerInfo);
   return (
     <div>
       <h2 className="text-lg font-semibold">Seller Details</h2>

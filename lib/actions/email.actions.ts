@@ -33,6 +33,7 @@ export async function sendEmail(
 
   try {
     await connectToDB();
+    console.log(receiverEmail);
     const existingInviteOrChat = await Chat.findOne({
       Seller: new mongo.ObjectId(await getIdByEmail(receiverEmail)),
       Buyer: new mongo.ObjectId(await getIdByEmail(senderEmail)),
@@ -54,10 +55,9 @@ export async function sendEmail(
     });
 
     const resend = new Resend(process.env.RESEND_API_KEY);
-
     const response = await resend.emails.send({
       from: "Acme <onboarding@resend.dev>",
-      to: "rajankamboj853@gmail.com",
+      to: receiverEmail,
       subject: "Bid offer",
       react: EmailTemplate({ senderEmail, price, productName, productImages }),
     });
