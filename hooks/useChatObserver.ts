@@ -1,4 +1,3 @@
-// import { countUnreadMessages } from "@/lib/actions/chat.actions";
 import { countUnreadMessages } from "@/lib/actions/chat.actions";
 import { useEffect } from "react";
 
@@ -15,6 +14,7 @@ export const useChatObserver = ({
   productId: string;
   currentUserId: string;
 }) => {
+  console.log("unread message count => ", unreadMessages.length);
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {

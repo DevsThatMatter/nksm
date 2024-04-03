@@ -39,4 +39,5 @@ export const Icons = {
   new: StarFilledIcon,
   likeNew: StarIcon,
   used: UpdateIcon,
+  buffering: UpdateIcon,
 };

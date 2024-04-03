@@ -33,14 +33,25 @@ export async function sendEmail(
 
   try {
     await connectToDB();
-    console.log("prodcut = > ", productId);
-    // await Chat.create({
-    //   Seller: new mongo.ObjectId("65c5e97aafe71c6df760f715"),
-    //   Buyer: new mongo.ObjectId("65c5e97aafe71c6df760f717"),
-    //   ProductId: productId,
-    //   status: "invite",
-    //   Messages: [],
-    // });
+    const existingInviteOrChat = await Chat.findOne({
+      Seller: new mongo.ObjectId(await getIdByEmail(receiverEmail)),
+      Buyer: new mongo.ObjectId(await getIdByEmail(senderEmail)),
+      ProductId: new mongo.ObjectId(productId),
+      status: { $ne: "dead" },
+    }).countDocuments();
+    if (existingInviteOrChat > 0) {
+      return {
+        error: null,
+        success: true,
+      };
+    }
+    await Chat.create({
+      Seller: new mongo.ObjectId(await getIdByEmail(receiverEmail)),
+      Buyer: new mongo.ObjectId(await getIdByEmail(senderEmail)),
+      ProductId: productId,
+      status: "invite",
+      Messages: [],
+    });
 
     const resend = new Resend(process.env.RESEND_API_KEY);
 

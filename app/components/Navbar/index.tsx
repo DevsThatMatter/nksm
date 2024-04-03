@@ -11,6 +11,8 @@ import { ReactNode, Suspense } from "react";
 import { auth } from "@/auth";
 import { fetchRecentProductS } from "@/lib/actions/fetchProduct.actions";
 import { cn } from "@/app/utils";
+import { Button } from "../ui/button";
+import { countUnreadMessages } from "@/lib/actions/chat.actions";
 
 const Navbar = async ({
   children = (

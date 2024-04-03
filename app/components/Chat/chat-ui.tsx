@@ -5,13 +5,14 @@ import { useChatQuery } from "@/hooks/useChatQuery";
 import { useChatScroll } from "@/hooks/useChatScroll";
 import useChatStore from "@/hooks/useChatStore";
 import { Button } from "../ui/button";
-import { lockDeal } from "@/lib/actions/chat.actions";
+import { getMessagesResult, lockDeal } from "@/lib/actions/chat.actions";
 import { MessageTypes } from "@/types";
 import { pusherClient } from "@/lib/pusher";
 import { useChatObserver } from "@/hooks/useChatObserver";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Icons } from "@/app/utils/icons";
 import { cn } from "@/app/utils";
+import { Icon } from "@radix-ui/react-select";
 
 interface ChatUIProps {
   currentUserId: string;
@@ -58,16 +59,35 @@ export default function ChatUI({
     });
   const [messages, setMessages] = useState<MessageTypes[]>([]);
 
+  useChatScroll({
+    topRef,
+    bottomRef,
+    loadMore: fetchNextPage,
+    shouldLoadMore: !isFetchingNextPage && hasNextPage,
+    count: messages.length,
+  });
+
   useEffect(() => {
-    if (data?.pages?.[0]?.content?.messages) {
+    if (data?.pages) {
       setMessages((prevMessages) => {
-        const newMessages = data?.pages?.[0]?.content?.messages;
-        const filteredNewMessages = newMessages.filter(
-          (newMsg: any) =>
-            !prevMessages.some((prevMsg) => prevMsg.msgId === newMsg.msgId),
-        );
-        return [...filteredNewMessages, ...prevMessages];
+        let updatedMessages = [...prevMessages];
+        data.pages.forEach((page) => {
+          const newMessages = page?.content?.messages;
+          if (newMessages) {
+            const filteredNewMessages = newMessages.filter(
+              (newMsg: getMessagesResult) =>
+                !updatedMessages.some(
+                  (prevMsg) => prevMsg.msgId === newMsg.msgId,
+                ),
+            );
+            updatedMessages = [...updatedMessages, ...filteredNewMessages];
+          }
+        });
+
+        return updatedMessages;
       });
+    } else {
+      console.log("message is null => ", data?.pages?.[0]?.content?.messages);
     }
     setLockedStatus({
       status: data?.pages?.[0]?.content?.Locked ?? false,
@@ -107,14 +127,7 @@ export default function ChatUI({
       pusherClient.unbind("messages:update", updateMessageHandler);
     };
   }, [addKey, updateKey, productId, sellerId, buyerId, messages]);
-
-  useChatScroll({
-    topRef,
-    bottomRef,
-    loadMore: fetchNextPage,
-    shouldLoadMore: !isFetchingNextPage && hasNextPage,
-    count: messages.length,
-  });
+  // console.log("is fetching => ", isFetchingNextPage, " hasNextPage => ", hasNextPage)
 
   if (productId === "" && sellerId !== "" && buyerId !== "") {
     removeChat("chatUi");
@@ -137,13 +150,13 @@ export default function ChatUI({
 
   const messageElements = document.querySelectorAll(".user-message-false");
 
-  // useChatObserver({
-  //   unreadMessages: messageElements,
-  //   sellerId,
-  //   buyerId,
-  //   productId,
-  //   currentUserId,
-  // });
+  useChatObserver({
+    unreadMessages: messageElements,
+    sellerId,
+    buyerId,
+    productId,
+    currentUserId,
+  });
 
   return (
     <section className="items-centerjustify-between flex h-full w-full flex-col">
@@ -175,43 +188,50 @@ export default function ChatUI({
         </div>
       </header>
       {/* Messages */}
-      <div
-        ref={topRef}
-        className={cn(
-          "mx-auto my-1 flex h-full w-full flex-col overflow-y-auto px-2.5 py-1",
-        )}
-      >
-        {isFetchingNextPage && hasNextPage && (
-          <div className="mx-auto">
-            <h4>...Loading</h4>
-            <h4>
-              {isFetchingNextPage ? "isFetchinh true" : "isFetching false"}
-            </h4>
-            <h4>{hasNextPage ? "true" : "false"}</h4>
-          </div>
-        )}
-        {status === "pending" ? (
-          <section className="flex flex-col space-y-3 ">
-            {Array.from({ length: 13 }).map((_, i) => (
+      {status === "pending" ? (
+        <section className="flex flex-col space-y-3 ">
+          {Array.from({ length: 13 }).map((_, i) => (
+            <div
+              key={i}
+              className={cn(
+                "w-[70%] animate-pulse rounded-md bg-gray-300",
+                i % 3 === 0 ? "mr-auto" : "ml-auto",
+              )}
+            >
               <div
-                key={i}
                 className={cn(
-                  "w-[70%] animate-pulse rounded-md bg-gray-300",
-                  i % 3 === 0 ? "mr-auto" : "ml-auto",
+                  "animate-pulse rounded-md bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300 text-white",
+                  i % 5 === 0 ? "h-16" : i % 6 === 0 ? "h-10" : "h-6",
                 )}
+              />
+            </div>
+          ))}
+        </section>
+      ) : status === "error" ? (
+        <div>Error: Something went wrong</div>
+      ) : (
+        <div
+          ref={topRef}
+          className={
+            "mx-auto my-1 flex h-full w-full flex-col overflow-y-auto px-2.5 py-1"
+          }
+        >
+          {isFetchingNextPage ? (
+            <div className="flex items-center justify-center space-x-2 text-gray-700 dark:text-gray-300">
+              <div className="h-5 w-5 animate-spin rounded-full border-t-2 border-lime-700" />
+              <h4 className="text-sm font-medium">Loading...</h4>
+            </div>
+          ) : (
+            hasNextPage && (
+              <button
+                onClick={() => fetchNextPage()}
+                className="mx-auto my-2 rounded-md bg-gray-300 px-2 text-sm text-gray-600 transition hover:bg-gray-400 hover:text-gray-700 dark:text-gray-400 dark:hover:text-zinc-300"
               >
-                <div
-                  className={cn(
-                    "animate-pulse rounded-md bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300 text-white",
-                    i % 5 === 0 ? "h-16" : i % 6 === 0 ? "h-10" : "h-6",
-                  )}
-                />
-              </div>
-            ))}
-          </section>
-        ) : status === "error" ? (
-          <div>Error: Something went wrong</div>
-        ) : (
+                Load previous messages
+              </button>
+            )
+          )}
+
           <Fragment>
             <section className="flex flex-col-reverse ">
               {messages?.map((msg: MessageTypes, j: number) =>
@@ -291,9 +311,8 @@ export default function ChatUI({
             </section>
             <div ref={bottomRef} />
           </Fragment>
-        )}
-      </div>
-      {/* Input and action buttons */}
+        </div>
+      )}
 
       <ChatInput
         otherUserPhoneNumber={otherUserPhoneNumber}

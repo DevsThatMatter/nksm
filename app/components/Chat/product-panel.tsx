@@ -126,25 +126,26 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
             currentUser: userId,
           }),
         enabled: discussions.length > 0,
+        refetchInterval: 10000,
       };
     }),
   });
 
-  // useEffect(() => {
-  //   unreadResults.forEach((result) => {
-  //     const { productId, cachedVal } = result.data ?? {
-  //       productId: undefined,
-  //       cachedVal: null,
-  //     };
-  //     if (productId && cachedVal) {
-  //       setProductReadCounts((prevCounts) => {
-  //         const updatedCounts = new Map<string, number>(prevCounts || []);
-  //         updatedCounts.set(productId, cachedVal);
-  //         return updatedCounts;
-  //       });
-  //     }
-  //   });
-  // }, [discussions]);
+  useEffect(() => {
+    unreadResults.forEach((result) => {
+      const { unreadCount, productId } = result.data ?? {
+        productId: undefined,
+        unreadCount: null,
+      };
+      if (productId && unreadCount) {
+        setProductReadCounts((prevCounts) => {
+          const updatedCounts = new Map<string, number>(prevCounts || []);
+          updatedCounts.set(productId, unreadCount);
+          return updatedCounts;
+        });
+      }
+    });
+  }, [discussions]);
 
   return (
     <div className="flex h-full w-full flex-col">
@@ -186,15 +187,20 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                     ) : (
                       <h5 className="h-4 w-36 animate-pulse rounded-sm bg-gradient-to-tr from-gray-300 via-gray-400 to-gray-300" />
                     )}
-                    <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-xs dark:bg-blue-700">
-                      <h3 className="font-semibold text-white">
-                        {String(
-                          productReadCounts?.get(
-                            discussion.productDetails.productId,
-                          ) ?? 0,
-                        )}
-                      </h3>
-                    </div>
+                    {productReadCounts &&
+                      productReadCounts.get(
+                        discussion.productDetails.productId,
+                      ) && (
+                        <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-xs dark:bg-blue-700">
+                          <h3 className="font-semibold text-white">
+                            {String(
+                              productReadCounts.get(
+                                discussion.productDetails.productId,
+                              ),
+                            )}
+                          </h3>
+                        </div>
+                      )}
                   </div>
                   <div className="flex justify-between">
                     {results[idx].data?.lastMsg ? (
@@ -202,7 +208,9 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                         {results[idx].data?.lastMsg}
                       </h5>
                     ) : (
-                      <h5 className="h-3 w-24 animate-pulse rounded-sm bg-gradient-to-tr from-gray-300 via-gray-400 to-gray-300" />
+                      results[0].status === "pending" && (
+                        <h5 className="h-3 w-24 animate-pulse rounded-sm bg-gradient-to-tr from-gray-300 via-gray-400 to-gray-300" />
+                      )
                     )}
                   </div>
                 </div>

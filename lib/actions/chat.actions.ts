@@ -12,6 +12,7 @@ import { MessageTypes, IChat, chatDetails } from "@/types";
 import { Message } from "../models/message.model";
 import { pusherServer } from "../pusher";
 import { InviteStruct } from "@/app/components/Chat/invites";
+import { client } from "../database/redis-config";
 
 const mongoId = z.string().refine((value) => Types.ObjectId.isValid(value), {
   message: "Invalid ObjectId format",
@@ -27,10 +28,9 @@ export async function getUserId({ email }: z.infer<typeof GetUserIdSchema>) {
     const user = await User.findOne({ Email: email });
     const userId = user?._id?.toString();
     // for test return "65c5e97aafe71c6df760f715"
-    return "65c5e97aafe71c6df760f715";
+    return "65c5e97aafe71c6df760f717";
   } catch (error) {
     throw error;
-    return undefined;
   }
 }
 
@@ -402,7 +402,7 @@ const UnreadMessagesProps = z.object({
 
 async function computeUnreadMessages(
   props: z.infer<typeof UnreadMessagesProps>,
-): Promise<number> {
+) {
   connectToDB();
   const validatedProps = UnreadMessagesProps.parse(props);
 
@@ -443,7 +443,7 @@ async function computeUnreadMessages(
     },
   ]);
 
-  const unreadCount = result.length > 0 ? result[0].unreadCount : 0;
+  const unreadCount = (result.length > 0 ? result[0].unreadCount : 0) as number;
 
   return unreadCount;
 }
@@ -455,93 +455,63 @@ export async function countUnreadMessages(
   },
 ) {
   try {
-    const unreadCount = await computeUnreadMessages(props);
+    const cacheKey = `productId${props.productId}sellerId${props.sellerId}buyerId${props.buyerId}cache`;
+    const cachedVal = await client.get(cacheKey);
 
-    return {
-      productId: props.productId,
-      cachedVal: unreadCount,
-      status: 200,
-    };
+    if (props.caller === "get") {
+      if (cachedVal) {
+        return {
+          unreadCount: parseInt(cachedVal),
+          productId: props.productId,
+        };
+      }
+      const unreadCount = await computeUnreadMessages(props);
+      await client.set(cacheKey, unreadCount.toString());
+      console.log("get caller called");
+      return {
+        unreadCount,
+        productId: props.productId,
+      };
+    } else {
+      if (cachedVal) {
+        let unreadCount = parseInt(cachedVal);
+        if (props.messageId) {
+          const updateResult = await Message.updateOne(
+            { _id: new mongo.ObjectId(props.messageId) },
+            { readStatus: true },
+          );
+          if (updateResult.modifiedCount === 1) {
+            unreadCount--;
+            if (unreadCount < 0) unreadCount = 0;
+            await client.set(cacheKey, unreadCount.toString(), "XX");
+          }
+        }
+        return {
+          unreadCount,
+          productId: props.productId,
+        };
+      } else {
+        let unreadCount = await computeUnreadMessages(props);
+        if (props.messageId) {
+          const updateResult = await Message.updateOne(
+            { _id: new mongo.ObjectId(props.messageId) },
+            { readStatus: true },
+          );
+          if (updateResult.modifiedCount === 1) {
+            unreadCount--;
+            if (unreadCount < 0) unreadCount = 0;
+            await client.set(cacheKey, unreadCount.toString());
+          }
+        }
+        return {
+          unreadCount,
+          productId: props.productId,
+        };
+      }
+    }
   } catch (error) {
-    return {
-      productId: props.productId,
-      cachedVal: 0,
-      status: 200,
-    };
+    console.error("Error while accessing Redis:", error);
   }
-
-  // try {
-  // const cacheKey = `unreadCount-${props.sellerId}-${props.buyerId}-${props.productId}`;
-  // const value = await client.get(cacheKey);
-  // if (props.caller === "get") {
-  //   if (value === null) {
-
-  //     //   await client.setex(cacheKey, 1800, unreadCount);
-  //     //   return {
-  //     //     productId: props.productId,
-  //     //     cachedVal: unreadCount,
-  //     //     error: null,
-  //     //     status: 200,
-  //     //   };
-  //     // } else {
-  //     //   console.log("Cached value:", value);
-  //     //   return {
-  //     //     productId: props.productId,
-  //     //     cachedVal: Number(value),
-  //     //     error: null,
-  //     //     status: 200,
-  //     //   };
-  //     // }
-  //   } else {
-  //     console.log("message => ", props.messageId);
-  //     await Message.updateOne(
-  //       {
-  //         _id: new mongo.ObjectId(props.messageId),
-  //       },
-  //       {
-  //         $set: { readStatus: true },
-  //       },
-  //       { new: true },
-  //     );
-  //     const updatedMessage = await Message.findOne({
-  //       _id: new mongo.ObjectId(props.messageId),
-  //     });
-  //     // console.log("updated => ", updatedMessage)
-  //     const updateKey = `chat${props.productId}productId${props.productId}sellerId${props.sellerId}buyerId${props.buyerId}update`;
-  //     await pusherServer.trigger(updateKey, "messages:update", updatedMessage);
-  //     // console.log("message's read status changed");
-
-  //     if (value === null) {
-  //       console.log("Key not found in cache");
-  //       let unreadCount = await computeUnreadMessages(props);
-  //       unreadCount--;
-  //       await client.setex(cacheKey, 1800, unreadCount);
-  //       return {
-  //         productId: props.productId,
-  //         cachedVal: unreadCount,
-  //         status: 200,
-  //         error: null,
-  //       };
-  //     } else {
-  //       console.log("Cached value:", value);
-  //       const unreadCount = Number(value) ?? 1 - 1;
-  //       await client.setex(cacheKey, 1800, unreadCount);
-  //       return {
-  //         productId: props.productId,
-  //         cachedVal: unreadCount,
-  //         error: null,
-  //         status: 200,
-  //       };
-  //     }
-  //   }
-  // } catch (error) {
-  //   console.error("Error counting unread messages:", error);
-  //   return {
-  //     cachedVal: null,
-  //     error: error,
-  //     status: 500,
-  //   };
-  // }
 }
 
 const CreateNewMessage = z.object({
@@ -637,12 +607,19 @@ const GetmessageProps = z.object({
   buyerId: mongoId,
   productId: mongoId,
   currentUser: mongoId,
-  pageNo: z.number(),
+  pageNo: z.number().optional(),
 });
 
-export async function getInitialMessages(
-  props: z.infer<typeof GetmessageProps>,
-) {
+export interface getMessagesResult {
+  msgId: string;
+  Message: string;
+  Sender: string;
+  TimeStamp: string;
+  options: boolean;
+  readStatus: boolean;
+}
+
+export async function getMessages(props: z.infer<typeof GetmessageProps>) {
   try {
     const docPerPage = 15;
     const pipeline = [
@@ -674,6 +651,7 @@ export async function getInitialMessages(
                 accepted: "$$msg.accepted",
                 TimeStamp: "$$msg.TimeStamp",
                 options: "$$msg.options",
+                readStatus: "$$msg.readStatus",
               },
             },
           },
@@ -706,15 +684,14 @@ export async function getInitialMessages(
       }),
       Chat.aggregate(pipeline),
     ]);
-
+    console.log("chat details => ", props);
     const nextPageNo =
-      messages && messages.length === docPerPage
+      messages && messages[0].Messages.length === docPerPage
         ? (props.pageNo ?? 0) + 1
         : undefined;
-
     return {
       content: {
-        messages: messages ? messages[0].Messages : [],
+        messages: messages ? (messages[0].Messages as getMessagesResult[]) : [],
         Locked: chat?.status === "stale",
         nextPageNo,
       },
@@ -723,12 +700,15 @@ export async function getInitialMessages(
     };
   } catch (error) {
     return {
-      content: null,
+      content: {
+        messages: [] as getMessagesResult[],
+      },
       msg: "Internal server error",
       status: 500,
     };
   }
 }
+
 export async function fecthInvites(userId: string) {
   try {
     await connectToDB();
@@ -856,16 +836,24 @@ export async function acceptTheInvite(
         },
       );
     } else {
-      await Chat.updateOne(
-        {
-          Seller: props.sellerId,
-          Buyer: props.buyerId,
-          ProductId: props.productId,
-        },
-        {
-          status: "reject",
-        },
+      console.log(
+        "reject this invite => ",
+        await Chat.updateOne(
+          {
+            Seller: props.sellerId,
+            Buyer: props.buyerId,
+            ProductId: props.productId,
+          },
+          {
+            status: "reject",
+          },
+        ),
       );
+      console.log("details => ", {
+        Seller: props.sellerId,
+        Buyer: props.buyerId,
+        ProductId: props.productId,
+      });
     }
   } catch (error) {
     throw error;

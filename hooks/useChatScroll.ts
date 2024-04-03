@@ -18,12 +18,15 @@ export function useChatScroll({
   const [hasInit, setHasInit] = useState(false);
   useEffect(() => {
     const topDiv = topRef?.current;
+
     function handelScroll() {
       const scrollTop = topDiv?.scrollTop;
+
       if (scrollTop === 0 && shouldLoadMore) {
         loadMore();
       }
     }
+
     topDiv?.addEventListener("scroll", handelScroll);
     return () => {
       topDiv?.removeEventListener("scroll", handelScroll);
