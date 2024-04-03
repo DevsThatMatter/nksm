@@ -1,3 +1,4 @@
+import { FilterProps } from "@/app/(root)/search/page";
 import { CategoryEnum, SortBy, category } from "@/types";
 import Link from "next/link";
 
@@ -7,16 +8,8 @@ const sortFilterObject = {
   newest: "Date: Newest",
   oldest: "Date: Oldest",
 };
-interface SortFilterProps {
-  query: string;
-  sorting?: SortBy;
-  category?: CategoryEnum;
-}
-const SortFilter = ({
-  query,
-  sorting = "newest",
-  category,
-}: SortFilterProps) => {
+
+const SortFilter = ({ query, sorting = "newest", category }: FilterProps) => {
   const selectedSorting =
     sorting && Object.keys(sortFilterObject).includes(sorting)
       ? sorting

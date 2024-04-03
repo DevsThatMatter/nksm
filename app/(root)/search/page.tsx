@@ -5,6 +5,12 @@ import { getSearchResults } from "@/lib/actions/products.actions";
 import { CategoryEnum, SortBy } from "@/types";
 import { redirect } from "next/navigation";
 
+export interface FilterProps {
+  query: string;
+  sorting?: SortBy;
+  category?: CategoryEnum;
+}
+
 export default async function Page({
   searchParams: { q, category, sortBy },
 }: {
@@ -35,7 +41,7 @@ export default async function Page({
 
   return (
     <main className="container m-auto flex justify-center">
-      <Filter />
+      <Filter query={q} sorting={sortBy} category={selectedCategory} />
       <section className="w-[80%] pt-4">
         <span className="flex justify-between">
           <p className="mb-4 text-xl font-semibold">
