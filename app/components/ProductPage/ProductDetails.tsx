@@ -3,6 +3,18 @@ import { type ConditionEnum, Product } from "@/types";
 import { cn } from "@/app/utils";
 import { Icons } from "@/app/utils/icons";
 
+export const renderConditionIcon = (condition: ConditionEnum | string) => {
+  switch (condition) {
+    case "Brand New":
+      return <Icons.new className="mr-1 h-3 w-3" />;
+    case "Like New":
+      return <Icons.likeNew className="mr-1 h-3 w-3" />;
+    case "Used":
+      return <Icons.used className="mr-1 h-3 w-3" />;
+    default:
+      return null;
+  }
+};
 const ProductDetails = ({
   productInfo,
   className,
@@ -10,18 +22,6 @@ const ProductDetails = ({
   productInfo: Product;
   className?: string;
 }) => {
-  const renderConditionIcon = (condition: ConditionEnum | string) => {
-    switch (condition) {
-      case "Brand New":
-        return <Icons.new className="mr-1 h-3 w-3" />;
-      case "Like New":
-        return <Icons.likeNew className="mr-1 h-3 w-3" />;
-      case "Used":
-        return <Icons.used className="mr-1 h-3 w-3" />;
-      default:
-        return null;
-    }
-  };
   return (
     <div className={cn("mt-4", className)}>
       <div className="flex justify-between">

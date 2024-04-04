@@ -98,6 +98,7 @@ export const getSearchResults = async ({
       Price: 1,
       Description: 1,
       Condition: 1,
+      Negotiable: 1,
     };
 
     const searchQuery = Product.find(query)
@@ -118,6 +119,7 @@ export const getSearchResults = async ({
         price={product.Price}
         description={product.Description}
         condition={product.Condition}
+        negotiable={product.Negotiable}
       />
     ));
 

@@ -9,8 +9,6 @@ import { Button } from "../ui/button";
 import { Icons } from "@/app/utils/icons";
 import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
 import {
-  Card,
-  CardHeader,
   CardTitle,
   CardDescription,
   CardContent,

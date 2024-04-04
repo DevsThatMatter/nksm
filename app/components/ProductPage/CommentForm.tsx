@@ -3,7 +3,6 @@ import React, { useRef } from "react";
 import { Input } from "../ui/input";
 import { sendComment } from "@/lib/actions/comment.actions";
 import { Session } from "next-auth";
-import mongoose from "mongoose";
 
 function CommentForm({
   userdata,

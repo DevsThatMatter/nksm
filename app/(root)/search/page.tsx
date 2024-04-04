@@ -1,6 +1,7 @@
 import Filter from "@/app/components/Search/Filter";
 import LoadMore from "@/app/components/Search/LoadMore";
 import SortFilter from "@/app/components/Search/SortFilter";
+import { ScrollArea } from "@/app/components/ui/scroll-area";
 import { getSearchResults } from "@/lib/actions/products.actions";
 import { CategoryEnum, SortBy } from "@/types";
 import { redirect } from "next/navigation";
@@ -40,19 +41,21 @@ export default async function Page({
   const loadMoreKey = JSON.stringify(q + category + sortBy);
 
   return (
-    <main className="container m-auto flex justify-center max-sm:px-2">
+    <main className="container m-auto flex justify-center max-sm:px-2 sm:gap-x-10">
       <Filter query={q} sorting={sortBy} category={selectedCategory} />
       <section className="w-[80%] pt-4">
-        <span className="flex justify-between">
-          <p className="mb-4 text-xl font-semibold">
+        <span className="flex flex-wrap justify-between">
+          <p className="mb-2 pl-1 text-xl font-semibold">
             Showing results for &quot;{q}&quot;
             {selectedCategory ? ` in ${selectedCategory}` : ""}
           </p>
           <SortFilter query={q} sorting={sortBy} category={selectedCategory} />
         </span>
-        {result.productsData}
-        {result.isNext && <LoadMore key={loadMoreKey} pageSize={pageSize} />}
-        <br />
+        <ScrollArea>
+          {result.productsData}
+          {result.isNext && <LoadMore key={loadMoreKey} pageSize={pageSize} />}
+          <br />
+        </ScrollArea>
       </section>
     </main>
   );

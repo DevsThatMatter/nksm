@@ -1,6 +1,7 @@
 import { CardContent, Card } from "@/app/components/ui/card";
 import { ConditionEnum } from "@/types";
 import { ObjectId } from "mongoose";
+import { renderConditionIcon } from "../ProductPage/ProductDetails";
 import ProductSaved from "../ProductSaved";
 import Image from "next/image";
 
@@ -10,7 +11,8 @@ interface ProductCardProps {
   name: string;
   price: number;
   description: string;
-  condition: ConditionEnum;
+  condition: keyof typeof ConditionEnum;
+  negotiable: boolean;
 }
 
 const SearchCard = ({
@@ -20,6 +22,7 @@ const SearchCard = ({
   price,
   description,
   condition,
+  negotiable,
 }: ProductCardProps) => {
   return (
     <Card>
@@ -27,7 +30,7 @@ const SearchCard = ({
         <div className="relative w-full sm:static sm:w-auto">
           <Image
             alt="Product Image"
-            className="overflow-hidden rounded-lg border border-gray-200 object-cover dark:border-gray-800 max-sm:w-full sm:aspect-square"
+            className="aspect-square overflow-hidden rounded-lg border border-gray-200 object-cover dark:border-gray-800 max-sm:w-full"
             height={200}
             src={image_url}
             width={200}
@@ -38,41 +41,30 @@ const SearchCard = ({
           />
         </div>
         <div className="grid gap-2 text-base sm:max-w-[calc(100%-16rem)]">
-          <h2 className="break-all font-extrabold leading-tight md:text-xl">
+          <h2 className="break-word font-extrabold leading-tight md:text-xl">
             {name}
           </h2>
-          <p className="line-clamp-3 overflow-ellipsis break-all text-base leading-normal">
+          <p className="line-clamp-3 overflow-ellipsis break-words text-base leading-normal">
             {description}
           </p>
           <div className="flex items-center gap-2">
-            <h4 className="font-bold">${price}</h4>
+            <p className="my-1 flex items-center justify-center rounded-2xl border border-muted-foreground p-1 px-2 text-xs text-muted-foreground dark:font-semibold">
+              {renderConditionIcon(condition)}
+              {condition}
+            </p>
+            <p
+              className={`flex items-center justify-center rounded-3xl p-1 px-2 text-xs max-sm:absolute max-sm:left-0 max-sm:top-0 max-sm:ml-4 max-sm:mt-4 ${negotiable ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-gray-200" : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-gray-200"}`}
+            >
+              {negotiable ? "Negotiable" : "Not Negotiable"}
+            </p>
           </div>
           <div className="flex items-center gap-2">
-            <ChevronRightIcon className="h-5 w-5 fill-muted" />
-            <span className="text-sm text-muted-foreground">{condition}</span>
+            <h4 className="font-bold">₹{price}</h4>
           </div>
         </div>
       </CardContent>
     </Card>
   );
 };
-
-function ChevronRightIcon({ className }: { className: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m9 18 6-6-6-6" />
-    </svg>
-  );
-}
 
 export default SearchCard;

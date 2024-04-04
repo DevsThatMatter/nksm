@@ -1,13 +1,9 @@
 import * as React from "react";
 
-import { Card } from "@/app/components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-  type CarouselApi,
 } from "@/app/components/ui/carousel";
 import Image from "next/image";
 
