@@ -45,7 +45,7 @@ const ProductDetails = ({
         </p>
       </div>
       <div>
-        <pre className="my-2 whitespace-pre-line font-sans text-muted-foreground">
+        <pre className="my-2 whitespace-pre-line break-all font-sans text-muted-foreground">
           {productInfo.Description}
         </pre>
       </div>

@@ -54,7 +54,6 @@ export interface Product {
   Condition: ConditionEnum;
   Category: CategoryEnum;
   Expiry: Date;
-  Negotiable: NegotiateEnum;
 }
 export enum CategoryEnum {
   "Bicycles" = "Bicycles",
