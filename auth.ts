@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-import { insertUser } from "./lib/actions/auth.actions";
+import { getUser, insertUser } from "./lib/actions/auth.actions";
 import { User } from "./lib/models/user.model";
 
 export const {
@@ -20,8 +20,8 @@ export const {
   callbacks: {
     async session({ session }) {
       if (session.user) {
-        const user = await User.findOne({ Email: session.user?.email });
-        session.user.id = user._id;
+        const user = await getUser(session.user.email!);
+        session.user.id = user._id.toString();
         session.user.image = user.Avatar;
         session.user.email = user.Email;
       }

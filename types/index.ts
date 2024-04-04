@@ -45,7 +45,7 @@ export type CommentsType = CommentsInterface[];
 export interface Product {
   _id: mongoose.Types.ObjectId;
   Seller: Seller;
-  Comments: CommentsType;
+  //Comments: CommentsType; ayo
   Quantity: number;
   Product_Name: string;
   Description: string;
@@ -71,4 +71,16 @@ export enum ConditionEnum {
   "Brand New",
   "Like New",
   "Used",
+}
+export enum ChatStatusEnum {
+  "invite",
+  "active",
+  "stale",
+  "dead",
+}
+
+export enum MessageStatusEnum {
+  "accepted",
+  "rejected",
+  "pending",
 }

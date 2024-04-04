@@ -1,6 +1,18 @@
-import mongoose from "mongoose";
+import mongoose, { Model, Types } from "mongoose";
 
-const userSchema = new mongoose.Schema({
+export interface IUser {
+  Username: string;
+  Name: string;
+  Phone_Number?: string;
+  Avatar?: string;
+  Email: string;
+  Chat_IDs?: [Types.ObjectId];
+  Owned_Products?: [Types.ObjectId];
+  Address?: string;
+  Ordered_Products?: [Types.ObjectId];
+  Comments?: [Types.ObjectId];
+}
+const userSchema = new mongoose.Schema<IUser>({
   Username: { type: String, required: true, unique: true },
   Name: { type: String, required: true },
   Phone_Number: { type: String },
@@ -13,5 +25,5 @@ const userSchema = new mongoose.Schema({
   Comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comments" }],
 });
 
-export const User =
+export const User: Model<IUser> =
   mongoose.models.User || mongoose.model("User", userSchema, "users");

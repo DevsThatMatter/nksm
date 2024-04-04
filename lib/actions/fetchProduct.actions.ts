@@ -117,7 +117,7 @@ export const fetchProductDetails = async (productId: string) => {
     const productDetails = await Product.findById(productId).populate({
       path: "Seller",
       model: User,
-      select: "_id Username Phone_Number Avatar Name",
+      select: { _id: 1, Username: 1, Phone_Number: 1, Avatar: 1, Name: 1 },
     });
     console.log("pOFSODGSAGASDG:", productDetails);
     if (!productDetails) {
@@ -133,7 +133,7 @@ export const fetchProductDetails = async (productId: string) => {
       Condition: productDetails.Condition,
       Category: productDetails.Category,
       Seller: productDetails.Seller,
-      Comments: productDetails.Comments,
+      //Comments: productDetails.Comments,  ayo how @geekysilento
       Quantity: productDetails.Total_Quantity_Available,
       Expiry: productDetails.expires_in,
     };

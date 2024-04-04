@@ -1,8 +1,25 @@
-import mongoose from "mongoose";
+import mongoose, { Model, Types } from "mongoose";
 import { CategoryEnum, ConditionEnum } from "@/types";
+import { IUser } from "./user.model";
 
-// Define the schema for the 'product' collection
-const productSchema = new mongoose.Schema(
+export interface IProduct {
+  Seller: Types.ObjectId;
+  Total_Quantity_Available: number;
+  Product_Name: string;
+  Description: string;
+  Price: number;
+  Images: [string];
+  Condition: keyof typeof ConditionEnum;
+  Category: keyof typeof CategoryEnum;
+  Negotiable: boolean;
+  expires_in: Date;
+  is_archived?: boolean;
+}
+export interface PopulatedProduct {
+  seller: IUser[];
+}
+
+const productSchema = new mongoose.Schema<IProduct>(
   {
     Seller: {
       type: mongoose.Schema.Types.ObjectId,
@@ -32,6 +49,6 @@ const productSchema = new mongoose.Schema(
 );
 
 // Create the 'product' model based on the schema
-export const Product =
+export const Product: Model<IProduct> =
   mongoose.models.Product ||
-  mongoose.model("Product", productSchema, "products");
+  mongoose.model<IProduct>("Product", productSchema, "products");

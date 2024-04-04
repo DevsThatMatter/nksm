@@ -44,7 +44,7 @@ export const CarouselItems = async ({
   return data!.map((product) => (
     <ProductCard
       image_url={product.Images[0]}
-      key={product._id}
+      key={product._id.toString()}
       id={product._id}
       name={product.Product_Name}
       price={product.Price}

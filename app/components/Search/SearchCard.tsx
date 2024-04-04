@@ -1,17 +1,17 @@
 import { CardContent, Card } from "@/app/components/ui/card";
 import { ConditionEnum } from "@/types";
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
 import ProductSaved from "../ProductSaved";
 import Image from "next/image";
 import Link from "next/link";
 
 interface ProductCardProps {
-  id: ObjectId;
+  id: Types.ObjectId;
   image_url: string;
   name: string;
   price: number;
   description: string;
-  condition: ConditionEnum;
+  condition: keyof typeof ConditionEnum;
 }
 
 const SearchCard = ({
