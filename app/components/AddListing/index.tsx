@@ -33,6 +33,7 @@ import AddListingPreview from "./AddListingPreview";
 import { addProductFromListing } from "@/lib/actions/add-listing.action";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { AutosizeTextarea } from "../ui/autosize-textarea";
 
 export type PreviewInputs = z.infer<typeof FormDataSchema>;
 
@@ -154,18 +155,26 @@ export function AddListing() {
   };
   return (
     <>
-      <DialogHeader>
-        <div>{`Step ${currentStep} of 4.`}</div>
-        <DialogTitle>Add Listing</DialogTitle>
-        <DialogDescription>
-          Provide details for your new listing.
-        </DialogDescription>
-      </DialogHeader>
+      {currentStep === 4 ? (
+        <>
+          <DialogTitle className="mb-0 text-xl">Preview</DialogTitle>
+        </>
+      ) : (
+        <>
+          <DialogHeader>
+            <div>{`Step ${currentStep} of 4.`}</div>
+            <DialogTitle>Add Listing</DialogTitle>
+            <DialogDescription>
+              Provide details for your new listing.
+            </DialogDescription>
+          </DialogHeader>
+        </>
+      )}
       <Form {...form}>
         <form className="my-2 grid grid-cols-2">
           {currentStep === 1 ? (
             <>
-              <div className="col-span-2">
+              <div className="col-span-2 mb-2">
                 <FormField
                   control={form.control}
                   name="iname"
@@ -188,9 +197,10 @@ export function AddListing() {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea
-                          placeholder="Tell us a little bit about your product"
-                          className="resize-none"
+                        <AutosizeTextarea
+                          rows={4}
+                          minHeight={100}
+                          placeholder="Tell us a bit about your product"
                           {...field}
                         />
                       </FormControl>
@@ -252,7 +262,9 @@ export function AddListing() {
               </div>
             </div>
           ) : currentStep === 4 ? (
-            <AddListingPreview {...form.getValues()} />
+            <div className="col-span-2 ">
+              <AddListingPreview {...form.getValues()} />
+            </div>
           ) : (
             <>
               <div className="col-span-2 mb-2">
@@ -266,34 +278,6 @@ export function AddListing() {
                         <FormControl>
                           <Input {...field} placeholder="Price" />
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField // negotiate
-                    control={form.control}
-                    name="negotiate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Negotiable</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          key={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {Object.values(NegotiateEnum).map((negotiate) => (
-                              <SelectItem key={negotiate} value={negotiate}>
-                                {negotiate}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -319,6 +303,34 @@ export function AddListing() {
                             {Object.values(ConditionEnum).map((condition) => (
                               <SelectItem key={condition} value={condition}>
                                 {condition}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField // negotiate
+                    control={form.control}
+                    name="negotiate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Negotiable</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          key={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Object.values(NegotiateEnum).map((negotiate) => (
+                              <SelectItem key={negotiate} value={negotiate}>
+                                {negotiate}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -366,12 +378,18 @@ export function AddListing() {
           )}
         </form>
       </Form>
-      <div className="flex justify-between">
-        <Button type="button" onClick={prev} disabled={currentStep === 1}>
+      <div className="flex justify-end space-x-4">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={prev}
+          disabled={currentStep === 1}
+          className="w-20"
+        >
           Previous
         </Button>
-        <Button onClick={next} disabled={currentStep > 4}>
-          {currentStep === 4 ? "submit" : "Next"}
+        <Button onClick={next} disabled={currentStep > 4} className="w-20">
+          {currentStep === 4 ? "Submit" : "Next"}
         </Button>
       </div>
     </>
