@@ -87,82 +87,81 @@ export default function AccountTab({ ...props }) {
         </Button>
       </div>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(sendData)}
-          className="relative flex flex-col items-center justify-center gap-4 rounded-xl bg-[#DFF1FE] p-4 *:text-center *:text-base dark:bg-[#16213E] sm:items-start sm:*:text-start"
-        >
-          <FormField
-            name="name"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className="ml-2 mt-2 w-full *:text-base">
-                <FormLabel>Name:</FormLabel>
-                <FormControl>
-                  <Input
-                    className={`w-full border-slate-500 text-center disabled:border-0 disabled:font-bold sm:w-3/5 sm:text-start`}
-                    placeholder="Full Name"
-                    disabled={!isEditing || form.formState.isSubmitting}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <form onSubmit={form.handleSubmit(sendData)}>
+          <div className="relative flex h-full w-full flex-col items-center justify-center gap-4 rounded-xl bg-[#DFF1FE] p-4 *:text-center *:text-base dark:bg-[#16213E] sm:items-start sm:*:text-start">
+            <FormField
+              name="name"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="ml-2 mt-2 w-full *:text-base">
+                  <FormLabel>Name:</FormLabel>
+                  <FormControl>
+                    <Input
+                      className={`w-full border-slate-500 text-center disabled:border-0 disabled:font-bold sm:w-3/5 sm:text-start`}
+                      placeholder="Full Name"
+                      disabled={!isEditing || form.formState.isSubmitting}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            name="phone"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem className="ml-2 w-full *:text-base">
-                <FormLabel>Phone:</FormLabel>
-                <FormControl>
-                  <Input
-                    className={`w-full border-slate-500 text-center disabled:border-0 disabled:font-bold sm:w-3/5 sm:text-start`}
-                    placeholder="Add a phone number"
-                    disabled={!isEditing || form.formState.isSubmitting}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              name="phone"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="ml-2 w-full *:text-base">
+                  <FormLabel>Phone:</FormLabel>
+                  <FormControl>
+                    <Input
+                      className={`w-full border-slate-500 text-center disabled:border-0 disabled:font-bold sm:w-3/5 sm:text-start`}
+                      placeholder="Add a phone number"
+                      disabled={!isEditing || form.formState.isSubmitting}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            name="email"
-            render={({ field }) => (
-              <FormItem className="ml-2 w-full *:text-base">
-                <FormLabel>Email:</FormLabel>
-                <Input
-                  className={`${!isEditing && "border-0"} w-full border-slate-600 text-center disabled:font-bold sm:w-3/5 sm:text-start`}
-                  placeholder="Email"
-                  type="email"
-                  value={props.Email}
-                  name="email"
-                  disabled
-                />
-              </FormItem>
-            )}
-          />
-          <Button
-            type="submit"
-            className="mt-5 place-self-center p-5 sm:mt-3 sm:place-self-end"
-            variant="outline"
-            disabled={form.formState.isSubmitting}
-          >
-            {!isEditing ? (
-              <>
-                Edit Profile <RadixPencil className="ml-2" />
-              </>
-            ) : form.formState.isSubmitting ? (
-              <>
-                <Loader className="mr-2 h-4 w-4" /> Saving
-              </>
-            ) : (
-              "Save Profile"
-            )}
-          </Button>
+            <FormField
+              name="email"
+              render={({ field }) => (
+                <FormItem className="ml-2 w-full *:text-base">
+                  <FormLabel>Email:</FormLabel>
+                  <Input
+                    className={`${!isEditing && "border-0"} w-full border-slate-600 text-center disabled:font-bold sm:w-3/5 sm:text-start`}
+                    placeholder="Email"
+                    type="email"
+                    value={props.Email}
+                    name="email"
+                    disabled
+                  />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="submit"
+              className="relative mt-3 place-self-center p-5 sm:bottom-7 sm:-mb-6 sm:mt-3 sm:place-self-end"
+              variant="outline"
+              disabled={form.formState.isSubmitting}
+            >
+              {!isEditing ? (
+                <>
+                  Edit Profile <RadixPencil className="ml-2" />
+                </>
+              ) : form.formState.isSubmitting ? (
+                <>
+                  <Loader className="mr-2 h-4 w-4" /> Saving
+                </>
+              ) : (
+                "Save Profile"
+              )}
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

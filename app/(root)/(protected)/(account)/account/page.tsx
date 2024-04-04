@@ -9,7 +9,7 @@ const page = async () => {
   console.log(userInfo);
 
   return (
-    <main className="mt-8 flex justify-center">
+    <main className="mt-8 flex justify-center overflow-x-hidden">
       <AccountTab
         Name={userInfo[0].Name}
         Phone={userInfo[0].Phone_Number}

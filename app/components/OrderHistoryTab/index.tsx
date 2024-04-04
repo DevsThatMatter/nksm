@@ -31,7 +31,7 @@ const OrderHistoryTab = async ({ email }: { email: string }) => {
           return (
             <Card className="w-10/12 md:w-7/12 lg:w-[50%]" key={index}>
               <CardHeader>
-                <CardTitle className="text-gray-400">
+                <CardTitle className="text-neutral-800 dark:text-gray-400 ">
                   {product.Category}
                 </CardTitle>
                 <CardDescription>

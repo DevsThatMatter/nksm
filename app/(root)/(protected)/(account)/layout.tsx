@@ -11,7 +11,7 @@ export default function AccountLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="w-full rounded-lg p-8 shadow ">
+    <div className="w-full overflow-x-hidden rounded-lg p-8 shadow ">
       <h1 className="mb-4 text-center text-2xl font-bold sm:text-left">
         My Account
       </h1>
