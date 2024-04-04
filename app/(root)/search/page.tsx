@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 export interface FilterProps {
   query: string;
   sorting?: SortBy;
-  category?: CategoryEnum;
+  category?: keyof typeof CategoryEnum;
 }
 
 export default async function Page({
@@ -40,7 +40,7 @@ export default async function Page({
   const loadMoreKey = JSON.stringify(q + category + sortBy);
 
   return (
-    <main className="container m-auto flex justify-center">
+    <main className="container m-auto flex justify-center max-sm:px-2">
       <Filter query={q} sorting={sortBy} category={selectedCategory} />
       <section className="w-[80%] pt-4">
         <span className="flex justify-between">

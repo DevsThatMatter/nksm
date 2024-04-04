@@ -6,8 +6,8 @@ import { FilterProps } from "@/app/(root)/search/page";
 
 const Filter = ({ query, sorting = "newest", category }: FilterProps) => {
   return (
-    <aside className="my-2 flex max-h-full w-[20%] flex-col p-2">
-      <span className="flex justify-between">
+    <aside className="my-2 flex max-h-full w-[30%] flex-col sm:w-[20%] sm:p-2">
+      <div className="flex flex-wrap justify-between">
         <h3 className="text-xl font-bold">Categories</h3>{" "}
         <Link
           href={{
@@ -21,7 +21,7 @@ const Filter = ({ query, sorting = "newest", category }: FilterProps) => {
         >
           Clear
         </Link>
-      </span>
+      </div>
       {categories.map(({ name, imgUrl }) => (
         <Link
           href={{

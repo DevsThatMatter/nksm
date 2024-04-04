@@ -52,7 +52,6 @@ const sortOptions = (
     case "low":
       return { Price: 1 };
     default:
-      console.error("Invalid sortBy value:", sortBy);
       return { createdAt: 1 };
   }
 };

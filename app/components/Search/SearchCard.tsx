@@ -23,25 +23,25 @@ const SearchCard = ({
 }: ProductCardProps) => {
   return (
     <Card>
-      <CardContent className="relative flex items-start gap-6 p-6 @container">
-        <div className="">
+      <CardContent className="container relative flex flex-col items-start gap-6 p-3 sm:h-64 sm:flex-row sm:p-6">
+        <div className="relative w-full sm:static sm:w-auto">
           <Image
             alt="Product Image"
-            className="aspect-square overflow-hidden rounded-lg border border-gray-200 object-cover dark:border-gray-800"
+            className="overflow-hidden rounded-lg border border-gray-200 object-cover dark:border-gray-800 max-sm:w-full sm:aspect-square"
             height={200}
             src={image_url}
             width={200}
           />
           <ProductSaved
-            className="absolute right-0 top-0 mr-5 mt-6 cursor-pointer rounded-full bg-gray-200 p-1"
+            className="absolute right-0 top-0 mr-2 mt-2 cursor-pointer rounded-full bg-gray-200 p-1 sm:mr-5 sm:mt-6"
             id={id.toString()}
           />
         </div>
-        <div className="grid max-w-[75%] gap-2 text-base">
+        <div className="grid gap-2 text-base sm:max-w-[calc(100%-16rem)]">
           <h2 className="break-all font-extrabold leading-tight md:text-xl">
             {name}
           </h2>
-          <p className="line-clamp-3 overflow-ellipsis text-base leading-normal">
+          <p className="line-clamp-3 overflow-ellipsis break-all text-base leading-normal">
             {description}
           </p>
           <div className="flex items-center gap-2">
