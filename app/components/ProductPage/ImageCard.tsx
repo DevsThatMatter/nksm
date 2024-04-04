@@ -11,7 +11,7 @@ import {
 } from "@/app/components/ui/carousel";
 import Image from "next/image";
 
-export default function ImageCard({ images }: any) {
+export default function ImageCard({ images }: { images: string[] }) {
   return (
     <div className="relative flex justify-end">
       <div className="absolute bottom-0 left-0 top-0 w-[15%] space-y-2 overflow-auto pr-2">
