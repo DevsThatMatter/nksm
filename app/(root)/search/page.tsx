@@ -41,22 +41,27 @@ export default async function Page({
   const loadMoreKey = JSON.stringify(q + category + sortBy);
 
   return (
-    <main className="container m-auto flex justify-center max-sm:px-2 sm:gap-x-10">
+    <main className="container m-auto flex h-dvh max-h-[calc(100dvh-4.9rem)] justify-center max-sm:px-2 sm:gap-x-10">
       <Filter query={q} sorting={sortBy} category={selectedCategory} />
-      <section className="w-[80%] pt-4">
-        <span className="flex flex-wrap justify-between">
-          <p className="mb-2 pl-1 text-xl font-semibold">
-            Showing results for &quot;{q}&quot;
-            {selectedCategory ? ` in ${selectedCategory}` : ""}
-          </p>
-          <SortFilter query={q} sorting={sortBy} category={selectedCategory} />
-        </span>
-        <ScrollArea>
+      <ScrollArea className="relative h-full w-[80%]">
+        <section className="rounded-sm">
+          <span className="sticky top-0 z-10 flex flex-wrap justify-between bg-background pt-4">
+            <p className="mb-2 pl-1 text-xl font-semibold">
+              Showing results for &quot;{q}&quot;
+              {selectedCategory ? ` in ${selectedCategory}` : ""}
+            </p>
+            <SortFilter
+              query={q}
+              sorting={sortBy}
+              category={selectedCategory}
+            />
+          </span>
+
           {result.productsData}
           {result.isNext && <LoadMore key={loadMoreKey} pageSize={pageSize} />}
           <br />
-        </ScrollArea>
-      </section>
+        </section>
+      </ScrollArea>
     </main>
   );
 }
