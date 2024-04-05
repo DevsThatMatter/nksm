@@ -1,3 +1,5 @@
+import { IProduct } from "@/lib/models/product.model";
+import { IUser } from "@/lib/models/user.model";
 import mongoose, { mongo } from "mongoose";
 import { Socket, Server as netServer } from "net";
 import { NextApiResponse } from "next";
@@ -27,35 +29,14 @@ export interface Seller {
   Name: string;
 }
 
-export interface User {
-  Username: string;
-  Email: string;
-  Avatar: string;
-  Name: string;
-  id: mongoose.Types.ObjectId;
-}
 export interface CommentsInterface {
   _id?: mongoose.Types.ObjectId;
-  Product: Product;
-  User: User;
+  Product: IProduct;
+  User: Pick<IUser, "Avatar" | "Name">;
   Comment: string;
 }
 export type CommentsType = CommentsInterface[];
 
-export interface Product {
-  _id: mongoose.Types.ObjectId;
-  Seller: Seller;
-  //Comments: CommentsType; ayo
-  Quantity: number;
-  Product_Name: string;
-  Description: string;
-  Price: number;
-  Images: string[];
-  Negotiable: boolean;
-  Condition: ConditionEnum;
-  Category: CategoryEnum;
-  Expiry: Date;
-}
 export enum CategoryEnum {
   Bicycles,
   Coolers,
