@@ -1,5 +1,4 @@
 "use server";
-import EmailTemplate from "@/app/components/ProductPage/email-template";
 import { Resend } from "resend";
 import { Chat } from "../models/chats.model";
 import { User } from "../models/user.model";
