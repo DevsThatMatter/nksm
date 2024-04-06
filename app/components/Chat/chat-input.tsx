@@ -130,6 +130,7 @@ export default function ChatInput({
                 className="max-h-[200px] min-h-[40px] w-full resize-y overflow-y-auto bg-muted p-2 text-foreground placeholder:text-accent-foreground focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 "
                 placeholder="Type a message"
                 {...form.register("content")}
+                autoComplete="off"
               />
               <Dialog>
                 <DialogTrigger asChild>

@@ -230,7 +230,7 @@ export default function BuyerInvites({ userId }: { userId: string }) {
               </div>
               <div className="flex flex-col">
                 <h1 className="text-xl font-semibold text-foreground">
-                  {invites.Seller.Name ?? "Moni"}
+                  {invites.Seller.Name ?? "Moni chan"}
                 </h1>
                 <h4 className="text-sm text-muted-foreground">
                   {invites.Product.Name}
