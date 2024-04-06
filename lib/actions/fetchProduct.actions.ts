@@ -1,12 +1,13 @@
 "use server";
 
-import { Product } from "../models/product.model";
+import { IProduct, Product } from "../models/product.model";
 import { connectToDB } from "../database/mongoose";
-import { FilterQuery, SortOrder } from "mongoose";
+import mongoose, { FilterQuery, Mongoose, SortOrder, Types } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { CategoryEnum } from "@/types";
-import { User } from "../models/user.model";
 import { Comments } from "../models/comments.model";
+import { IUser, User } from "../models/user.model";
+
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -114,29 +115,20 @@ export const getSearchResults = async ({
 export const fetchProductDetails = async (productId: string) => {
   try {
     await connectToDB();
-    const productDetails = await Product.findById(productId).populate({
+    const productDetails = await Product.findById(productId).populate<{
+      Seller: Pick<IUser, "Avatar" | "Username" | "Phone_Number" | "Name"> & {
+        _id: Types.ObjectId;
+      };
+    }>({
       path: "Seller",
       model: User,
-      select: "_id Username Phone_Number Avatar Name",
+      select: { _id: 1, Username: 1, Phone_Number: 1, Avatar: 1, Name: 1 },
     });
     console.log("pOFSODGSAGASDG:", productDetails);
     if (!productDetails) {
       throw new Error("Product not found!");
     }
-    return {
-      _id: productDetails._id,
-      Negotiable: productDetails.Negotiable,
-      Product_Name: productDetails.Product_Name,
-      Price: productDetails.Price,
-      Images: productDetails.Images,
-      Description: productDetails.Description,
-      Condition: productDetails.Condition,
-      Category: productDetails.Category,
-      Seller: productDetails.Seller,
-      Comments: productDetails.Comments,
-      Quantity: productDetails.Total_Quantity_Available,
-      Expiry: productDetails.expires_in,
-    };
+    return productDetails;
   } catch (error) {
     console.error("Error fetching product details:", error);
     throw error;

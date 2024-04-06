@@ -22,3 +22,13 @@ export const insertUser = async (data: userData) => {
     throw error;
   }
 };
+export const getUser = async (email: string) => {
+  try {
+    await connectToDB();
+    const user = await User.findOne({ Email: email }).orFail();
+    return user;
+  } catch (error) {
+    console.error("Error user not found!:", error);
+    throw error;
+  }
+};

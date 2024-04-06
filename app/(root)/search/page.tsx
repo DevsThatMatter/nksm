@@ -35,7 +35,7 @@ export default async function Page({
           <>
             {result.products.map((product) => (
               <SearchCard
-                key={product._id}
+                key={product._id.toString()}
                 id={product._id}
                 image_url={product.Images[0]}
                 name={product.Product_Name}

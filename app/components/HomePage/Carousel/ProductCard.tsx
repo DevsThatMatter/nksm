@@ -2,12 +2,11 @@ import Image from "next/image";
 import { Card, CardContent } from "../../ui/card";
 import Link from "next/link";
 import { CarouselItem } from "../../ui/carousel";
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
 import ProductSaved from "../../ProductSaved";
-import { cn } from "@/app/utils";
 
 interface ProductCardProps {
-  id: ObjectId;
+  id: Types.ObjectId;
   image_url: string;
   name: string;
   price: number;
@@ -47,7 +46,7 @@ const ProductCard = ({
                 </h1>
                 <span className="text-muted-foreground">₹{price}</span>
               </div>
-              <p className="line-clamp-2 h-8 w-full overflow-ellipsis break-words text-foreground min-[300px]:text-xs md:h-10 md:text-sm lg:h-8 lg:text-xs">
+              <p className="line-clamp-2 h-8 w-full overflow-ellipsis break-all text-foreground min-[300px]:text-xs md:h-10 md:text-sm lg:h-8 lg:text-xs">
                 {description}
               </p>
             </div>

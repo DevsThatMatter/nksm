@@ -1,6 +1,12 @@
-import mongoose from "mongoose";
+import mongoose, { Model, Types } from "mongoose";
 
-const commentSchema = new mongoose.Schema({
+export interface IComment {
+  Product: Types.ObjectId;
+  User: Types.ObjectId;
+  Comment: string;
+}
+
+const commentSchema = new mongoose.Schema<IComment>({
   Product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
@@ -10,5 +16,5 @@ const commentSchema = new mongoose.Schema({
   Comment: { type: String, required: true },
 });
 
-export const Comments =
+export const Comments: Model<IComment> =
   mongoose.models.Comments || mongoose.model("Comments", commentSchema);

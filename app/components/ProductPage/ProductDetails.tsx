@@ -1,13 +1,14 @@
 import React from "react";
-import { type ConditionEnum, Product } from "@/types";
+import { type ConditionEnum } from "@/types";
 import { cn } from "@/app/utils";
 import { Icons } from "@/app/utils/icons";
+import { IProduct } from "@/lib/models/product.model";
 
 const ProductDetails = ({
   productInfo,
   className,
 }: {
-  productInfo: Product;
+  productInfo: IProduct;
   className?: string;
 }) => {
   const renderConditionIcon = (condition: ConditionEnum | string) => {
@@ -41,11 +42,11 @@ const ProductDetails = ({
           </p>
         </div>
         <p className="text-sm text-muted-foreground">
-          Available: {productInfo.Quantity}
+          Available: {productInfo.Total_Quantity_Available}
         </p>
       </div>
       <div>
-        <pre className="my-2 whitespace-pre-line font-sans text-muted-foreground">
+        <pre className="my-2 whitespace-pre-line break-all font-sans text-muted-foreground">
           {productInfo.Description}
         </pre>
       </div>

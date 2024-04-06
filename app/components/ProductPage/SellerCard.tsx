@@ -17,11 +17,21 @@ import {
   CardFooter,
 } from "../ui/card";
 import { Input } from "../ui/input";
+import { IUser } from "@/lib/models/user.model";
+import { Types } from "mongoose";
 
-function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
+function SellerCard({
+  sellerInfo,
+}: {
+  sellerInfo: Pick<IUser, "Avatar" | "Username" | "Phone_Number" | "Name"> & {
+    _id: Types.ObjectId;
+  };
+}) {
   return (
     <div>
-      <h2 className="text-lg font-semibold">Seller Details</h2>
+      <h2 className="mt-6 pb-3 text-2xl font-semibold lg:mt-0 lg:pb-0 lg:text-xl">
+        Seller Details
+      </h2>
       <div className="my-2 flex justify-between">
         <div className="flex items-center">
           <Avatar className="h-[3rem] w-[3rem]">
