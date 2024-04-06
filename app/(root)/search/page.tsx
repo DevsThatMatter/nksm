@@ -1,5 +1,5 @@
 import Filter from "@/app/components/Search/Filter";
-import LoadMore, { SearchCard } from "@/app/components/Search/LoadMore";
+import LoadMore from "@/app/components/Search/LoadMore";
 import SortFilter, {
   sortFilterObject,
 } from "@/app/components/Search/SortFilter";

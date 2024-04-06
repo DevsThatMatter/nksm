@@ -1,6 +1,7 @@
 import { categories } from "@/constants/categories";
 import Link from "next/link";
 import Image from "next/image";
+import { Separator } from "../ui/separator";
 import { spartan } from "@/app/utils/fonts";
 import { cn } from "@/app/utils";
 import { FilterProps } from "@/app/(root)/search/page";
@@ -23,6 +24,7 @@ const Filter = ({ query, sorting = "newest", category }: FilterProps) => {
           >
             Clear
           </Link>
+          <Separator className="my-[0.05rem]" />
         </div>
         {categories.map(({ name, imgUrl }) => (
           <Link
