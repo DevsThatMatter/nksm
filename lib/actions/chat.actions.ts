@@ -27,8 +27,7 @@ export async function getUserId({ email }: z.infer<typeof GetUserIdSchema>) {
     await connectToDB();
     const user = await User.findOne({ Email: email });
     const userId = user?._id?.toString();
-    // for test return "65c5e97aafe71c6df760f715"
-    return "65c5e97aafe71c6df760f717";
+    return userId;
   } catch (error) {
     throw error;
   }
@@ -63,7 +62,7 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
     const matchStage1 = {
       $match: {
         Buyer: new mongo.ObjectId(userId),
-        status: { $eq: "active" },
+        status: { $in: ["active", "stale"] },
       },
     };
 
@@ -122,9 +121,8 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
               input: "$sellerInfo",
               as: "seller",
               in: {
-                First_Name: "$$seller.First_Name",
-                Last_Name: "$$seller.Last_Name",
-                Phone_Number: "$$seller.Phone_Number",
+                Name: "$$seller.Name",
+                Username: "$$seller.Username",
                 id: {
                   $toString: "$$seller._id",
                 },
@@ -139,9 +137,8 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
               input: "$buyerInfo",
               as: "buyer",
               in: {
-                First_Name: "$$buyer.First_Name",
-                Last_Name: "$$buyer.Last_Name",
-                Phone_Number: "$$buyer.Phone_Number",
+                Name: "$$buyer.Name",
+                Username: "$$buyer.Username",
                 id: {
                   $toString: "$$buyer._id",
                 },
@@ -181,7 +178,6 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
       data: { resultWhereUserIsBuyer, resultWhereUserIsSeller1 },
     };
   } catch (error) {
-    console.error("Error in chatHandler:", error);
     throw error;
   }
 }
@@ -385,7 +381,6 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
       status: 200,
     };
   } catch (error) {
-    console.error("Error locking deal:", error);
     return {
       content: null,
       status: 500,
@@ -450,15 +445,21 @@ async function computeUnreadMessages(
 
 export async function countUnreadMessages(
   props: z.infer<typeof UnreadMessagesProps> & {
-    caller: "get" | "update";
+    caller: "get" | "update" | "db";
     messageId?: string;
   },
 ) {
   try {
     const cacheKey = `productId${props.productId}sellerId${props.sellerId}buyerId${props.buyerId}cache`;
     const cachedVal = await client.get(cacheKey);
-
-    if (props.caller === "get") {
+    if (props.caller === "db") {
+      const unreadCount = await computeUnreadMessages(props);
+      await client.set(cacheKey, unreadCount.toString());
+      return {
+        unreadCount,
+        productId: props.productId,
+      };
+    } else if (props.caller === "get") {
       if (cachedVal) {
         return {
           unreadCount: parseInt(cachedVal),
@@ -467,7 +468,6 @@ export async function countUnreadMessages(
       }
       const unreadCount = await computeUnreadMessages(props);
       await client.set(cacheKey, unreadCount.toString());
-      console.log("get caller called");
       return {
         unreadCount,
         productId: props.productId,
@@ -510,7 +510,7 @@ export async function countUnreadMessages(
       }
     }
   } catch (error) {
-    console.error("Error while accessing Redis:", error);
+    throw error;
   }
 }
 
@@ -580,6 +580,10 @@ export async function createNewMessage(
       ...newMessage,
     });
 
+    newMessage = {
+      ...newMessage,
+      msgId: String(createdMessage._id),
+    };
     if (chat) {
       chat.Messages.push(createdMessage._id);
       await chat.save();
@@ -684,7 +688,6 @@ export async function getMessages(props: z.infer<typeof GetmessageProps>) {
       }),
       Chat.aggregate(pipeline),
     ]);
-    console.log("chat details => ", props);
     const nextPageNo =
       messages && messages[0].Messages.length === docPerPage
         ? (props.pageNo ?? 0) + 1
@@ -751,9 +754,8 @@ export async function fecthInvites(userId: string) {
               input: "$buyerDetails",
               as: "buyer",
               in: {
-                Last_Name: "$$buyer.Last_Name",
-                First_Name: "$$buyer.First_Name",
-                Phone_Number: "$$buyer.Phone_Number",
+                Name: "$$buyer.Name",
+                Username: "$$buyer.Username",
                 Avatar: "$$buyer.Avatar",
                 address: "$$buyer.address",
                 buyerId: {
@@ -778,9 +780,8 @@ export async function fecthInvites(userId: string) {
           buyerDetails: 1,
           "sellerDetails.Avatar": 1,
           "sellerDetails.address": 1,
-          "sellerDetails.Last_Name": 1,
-          "sellerDetails.First_Name": 1,
-          "sellerDetails.Phone_Number": 1,
+          "sellerDetails.Name": 1,
+          "sellerDetails.Username": 1,
           sellerId: {
             $toString: "$sellerDetails._id",
           },
@@ -836,24 +837,16 @@ export async function acceptTheInvite(
         },
       );
     } else {
-      console.log(
-        "reject this invite => ",
-        await Chat.updateOne(
-          {
-            Seller: props.sellerId,
-            Buyer: props.buyerId,
-            ProductId: props.productId,
-          },
-          {
-            status: "reject",
-          },
-        ),
+      await Chat.updateOne(
+        {
+          Seller: props.sellerId,
+          Buyer: props.buyerId,
+          ProductId: props.productId,
+        },
+        {
+          status: "reject",
+        },
       );
-      console.log("details => ", {
-        Seller: props.sellerId,
-        Buyer: props.buyerId,
-        ProductId: props.productId,
-      });
     }
   } catch (error) {
     throw error;

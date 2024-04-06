@@ -4,7 +4,7 @@ import "./styles/globals.css";
 import { cn } from "@/app/utils";
 import { ThemeProvider } from "@/app/components/providers/theme-provider";
 import { QueryProvider } from "./components/providers/query-provider";
-import { Toaster } from "sonner";
+import { Toaster } from "./components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {

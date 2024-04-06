@@ -7,7 +7,14 @@ import { Seller } from "@/types";
 import React from "react";
 import { Button } from "../ui/button";
 import { Icons } from "@/app/utils/icons";
-import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogDescription,
+  DialogTitle,
+} from "../ui/dialog";
 import OfferForm from "./offer-form";
 import { auth } from "@/auth";
 import mongoose from "mongoose";
@@ -65,3 +72,26 @@ async function SellerCard({
 }
 
 export default SellerCard;
+{
+  /* <DialogContent className="rounded-md">
+            <CardTitle className="text-2xl">Enter Your Price</CardTitle>
+            <CardDescription>Let us know your offer.</CardDescription>
+            <CardContent className="space-y-2 p-4">
+              <Input
+                className="w-full"
+                min="0"
+                placeholder="How much are you willing to pay?"
+                step="0.01"
+                type="number"
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Your bid will be submitted to the seller.
+              </p>
+            </CardContent>
+            <CardFooter className="flex">
+              <Button className="w-full bg-green-600 hover:bg-green-700 dark:text-foreground">
+                Submit Offer
+              </Button>
+            </CardFooter>
+          </DialogContent> */
+}

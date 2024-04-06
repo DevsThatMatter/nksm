@@ -11,7 +11,6 @@ export type category = {
 export interface Seller {
   SellerId: string;
   Username: string;
-  Phone_Number: string;
   Avatar: string;
   Email: string;
   Name: string;
@@ -86,9 +85,8 @@ export interface IChat {
 }
 
 interface userDetails {
-  First_Name: string;
-  Last_Name: string;
-  Phone_Number: string;
+  Name: string;
+  Username: string;
   id: string;
   Avatar: string;
 }
@@ -111,7 +109,6 @@ export interface MessageTypes {
   Sender: string;
   Message: string;
   options: boolean;
-  FileUrl?: string;
   TimeStamp: string;
   accepted?: "accepted" | "rejected" | "pending";
   readStatus: boolean;

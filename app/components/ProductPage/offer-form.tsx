@@ -6,18 +6,17 @@ import {
   CardFooter,
 } from "../ui/card";
 import { Input } from "../ui/input";
-import { Form, FormControl, FormItem } from "../ui/form";
+import { Form, FormControl, FormItem, FormMessage } from "../ui/form";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/button";
 import { sendEmail } from "@/lib/actions/email.actions";
 import { toast } from "sonner";
-import { DialogClose } from "@radix-ui/react-dialog";
-import mongoose from "mongoose";
+import { cn } from "@/app/utils";
 
 const OfferSchema = z.object({
-  price: z.number().min(1, { message: "Zero values are not accepted" }),
+  price: z.number().min(1, { message: "Zero values bids are not accepted" }),
 });
 interface OfferFormProps {
   reciverEmail: string;
@@ -33,7 +32,15 @@ export default function OfferForm({
   productId,
   productName,
 }: OfferFormProps) {
-  const sendEmailWithDetails = (formData: FormData) => {
+  const form = useForm({
+    resolver: zodResolver(OfferSchema),
+    defaultValues: {
+      price: 1,
+    },
+  });
+
+  const sendEmailWithDetails = (formData: z.infer<typeof OfferSchema>) => {
+    console.log(typeof formData.price);
     const prom = sendEmail(
       senderEmail,
       reciverEmail,
@@ -45,22 +52,23 @@ export default function OfferForm({
     toast.promise(prom, {
       loading: "Sending...",
       success: (data) => {
-        return "An invite email has been sent.";
+        return (
+          <span className={cn(data.error ? "text-red-600" : "text-lime-800")}>
+            {data.error || data.msg}
+          </span>
+        );
       },
     });
+    form.reset();
   };
-  const form = useForm({
-    resolver: zodResolver(OfferSchema),
-    defaultValues: {
-      price: 0,
-    },
-  });
 
   return (
     <Form {...form}>
-      <form action={sendEmailWithDetails}>
-        <CardTitle className="text-2xl">Enter Your Price</CardTitle>
-        <CardDescription>Let us know your offer.</CardDescription>
+      <form onSubmit={form.handleSubmit(sendEmailWithDetails)}>
+        <CardTitle className="mb-5 text-2xl">Enter Your Price</CardTitle>
+        <CardDescription className="mb-5">
+          Let us know your offer.
+        </CardDescription>
         <CardContent className="space-y-2 p-4">
           <FormItem>
             <FormControl>
@@ -68,22 +76,26 @@ export default function OfferForm({
                 className="w-full"
                 min="0"
                 placeholder="How much are you willing to pay?"
-                step="0.01"
+                step="0.1"
                 type="number"
-                {...form.register("price")}
+                {...form.register("price", { valueAsNumber: true })}
               />
             </FormControl>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Your bid will be submitted to the seller.
+            </p>
+            {form.formState.errors.price && (
+              <FormMessage>{form.formState.errors.price.message}</FormMessage>
+            )}
           </FormItem>
         </CardContent>
         <CardFooter className="flex">
-          <DialogClose>
-            <Button
-              type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 dark:text-foreground"
-            >
-              Submit Offer
-            </Button>
-          </DialogClose>
+          <Button
+            type="submit"
+            className="mt-5 w-full bg-green-600 hover:bg-green-700 dark:text-foreground"
+          >
+            Submit Offer
+          </Button>
         </CardFooter>
       </form>
     </Form>

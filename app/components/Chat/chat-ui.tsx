@@ -86,8 +86,6 @@ export default function ChatUI({
 
         return updatedMessages;
       });
-    } else {
-      console.log("message is null => ", data?.pages?.[0]?.content?.messages);
     }
     setLockedStatus({
       status: data?.pages?.[0]?.content?.Locked ?? false,
@@ -127,7 +125,6 @@ export default function ChatUI({
       pusherClient.unbind("messages:update", updateMessageHandler);
     };
   }, [addKey, updateKey, productId, sellerId, buyerId, messages]);
-  // console.log("is fetching => ", isFetchingNextPage, " hasNextPage => ", hasNextPage)
 
   if (productId === "" && sellerId !== "" && buyerId !== "") {
     removeChat("chatUi");

@@ -52,7 +52,7 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
         buyerDetails: { id: buyer.id },
       });
     } catch (error) {
-      console.error(error);
+      throw error;
     }
   }
 
@@ -63,12 +63,12 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
         : discussion.buyerDetails.id;
     const otherUserName =
       discussion.buyerDetails.id === userId
-        ? `${discussion.sellerDetails.First_Name} ${discussion.sellerDetails.Last_Name}`
-        : `${discussion.buyerDetails.First_Name} ${discussion.buyerDetails.Last_Name}`;
+        ? `${discussion.sellerDetails.Name}`
+        : `${discussion.buyerDetails.Name}`;
     const otherUserPhoneNumber =
       discussion.buyerDetails.id === userId
-        ? discussion.sellerDetails.Phone_Number
-        : discussion.buyerDetails.Phone_Number;
+        ? discussion.sellerDetails.Username
+        : discussion.buyerDetails.Username;
     const otherUserAvatar =
       discussion.buyerDetails.id === userId
         ? discussion.sellerDetails.Avatar
@@ -122,7 +122,7 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
             sellerId: sellerId,
             buyerId: buyerId,
             productId: productId,
-            caller: "get",
+            caller: "db",
             currentUser: userId,
           }),
         enabled: discussions.length > 0,
@@ -163,7 +163,11 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                 <div className="mx-2 flex-shrink-0 overflow-hidden rounded-full">
                   {discussion.sellerDetails.Avatar ? (
                     <Image
-                      src={discussion.sellerDetails.Avatar}
+                      src={
+                        discussion.buyerDetails.id === userId
+                          ? discussion.sellerDetails.Avatar
+                          : discussion.buyerDetails.Avatar
+                      }
                       alt={discussion.productDetails.Product_Name}
                       width={64}
                       height={64}
@@ -177,12 +181,8 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                     {discussion.buyerDetails ? (
                       <h4 className="text-xl font-semibold text-black dark:text-white ">
                         {discussion.buyerDetails.id === userId
-                          ? discussion.sellerDetails.First_Name +
-                            " " +
-                            discussion.sellerDetails.Last_Name
-                          : discussion.buyerDetails.First_Name +
-                            " " +
-                            discussion.buyerDetails.Last_Name}
+                          ? discussion.sellerDetails.Name
+                          : discussion.buyerDetails.Name}
                       </h4>
                     ) : (
                       <h5 className="h-4 w-36 animate-pulse rounded-sm bg-gradient-to-tr from-gray-300 via-gray-400 to-gray-300" />

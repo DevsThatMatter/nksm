@@ -87,7 +87,7 @@ export default function ChatInput({
       );
       form.reset();
     } catch (error) {
-      console.error(error);
+      throw error;
     }
   }
   useEffect(() => {
@@ -108,7 +108,7 @@ export default function ChatInput({
         );
         form.reset();
       } catch (error) {
-        console.error(error);
+        throw error;
       }
     }
     if (dealLock) {

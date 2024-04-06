@@ -24,9 +24,8 @@ import { cn } from "@/app/utils";
 interface UserDetails {
   Avatar: string;
   address: string;
-  Last_Name: string;
-  First_Name: string;
-  Phone_Number: string;
+  Name: string;
+  Username: string;
 }
 
 interface ProductDetails {
@@ -72,14 +71,14 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                   <div className="relative h-12 w-12 overflow-hidden rounded-full">
                     <Image
                       src={buyer.Avatar}
-                      alt={buyer.Phone_Number}
+                      alt={buyer.Username}
                       fill
                       className="h-16 w-16 object-cover"
                     />
                   </div>
                   <div className="flex flex-col">
                     <h1 className="text-lg font-semibold text-black dark:text-white">
-                      {`${buyer.First_Name} ${buyer.Last_Name}`}
+                      {`${buyer.Name}`}
                     </h1>
                     <h5 className="text-sm text-gray-600 dark:text-gray-100">
                       {`For ${invites.productDetails.Product_Name}`}
@@ -98,7 +97,6 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                         <button
                           className="rounded-lg bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
                           onClick={() => {
-                            console.log("accepted was clicked");
                             setSellectedButton("accept");
                           }}
                         >
@@ -109,7 +107,6 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                         <button
                           className="rounded-lg bg-red-100 px-4 py-1 text-sm text-red-500 hover:text-red-600  dark:bg-background/20"
                           onClick={() => {
-                            console.log("rejected was clicked");
                             setSellectedButton("reject");
                           }}
                         >

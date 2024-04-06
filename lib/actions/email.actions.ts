@@ -2,20 +2,25 @@
 import EmailTemplate from "@/app/components/ProductPage/email-template";
 import { Resend } from "resend";
 import { Chat } from "../models/chats.model";
-import { string } from "zod";
 import { User } from "../models/user.model";
-import mongoose, { mongo } from "mongoose";
+import { mongo } from "mongoose";
 import { connectToDB } from "../database/mongoose";
-
-interface State {
-  error: string | null;
-  success: boolean;
-}
+import nodemailer from "nodemailer";
 
 async function getIdByEmail(email: string) {
   const id = (await User.findOne({ Email: email }))._id;
   return id;
 }
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.SMTP_ACCOUNT,
+    pass: process.env.SMTP_PASSKEY,
+  },
+});
 
 export async function sendEmail(
   senderEmail: string,
@@ -23,16 +28,105 @@ export async function sendEmail(
   productName: string,
   productImages: string[],
   productId: string,
-  formData: FormData,
+  formData: {
+    price: number;
+  },
 ) {
-  let priceString = formData.get("price")?.toString();
-  if (priceString === undefined) {
-    priceString = "0";
-  }
-  let price = parseFloat(priceString);
+  const { price } = formData;
 
+  const htmlTemplate = `
+  <!doctype html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Bid Offer</title>
+    </head>
+    <body
+      style="margin: 0; font-family: Arial, sans-serif; background-color: #f8f8f8"
+    >
+      <main
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+        "
+      >
+        <div
+          style="
+            width: 90%;
+            max-width: 800px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          "
+        >
+          <h1 style="color: indigo; margin-bottom: 20px; text-align: center">
+            Bid Offer
+          </h1>
+          <p style="margin-bottom: 30px; text-align: center">
+            You've received a bid offer from ${senderEmail}.
+          </p>
+          <section
+            style="
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              margin-top: 20px;
+            "
+          >
+            <h2 style="margin-bottom: 10px">${productName}</h2>
+            <img
+              src={${productImages[0]}}
+              alt="Product"
+              style="max-width: 100%; height: auto; margin-bottom: 20px"
+            />
+            <div
+              style="display: flex; flex-direction: column; align-items: center"
+            >
+              <div style="margin-bottom: 10px">
+                <span style="font-weight: bold">Bid:</span>
+                <span
+                  style="
+                    font-size: 24px;
+                    font-weight: bold;
+                    color: #007bff;
+                    margin-left: 5px;
+                  "
+                  >${price}</span
+                >
+              </div>
+              <button
+                style="
+                  padding: 10px 20px;
+                  background-color: #007bff;
+                  color: #fff;
+                  border: none;
+                  border-radius: 8px;
+                  cursor: pointer;
+                  font-size: 24px;
+                "
+              >
+                <a style="color: #fff" href="">Visit NKSM</a>
+              </button>
+            </div>
+          </section>
+        </div>
+      </main>
+    </body>
+  </html>  
+  `;
   try {
     await connectToDB();
+    if (senderEmail === receiverEmail) {
+      return {
+        error: "Can't send invite to same user",
+        msg: null,
+        success: true,
+      };
+    }
     const existingInviteOrChat = await Chat.findOne({
       Seller: new mongo.ObjectId(await getIdByEmail(receiverEmail)),
       Buyer: new mongo.ObjectId(await getIdByEmail(senderEmail)),
@@ -41,38 +135,43 @@ export async function sendEmail(
     }).countDocuments();
     if (existingInviteOrChat > 0) {
       return {
-        error: null,
+        error: "Yor all ready have sent an invite",
+        msg: "",
         success: true,
       };
     }
-    await Chat.create({
-      Seller: new mongo.ObjectId(await getIdByEmail(receiverEmail)),
-      Buyer: new mongo.ObjectId(await getIdByEmail(senderEmail)),
+
+    const response = await transporter.sendMail({
+      from: `"NKSM" <${senderEmail}>`,
+      to: receiverEmail,
+      html: htmlTemplate,
+    });
+    const sellerId = new mongo.ObjectId(await getIdByEmail(receiverEmail));
+    const buyerId = new mongo.ObjectId(await getIdByEmail(senderEmail));
+    const invite = await Chat.create({
+      Seller: sellerId,
+      Buyer: buyerId,
       ProductId: productId,
       status: "invite",
       Messages: [],
     });
-
-    const resend = new Resend(process.env.RESEND_API_KEY);
-
-    const response = await resend.emails.send({
-      from: "Acme <onboarding@resend.dev>",
-      to: "rajankamboj853@gmail.com",
-      subject: "Bid offer",
-      react: EmailTemplate({ senderEmail, price, productName, productImages }),
+    const seller = await User.findOne({
+      _id: sellerId,
     });
-    console.log("response => ", response);
-    if (response.error) {
-      console.log(response.error);
-    }
+    seller.Chat_IDs.push(invite._id);
+    const buyer = await User.findOne({
+      _id: buyerId,
+    });
+    buyer.Chat_IDs.push(invite._id);
     return {
       error: null,
+      msg: "An invite email has been sent.",
       success: true,
     };
   } catch (error) {
-    console.error(error);
     return {
-      error: "There was an error sending the email. Please try again later.",
+      msg: null,
+      error: "Server issue. Please try again sometime later.",
       success: false,
     };
   }

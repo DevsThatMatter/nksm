@@ -94,7 +94,7 @@ export default function UserChat() {
         buyerDetails: { id: "" },
       });
     } catch (error) {
-      console.error(error);
+      throw error;
     }
   }
   function resetChat() {
@@ -180,7 +180,7 @@ export default function UserChat() {
                       }}
                     >
                       <div
-                        key={discussions[0].sellerDetails.Phone_Number}
+                        key={discussions[0].sellerDetails.Username}
                         className="flex space-x-4"
                       >
                         <div className="relative h-16 w-16">
@@ -204,10 +204,7 @@ export default function UserChat() {
                                     key={idx}
                                     className="text-sm text-muted-foreground"
                                   >
-                                    Buyers:{" "}
-                                    {dis.buyerDetails.First_Name +
-                                      " " +
-                                      dis.buyerDetails.Last_Name}
+                                    Buyers: {dis.buyerDetails.Name}
                                   </div>
                                 ),
                             )}

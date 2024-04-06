@@ -16,18 +16,17 @@ export default function UserUnauthorized() {
             <Icons.chaticon className="h-[1.3rem] w-[1.32rem]" />
           </Button>
         </HoverCardTrigger>
-        <HoverCardContent className="w-80">
-          <div className="flex justify-between space-x-4">
-            <div className="space-y-1">
-              <h4 className="text-sm font-semibold">Please get authorized</h4>
-
-              <Link
-                href={"/login"}
-                className={buttonVariants({ variant: "default" })}
-              >
-                Sign in
-              </Link>
-            </div>
+        <HoverCardContent className="p-5">
+          <div className="flex flex-col justify-center space-y-5">
+            <h4 className="text-center text-sm font-semibold">
+              Please get authorized
+            </h4>
+            <Link
+              href={"/login"}
+              className={buttonVariants({ variant: "default" })}
+            >
+              Sign in
+            </Link>
           </div>
         </HoverCardContent>
       </HoverCard>
