@@ -1,7 +1,8 @@
 import Filter from "@/app/components/Search/Filter";
-import LoadMore from "@/app/components/Search/LoadMore";
-import SortFilter from "@/app/components/Search/SortFilter";
-import { ScrollArea } from "@/app/components/ui/scroll-area";
+import LoadMore, { SearchCard } from "@/app/components/Search/LoadMore";
+import SortFilter, {
+  sortFilterObject,
+} from "@/app/components/Search/SortFilter";
 import { getSearchResults } from "@/lib/actions/products.actions";
 import { CategoryEnum, SortBy } from "@/types";
 import { redirect } from "next/navigation";
@@ -17,18 +18,21 @@ export default async function Page({
 }: {
   searchParams: {
     q: string;
-    category?: CategoryEnum;
+    category?: keyof typeof CategoryEnum;
     sortBy?: SortBy;
   };
 }) {
   if (!q) {
     redirect("/");
   }
-  const selectedCategory = (
-    category && Object.values(CategoryEnum).includes(category)
+  const selectedCategory =
+    category && Object.keys(CategoryEnum).includes(category)
       ? category
-      : undefined
-  ) as CategoryEnum | undefined;
+      : undefined;
+  const selectedSorting =
+    sortBy && Object.keys(sortFilterObject).includes(sortBy)
+      ? sortBy
+      : "newest";
   console.log(selectedCategory);
   const pageSize = 5;
   const result = await getSearchResults({
@@ -36,32 +40,41 @@ export default async function Page({
     pageNumber: 1,
     pageSize: pageSize,
     category: selectedCategory,
-    sortBy: sortBy,
+    sortBy: selectedSorting,
   });
-  const loadMoreKey = JSON.stringify(q + category + sortBy);
-
+  console.log(result.isNext);
+  const loadMoreKey = JSON.stringify(
+    q + selectedCategory ?? "" + selectedSorting ?? "",
+  );
   return (
-    <main className="container m-auto flex h-dvh max-h-[calc(100dvh-4.9rem)] justify-center max-sm:px-2 sm:gap-x-10">
-      <Filter query={q} sorting={sortBy} category={selectedCategory} />
-      <ScrollArea className="relative h-full w-[80%]">
-        <section className="rounded-sm">
-          <span className="sticky top-0 z-10 flex flex-wrap justify-between bg-background pt-4">
-            <p className="mb-2 pl-1 text-xl font-semibold">
-              Showing results for &quot;{q}&quot;
-              {selectedCategory ? ` in ${selectedCategory}` : ""}
-            </p>
-            <SortFilter
-              query={q}
-              sorting={sortBy}
-              category={selectedCategory}
-            />
-          </span>
+    <section className="container m-auto grid grid-cols-[30%_auto] justify-center gap-x-1 px-2 sm:gap-x-[1%] sm:px-3 md:grid-cols-[13rem_calc(100%-13rem)] lg:grid-cols-[15rem_calc(100%-15rem)] xl:grid-cols-[20%_80%]">
+      <Filter query={q} sorting={selectedSorting} category={selectedCategory} />
 
-          {result.productsData}
-          {result.isNext && <LoadMore key={loadMoreKey} pageSize={pageSize} />}
-          <br />
-        </section>
-      </ScrollArea>
-    </main>
+      <section className="rounded-sm">
+        <span className="sticky top-[4.769rem] z-10 flex flex-wrap items-center justify-between bg-background p-2">
+          <p className="pl-1 text-xl font-semibold">
+            Showing results for &quot;{q}&quot;
+            {selectedCategory ? ` in ${selectedCategory}` : ""}
+          </p>
+          <SortFilter
+            query={q}
+            sorting={selectedSorting}
+            category={selectedCategory}
+          />
+        </span>
+
+        {result.productsData}
+        {result.isNext && (
+          <LoadMore
+            sorting={selectedSorting}
+            category={selectedCategory}
+            query={q}
+            pageSize={pageSize}
+            key={loadMoreKey}
+          />
+        )}
+        <br />
+      </section>
+    </section>
   );
 }

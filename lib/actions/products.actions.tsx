@@ -67,7 +67,7 @@ export const getSearchResults = async ({
   pageNumber?: number;
   pageSize?: number;
   sortBy?: SortBy;
-  category?: CategoryEnum;
+  category?: keyof typeof CategoryEnum;
 }) => {
   try {
     connectToDB();
@@ -112,7 +112,7 @@ export const getSearchResults = async ({
     const products = await searchQuery.exec();
     const productsData = products.map((product) => (
       <SearchCard
-        key={product._id}
+        key={product._id.toString()}
         id={product._id}
         image_url={product.Images[0]}
         name={product.Product_Name}

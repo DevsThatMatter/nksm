@@ -1,28 +1,26 @@
 "use client";
 
 import { getSearchResults } from "@/lib/actions/products.actions";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import Image from "next/image";
-import { CategoryEnum, SortBy } from "@/types";
+import { FilterProps } from "@/app/(root)/search/page";
+import { SymbolIcon } from "@radix-ui/react-icons";
 
 export type SearchCard = JSX.Element;
 let page = 2;
 function LoadMore({
+  sorting,
+  category,
+  query,
   datas = [],
   pageSize,
 }: {
   datas?: SearchCard[];
   pageSize: number;
-}) {
+} & FilterProps) {
   const { ref, inView } = useInView();
   const [data, setData] = useState<SearchCard[]>(datas);
   const [isNext, setIsNext] = useState(true);
-  const searchParams = useSearchParams();
-  const search = searchParams!.get("q") || "";
-  const category = searchParams?.get("category") as CategoryEnum | undefined;
-  const sortBy = searchParams!.get("sortBy") as SortBy;
 
   useEffect(() => {
     if (inView) {
@@ -31,10 +29,10 @@ function LoadMore({
 
       const timeoutId = setTimeout(() => {
         getSearchResults({
-          searchString: search || "",
+          searchString: query || "",
           pageNumber: page,
           pageSize: pageSize,
-          sortBy: sortBy,
+          sortBy: sorting,
           category: category === null ? undefined : category,
         }).then((res) => {
           console.log(res);
@@ -47,23 +45,21 @@ function LoadMore({
       // Clear the timeout if the component is unmounted or inView becomes false
       return () => clearTimeout(timeoutId);
     }
-  }, [inView, data]);
+  }, [inView]);
+
+  useEffect(() => {
+    setIsNext(true);
+    setData([]);
+    page = 2;
+  }, [query, category, sorting]);
 
   return (
     <>
       {data}
 
       {isNext && (
-        <div ref={ref} id="load" className="self-center">
-          {inView && (
-            <Image
-              src="./spinner.svg"
-              alt="spinner"
-              width={56}
-              height={56}
-              className="object-contain"
-            />
-          )}
+        <div ref={ref} id="load" className="w-full p-6">
+          {inView && <SymbolIcon className="m-auto h-8 w-8 animate-spin " />}
         </div>
       )}
     </>
