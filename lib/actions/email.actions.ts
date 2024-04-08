@@ -140,28 +140,34 @@ export async function sendEmail(
       };
     }
 
-    const response = await transporter.sendMail({
+    await transporter.sendMail({
       from: `"NKSM" <${senderEmail}>`,
       to: receiverEmail,
       html: htmlTemplate,
     });
     const sellerId = new mongo.ObjectId(await getIdByEmail(receiverEmail));
     const buyerId = new mongo.ObjectId(await getIdByEmail(senderEmail));
+
     const invite = await Chat.create({
       Seller: sellerId,
       Buyer: buyerId,
       ProductId: productId,
       status: "invite",
       Messages: [],
+      InitPrice: price,
     });
+    console.log("invite ", invite);
+
     const seller = await User.findOne({
       _id: sellerId,
     });
     seller.Chat_IDs.push(invite._id);
+
     const buyer = await User.findOne({
       _id: buyerId,
     });
     buyer.Chat_IDs.push(invite._id);
+
     return {
       error: null,
       msg: "An invite email has been sent.",

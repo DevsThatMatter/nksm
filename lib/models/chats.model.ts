@@ -10,6 +10,7 @@ const chatSchema = new mongoose.Schema({
     type: String,
     enum: ["invite", "active", "stale", "dead"],
   },
+  InitPrice: { type: Number, required: true },
 });
 
 // Create the 'chat' model based on the schema

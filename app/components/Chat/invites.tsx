@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -17,7 +16,6 @@ import {
   fecthInvites,
   getAllUserSentInvites,
 } from "@/lib/actions/chat.actions";
-import { Badge } from "../ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/app/utils";
 
@@ -39,6 +37,7 @@ export interface InviteStruct {
   productDetails: ProductDetails;
   sellerId: string;
   productId: string;
+  InitPrice: number;
 }
 
 export default function BuyerInvites({ userId }: { userId: string }) {
@@ -86,7 +85,7 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                   </div>
                 </div>
                 <h2 className="text-lg font-bold text-black dark:text-white">
-                  ₹400
+                  ₹{invites.InitPrice}
                 </h2>
               </div>
               <div className="ml-[18%] flex md:ml-[17%]">

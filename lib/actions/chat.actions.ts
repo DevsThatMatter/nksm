@@ -282,6 +282,14 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
           $set: { status: "stale" },
         },
       );
+      await Product.updateOne(
+        {
+          _id: new mongo.ObjectId(props.productId),
+        },
+        {
+          is_archived: true,
+        },
+      );
       const messageIds = await Chat.aggregate([
         {
           $match: {
@@ -770,6 +778,7 @@ export async function fecthInvites(userId: string) {
           productDetails: {
             $arrayElemAt: ["$productDetails", 0],
           },
+          InitPrice: 1,
         },
       },
       {
@@ -790,6 +799,7 @@ export async function fecthInvites(userId: string) {
           productId: {
             $toString: "$productDetails._id",
           },
+          InitPrice: 1,
         },
       },
     ];
