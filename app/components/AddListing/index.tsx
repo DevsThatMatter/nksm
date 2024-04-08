@@ -102,7 +102,6 @@ export function AddListing() {
       images,
       negotiate: negotiate === "Yes" ? true : false,
       condition,
-      userId: "65c5e979afe71c6df760f704",
     });
   }
 
