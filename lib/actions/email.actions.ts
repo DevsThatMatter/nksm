@@ -1,5 +1,5 @@
 "use server";
-import { Resend } from "resend";
+
 import { Chat } from "../models/chats.model";
 import { User } from "../models/user.model";
 import { mongo } from "mongoose";

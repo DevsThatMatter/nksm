@@ -193,7 +193,7 @@ export default function UserChat() {
                           />
                         </div>
                         <div className="flex flex-col justify-center">
-                          <h1 className="mb-2 text-xl font-bold text-black dark:text-white">
+                          <h1 className="mb-2 line-clamp-1 text-lg font-bold text-black dark:text-white">
                             {discussions[0].productDetails.Product_Name}
                           </h1>
                           <div className="flex flex-col">

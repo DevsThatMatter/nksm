@@ -179,7 +179,7 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
                 <div className="ml-3 mt-1 flex-grow cursor-pointer">
                   <div className="flex justify-between">
                     {discussion.buyerDetails ? (
-                      <h4 className="text-xl font-semibold text-black dark:text-white ">
+                      <h4 className="line-clamp-1 text-lg font-semibold text-black dark:text-white">
                         {discussion.buyerDetails.id === userId
                           ? discussion.sellerDetails.Name
                           : discussion.buyerDetails.Name}

@@ -77,15 +77,15 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                     />
                   </div>
                   <div className="flex flex-col">
-                    <h1 className="text-lg font-semibold text-black dark:text-white">
+                    <h1 className="line-clamp-1 text-ellipsis text-lg font-semibold text-black dark:text-white">
                       {`${buyer.Name}`}
                     </h1>
-                    <h5 className="text-sm text-gray-600 dark:text-gray-100">
+                    <h5 className="line-clamp-1 text-sm text-gray-600 dark:text-gray-100">
                       {`For ${invites.productDetails.Product_Name}`}
                     </h5>
                   </div>
                 </div>
-                <h2 className="text-xl font-bold text-black dark:text-white">
+                <h2 className="text-lg font-bold text-black dark:text-white">
                   ₹400
                 </h2>
               </div>
@@ -229,7 +229,7 @@ export default function BuyerInvites({ userId }: { userId: string }) {
                 />
               </div>
               <div className="flex flex-col">
-                <h1 className="text-xl font-semibold text-foreground">
+                <h1 className="text-lg font-semibold text-foreground">
                   {invites.Seller.Name ?? "Moni chan"}
                 </h1>
                 <h4 className="text-sm text-muted-foreground">
