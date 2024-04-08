@@ -3,6 +3,7 @@ import { RedirectType, redirect } from "next/navigation";
 import { connectToDB } from "../database/mongoose";
 import { Product } from "../models/product.model";
 import { User } from "../models/user.model";
+import { auth } from "@/auth";
 
 type formData = {
   userId: string | undefined;
@@ -24,9 +25,10 @@ async function update(values: formData) {
   try {
     console.log("hi");
     await connectToDB();
-    const user = await User.findById(values.userId);
+    const userObj = await auth();
+
     const product = await Product.create({
-      Seller: user._id,
+      Seller: userObj?.user?.id,
       Total_Quantity_Available: values.quantity,
       Product_Name: values.iname,
       Description: values.description,
