@@ -51,7 +51,7 @@ const Filter = ({ query, sorting = "newest", category }: FilterProps) => {
               />
               <figcaption
                 className={cn(
-                  "absolute inset-0 flex items-center justify-center bg-white text-center text-lg transition-opacity dark:bg-gray-900",
+                  "transition-opacity] absolute inset-0 flex items-center justify-center bg-white text-center text-lg dark:bg-[#0c0a09]",
                   category === name
                     ? "!bg-opacity-10 text-foreground"
                     : "!bg-opacity-80 text-gray-400 group-hover:!bg-opacity-40",

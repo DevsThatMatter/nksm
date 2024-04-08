@@ -63,7 +63,19 @@ export default async function Page({
           />
         </span>
 
-        {result.productsData}
+        {result.productsData.length === 0 ? (
+          <div className="grid h-[34rem] place-content-center px-4">
+            <div className="text-center">
+              <h1 className="text-9xl font-black text-foreground">404</h1>
+              <p className="text-2xl font-bold tracking-tight text-muted-foreground sm:text-4xl">
+                Uh-oh!
+              </p>
+              <p className="mt-4 text-gray-500">No Results Found!</p>
+            </div>
+          </div>
+        ) : (
+          result.productsData
+        )}
         {result.isNext && (
           <LoadMore
             sorting={selectedSorting}

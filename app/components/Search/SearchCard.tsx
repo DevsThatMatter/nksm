@@ -59,7 +59,7 @@ const SearchCard = ({
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <h4 className="font-bold">₹{price}</h4>
+            <h4 className="text-xl font-bold">₹{price}</h4>
           </div>
         </div>
       </CardContent>
