@@ -30,13 +30,13 @@ export default function ImageCard({ images }: { images: string[] }) {
       <Carousel className="w-[85%] rounded-lg shadow-none">
         <CarouselContent>
           {images.map((image: string, index: number) => (
-            <CarouselItem key={index} className="rounded-md">
+            <CarouselItem key={index}>
               <Image
                 src={image}
                 alt={`Image ${index + 1}`}
                 width={1920}
                 height={1080}
-                className="aspect-video h-full w-full cursor-pointer rounded-lg object-fill"
+                className="aspect-video h-full w-full cursor-pointer rounded-lg object-contain"
               />
             </CarouselItem>
           ))}
