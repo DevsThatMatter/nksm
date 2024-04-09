@@ -1,4 +1,3 @@
-"use client";
 import { Icons } from "@/app/utils/icons";
 import {
   Sheet,
@@ -11,19 +10,16 @@ import {
 } from "../ui/sheet";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { User } from "@/lib/models/user.model";
-import mongoose from "mongoose";
 
 import * as z from "zod";
-import { connectToDB } from "@/lib/database/mongoose";
 import Link from "next/link";
 import { cn } from "@/app/utils";
 import { CategoryEnum, ConditionEnum } from "@/types";
-import { useEffect, useState } from "react";
 import {
   fetchSavedProduct,
-  removeSavedProduct,
 } from "@/lib/actions/fetchProduct.actions";
+import DeleteSavedProducts from "./delete-saved-products";
+import { auth } from "@/auth";
 
 export interface SavedProduct {
   _id: string;
@@ -40,21 +36,10 @@ export interface SavedProduct {
   expires_in: Date;
 }
 
-const shema = z.object({
-  email: z.string().email(),
-});
+export default async function SavedItems() {
+  const email = (await auth())?.user?.email ?? ""
 
-export default function SavedItems() {
-  const email = "user1@example.com";
-  // (await auth())?.user?.email ??
-  const [data, setData] = useState<SavedProduct[] | null>(null);
-  useEffect(() => {
-    async function fetchData() {
-      const data = await fetchSavedProduct({ email });
-      setData(data.content);
-    }
-    fetchData();
-  }, [email]);
+  const data = (await fetchSavedProduct({ email })).content as SavedProduct[];
 
   const renderConditionIcon = (condition: ConditionEnum | string) => {
     switch (condition) {
@@ -76,7 +61,7 @@ export default function SavedItems() {
           <Icons.saved className="h-[1.4rem] w-[1.4rem]" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-sm md:max-w-md">
+      <SheetContent className="w-full sm:max-w-sm md:max-w-md ">
         <SheetHeader className="mb-6">
           <SheetTitle>Saved Products</SheetTitle>
           <SheetDescription>Manage your saved products</SheetDescription>
@@ -84,62 +69,50 @@ export default function SavedItems() {
         {data?.map((product, id) => (
           <div key={id}>
             <Link href={`/product/${String(product._id)}`}>
-              <div
-                className={cn(
-                  " w-full cursor-pointer border-b-2",
-                  id === 0 && "border-t-2",
-                )}
-              >
-                <div className="flex space-x-4 p-2">
-                  <Image
-                    width={200}
-                    height={200}
-                    alt="Product Image"
-                    className="h-16 w-16 rounded-lg object-cover"
-                    src={product.Images[0]}
-                  />
-                  <div className="ml-2 flex flex-grow flex-col">
-                    <div className="flex items-center justify-between">
-                      <h1 className="font-semibold">{product.Product_Name}</h1>
-                      <h1 className="font-semibold">
-                        {"₹ "}
-                        {product.Price}
-                      </h1>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <p className="my-1 flex items-center justify-center rounded-2xl border border-muted-foreground p-1 text-xs text-foreground">
-                          {renderConditionIcon(product.Condition)}
-                          {product.Condition}
-                        </p>
-                        <p
-                          className={`mx-1 flex items-center justify-center rounded-3xl p-1 text-xs ${
-                            product.Negotiable
+              <SheetClose className="p-0 m-0 w-full">
+                <div
+                  className={cn(
+                    " w-full cursor-pointer border-b-2",
+                    id === 0 && "border-t-2",
+                  )}
+                >
+                  <div className="flex space-x-4 p-2">
+                    <Image
+                      width={200}
+                      height={200}
+                      alt="Product Image"
+                      className="h-16 w-16 rounded-lg object-cover"
+                      src={product.Images[0]}
+                    />
+                    <div className="ml-2 flex flex-grow flex-col">
+                      <div className="flex items-center justify-between">
+                        <h1 className="font-semibold">{product.Product_Name}</h1>
+                        <h1 className="font-semibold">
+                          {"₹ "}
+                          {product.Price}
+                        </h1>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <p className="my-1 flex items-center justify-center rounded-2xl border border-muted-foreground p-1 text-xs text-foreground">
+                            {renderConditionIcon(product.Condition)}
+                            {product.Condition}
+                          </p>
+                          <p
+                            className={`mx-1 flex items-center justify-center rounded-3xl p-1 text-xs ${product.Negotiable
                               ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-green-800"
                               : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-sky-900"
-                          }`}
-                        >
-                          {product.Negotiable ? "Negotiable" : "Not Negotiable"}
-                        </p>
+                              }`}
+                          >
+                            {product.Negotiable ? "Negotiable" : "Not Negotiable"}
+                          </p>
+                        </div>
+                        <DeleteSavedProducts productId={product._id} email={email} />
                       </div>
-                      <Button
-                        size="icon"
-                        className="h-6 w-10 bg-red-300 text-foreground hover:bg-red-400"
-                        onClick={async (event) => {
-                          console.log("delete was triggered");
-                          event.stopPropagation();
-                          await removeSavedProduct({
-                            productId: product._id,
-                            email: email,
-                          });
-                        }}
-                      >
-                        <Icons.delete className="text-red-700" />
-                      </Button>
                     </div>
                   </div>
                 </div>
-              </div>
+              </SheetClose>
             </Link>
           </div>
         ))}

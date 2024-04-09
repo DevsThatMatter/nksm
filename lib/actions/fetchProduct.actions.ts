@@ -2,7 +2,7 @@
 
 import { Product } from "../models/product.model";
 import { connectToDB } from "../database/mongoose";
-import { FilterQuery, SortOrder, mongo } from "mongoose";
+import { FilterQuery, SortOrder, Types, mongo } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { CategoryEnum } from "@/types";
 import { User } from "../models/user.model";
@@ -120,6 +120,9 @@ export const fetchProductDetails = async (productId: string) => {
       model: User,
       select: "_id Username Phone_Number Avatar Name Email",
     });
+
+
+
     // console.log("pOFSODGSAGASDG:", productDetails);
     if (!productDetails) {
       throw new Error("Product not found!");
@@ -150,7 +153,7 @@ export async function fetchSavedProduct({ email }: { email: string }) {
     let res = await User.aggregate([
       {
         $match: {
-          Email: "user1@example.com",
+          Email: email,
         },
       },
       {
@@ -185,6 +188,11 @@ export async function fetchSavedProduct({ email }: { email: string }) {
           _id: 0,
         },
       },
+      {
+        $match: {
+          "savedProducts.is_archived": false,
+        },
+      },
     ]);
     const result = res[0] as { savedProducts: SavedProduct[] };
     return {
@@ -209,13 +217,31 @@ export async function removeSavedProduct({
   email: string;
 }) {
   try {
+    console.log("In the remove saved action");
+
     await connectToDB();
-    const res = await User.updateOne(
-      { Email: "user1@example.com" },
-      { $pull: { savedProducts: new mongo.ObjectId(productId) } },
-    );
-    console.log(res);
+
+    const user = await User.findOne({ Email: email });
+
+    if (!user) {
+      console.log('User not found.');
+      return;
+    }
+
+
+    const savedProducts = user.Saved_Products.map((id: Types.ObjectId) => new mongo.ObjectId(id.toString()));
+
+
+    const updatedSavedProducts = savedProducts.filter((id: Types.ObjectId) => id.toString() !== productId);
+
+
+    user.Saved_Products = updatedSavedProducts;
+
+
+    await user.save();
+
+    console.log('Product removed successfully.');
   } catch (error) {
-    return error;
+    console.error('Error removing product:', error);
   }
 }
