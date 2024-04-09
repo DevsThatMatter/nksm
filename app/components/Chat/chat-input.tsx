@@ -72,6 +72,7 @@ export default function ChatInput({
 
   async function onSend(values: z.infer<typeof messageSchema>) {
     try {
+      console.log("triggered ");
       const message = values.content;
       const sender = userId;
       const sellerId = sellerDetails.id;

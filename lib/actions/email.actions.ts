@@ -134,8 +134,8 @@ export async function sendEmail(
     }).countDocuments();
     if (existingInviteOrChat > 0) {
       return {
-        error: "Yor all ready have sent an invite",
-        msg: "",
+        error: "Yor already have sent an invite",
+        msg: null,
         success: true,
       };
     }
@@ -156,7 +156,6 @@ export async function sendEmail(
       Messages: [],
       InitPrice: price,
     });
-    console.log("invite ", invite);
 
     const seller = await User.findOne({
       _id: sellerId,

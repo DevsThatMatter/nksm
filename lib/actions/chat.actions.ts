@@ -593,6 +593,7 @@ export async function createNewMessage(
       msgId: String(createdMessage._id),
     };
     if (chat) {
+      console.log("chat found");
       chat.Messages.push(createdMessage._id);
       await chat.save();
     } else {
@@ -608,6 +609,7 @@ export async function createNewMessage(
     const addKey = `chat${validatedProps.productId}productId${validatedProps.productId}sellerId${validatedProps.sellerId}buyerId${validatedProps.buyerId}add`;
     await pusherServer.trigger(addKey, "messages:new", newMessage);
   } catch (error) {
+    console.log("error ", error);
     if (error instanceof z.ZodError) {
       throw new Error(`zod type error  ${error.message}`);
     }
