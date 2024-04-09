@@ -1,4 +1,4 @@
-"use server"
+"use server";
 import EmailTemplate from "@/app/components/ProductPage/email-template";
 import { Resend } from "resend";
 import { Chat } from "../models/chats.model";
@@ -12,8 +12,8 @@ interface State {
 }
 
 async function getIdByEmail(email: string) {
-  const id = (await User.findOne({ Email: email }))._id
-  return id
+  const id = (await User.findOne({ Email: email }))._id;
+  return id;
 }
 
 export async function sendEmail(
@@ -31,14 +31,13 @@ export async function sendEmail(
   let price = parseFloat(priceString);
 
   try {
-
     await Chat.create({
       Seller: await getIdByEmail(receiverEmail),
       BUyer: await getIdByEmail(senderEmail),
       productId: productId,
       status: "invite",
-      Messages: []
-    })
+      Messages: [],
+    });
 
     const resend = new Resend(process.env.RESEND_API_KEY);
 

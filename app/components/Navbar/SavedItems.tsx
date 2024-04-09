@@ -15,9 +15,7 @@ import * as z from "zod";
 import Link from "next/link";
 import { cn } from "@/app/utils";
 import { CategoryEnum, ConditionEnum } from "@/types";
-import {
-  fetchSavedProduct,
-} from "@/lib/actions/fetchProduct.actions";
+import { fetchSavedProduct } from "@/lib/actions/fetchProduct.actions";
 import DeleteSavedProducts from "./delete-saved-products";
 import { auth } from "@/auth";
 
@@ -37,7 +35,7 @@ export interface SavedProduct {
 }
 
 export default async function SavedItems() {
-  const email = (await auth())?.user?.email ?? ""
+  const email = (await auth())?.user?.email ?? "";
 
   const data = (await fetchSavedProduct({ email })).content as SavedProduct[];
 
@@ -69,7 +67,7 @@ export default async function SavedItems() {
         {data?.map((product, id) => (
           <div key={id}>
             <Link href={`/product/${String(product._id)}`}>
-              <SheetClose className="p-0 m-0 w-full">
+              <SheetClose className="m-0 w-full p-0">
                 <div
                   className={cn(
                     " w-full cursor-pointer border-b-2",
@@ -86,7 +84,9 @@ export default async function SavedItems() {
                     />
                     <div className="ml-2 flex flex-grow flex-col">
                       <div className="flex items-center justify-between">
-                        <h1 className="font-semibold">{product.Product_Name}</h1>
+                        <h1 className="font-semibold">
+                          {product.Product_Name}
+                        </h1>
                         <h1 className="font-semibold">
                           {"₹ "}
                           {product.Price}
@@ -99,15 +99,21 @@ export default async function SavedItems() {
                             {product.Condition}
                           </p>
                           <p
-                            className={`mx-1 flex items-center justify-center rounded-3xl p-1 text-xs ${product.Negotiable
-                              ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-green-800"
-                              : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-sky-900"
-                              }`}
+                            className={`mx-1 flex items-center justify-center rounded-3xl p-1 text-xs ${
+                              product.Negotiable
+                                ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-green-800"
+                                : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-sky-900"
+                            }`}
                           >
-                            {product.Negotiable ? "Negotiable" : "Not Negotiable"}
+                            {product.Negotiable
+                              ? "Negotiable"
+                              : "Not Negotiable"}
                           </p>
                         </div>
-                        <DeleteSavedProducts productId={product._id} email={email} />
+                        <DeleteSavedProducts
+                          productId={product._id}
+                          email={email}
+                        />
                       </div>
                     </div>
                   </div>

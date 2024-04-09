@@ -35,9 +35,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         >
           <Toaster position="bottom-left" richColors />
           <SocketProvider>
-            <QueryProvider>
-              {children}
-            </QueryProvider>
+            <QueryProvider>{children}</QueryProvider>
           </SocketProvider>
         </ThemeProvider>
       </body>

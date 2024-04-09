@@ -33,10 +33,17 @@ export default function OfferForm({
   senderEmail,
   productImage,
   productId,
-  productName
+  productName,
 }: OfferFormProps) {
   const sendEmailWithDetails = (formData: FormData) =>
-    sendEmail(senderEmail, reciverEmail, productName, productImage, productId, formData);
+    sendEmail(
+      senderEmail,
+      reciverEmail,
+      productName,
+      productImage,
+      productId,
+      formData,
+    );
 
   const form = useForm({
     resolver: zodResolver(OfferSchema),

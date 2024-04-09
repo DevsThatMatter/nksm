@@ -15,10 +15,15 @@ interface SellerCardProps {
   sellerInfo: Seller;
   productName: string;
   productImage: string;
-  productId: mongoose.Types.ObjectId
+  productId: mongoose.Types.ObjectId;
 }
 
-async function SellerCard({ sellerInfo, productName, productImage, productId }: SellerCardProps) {
+async function SellerCard({
+  sellerInfo,
+  productName,
+  productImage,
+  productId,
+}: SellerCardProps) {
   const senderEmail = (await auth())?.user?.email;
   return (
     <div>

@@ -66,8 +66,8 @@ export const getSearchResults = async ({
     const query: FilterQuery<typeof Product> = category
       ? { Category: category, is_archived: false }
       : {
-        is_archived: false,
-      };
+          is_archived: false,
+        };
 
     if (searchString.trim() !== "") {
       query.$or = [
@@ -120,8 +120,6 @@ export const fetchProductDetails = async (productId: string) => {
       model: User,
       select: "_id Username Phone_Number Avatar Name Email",
     });
-
-
 
     // console.log("pOFSODGSAGASDG:", productDetails);
     if (!productDetails) {
@@ -224,24 +222,24 @@ export async function removeSavedProduct({
     const user = await User.findOne({ Email: email });
 
     if (!user) {
-      console.log('User not found.');
+      console.log("User not found.");
       return;
     }
 
+    const savedProducts = user.Saved_Products.map(
+      (id: Types.ObjectId) => new mongo.ObjectId(id.toString()),
+    );
 
-    const savedProducts = user.Saved_Products.map((id: Types.ObjectId) => new mongo.ObjectId(id.toString()));
-
-
-    const updatedSavedProducts = savedProducts.filter((id: Types.ObjectId) => id.toString() !== productId);
-
+    const updatedSavedProducts = savedProducts.filter(
+      (id: Types.ObjectId) => id.toString() !== productId,
+    );
 
     user.Saved_Products = updatedSavedProducts;
 
-
     await user.save();
 
-    console.log('Product removed successfully.');
+    console.log("Product removed successfully.");
   } catch (error) {
-    console.error('Error removing product:', error);
+    console.error("Error removing product:", error);
   }
 }
