@@ -9,9 +9,9 @@ import { FilterProps } from "@/app/(root)/search/page";
 const Filter = ({ query, sorting = "newest", category }: FilterProps) => {
   return (
     <aside className="flex max-h-full flex-col sm:px-2">
-      <div className="sticky top-[5.5rem] mt-2">
+      <div className="sticky top-[5.5rem] mt-2 max-h-[calc(100dvh-5.6rem)] overflow-auto pr-1">
         <div className="flex flex-wrap justify-between pb-2">
-          <h3 className="text-xl font-bold">Categories</h3>{" "}
+          <h3 className="text-xl font-bold">Categories</h3>
           <Link
             href={{
               query: {
