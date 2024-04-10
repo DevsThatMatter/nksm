@@ -1,5 +1,5 @@
 import ImageCard from "./ImageCard";
-import { CarouselItems } from "../HomePage/Carousel";
+import ProductCarousel, { CarouselItems } from "../HomePage/Carousel";
 import ProductDetails from "./ProductDetails";
 import { Product } from "@/types";
 import SellerCard from "./SellerCard";
@@ -11,7 +11,6 @@ import { Carousel, CarouselContent } from "../ui/carousel";
 import { EmblaOptionsType } from "embla-carousel";
 
 const ProductPage = ({ productInfo }: { productInfo: Product }) => {
-  const options: EmblaOptionsType = { loop: true, align: "center" };
   return (
     <div key="1" className="mx-auto max-w-full p-4">
       <div className="gap-4 lg:grid lg:grid-cols-3">
@@ -20,17 +19,8 @@ const ProductPage = ({ productInfo }: { productInfo: Product }) => {
           <ProductDetails productInfo={productInfo} />
           <div className={cn("m-2 mt-8")}>
             <h1 className="pb-3 text-2xl font-semibold">You may also like:</h1>
-            <Carousel className="w-full" opts={options}>
-              <CarouselContent>
-                <Suspense
-                  fallback={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-                    <ProductSkeleton key={i} />
-                  ))}
-                >
-                  <CarouselItems productPageCarousel />
-                </Suspense>
-              </CarouselContent>
-            </Carousel>
+
+            <ProductCarousel productPageCarousel arrows={false} />
           </div>
         </div>
         <div className="col-span-1">

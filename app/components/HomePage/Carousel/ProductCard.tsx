@@ -41,9 +41,11 @@ const ProductCard = ({
                 className="aspect-square rounded object-cover shadow-md"
               />
               <div className="mt-2 flex items-center justify-between">
-                <h1 className="line-clamp-1 overflow-hidden overflow-ellipsis font-semibold hover:underline min-[280px]:text-lg min-[300px]:max-w-12 min-[370px]:max-w-24 min-[440px]:max-w-52 sm:max-w-44 sm:text-xl md:max-w-40 lg:max-w-32 lg:text-base 2xl:max-w-48 2xl:text-xl min-[2000px]:max-w-60">
-                  {name}
-                </h1>
+                <span className="grow overflow-hidden">
+                  <h1 className="line-clamp-1 overflow-hidden overflow-ellipsis font-semibold hover:underline">
+                    {name}
+                  </h1>
+                </span>
                 <span className="text-muted-foreground">₹{price}</span>
               </div>
               <p className="line-clamp-2 h-8 w-full overflow-ellipsis break-all text-foreground min-[300px]:text-xs md:h-10 md:text-sm lg:h-8 lg:text-xs">

@@ -11,26 +11,39 @@ import { Suspense } from "react";
 import ProductSkeleton from "./ProductSkeleton";
 import { cn } from "@/app/utils";
 
-const options: EmblaOptionsType = { loop: true, align: "center" };
-
-const ProductCarousel = ({ className }: { className?: string | undefined }) => {
+const ProductCarousel = ({
+  options = {
+    loop: true,
+    align: "start",
+    containScroll: "trimSnaps",
+    skipSnaps: true,
+  },
+  productPageCarousel,
+  arrows = true,
+}: {
+  className?: string | undefined;
+  options?: EmblaOptionsType;
+  productPageCarousel?: boolean;
+  arrows?: boolean;
+}) => {
   return (
-    <div className={cn("p-4 lg:m-9 lg:mt-12", className)}>
-      <h1 className="pb-3 text-2xl font-semibold">Recent Items</h1>
-      <Carousel className="w-full" opts={options}>
-        <CarouselContent>
-          <Suspense
-            fallback={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-              <ProductSkeleton key={i} />
-            ))}
-          >
-            <CarouselItems />
-          </Suspense>
-        </CarouselContent>
-        <CarouselPrevious className="hidden lg:flex" />
-        <CarouselNext className="hidden lg:flex" />
-      </Carousel>
-    </div>
+    <Carousel className="w-full" opts={options}>
+      <CarouselContent>
+        <Suspense
+          fallback={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+            <ProductSkeleton key={i} />
+          ))}
+        >
+          <CarouselItems productPageCarousel={productPageCarousel} />
+        </Suspense>
+      </CarouselContent>
+      {arrows && (
+        <>
+          <CarouselPrevious className="hidden lg:flex" />
+          <CarouselNext className="hidden lg:flex" />
+        </>
+      )}
+    </Carousel>
   );
 };
 
