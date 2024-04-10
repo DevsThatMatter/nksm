@@ -5,7 +5,6 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useDebouncedCallback } from "use-debounce";
-import Link from "next/link";
 
 type ProductsArray = {
   _id: string;
@@ -24,8 +23,6 @@ export default function SearchBar({
   const [input, setInput] = useState("");
   const searchParams = useSearchParams();
   const category = searchParams!.get("category") || "";
-  const sort = searchParams!.get("sort") || "";
-  const sortBy = searchParams!.get("by") || "";
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -41,44 +38,52 @@ export default function SearchBar({
     product.Product_Name.toLowerCase().startsWith(input.toLowerCase()),
   );
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    router.push("/search?q=" + input);
+  const handleSearchSubmit = (formData: FormData) => {
+    const input = formData.get("q")?.toString().trim();
+    if (!input && pathname == "/search") {
+      console.log(category);
+      if (category) {
+        router.push("/search?category=" + category);
+      } else {
+        router.push("/");
+        return;
+      }
+    } else {
+      router.push("/search?q=" + formData.get("q"));
+    }
     setIsDropdownOpen(false);
   };
 
   const handleFocusOut = () => {
-    setTimeout(() => {
-      // Corrected syntax: added the missing arrow function '() => {'
-      if (dropdownRef.current) {
-        setIsDropdownOpen(false);
-      }
-    }, 100); // Moved the timeout value (100) inside the setTimeout function call
+    if (dropdownRef.current) {
+      setIsDropdownOpen(false);
+    }
   };
 
   return (
-    <form onSubmit={handleSearchSubmit} className={className}>
+    <form action={handleSearchSubmit} className={className}>
       <div className="relative" ref={dropdownRef}>
         <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
         <div>
           <Input
             placeholder="Search"
+            name="q"
             className="w-100% pl-8 sm:w-56 md:w-[31.4rem]"
             onChange={useDebouncedCallback((e) => {
               // debounce can create artificial delay before querying db
               setInput(e.target.value);
               pathname != "/search"
                 ? setIsDropdownOpen(!!e.target.value)
-                : router.push(
-                    "?q=" +
-                      e.target.value +
-                      `&category=${category}&sort=${sort}&by=${sortBy}`,
+                : (e.target.value || category) &&
+                  router.push(
+                    "/search?q=" + e.target.value + `&category=${category}`,
+                    { scroll: true },
                   ); // Show dropdown when input is not empty
-            }, 1000)}
+            }, 800)}
             onFocus={() => {
               pathname != "/search" && setIsDropdownOpen(true);
             }}
-            onBlurCapture={handleFocusOut}
+            onBlur={handleFocusOut}
           />
         </div>
         {input &&
@@ -87,25 +92,26 @@ export default function SearchBar({
         filteredProducts.length > 0 ? (
           <div className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-auto rounded-md border bg-card shadow-lg">
             {filteredProducts.map((product) => (
-              <Link href={`/product/${product._id}`} key={product._id}>
-                <li className="flex items-center justify-between border px-4 py-2 hover:bg-accent">
-                  <div className="flex items-center">
-                    <Image
-                      alt={product.Product_Name}
-                      className="rounded-md"
-                      src={product.Images[0]}
-                      height={56}
-                      width={56}
-                      style={{
-                        aspectRatio: "64/64",
-                        objectFit: "cover",
-                      }}
-                    />
-                    <span className="ml-4">{product.Product_Name}</span>
-                  </div>
-                  <span>₹ {product.Price}</span>
-                </li>
-              </Link>
+              <li
+                key={product._id}
+                className="flex items-center justify-between border px-4 py-2 hover:bg-accent"
+              >
+                <div className="flex items-center">
+                  <Image
+                    alt={product.Product_Name}
+                    className="rounded-md"
+                    src={product.Images[0]}
+                    height={56}
+                    width={56}
+                    style={{
+                      aspectRatio: "64/64",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <span className="ml-4">{product.Product_Name}</span>
+                </div>
+                <span>₹ {product.Price}</span>
+              </li>
             ))}
           </div>
         ) : (

@@ -6,7 +6,7 @@ import Image from "next/image";
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const mobnav = getIsSsrMobile();
   return (
-    <main className="min-h-screen bg-background">
+    <>
       {mobnav ? (
         <>
           <Navbar className="w-[100%] justify-between">
@@ -30,7 +30,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <Navbar />
       )}
       {children}
-    </main>
+    </>
   );
 };
 export default Layout;

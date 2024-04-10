@@ -7,7 +7,7 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import { EmblaOptionsType, EmblaPluginType } from "embla-carousel";
 import ProductCard from "@/app/components/HomePage/Carousel/ProductCard";
-import { fetchRecentProducts } from "@/lib/actions/fetchProduct.actions";
+import { fetchRecentProducts } from "@/lib/actions/products.actions";
 import { Suspense } from "react";
 import ProductSkeleton from "./ProductSkeleton";
 import { cn } from "@/app/utils";

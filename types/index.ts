@@ -8,6 +8,8 @@ export type category = {
   textClassName?: string;
 };
 
+export type SortBy = "newest" | "oldest" | "high" | "low";
+
 export interface Seller {
   SellerId: string;
   Username: string;
@@ -46,14 +48,14 @@ export interface Product {
   Expiry: Date;
 }
 export enum CategoryEnum {
-  Bicycles,
-  Coolers,
-  Stationery,
-  Miscellaneous,
-  Mattresses,
-  Kitchenware,
-  Instruments,
-  Electronics,
+  "Bicycles" = "Bicycles",
+  "Coolers" = "Coolers",
+  "Stationery" = "Stationery",
+  "Miscellaneous" = "Miscellaneous",
+  "Mattresses" = "Mattresses",
+  "Kitchenware" = "Kitchenware",
+  "Instruments" = "Instruments",
+  "Electronics" = "Electronics",
 }
 
 export enum ConditionEnum {
