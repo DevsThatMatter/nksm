@@ -59,13 +59,13 @@ export default async function SavedItems() {
           <Icons.saved className="h-[1.4rem] w-[1.4rem]" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-sm md:max-w-md ">
+      <SheetContent className="w-full overflow-scroll sm:max-w-sm md:max-w-md">
         <SheetHeader className="mb-6">
           <SheetTitle>Saved Products</SheetTitle>
           <SheetDescription>Manage your saved products</SheetDescription>
         </SheetHeader>
         {data?.map((product, id) => (
-          <div key={id}>
+          <div key={id} className="overflow-scroll">
             <Link href={`/product/${String(product._id)}`}>
               <SheetClose className="m-0 w-full p-0">
                 <div
