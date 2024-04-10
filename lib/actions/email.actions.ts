@@ -134,7 +134,7 @@ export async function sendEmail(
     }).countDocuments();
     if (existingInviteOrChat > 0) {
       return {
-        error: "Yor already have sent an invite",
+        error: "Already sent an invite!",
         msg: null,
         success: true,
       };
@@ -175,7 +175,7 @@ export async function sendEmail(
   } catch (error) {
     return {
       msg: null,
-      error: "Server issue. Please try again sometime later.",
+      error: "Server issue. Please try again later.",
       success: false,
     };
   }
