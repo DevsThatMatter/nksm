@@ -31,7 +31,6 @@ export function AddListing({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleDialogOpen = () => {
-    console.log("triggered");
     if (isDialogOpen) {
       setIsDialogOpen(false);
     } else {

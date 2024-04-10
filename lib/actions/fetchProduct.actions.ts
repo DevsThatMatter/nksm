@@ -8,6 +8,7 @@ import { CategoryEnum } from "@/types";
 import { User } from "../models/user.model";
 import { Comments } from "../models/comments.model";
 import { SavedProduct } from "@/app/components/Navbar/SavedItems";
+import { auth } from "@/auth";
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -207,16 +208,9 @@ export async function fetchSavedProduct({ email }: { email: string }) {
   }
 }
 
-export async function removeSavedProduct({
-  productId,
-  email,
-}: {
-  productId: string;
-  email: string;
-}) {
+export async function removeSavedProduct({ productId }: { productId: string }) {
   try {
-    console.log("In the remove saved action");
-
+    const email = (await auth())?.user?.email ?? "";
     await connectToDB();
 
     const user = await User.findOne({ Email: email });
@@ -241,5 +235,34 @@ export async function removeSavedProduct({
     console.log("Product removed successfully.");
   } catch (error) {
     console.error("Error removing product:", error);
+  }
+}
+
+export async function saveProduct({ productId }: { productId: string }) {
+  try {
+    await connectToDB();
+    const currentUserEmail = (await auth())?.user?.email;
+    const res = await User.updateOne(
+      { Email: currentUserEmail },
+      { $push: { Saved_Products: new mongo.ObjectId(productId) } },
+    );
+
+    console.log("saved product res => ", res);
+  } catch (error) {
+    console.log("ERROR_WHILE_SAVING_PRODUCT", error);
+  }
+}
+
+export async function checkIfSaved({ productId }: { productId: string }) {
+  try {
+    const currentUserEmail = (await auth())?.user?.email;
+    const savedProducts: Types.ObjectId[] = (
+      await User.findOne({ Email: currentUserEmail })
+    ).Saved_Products;
+    const test = savedProducts.includes(new mongo.ObjectId(productId));
+    return test;
+  } catch (error) {
+    console.log("ERROR_WHILE_CHECKING_SAVED_PRODUCT", error);
+    return false;
   }
 }

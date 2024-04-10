@@ -30,7 +30,6 @@ export default function ChatInput({ userId1, userId2 }: chatInputProps) {
 
   async function onSend(values: z.infer<typeof messageSchema>) {
     try {
-      console.log("hello from frontend");
       await chatHandler(userId1, userId2)
         .then((res) => {
           console.log(`res ${res}`);

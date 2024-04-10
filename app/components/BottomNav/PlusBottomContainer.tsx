@@ -3,7 +3,6 @@ import { AddListing } from "../AddListing";
 import { Button } from "../ui/button";
 
 const PlusBottomContainer = () => {
-  console.log("PlusBottomContainer");
   return (
     <div className="relative h-full w-12">
       <AddListing>

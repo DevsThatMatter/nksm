@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import { removeSavedProduct } from "@/lib/actions/fetchProduct.actions";
 import { Icons } from "@/app/utils/icons";
+import { useRouter } from "next/navigation";
 
 export default function DeleteSavedProducts({
   productId,
@@ -11,18 +12,17 @@ export default function DeleteSavedProducts({
   productId: string;
   email: string;
 }) {
+  const router = useRouter();
   async function handleDelete(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) {
-    console.log("delete was triggered");
     event.preventDefault();
     event.stopPropagation();
     await removeSavedProduct({
       productId: productId,
-      email: email,
     });
+    router.refresh();
   }
-
   return (
     <Button
       size="icon"
