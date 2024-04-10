@@ -60,10 +60,8 @@ const AddListingPreview = (
         </p>
       </div>
       <div>
-        <pre className="my-2 whitespace-pre-line font-sans text-muted-foreground">
-          {previewData.description.length > 100
-            ? previewData.description.substring(0, 100) + "..."
-            : previewData.description}
+        <pre className="my-2 line-clamp-3 overflow-ellipsis whitespace-pre-line break-all font-sans text-muted-foreground">
+          {previewData.description}
         </pre>
       </div>
     </div>
