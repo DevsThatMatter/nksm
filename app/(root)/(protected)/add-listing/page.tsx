@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import AddListingForm from "../../../components/AddListing/Form";
 import { redirect } from "next/navigation";
 
 async function page() {
@@ -7,7 +6,7 @@ async function page() {
   if (!userData) {
     redirect("/login");
   }
-  return <AddListingForm userData={userData} />;
+  redirect("/");
 }
 
 export default page;
