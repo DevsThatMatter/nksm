@@ -24,7 +24,7 @@ const Filter = ({ query, sorting = "newest", category }: FilterProps) => {
           >
             Clear
           </Link>
-          <Separator className="my-[0.05rem]" />
+          <Separator className="my-2" />
         </div>
         {categories.map(({ name, imgUrl }) => (
           <Link

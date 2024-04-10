@@ -33,7 +33,7 @@ const SortFilter = ({ query, sorting = "newest", category }: FilterProps) => {
                 }}
                 replace
               >
-                <button className="w-full rounded-lg bg-background p-2 hover:bg-gray-200">
+                <button className="w-full rounded-lg bg-background p-2 hover:bg-muted">
                   {value}
                 </button>
               </Link>
