@@ -7,12 +7,9 @@ import {
 } from "@/app/components/ui/avatar";
 import React from "react";
 
-import { addComment, listComments } from "@/lib/actions/comment.actions";
-import { redirect } from "next/navigation";
+import { listComments } from "@/lib/actions/comment.actions";
 import mongoose from "mongoose";
 import { auth } from "@/auth";
-import { revalidatePath } from "next/cache";
-import { Session } from "next-auth";
 import CommentForm from "./CommentForm";
 
 async function CommentCard({

@@ -22,7 +22,7 @@ export const products = [
   },
   {
     image_url: "/Categories/Miscellaneous.jpg",
-    name: "Miscellaneousasfasdfasfafsdfsdasafsadadafasdfasdasd",
+    name: "Miscellaneous",
     price: 100,
     description:
       "Miscellaneous is the adjective form of the noun miscellany, which means a mixture of different things.",

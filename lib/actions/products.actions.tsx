@@ -3,10 +3,9 @@
 import { Product } from "../models/product.model";
 import { connectToDB } from "../database/mongoose";
 import { FilterQuery, SortOrder } from "mongoose";
-import { revalidatePath } from "next/cache";
-import { CategoryEnum } from "@/types";
+import SearchCard from "@/app/components/Search/SearchCard";
 import { User } from "../models/user.model";
-import { Comments } from "../models/comments.model";
+import { CategoryEnum, SortBy, category } from "@/types";
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -40,25 +39,42 @@ export const fetchRecentProductS = async () => {
   }
 };
 
+const sortOptions = (
+  sortBy?: SortBy,
+): { createdAt: SortOrder } | { Price: SortOrder } => {
+  switch (sortBy) {
+    case "newest":
+      return { createdAt: -1 };
+    case "oldest":
+      return { createdAt: 1 };
+    case "high":
+      return { Price: -1 };
+    case "low":
+      return { Price: 1 };
+    default:
+      return { createdAt: 1 };
+  }
+};
+
 export const getSearchResults = async ({
   searchString,
   pageNumber = 1,
   pageSize = 20,
-  sortBy = "createdAt",
-  sortOrder = "desc",
+  sortBy = "newest",
   category,
 }: {
   searchString: string;
   pageNumber?: number;
   pageSize?: number;
-  sortBy?: "createdAt" | "Price";
-  sortOrder?: SortOrder;
-  category?: string;
+  sortBy?: SortBy;
+  category?: keyof typeof CategoryEnum;
 }) => {
   try {
     connectToDB();
 
     const skipAmount = (pageNumber - 1) * pageSize;
+    console.log("pageNumber", pageNumber);
+    console.log("skipAmount", skipAmount);
 
     const regex = new RegExp(searchString, "i");
 
@@ -82,28 +98,35 @@ export const getSearchResults = async ({
       Price: 1,
       Description: 1,
       Condition: 1,
+      Negotiable: 1,
     };
 
-    const sortOptions = { [sortBy]: sortOrder };
-
     const searchQuery = Product.find(query)
-      .sort(sortOptions)
-      .skip(skipAmount)
       .select(select)
-      .limit(pageSize);
+      .sort(sortOptions(sortBy))
+      .limit(pageSize)
+      .skip(skipAmount);
 
     const totalProductsCount = await Product.countDocuments(query);
 
     const products = await searchQuery.exec();
+    const productsData = products.map((product) => (
+      <SearchCard
+        key={product._id.toString()}
+        id={product._id}
+        image_url={product.Images[0]}
+        name={product.Product_Name}
+        price={product.Price}
+        description={product.Description}
+        condition={product.Condition}
+        negotiable={product.Negotiable}
+      />
+    ));
 
     const isNext = totalProductsCount > skipAmount + products.length;
-    revalidatePath("/search");
     return {
-      products,
+      productsData,
       isNext,
-      totalProductsCount,
-      productsCount: products.length,
-      skipAmount,
     };
   } catch (error) {
     console.error("Error fetching users:", error);
