@@ -6,7 +6,6 @@ import { User } from "../models/user.model";
 import { auth } from "@/auth";
 
 type formData = {
-  userId: string | undefined;
   iname: string;
   condition: string;
   description: string;
@@ -39,7 +38,7 @@ async function update(values: formData) {
       Negotiable: values.negotiate,
     });
 
-    await User.findByIdAndUpdate(values.userId, {
+    await User.findByIdAndUpdate(userObj?.user?.id, {
       $push: { Owned_Products: product._id },
     });
     return product._id.toString();
