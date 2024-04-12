@@ -3,6 +3,7 @@ import mongoose, { ObjectId, Types } from "mongoose";
 export type category = {
   name: string;
   imgUrl: string;
+  darkImgUrl: string;
   imageClassName?: string;
   className?: string;
   textClassName?: string;

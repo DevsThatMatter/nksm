@@ -12,6 +12,7 @@ const Categories = () => {
           key={category.name}
           name={category.name}
           imgUrl={category.imgUrl}
+          darkImgUrl={category.darkImgUrl}
           imageClassName={category.imageClassName}
           className={category.className}
           textClassName={category.textClassName}
