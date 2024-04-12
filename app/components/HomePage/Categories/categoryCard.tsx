@@ -1,5 +1,3 @@
-"use client";
-import { useTheme } from "next-themes";
 import Link from "next/link";
 import Image from "next/image";
 import { spartan } from "@/app/utils/fonts";
@@ -20,7 +18,6 @@ const CategoryCard: React.FC<CategoryProp> = ({
   imageClassName,
   textClassName,
 }) => {
-  const { theme } = useTheme();
   return (
     <Link
       href={""}
@@ -31,10 +28,20 @@ const CategoryCard: React.FC<CategoryProp> = ({
       )}
     >
       <Image
-        src={theme === "light" ? imgUrl : darkImgUrl}
+        src={imgUrl}
         alt={name}
         className={cn(
-          "h-full w-full rounded-lg object-cover group-hover:opacity-75 ",
+          "h-full w-full rounded-lg object-cover group-hover:opacity-75 dark:hidden",
+          imageClassName,
+        )}
+        width={800}
+        height={800}
+      />
+      <Image
+        src={darkImgUrl}
+        alt={name}
+        className={cn(
+          "hidden h-full w-full rounded-lg object-cover group-hover:opacity-75 dark:block",
           imageClassName,
         )}
         width={800}
