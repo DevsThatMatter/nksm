@@ -43,7 +43,8 @@ const CategoryCard: React.FC<CategoryProp> = ({
 
       <h1
         className={cn(
-          "absolute h-fit w-fit text-2xl font-semibold text-gray-700 group-hover:opacity-75 @2xs:text-3xl @xs:text-4xl @sm:text-5xl @md:text-6xl @md:font-medium",
+          "absolute h-fit w-fit text-2xl font-semibold text-foreground/70 group-hover:opacity-75 @2xs:text-3xl @xs:text-4xl @sm:text-5xl @md:text-6xl @md:font-medium dark:text-foreground",
+          // theme === "light" ? textClassName : darkTextClassName,
           textClassName,
           spartan.className,
         )}
