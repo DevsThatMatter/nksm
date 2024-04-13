@@ -1,47 +1,39 @@
 "use client";
-import { use, useEffect, useState } from "react";
-import clsx from "clsx";
-import { Tabs, TabsList } from "../ui/tabs";
-import { TabsTrigger } from "@radix-ui/react-tabs";
+import Image from "next/image";
+import { useState } from "react";
+
+import { Button } from "@/app/components/ui/button";
+import { cn } from "@/app/utils";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTrigger,
 } from "@/app/components/ui/sheet";
-import { Button } from "@/app/components/ui/button";
-import { Icons } from "@/app/utils/icons";
-import { chatDetails } from "@/types";
-import { getAllChats, getUserId } from "@/lib/actions/chat.actions";
-import ProductPanel from "./product-panel";
-import UserUnauthorized from "./user-unauthorized";
-import useChatStore from "../../../hooks/useChatStore";
-import BuyerInvites from "./invites";
+import { Tabs, TabsList } from "../ui/tabs";
+import { TabsTrigger } from "@radix-ui/react-tabs";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
+
+import { chatDetails } from "@/types";
+import { getAllChats } from "@/lib/actions/chat.actions";
+import { Icons } from "@/app/utils/icons";
+import ProductPanel from "./product-panel";
+import UserUnauthorized from "./user-unauthorized";
+import BuyerInvites from "./invites";
+import useChatStore from "../../../hooks/useChatStore";
 
 export default function UserChat() {
   const { data: session } = useSession();
-  const email = session?.user?.email ?? "";
-  const [userId, setUserId] = useState<string | undefined>(undefined);
-  useEffect(() => {
-    async function fetchUserId() {
-      const id = await getUserId({ email });
-      setUserId(id);
-    }
-    fetchUserId();
-  }, [email]);
+  const userId = session?.user?.id;
 
-  const { discussions, otherUserDetails, createChat, removeChat } =
-    useChatStore();
+  const { discussions, otherUserDetails, createChat } = useChatStore();
 
   const [activeTab, setActiveTab] = useState<
     "seller" | "buyer" | "invites" | ""
   >("seller");
 
-  const { data, status } = useQuery({
+  const { data } = useQuery({
     queryKey: ["getAllChats", userId],
     queryFn: () => getAllChats(userId ?? ""),
     enabled: userId !== undefined,
@@ -130,7 +122,7 @@ export default function UserChat() {
                   <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger
                       value="Seller Chats"
-                      className={clsx(
+                      className={cn(
                         "rounded-lg p-0.5",
                         activeTab === "seller" &&
                           "bg-white text-black shadow-md transition-colors duration-300",
@@ -141,7 +133,7 @@ export default function UserChat() {
                     </TabsTrigger>
                     <TabsTrigger
                       value="Buyer Chats"
-                      className={clsx(
+                      className={cn(
                         "rounded-lg p-0.5",
                         activeTab === "buyer" &&
                           "bg-white text-black shadow-md transition-colors duration-300",
@@ -152,7 +144,7 @@ export default function UserChat() {
                     </TabsTrigger>
                     <TabsTrigger
                       value="Invites"
-                      className={clsx(
+                      className={cn(
                         "rounded-lg p-0.5",
                         activeTab === "invites" &&
                           "bg-white text-black shadow-md transition-colors duration-300",

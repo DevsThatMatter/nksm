@@ -18,21 +18,6 @@ const mongoId = z.string().refine((value) => Types.ObjectId.isValid(value), {
   message: "Invalid ObjectId format",
 });
 
-const GetUserIdSchema = z.object({
-  email: z.string().email(),
-});
-
-export async function getUserId({ email }: z.infer<typeof GetUserIdSchema>) {
-  try {
-    await connectToDB();
-    const user = await User.findOne({ Email: email });
-    const userId = user?._id?.toString();
-    return userId;
-  } catch (error) {
-    throw error;
-  }
-}
-
 function groupDocs(data: chatDetails[]): Map<string, chatDetails[]> {
   const groupDocsByProduct = new Map<string, chatDetails[]>();
 

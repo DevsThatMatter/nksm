@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
-
 import Image from "next/image";
+import { useState } from "react";
+
+import { Button } from "../ui/button";
+import { cn } from "@/app/utils";
 import {
   Dialog,
   DialogClose,
@@ -9,15 +11,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { Button } from "../ui/button";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
+
 import {
   acceptTheInvite,
   fecthInvites,
   getAllUserSentInvites,
 } from "@/lib/actions/chat.actions";
-import { useQuery } from "@tanstack/react-query";
-import { cn } from "@/app/utils";
 
 interface UserDetails {
   Avatar: string;

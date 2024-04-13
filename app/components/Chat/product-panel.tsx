@@ -1,13 +1,15 @@
-import useChatStore from "@/hooks/useChatStore";
-import ChatUI from "./chat-ui";
-import { useEffect, useState } from "react";
-import { chatDetails } from "@/types";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+
+import { useQueries } from "@tanstack/react-query";
+
 import {
   countUnreadMessages,
   getLastMessages,
 } from "@/lib/actions/chat.actions";
-import { useQueries } from "@tanstack/react-query";
+import { chatDetails } from "@/types";
+import ChatUI from "./chat-ui";
+import useChatStore from "@/hooks/useChatStore";
 
 interface ProductPanelProps {
   userId: string;
@@ -25,10 +27,6 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
   } = useChatStore();
 
   const [productId, setProductId] = useState<string | null>(null);
-
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(
-    null,
-  );
 
   // Extracted the logic to handle chat creation
   function handleSingleSellerChatSet(
@@ -83,7 +81,6 @@ export default function ProductPanel({ userId }: ProductPanelProps) {
     );
     createBuyer(discussion.buyerDetails.id);
     createSeller(discussion.sellerDetails.id);
-    setSelectedProductId(discussion.productDetails.productId);
     setProductId(discussion.productDetails.productId);
   }
   const [productReadCounts, setProductReadCounts] = useState<Map<

@@ -6,11 +6,8 @@ import NavButton from "./NavButton";
 import PlusBottomContainer from "./PlusBottomContainer";
 
 import CategoriesDrawer from "./CategoriesDrawer";
-import { auth } from "@/auth";
 
 const BottomNav = async () => {
-  const userData = await auth();
-  const userId = userData?.user?.id ?? "";
   return (
     <BottomNavContainer>
       <ButtonContainer>

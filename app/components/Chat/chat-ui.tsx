@@ -1,18 +1,20 @@
 "use client";
-import { Fragment, useRef, ElementRef, useEffect, useState } from "react";
-import ChatInput from "./chat-input";
-import { useChatQuery } from "@/hooks/useChatQuery";
-import { useChatScroll } from "@/hooks/useChatScroll";
-import useChatStore from "@/hooks/useChatStore";
+import { Fragment, useRef, useEffect, useState, ElementRef } from "react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
+import { cn } from "@/app/utils";
+import { useQueryClient } from "@tanstack/react-query";
+
+import ChatInput from "./chat-input";
 import { getMessagesResult, lockDeal } from "@/lib/actions/chat.actions";
+import { Icons } from "@/app/utils/icons";
 import { MessageTypes } from "@/types";
 import { pusherClient } from "@/lib/pusher";
+import useChatStore from "@/hooks/useChatStore";
+import { useChatScroll } from "@/hooks/useChatScroll";
+import { useChatQuery } from "@/hooks/useChatQuery";
 import { useChatObserver } from "@/hooks/useChatObserver";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Icons } from "@/app/utils/icons";
-import { cn } from "@/app/utils";
-import { Icon } from "@radix-ui/react-select";
 
 interface ChatUIProps {
   currentUserId: string;
@@ -43,10 +45,6 @@ export default function ChatUI({
 
   const topRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
-  const [lockedStatus, setLockedStatus] = useState<{
-    status: boolean;
-    accepted: "pending" | "accepted" | "rejected";
-  }>({ status: false, accepted: "pending" });
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useChatQuery({
@@ -87,10 +85,6 @@ export default function ChatUI({
         return updatedMessages;
       });
     }
-    setLockedStatus({
-      status: data?.pages?.[0]?.content?.Locked ?? false,
-      accepted: "pending",
-    });
   }, [data]);
 
   useEffect(() => {
@@ -138,11 +132,6 @@ export default function ChatUI({
       caller,
       msgId,
     });
-    if (caller === "yes") {
-      setLockedStatus({ accepted: "accepted", status: true });
-    } else {
-      setLockedStatus({ accepted: "rejected", status: false });
-    }
   }
 
   const messageElements = document.querySelectorAll(".user-message-false");
@@ -154,6 +143,8 @@ export default function ChatUI({
     productId,
     currentUserId,
   });
+
+  const queryClient = useQueryClient();
 
   return (
     <section className="items-centerjustify-between flex h-full w-full flex-col">
@@ -168,6 +159,7 @@ export default function ChatUI({
               } else if (otherUserDetails.id !== "") {
                 removeChat("productPanel");
               }
+              queryClient.invalidateQueries({ queryKey: [queryKey] });
             }}
           >
             <Icons.moveback className="h-6 w-6" />
@@ -312,11 +304,8 @@ export default function ChatUI({
       )}
 
       <ChatInput
-        otherUserPhoneNumber={otherUserPhoneNumber}
         userId={currentUserId}
         productId={productId}
-        otherUserId={otherUserId}
-        otherUserName={otherUserName}
         sellerDetails={{ id: sellerId }}
         buyerDetails={{ id: buyerId }}
       />

@@ -1,11 +1,13 @@
-import { Icons } from "@/app/utils/icons";
+import Link from "next/link";
+
 import { Button, buttonVariants } from "../ui/button";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "../ui/hover-card";
-import Link from "next/link";
+
+import { Icons } from "@/app/utils/icons";
 
 export default function UserUnauthorized() {
   return (

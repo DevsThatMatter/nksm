@@ -1,24 +1,23 @@
+import { useEffect, useState } from "react";
+
+import Skeleton from "react-loading-skeleton";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormItem } from "@/app/components/ui/form";
-import { Icons } from "@/app/utils/icons";
-import { Input } from "@/app/components/ui/input";
-import Skeleton from "react-loading-skeleton";
+
 import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
+import { cn } from "@/app/utils";
+import { createNewMessage, getChatStatus } from "@/lib/actions/chat.actions";
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import useChatStore from "@/hooks/useChatStore";
-import { createNewMessage, getChatStatus } from "@/lib/actions/chat.actions";
-import { cn } from "@/app/utils";
+import { Form, FormControl, FormItem } from "@/app/components/ui/form";
+import { Icons } from "@/app/utils/icons";
 
 const messageSchema = z.object({
   content: z.string().min(1),
@@ -27,9 +26,6 @@ const messageSchema = z.object({
 interface ChatInputProps {
   userId: string;
   productId: string;
-  otherUserId: string;
-  otherUserName: string;
-  otherUserPhoneNumber: string;
   sellerDetails: { id: string };
   buyerDetails: { id: string };
 }
@@ -37,9 +33,6 @@ interface ChatInputProps {
 export default function ChatInput({
   userId,
   productId,
-  otherUserId,
-  otherUserName,
-  otherUserPhoneNumber,
   buyerDetails,
   sellerDetails,
 }: ChatInputProps) {
