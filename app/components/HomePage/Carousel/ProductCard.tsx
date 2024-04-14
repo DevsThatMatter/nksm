@@ -48,7 +48,6 @@ const ProductCard = ({
                 <span className="text-muted-foreground">₹{price}</span>
               </div>
               <p className="line-clamp-2 h-8 w-full overflow-ellipsis break-all text-foreground min-[300px]:text-xs md:h-10 md:text-sm lg:h-8 lg:text-xs">
-
                 {description}
               </p>
             </div>

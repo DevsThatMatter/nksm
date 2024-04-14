@@ -14,7 +14,7 @@ const ProductPage = ({ productInfo }: { productInfo: Product }) => {
   const options: EmblaOptionsType = { loop: true, align: "center" };
   return (
     <div key="1" className="mx-auto max-w-full p-4">
-      <div className="gap-4 lg:grid lg:grid-cols-3 lg:grid-rows-3">
+      <div className="gap-4 lg:grid lg:grid-cols-3 lg:grid-rows-2">
         <div className="col-span-2 row-span-2">
           <ImageCard images={productInfo.Images} />
           <ProductDetails productInfo={productInfo} />
