@@ -48,6 +48,7 @@ export interface Product {
   Category: CategoryEnum;
   Expiry: Date;
 }
+
 export enum CategoryEnum {
   "Bicycles" = "Bicycles",
   "Coolers" = "Coolers",
@@ -60,9 +61,14 @@ export enum CategoryEnum {
 }
 
 export enum ConditionEnum {
-  "Brand New",
-  "Like New",
-  "Used",
+  "Brand New" = "Brand New",
+  "Like New" = "Like New",
+  "Used" = "Used",
+}
+
+export enum NegotiateEnum {
+  "Yes" = "Yes",
+  "No" = "No",
 }
 
 export interface IProduct {

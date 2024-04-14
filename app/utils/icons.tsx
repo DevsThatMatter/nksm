@@ -18,6 +18,9 @@ import {
   CheckIcon,
   Cross1Icon,
   ChevronLeftIcon,
+  Cross2Icon,
+  UploadIcon,
+  ReloadIcon,
 } from "@radix-ui/react-icons";
 
 export const Icons = {
@@ -26,6 +29,7 @@ export const Icons = {
   avatar: AvatarIcon,
   saved: BookmarkIcon,
   chaticon: ChatBubbleIcon,
+  cross: Cross2Icon,
   add: PlusIcon,
   replyIcon: ChevronDownIcon,
   search: MagnifyingGlassIcon,
@@ -40,4 +44,6 @@ export const Icons = {
   likeNew: StarIcon,
   used: UpdateIcon,
   buffering: UpdateIcon,
+  loading: ReloadIcon,
+  upload: UploadIcon,
 };

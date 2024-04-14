@@ -23,6 +23,8 @@
     "pnpm": "please-use-bun"
   },
   "dependencies": {
+    "@edgestore/react": "^0.1.6",
+    "@edgestore/server": "^0.1.6",
     "@hookform/resolvers": "^3.3.4",
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -42,12 +44,14 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@react-email/components": "^0.0.15",
     "@tailwindcss/container-queries": "^0.1.1",
+    "@types/uuid": "^9.0.8",
     "@tanstack/react-query": "^5.24.1",
     "@upstash/redis": "^1.29.0",
     "axios": "^1.6.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.1",
+    "compressorjs": "^1.2.1",
     "embla-carousel-autoplay": "8.0.0-rc21",
     "embla-carousel-react": "8.0.0-rc21",
     "ioredis": "^5.3.2",
@@ -70,6 +74,7 @@
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.0",
+    "uuid": "^9.0.1",
     "vaul": "^0.9.0",
     "zod": "^3.22.4",
     "zustand": "^4.5.0"
