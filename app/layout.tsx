@@ -3,6 +3,7 @@ import { inter } from "@/app/utils/fonts";
 import "./styles/globals.css";
 import { cn } from "@/app/utils";
 import { ThemeProvider } from "@/app/components/providers/theme-provider";
+import { EdgeStoreProvider } from "./utils/edgestore";
 import { QueryProvider } from "./components/providers/query-provider";
 import { Toaster } from "./components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
@@ -19,7 +20,13 @@ export const viewport: Viewport = {
   ],
 };
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+const RootLayout = ({
+  modals,
+  children,
+}: {
+  modals: React.ReactNode;
+  children: React.ReactNode;
+}) => {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
@@ -33,9 +40,14 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           enableSystem
           disableTransitionOnChange
         >
-          <Toaster position="bottom-left" richColors />
           <SessionProvider>
-            <QueryProvider>{children}</QueryProvider>
+            <QueryProvider>
+              <EdgeStoreProvider>
+                {modals}
+                {children}
+              </EdgeStoreProvider>
+              <Toaster position="bottom-left" richColors />
+            </QueryProvider>
           </SessionProvider>
         </ThemeProvider>
       </body>
