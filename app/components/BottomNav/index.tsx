@@ -1,5 +1,5 @@
 import BottomNavContainer from "./BottomNavContainer";
-import UserChat from "../Chat/ChatsPanel";
+import UserChat from "../Chat/chat-panel";
 import UserProfile from "../Navbar/UserProfile";
 import ButtonContainer from "./ButtonContainer";
 import NavButton from "./NavButton";
@@ -12,7 +12,7 @@ const BottomNav = () => {
     <BottomNavContainer>
       <ButtonContainer>
         <UserChat>
-          <NavButton className="mt-3">
+          <NavButton className="m-1 pl-1 pt-1">
             <svg
               className="w-8  fill-[#4B5563] dark:fill-gray-500"
               viewBox="0 0 16 16"

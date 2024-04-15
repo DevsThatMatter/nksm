@@ -13,8 +13,6 @@ export const {
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      authorization:
-        "https://accounts.google.com/o/oauth2/auth?response_type=code&hd=nitkkr.ac.in",
     }),
   ],
   callbacks: {
@@ -28,8 +26,7 @@ export const {
       return session;
     },
     async signIn({ user, profile }) {
-      const isAllowedToSignIn =
-        user.email && user.email.endsWith("@nitkkr.ac.in");
+      const isAllowedToSignIn = user.email && user.email;
       if (isAllowedToSignIn && profile) {
         await insertUser({
           Username: profile.email!.substring(0, profile.email!.indexOf("@")),

@@ -14,6 +14,10 @@ import {
   StarFilledIcon,
   StarIcon,
   UpdateIcon,
+  CrossCircledIcon,
+  CheckIcon,
+  Cross1Icon,
+  ChevronLeftIcon,
 } from "@radix-ui/react-icons";
 
 export const Icons = {
@@ -25,11 +29,15 @@ export const Icons = {
   add: PlusIcon,
   replyIcon: ChevronDownIcon,
   search: MagnifyingGlassIcon,
-  moveback: ArrowLeftIcon,
+  moveback: ChevronLeftIcon,
   sendIcon: PaperPlaneIcon,
   fileLink: Link2Icon,
   image: ImageIcon,
+  remove: CrossCircledIcon,
+  yes: CheckIcon,
+  no: Cross1Icon,
   new: StarFilledIcon,
   likeNew: StarIcon,
   used: UpdateIcon,
+  buffering: UpdateIcon,
 };

@@ -4,13 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { SavedItems } from "./SavedItems";
 import { Separator } from "@/app/components/ui/separator";
-import UserChat from "@/app/components/Chat/ChatsPanel";
+import UserChat from "../Chat/chat-panel";
 import { AddListing } from "../AddListing";
 import SearchBar from "./SearchBar";
 import { ReactNode, Suspense } from "react";
 import { auth } from "@/auth";
 import { fetchRecentProductS } from "@/lib/actions/products.actions";
 import { cn } from "@/app/utils";
+import { Button } from "../ui/button";
+import { countUnreadMessages } from "@/lib/actions/chat.actions";
 
 const Navbar = async ({
   children = (
