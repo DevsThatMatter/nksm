@@ -11,6 +11,7 @@ import { Carousel, CarouselContent } from "../ui/carousel";
 import { EmblaOptionsType } from "embla-carousel";
 
 const ProductPage = ({ productInfo }: { productInfo: Product }) => {
+  const options: EmblaOptionsType = { loop: true, align: "center" };
   return (
     <div key="1" className="mx-auto max-w-full p-4">
       <div className="gap-4 lg:grid lg:grid-cols-3 lg:grid-rows-2">
@@ -20,7 +21,11 @@ const ProductPage = ({ productInfo }: { productInfo: Product }) => {
           <div className={cn("m-2 mt-8")}>
             <h1 className="pb-3 text-2xl font-semibold">You may also like:</h1>
 
-            <ProductCarousel productPageCarousel arrows={false} />
+            <ProductCarousel
+              productPageCarousel
+              arrows={false}
+              options={options}
+            />
           </div>
         </div>
         <div className="col-span-1">
