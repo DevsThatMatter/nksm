@@ -1,9 +1,14 @@
 "use client";
 import React from "react";
 import { Button } from "../ui/button";
-import { removeSavedProduct } from "@/lib/actions/fetchProduct.actions";
+import {
+  getSaved,
+  removeSavedProduct,
+} from "@/lib/actions/fetchProduct.actions";
 import { Icons } from "@/app/utils/icons";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { cn } from "@/app/utils";
 
 export default function DeleteSavedProducts({
   productId,
@@ -18,8 +23,19 @@ export default function DeleteSavedProducts({
   ) {
     event.preventDefault();
     event.stopPropagation();
-    await removeSavedProduct({
+    const prom = removeSavedProduct({
       productId: productId,
+    });
+    await getSaved({ productId: productId });
+    toast.promise(prom, {
+      loading: "Processing",
+      success: (data) => {
+        return (
+          <span className={cn(data.error && "text-red-700")}>
+            {data.msg || data.error}
+          </span>
+        );
+      },
     });
     router.refresh();
   }

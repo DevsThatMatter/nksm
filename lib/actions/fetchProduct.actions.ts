@@ -216,8 +216,10 @@ export async function removeSavedProduct({ productId }: { productId: string }) {
     const user = await User.findOne({ Email: email });
 
     if (!user) {
-      console.log("User not found.");
-      return;
+      return {
+        error: null,
+        msg: "Please get authorized",
+      };
     }
 
     const savedProducts = user.Saved_Products.map(
@@ -232,9 +234,16 @@ export async function removeSavedProduct({ productId }: { productId: string }) {
 
     await user.save();
 
-    console.log("Product removed successfully.");
+    return {
+      error: null,
+      msg: "Removed successfully",
+    };
   } catch (error) {
     console.error("Error removing product:", error);
+    return {
+      error: null,
+      msg: "Server error, try later",
+    };
   }
 }
 
@@ -242,25 +251,32 @@ export async function saveProduct({ productId }: { productId: string }) {
   try {
     await connectToDB();
     const currentUserEmail = (await auth())?.user?.email;
-    const res = await User.updateOne(
+    await User.updateOne(
       { Email: currentUserEmail },
       { $push: { Saved_Products: new mongo.ObjectId(productId) } },
     );
 
-    console.log("saved product res => ", res);
+    return {
+      msg: "Product saved",
+      error: null,
+    };
   } catch (error) {
     console.log("ERROR_WHILE_SAVING_PRODUCT", error);
+    return {
+      msg: null,
+      error: "Server error, try later",
+    };
   }
 }
 
-export async function checkIfSaved({ productId }: { productId: string }) {
+export async function getSaved({ productId }: { productId: string }) {
   try {
     const currentUserEmail = (await auth())?.user?.email;
-    const savedProducts: Types.ObjectId[] = (
+    let savedProducts: Types.ObjectId[] = (
       await User.findOne({ Email: currentUserEmail })
     ).Saved_Products;
-    const test = savedProducts.includes(new mongo.ObjectId(productId));
-    return test;
+
+    return savedProducts.includes(new mongo.ObjectId(productId));
   } catch (error) {
     console.log("ERROR_WHILE_CHECKING_SAVED_PRODUCT", error);
     return false;
