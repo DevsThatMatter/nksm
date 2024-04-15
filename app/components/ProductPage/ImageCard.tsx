@@ -1,11 +1,6 @@
-import * as React from "react";
-
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/app/components/ui/carousel";
+import { CarouselContent, CarouselItem } from "@/app/components/ui/carousel";
 import Image from "next/image";
+import Overlay from "./Overlay";
 
 export default function ImageCard({ images }: { images: string[] }) {
   return (
@@ -23,8 +18,8 @@ export default function ImageCard({ images }: { images: string[] }) {
         ))}
       </div>
 
-      <Carousel className="w-[85%] rounded-lg shadow-none">
-        <CarouselContent>
+      <Overlay className="aspect-video w-[85%]">
+        <CarouselContent className="flex h-full w-full items-center justify-center">
           {images.map((image: string, index: number) => (
             <CarouselItem key={index}>
               <Image
@@ -32,12 +27,12 @@ export default function ImageCard({ images }: { images: string[] }) {
                 alt={`Image ${index + 1}`}
                 width={1920}
                 height={1080}
-                className="aspect-video h-full w-full cursor-pointer rounded-lg object-contain"
+                className="aspect-video h-full w-full cursor-pointer rounded-lg object-contain py-2"
               />
             </CarouselItem>
           ))}
         </CarouselContent>
-      </Carousel>
+      </Overlay>
     </div>
   );
 }

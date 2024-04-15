@@ -157,7 +157,7 @@ const CarouselContent = React.forwardRef<
   const { carouselRef, orientation } = useCarousel();
 
   return (
-    <div ref={carouselRef} className="overflow-hidden">
+    <div ref={carouselRef} className="h-full overflow-hidden">
       <div
         ref={ref}
         className={cn(
@@ -213,7 +213,10 @@ const CarouselPrevious = React.forwardRef<
         className,
       )}
       disabled={!canScrollPrev}
-      onClick={scrollPrev}
+      onClick={(e) => {
+        e.stopPropagation();
+        scrollPrev();
+      }}
       {...props}
     >
       <ArrowLeftIcon className="h-4 w-4" />
@@ -242,7 +245,10 @@ const CarouselNext = React.forwardRef<
         className,
       )}
       disabled={!canScrollNext}
-      onClick={scrollNext}
+      onClick={(e) => {
+        e.stopPropagation();
+        scrollNext();
+      }}
       {...props}
     >
       <ArrowRightIcon className="h-4 w-4" />
