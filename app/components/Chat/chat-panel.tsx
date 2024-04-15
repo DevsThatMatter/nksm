@@ -23,7 +23,15 @@ import UserUnauthorized from "./user-unauthorized";
 import BuyerInvites from "./invites";
 import useChatStore from "../../../hooks/useChatStore";
 
-export default function UserChat() {
+export default function UserChat({
+  children = (
+    <Button variant="ghost" size="icon">
+      <Icons.chaticon className="h-[1.3rem] w-[1.32rem]" />
+    </Button>
+  ),
+}: {
+  children?: React.ReactNode;
+}) {
   const { data: session } = useSession();
   const userId = session?.user?.id;
 
@@ -106,11 +114,7 @@ export default function UserChat() {
   return userId ? (
     <div>
       <Sheet onOpenChange={resetChat}>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <Icons.chaticon className="h-[1.3rem] w-[1.32rem]" />
-          </Button>
-        </SheetTrigger>
+        <SheetTrigger asChild>{children}</SheetTrigger>
         <SheetContent side="left" className="w-[90vw] sm:w-[50vw]  lg:w-[90vw]">
           <SheetHeader className="flex justify-between px-4">
             {(discussions.length === 0 ||
