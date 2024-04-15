@@ -14,13 +14,13 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "pnpm build"
+      "pre-push": "bun run build"
     }
   },
   "engines": {
-    "npm": "please-use-pnpm",
-    "yarn": "please-use-pnpm",
-    "pnpm": ">=6.0.0"
+    "npm": "please-use-bun",
+    "yarn": "please-use-bun",
+    "pnpm": "please-use-bun"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
