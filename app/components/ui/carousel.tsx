@@ -26,8 +26,12 @@ type CarouselContextProps = {
   api: ReturnType<typeof useEmblaCarousel>[1];
   scrollPrev: () => void;
   scrollNext: () => void;
+  scrollTo: (index: number) => void;
   canScrollPrev: boolean;
   canScrollNext: boolean;
+  containerRef?: React.ForwardedRef<HTMLDivElement>;
+  handleKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  containerProps?: React.HTMLAttributes<HTMLDivElement> & CarouselProps;
 } & CarouselProps;
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
@@ -44,7 +48,8 @@ function useCarousel() {
 
 const Carousel = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & CarouselProps
+  React.HTMLAttributes<HTMLDivElement> &
+    CarouselProps & { removedContainer?: boolean }
 >(
   (
     {
@@ -54,6 +59,7 @@ const Carousel = React.forwardRef<
       plugins,
       className,
       children,
+      removedContainer,
       ...props
     },
     ref,
@@ -84,6 +90,13 @@ const Carousel = React.forwardRef<
     const scrollNext = React.useCallback(() => {
       api?.scrollNext();
     }, [api]);
+
+    const scrollTo = React.useCallback(
+      (index: number) => {
+        api?.scrollTo(index);
+      },
+      [api],
+    );
 
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -119,8 +132,7 @@ const Carousel = React.forwardRef<
         api?.off("select", onSelect);
       };
     }, [api, onSelect]);
-
-    return (
+    return removedContainer ? (
       <CarouselContext.Provider
         value={{
           carouselRef,
@@ -130,6 +142,27 @@ const Carousel = React.forwardRef<
             orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
           scrollPrev,
           scrollNext,
+          scrollTo,
+          canScrollPrev,
+          canScrollNext,
+          containerRef: ref,
+          handleKeyDown,
+          containerProps: props,
+        }}
+      >
+        {children}
+      </CarouselContext.Provider>
+    ) : (
+      <CarouselContext.Provider
+        value={{
+          carouselRef,
+          api: api,
+          opts,
+          orientation:
+            orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
+          scrollPrev,
+          scrollNext,
+          scrollTo,
           canScrollPrev,
           canScrollNext,
         }}
@@ -150,6 +183,31 @@ const Carousel = React.forwardRef<
 );
 Carousel.displayName = "Carousel";
 
+const CarouselContainer = ({
+  className,
+  children,
+  ariaExpanded,
+}: {
+  className?: string;
+  children: React.ReactNode;
+  ariaExpanded: boolean;
+}) => {
+  const { containerRef, containerProps, handleKeyDown } = useCarousel();
+  return (
+    // eslint-disable-next-line jsx-a11y/role-supports-aria-props
+    <div
+      ref={containerRef}
+      onKeyDownCapture={handleKeyDown}
+      className={cn("relative", className)}
+      role="region"
+      aria-roledescription="carousel"
+      aria-expanded={ariaExpanded}
+      {...containerProps}
+    >
+      {children}
+    </div>
+  );
+};
 const CarouselContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -157,7 +215,7 @@ const CarouselContent = React.forwardRef<
   const { carouselRef, orientation } = useCarousel();
 
   return (
-    <div ref={carouselRef} className="h-full overflow-hidden">
+    <div ref={carouselRef} className="h-full overflow-hidden rounded-lg">
       <div
         ref={ref}
         className={cn(
@@ -193,6 +251,23 @@ const CarouselItem = React.forwardRef<
   );
 });
 CarouselItem.displayName = "CarouselItem";
+
+const CarouselIndexNavigate = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & { index: number }
+>(({ className, index, ...props }, ref) => {
+  const { scrollTo } = useCarousel();
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      onClick={() => scrollTo(index)}
+      {...props}
+    />
+  );
+});
+CarouselIndexNavigate.displayName = "CarouselIndexNavigate";
 
 const CarouselPrevious = React.forwardRef<
   HTMLButtonElement,
@@ -265,4 +340,6 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  CarouselContainer,
+  CarouselIndexNavigate,
 };
