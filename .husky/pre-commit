@@ -1,8 +1,8 @@
 echo "Testing your code...🛠️"
 
-pnpm format:check ||
+bun format:check ||
 (
-    echo 'Prettier Check Failed. Run pnpm format, add changes and try commit again.';
+    echo 'Prettier Check Failed. Run bun format, add changes and try commit again.';
     false;
 )
 

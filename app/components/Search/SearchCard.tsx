@@ -26,7 +26,7 @@ const SearchCard = ({
   negotiable,
 }: ProductCardProps) => {
   return (
-    <Link href={"/"}>
+    <Link href={`/product/${id}`}>
       <Card className="my-4">
         <CardContent className="container relative flex flex-col items-start gap-6 p-3 sm:h-64 sm:flex-row sm:p-6">
           <div className="relative w-full sm:static sm:w-auto">
