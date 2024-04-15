@@ -73,12 +73,10 @@ export function AddListing() {
       });
 
       if (!output) return;
-      console.log("dfsf");
 
       setCurrentStep((step) => step + 1);
     } else {
       await form.handleSubmit(onSubmit)();
-      console.log("hi");
     }
   };
   async function onSubmit(data: PreviewInputs) {
@@ -92,8 +90,8 @@ export function AddListing() {
       images,
       negotiate,
     } = data;
-    console.log("gsddsfg");
     const id = await addProductFromListing({
+      //where is this id used?
       iname,
       quantity,
       category,

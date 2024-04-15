@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CarouselItem } from "../../ui/carousel";
 import { ObjectId } from "mongoose";
 import ProductSaved from "../../ProductSaved";
+import { cn } from "@/app/utils";
 
 interface ProductCardProps {
   id: ObjectId;
@@ -23,13 +24,12 @@ const ProductCard = ({
 }: ProductCardProps) => {
   return (
     <CarouselItem
-      className={
-        productPageCarousel
-          ? "basis-1/2 min-[200px]:basis-11/12 min-[300px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4"
-          : "basis-1/2 min-[200px]:basis-11/12 min-[300px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
-      }
+      className={cn(
+        "basis-1/2 min-[200px]:basis-11/12 min-[330px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4",
+        productPageCarousel ? "" : "xl:basis-1/5",
+      )}
     >
-      <Card className="m-1 min-w-[120px]">
+      <Card className="m-1">
         <CardContent className="relative flex aspect-square items-center justify-center p-3">
           <Link href={`/product/${id}`}>
             <div className="flex flex-col justify-center">
@@ -42,11 +42,13 @@ const ProductCard = ({
               />
               <div className="mt-2 flex items-center justify-between">
                 <span className="grow overflow-hidden">
-                  <h1 className="line-clamp-1 overflow-hidden overflow-ellipsis font-semibold hover:underline">
+                  <h1 className="line-clamp-1 overflow-hidden overflow-ellipsis text-lg font-semibold hover:underline">
                     {name}
                   </h1>
                 </span>
-                <span className="text-muted-foreground">₹{price}</span>
+                <span className="text-muted-foreground max-[380px]:text-xs">
+                  ₹{price}
+                </span>
               </div>
               <p className="line-clamp-2 h-8 w-full overflow-ellipsis break-all text-foreground min-[300px]:text-xs md:h-10 md:text-sm lg:h-8 lg:text-xs">
                 {description}
