@@ -14,7 +14,7 @@ export const categories: category[] = [
     imageClassName: "object-left-top",
     className: "lg:col-span-2 lg:row-span-3",
     textClassName:
-      "top-[20%] left-[15%] dark:top-[20%] dark:right-[10%] dark:left-0 dark:m-auto",
+      "top-[20%] left-[15%] dark:top-[20%] dark:right-0 dark:left-0 dark:m-auto",
   },
   {
     name: "Stationery",
