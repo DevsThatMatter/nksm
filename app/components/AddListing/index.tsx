@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { FormDataSchema } from "@/lib/validations/listing-schema";
+import { FormDataSchemaFront } from "@/lib/validations/listing-schema";
 import Dropzone from "react-dropzone";
 import {
   Form,
@@ -33,17 +33,20 @@ import { cn } from "@/app/utils";
 import Compressor from "compressorjs";
 import { Icons } from "@/app/utils/icons";
 
-export type PreviewInputs = z.infer<typeof FormDataSchema>;
+export type PreviewInputs = z.infer<typeof FormDataSchemaFront>;
 
 export function AddListing() {
   const { edgestore } = useEdgeStore();
   const [currentStep, setCurrentStep] = useState<number>(1);
   const form = useForm<
-    Omit<PreviewInputs, "price"> & { price: number | string },
+    Omit<PreviewInputs, "price" | "negotiate"> & {
+      price: number | string;
+      negotiate: "Yes" | "No";
+    },
     void,
     PreviewInputs
   >({
-    resolver: zodResolver(FormDataSchema),
+    resolver: zodResolver(FormDataSchemaFront),
     defaultValues: {
       iname: "",
       quantity: 1,
@@ -90,7 +93,7 @@ export function AddListing() {
     } = data;
     const resImageUrls = await Promise.all(
       images.map(
-        async (image) =>
+        async (image: File) =>
           await edgestore.publicImages
             .upload({
               file: image,
@@ -112,7 +115,7 @@ export function AddListing() {
       description,
       price,
       images: resImageUrls,
-      negotiate: negotiate === "Yes" ? true : false,
+      negotiate: negotiate,
       condition,
     });
   }
@@ -392,11 +395,15 @@ export function AddListing() {
                                 height={100}
                                 className="aspect-square h-full w-12 rounded-md object-cover"
                               />
-                              <p className="grow px-1 text-sm">{file.name}</p>
+                              <p className="line-clamp-1 grow overflow-ellipsis px-1 text-sm">
+                                {file.name}
+                              </p>
                               <Button
                                 onClick={() =>
                                   field.onChange(
-                                    field.value.filter((_, i) => i !== index),
+                                    field.value.filter(
+                                      (_: File, i: number) => i !== index,
+                                    ),
                                   )
                                 }
                                 variant="ghost"

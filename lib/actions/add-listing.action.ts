@@ -4,23 +4,21 @@ import { connectToDB } from "../database/mongoose";
 import { Product } from "../models/product.model";
 import { User } from "../models/user.model";
 import { auth } from "@/auth";
+import { FormDataSchemaBack } from "../validations/listing-schema";
+import { z } from "zod";
 
-type formData = {
-  iname: string;
-  condition: string;
-  description: string;
-  category: string;
-  price: number | "";
-  quantity: number | "";
-  images: string[];
-  negotiate: boolean;
-}; // to be updated to use zod schema when toggle is added
-export async function addProductFromListing(values: formData) {
-  const id = await update(values);
+export async function addProductFromListing(
+  values: z.infer<typeof FormDataSchemaBack>,
+) {
+  const result = FormDataSchemaBack.safeParse(values);
+  if (!result.success) {
+    throw new Error(result.error.message);
+  }
+  const id = await update(result.data);
   redirect("/product/" + id, RedirectType.replace);
 }
 
-async function update(values: formData) {
+async function update(values: z.infer<typeof FormDataSchemaBack>) {
   try {
     await connectToDB();
     const userObj = await auth();
