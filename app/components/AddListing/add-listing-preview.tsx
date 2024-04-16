@@ -1,6 +1,4 @@
 import Image from "next/image";
-import { Card, CardContent } from "../ui/card";
-import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { PreviewInputs } from ".";
 import { cn } from "@/app/utils";
 import { Icons } from "@/app/utils/icons";
@@ -8,7 +6,10 @@ import { ConditionEnum } from "@/types";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 
 const AddListingPreview = (
-  previewData: Omit<PreviewInputs, "price"> & { price: number | string },
+  previewData: Omit<PreviewInputs, "price" | "negotiate"> & {
+    price: number | string;
+    negotiate: boolean | string;
+  },
 ) => {
   const renderConditionIcon = (condition: ConditionEnum | string) => {
     switch (condition) {
@@ -52,7 +53,9 @@ const AddListingPreview = (
           <p
             className={`m-1 flex items-center justify-center rounded-3xl p-1 px-2 text-xs ${previewData.negotiate ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-green-800" : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-sky-900"}`}
           >
-            {previewData.negotiate ? "Negotiable" : "Not Negotiable"}
+            {previewData.negotiate === true || previewData.negotiate === "Yes"
+              ? "Negotiable"
+              : "Not Negotiable"}
           </p>
         </div>
         <p className="text-sm text-muted-foreground">
