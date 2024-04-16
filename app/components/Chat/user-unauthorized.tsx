@@ -9,15 +9,15 @@ import {
 
 import { Icons } from "@/app/utils/icons";
 
-export default function UserUnauthorized() {
+export default function UserUnauthorized({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div>
       <HoverCard>
-        <HoverCardTrigger asChild>
-          <Button variant="link">
-            <Icons.chaticon className="h-[1.3rem] w-[1.32rem]" />
-          </Button>
-        </HoverCardTrigger>
+        <HoverCardTrigger asChild>{children}</HoverCardTrigger>
         <HoverCardContent className="p-5">
           <div className="flex flex-col justify-center space-y-5">
             <h4 className="text-center text-sm font-semibold">

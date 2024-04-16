@@ -229,6 +229,6 @@ export default function UserChat({
       </Sheet>
     </div>
   ) : (
-    <UserUnauthorized />
+    <UserUnauthorized>{children}</UserUnauthorized>
   );
 }

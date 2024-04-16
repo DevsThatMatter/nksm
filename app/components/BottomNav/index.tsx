@@ -12,7 +12,7 @@ const BottomNav = () => {
     <BottomNavContainer>
       <ButtonContainer>
         <UserChat>
-          <NavButton className="m-1 pl-1 pt-1">
+          <NavButton className="m-1 pl-1 pt-[0.4rem]">
             <svg
               className="w-8  fill-[#4B5563] dark:fill-gray-500"
               viewBox="0 0 16 16"
