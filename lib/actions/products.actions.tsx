@@ -2,10 +2,12 @@
 
 import { Product } from "../models/product.model";
 import { connectToDB } from "../database/mongoose";
-import { FilterQuery, SortOrder } from "mongoose";
+import { FilterQuery, SortOrder, Types, mongo } from "mongoose";
 import SearchCard from "@/app/components/Search/SearchCard";
 import { User } from "../models/user.model";
 import { CategoryEnum, SortBy, category } from "@/types";
+import { auth } from "@/auth";
+import { SavedProduct } from "@/app/components/Navbar/SavedItems";
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -164,3 +166,141 @@ export const fetchProductDetails = async (productId: string) => {
     throw error;
   }
 };
+
+export async function fetchSavedProduct({ email }: { email: string }) {
+  try {
+    await connectToDB();
+    let res = await User.aggregate([
+      {
+        $match: {
+          Email: email,
+        },
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "Saved_Products",
+          foreignField: "_id",
+          as: "savedProducts",
+        },
+      },
+      {
+        $project: {
+          savedProducts: {
+            $map: {
+              input: "$savedProducts",
+              as: "product",
+              in: {
+                $mergeObjects: [
+                  "$$product",
+                  {
+                    Seller: {
+                      $toString: "$$product.Seller",
+                    },
+                    _id: {
+                      $toString: "$$product._id",
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          _id: 0,
+        },
+      },
+      {
+        $match: {
+          "savedProducts.is_archived": false,
+        },
+      },
+    ]);
+    const result = res[0] as { savedProducts: SavedProduct[] };
+    return {
+      content: result.savedProducts,
+      status: 200,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      content: null,
+      status: 500,
+      error: error,
+    };
+  }
+}
+
+export async function removeSavedProduct({ productId }: { productId: string }) {
+  try {
+    const email = (await auth())?.user?.email ?? "";
+    await connectToDB();
+
+    const user = await User.findOne({ Email: email });
+
+    if (!user) {
+      return {
+        error: null,
+        msg: "Please get authorized",
+      };
+    }
+
+    const savedProducts = user.Saved_Products.map(
+      (id: Types.ObjectId) => new mongo.ObjectId(id.toString()),
+    );
+
+    const updatedSavedProducts = savedProducts.filter(
+      (id: Types.ObjectId) => id.toString() !== productId,
+    );
+
+    user.Saved_Products = updatedSavedProducts;
+
+    await user.save();
+
+    return {
+      error: null,
+      msg: "Removed successfully",
+    };
+  } catch (error) {
+    console.error("Error removing product:", error);
+    return {
+      error: null,
+      msg: "Server error, try later",
+    };
+  }
+}
+
+export async function saveProduct({ productId }: { productId: string }) {
+  try {
+    await connectToDB();
+    const currentUserEmail = (await auth())?.user?.email;
+    await User.updateOne(
+      { Email: currentUserEmail },
+      { $push: { Saved_Products: new mongo.ObjectId(productId) } },
+    );
+
+    return {
+      msg: "Product saved",
+      error: null,
+    };
+  } catch (error) {
+    console.log("ERROR_WHILE_SAVING_PRODUCT", error);
+    return {
+      msg: null,
+      error: "Server error, try later",
+    };
+  }
+}
+
+export async function getSaved({ productId }: { productId: string }) {
+  try {
+    const currentUserEmail = (await auth())?.user?.email;
+
+    const savedProducts: Types.ObjectId[] = (
+      await User.findOne({ Email: currentUserEmail })
+    ).Saved_Products;
+
+    return savedProducts.includes(new mongo.ObjectId(productId));
+  } catch (error) {
+    // console.log("ERROR_WHILE_CHECKING_SAVED_PRODUCT", error);
+    return false;
+  }
+}

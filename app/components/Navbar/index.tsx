@@ -2,7 +2,7 @@ import UserProfile from "./UserProfile";
 
 import Image from "next/image";
 import Link from "next/link";
-import { SavedItems } from "./SavedItems";
+import SavedItems from "./SavedItems";
 import { Separator } from "@/app/components/ui/separator";
 import UserChat from "../Chat/chat-panel";
 import SearchBar from "./SearchBar";
