@@ -17,7 +17,7 @@ import { CategoryEnum, ConditionEnum } from "@/types";
 
 import DeleteSavedProducts from "./delete-saved-products";
 import { auth } from "@/auth";
-import { fetchSavedProduct, getAllSaved } from "@/lib/actions/products.actions";
+import { fetchSavedProduct } from "@/lib/actions/products.actions";
 
 export interface SavedProduct {
   _id: string;
@@ -38,7 +38,6 @@ export default async function SavedItems() {
   const email = (await auth())?.user?.email ?? "";
 
   const data = (await fetchSavedProduct({ email })).content as SavedProduct[];
-  const allSavedProducts = await getAllSaved({ Email: email })
 
   const renderConditionIcon = (condition: ConditionEnum | string) => {
     switch (condition) {
@@ -103,8 +102,8 @@ export default async function SavedItems() {
                             </p>
                             <p
                               className={`mx-1 flex items-center justify-center rounded-3xl p-1 text-xs ${product.Negotiable
-                                ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-green-800"
-                                : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-sky-900"
+                                  ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-green-800"
+                                  : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-sky-900"
                                 }`}
                             >
                               {product.Negotiable
@@ -115,7 +114,6 @@ export default async function SavedItems() {
                           <DeleteSavedProducts
                             productId={product._id}
                             email={email}
-                            allSavedProducts={allSavedProducts}
                           />
                         </div>
                       </div>
