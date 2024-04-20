@@ -11,7 +11,7 @@ import { Product } from "../models/product.model";
 import { MessageTypes, IChat, chatDetails } from "@/types";
 import { Message } from "../models/message.model";
 import { pusherServer } from "../pusher";
-import { InviteStruct } from "@/app/components/Chat/invites";
+import { InviteStruct } from "@/app/components/Chat/displays/invite-display";
 import { client } from "../database/redis-config";
 
 const mongoId = z.string().refine((value) => Types.ObjectId.isValid(value), {
@@ -1014,11 +1014,13 @@ export async function getLastMessages({
       .lastSentForeignMessage as string;
     return {
       lastMsg: lastMsg,
+      productId: productId.toString(),
       status: 200,
     };
   } catch (error) {
     return {
       lastMsg: null,
+      productId: productId.toString(),
       status: 500,
     };
   }

@@ -1,14 +1,14 @@
 "use server";
 
-import { FilterQuery, SortOrder, Types, mongo } from "mongoose";
+import { SavedProduct } from "@/app/components/Navbar/SavedItems";
 import SearchCard from "@/app/components/Search/SearchCard";
+import { auth } from "@/auth";
+import { CategoryEnum, SortBy } from "@/types";
+import { FilterQuery, SortOrder, mongo } from "mongoose";
+import { redirect } from "next/navigation";
 import { connectToDB } from "../database/mongoose";
 import { Product } from "../models/product.model";
 import { User } from "../models/user.model";
-import { CategoryEnum, SortBy } from "@/types";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
-import { SavedProduct } from "@/app/components/Navbar/SavedItems";
 
 export const fetchRecentProducts = async () => {
   try {
@@ -279,5 +279,27 @@ export async function saveProduct(productId: string) {
       msg: null,
       error: "Server error, try later",
     };
+  }
+}
+
+export async function getProductById({ productId }: { productId: string }) {
+  try {
+    await connectToDB();
+
+    const productDetails = await Product.findById(productId);
+
+    if (!productDetails) {
+      throw new Error("Product not found");
+    }
+    const prod = {
+      Product_Name: productDetails.Product_Name,
+      Images: productDetails.Images,
+      Description: productDetails.Description,
+    };
+
+    return prod;
+  } catch (error) {
+    console.log("ERROR_WHILE_GETTING_PRODUCT_BY_ID", error);
+    throw error;
   }
 }

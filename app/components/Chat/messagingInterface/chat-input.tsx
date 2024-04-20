@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { cn } from "@/app/utils";
 import { createNewMessage, getChatStatus } from "@/lib/actions/chat.actions";
 import {
@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
+} from "../../ui/dialog";
 import { Form, FormControl, FormItem } from "@/app/components/ui/form";
 import { Icons } from "@/app/utils/icons";
 

@@ -1,20 +1,21 @@
 import UserProfile from "./UserProfile";
 
+import { Separator } from "@/app/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
-import { Separator } from "@/app/components/ui/separator";
-import UserChat from "../Chat/chat-panel";
-import SearchBar from "./SearchBar";
-import { ReactNode, Suspense } from "react";
+
+import { cn } from "@/app/utils";
+import { Icons } from "@/app/utils/icons";
 import {
   fetchRecentProductS,
   fetchSavedProduct,
 } from "@/lib/actions/products.actions";
-import { cn } from "@/app/utils";
+import { ReactNode, Suspense } from "react";
+import Chat from "../Chat";
 import { Button } from "../ui/button";
-import { Icons } from "@/app/utils/icons";
-import FetchedProducts from "./fetch-utils";
 import { Input } from "../ui/input";
+import SearchBar from "./SearchBar";
+import FetchedProducts from "./fetch-utils";
 
 const Navbar = ({
   children = (
@@ -25,7 +26,7 @@ const Navbar = ({
           <span className="hidden pl-4 sm:inline-block"> Add Listing </span>
         </Button>
       </Link>
-      <UserChat />
+      <Chat />
       <Suspense
         fallback={
           <Button variant="ghost" size="icon" disabled>
