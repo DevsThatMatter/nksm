@@ -1,6 +1,4 @@
 import Image from "next/image";
-import { Card, CardContent } from "../ui/card";
-import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { PreviewInputs } from ".";
 import { cn } from "@/app/utils";
 import { Icons } from "@/app/utils/icons";

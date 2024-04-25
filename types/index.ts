@@ -57,6 +57,14 @@ export enum CategoryEnum {
   "Kitchenware" = "Kitchenware",
   "Instruments" = "Instruments",
   "Electronics" = "Electronics",
+  "Bicycles" = "Bicycles",
+  "Coolers" = "Coolers",
+  "Stationery" = "Stationery",
+  "Miscellaneous" = "Miscellaneous",
+  "Mattresses" = "Mattresses",
+  "Kitchenware" = "Kitchenware",
+  "Instruments" = "Instruments",
+  "Electronics" = "Electronics",
 }
 
 export enum ConditionEnum {

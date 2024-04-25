@@ -35,7 +35,7 @@ export default function SearchBar({
   }, [pathname]);
 
   const filteredProducts = products?.filter((product) =>
-    product.Product_Name.toLowerCase().startsWith(input.toLowerCase())
+    product.Product_Name.toLowerCase().startsWith(input.toLowerCase()),
   );
 
   const handleSearchSubmit = (formData: FormData) => {

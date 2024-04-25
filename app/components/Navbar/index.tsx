@@ -22,6 +22,12 @@ const Navbar = async ({
           <span className="hidden pl-4 sm:inline-block"> Add Listing </span>
         </Button>
       </Link>
+      <Link href="/add-listing">
+        <Button variant="default" className="relative">
+          <Icons.add className="absolute bottom-0 left-2 top-0 m-auto h-5 w-5" />
+          <span className="hidden pl-4 sm:inline-block"> Add Listing </span>
+        </Button>
+      </Link>
       <UserChat />
       <SavedItems />
       <Separator orientation="vertical" className="h-10" />
