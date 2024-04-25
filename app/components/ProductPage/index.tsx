@@ -19,6 +19,9 @@ const ProductPage = async ({ id }: { id: string }) => {
       <div className="col-span-1 row-span-3">
         <div className="sticky top-[6.3rem] mt-2">
           <SellerCard
+            price={productInfo.Price}
+            is_negotiable={productInfo.Negotiable}
+            is_archived={productInfo.isArchived}
             sellerInfo={productInfo.Seller}
             productName={productInfo.Product_Name}
             productImages={productInfo.Images}

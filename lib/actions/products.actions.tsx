@@ -170,6 +170,7 @@ export const fetchProductDetails = async (productId: string) => {
       Comments: productDetails.Comments,
       Quantity: productDetails.Total_Quantity_Available,
       Expiry: productDetails.expires_in,
+      isArchived: productDetails.is_archived,
     };
   } catch (error) {
     console.error("Error fetching product details:", error);

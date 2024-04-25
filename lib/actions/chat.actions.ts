@@ -1,18 +1,19 @@
 "use server";
 
 import * as z from "zod";
-import { Types, mongo } from "mongoose";
+import mongoose, { Types, mongo } from "mongoose";
 
 import { User } from "../models/user.model";
 import { connectToDB } from "../database/mongoose";
 import { Chat } from "../models/chats.model";
 import { Product } from "../models/product.model";
 
-import { MessageTypes, IChat, chatDetails } from "@/types";
+import { MessageTypes, IChat, chatDetails, IProduct } from "@/types";
 import { Message } from "../models/message.model";
 import { pusherServer } from "../pusher";
 import { InviteStruct } from "@/app/components/Chat/displays/invite-display";
 import { client } from "../database/redis-config";
+import { revalidatePath } from "next/cache";
 
 const mongoId = z.string().refine((value) => Types.ObjectId.isValid(value), {
   message: "Invalid ObjectId format",

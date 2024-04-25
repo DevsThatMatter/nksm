@@ -15,15 +15,14 @@ import { sendEmail } from "@/lib/actions/email.actions";
 import { toast } from "sonner";
 import { cn } from "@/app/utils";
 
-const OfferSchema = z.object({
-  price: z.number().min(1, { message: "Zero values bids are not accepted" }),
-});
 interface OfferFormProps {
   reciverEmail: string;
   senderEmail: string;
   productImages: string[];
   productId: string;
   productName: string;
+  is_negotiable: boolean;
+  price: number;
 }
 export default function OfferForm({
   reciverEmail,
@@ -31,11 +30,17 @@ export default function OfferForm({
   productImages,
   productId,
   productName,
+  is_negotiable,
+  price,
 }: OfferFormProps) {
+  const OfferSchema = z.object({
+    price: z.number().min(1, { message: "Zero values bids are not accepted" }),
+  });
+
   const form = useForm({
     resolver: zodResolver(OfferSchema),
     defaultValues: {
-      price: 1,
+      price: price,
     },
   });
 
@@ -54,7 +59,7 @@ export default function OfferForm({
       success: (data) => {
         return (
           <span className={cn(data.error ? "text-red-600" : "text-lime-800")}>
-            {data.error || data.msg}
+            {data.msg}
           </span>
         );
       },
@@ -78,12 +83,16 @@ export default function OfferForm({
                 placeholder="How much are you willing to pay?"
                 step="0.1"
                 type="number"
+                readOnly={!is_negotiable}
                 {...form.register("price", { valueAsNumber: true })}
               />
             </FormControl>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Your bid will be submitted to the seller.
-            </p>
+            <div className="flex text-xs text-gray-500 dark:text-gray-400">
+              <p>{"Your bid will be submitted to the seller. "}</p>
+              {!is_negotiable && (
+                <p className="text-yellow-500">This price is not negotiable</p>
+              )}
+            </div>
             {form.formState.errors.price && (
               <FormMessage>{form.formState.errors.price.message}</FormMessage>
             )}

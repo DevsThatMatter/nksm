@@ -3,7 +3,7 @@
 import SellerBuyerChatDisplay from "../displays/seler-buyer-chat-display";
 import { chatDetails } from "@/types";
 
-import ChatUI1 from "../messagingInterface/chat-ui";
+import ChatUI1 from "../messageInterface/chat-ui";
 import NoOneToTalk from "../no-one-to-talk";
 import { cn } from "@/app/utils";
 import { useQueries } from "@tanstack/react-query";
@@ -24,7 +24,7 @@ export default function AsBuyerPanel({
   const { activeDiscussion, updateLastMessage, activeDiscussionGroup } =
     useChatStore();
 
-  const rslt = useQueries({
+  useQueries({
     queries: discussions.discussionGroup.map((chat) => {
       const sellerId = chat.sellerDetails.id;
       const buyerId = chat.buyerDetails.id;
@@ -37,16 +37,13 @@ export default function AsBuyerPanel({
             sellerId: sellerId,
             buyerId: buyerId,
             productId: productId,
+          }).then((data) => {
+            updateLastMessage(productId, data.lastMsg ?? "");
+            return data;
           }),
       };
     }),
   });
-
-  useEffect(() => {
-    rslt.forEach((obj) => {
-      updateLastMessage(obj.data?.productId ?? "", obj.data?.lastMsg ?? "");
-    });
-  }, []);
 
   if (discussions.discussionGroup.length === 0) {
     return <NoOneToTalk endpoint={"buyer"} />;

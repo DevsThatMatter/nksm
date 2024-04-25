@@ -31,6 +31,7 @@ export default function InviteDisplay({
   sellerId,
   productId,
   seller,
+  userId,
 }: {
   productId?: string;
   buyer?: UserDetails & {
@@ -43,6 +44,7 @@ export default function InviteDisplay({
   sellerId: string;
   product: ProductDetails;
   initPrice?: number;
+  userId: string;
 }) {
   return (
     <section
@@ -61,19 +63,21 @@ export default function InviteDisplay({
         height={100}
         className="h-14 w-14 rounded-full object-cover"
       />
-      <article className="flex w-full flex-col space-y-1">
-        <header className="flex items-center justify-between">
-          <div>
+      <article className="flex w-full flex-col justify-center space-y-1">
+        <header className="flex items-center justify-between pl-2">
+          <section>
             <h2
               className={cn(
                 "line-clamp-1 text-ellipsis",
                 "text-lg font-semibold text-foreground",
               )}
             >
-              {buyer ? buyer.Username : seller?.Name}
+              {buyer ? buyer.Name : seller?.Name}
             </h2>
-            <h5 className="text-sm">For {product.Product_Name}</h5>
-          </div>
+            <h5 className="text-sm text-muted-foreground">
+              {buyer && "For"} {product.Product_Name}
+            </h5>
+          </section>
           <h2
             className={cn(
               "text-lg font-bold text-foreground",
@@ -86,12 +90,14 @@ export default function InviteDisplay({
         {buyer && productId && (
           <div className="flex justify-start space-x-4">
             <InviteModal
+              userId={userId}
               endpoint={"Accept"}
               productId={productId}
               sellerId={sellerId}
               buyerId={buyer.buyerId}
             />
             <InviteModal
+              userId={userId}
               endpoint={"Reject"}
               productId={productId}
               sellerId={sellerId}

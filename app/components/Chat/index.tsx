@@ -4,7 +4,6 @@ import { getAllChats } from "@/lib/actions/chat.actions";
 import ControlPanel from "./panels/control-panel";
 import UserUnauthorized from "./user-unauthorized";
 import { Button } from "../ui/button";
-import { chatDetails } from "@/types";
 import { Icons } from "@/app/utils/icons";
 
 export default async function Chat({

@@ -24,6 +24,7 @@ export default function InvitePanel({ userId }: { userId: string }) {
           invite.buyerDetails.map((buyer, i) => (
             <InviteDisplay
               key={i}
+              userId={userId}
               buyer={buyer}
               product={invite.productDetails}
               productId={invite.productId}
@@ -35,16 +36,17 @@ export default function InvitePanel({ userId }: { userId: string }) {
       </section>
 
       <div className="flex w-full items-center justify-between">
-        <div className="h-1 w-20 rounded-full border-b-2 border-b-gray-300" />
+        <div className="h-1 w-[24%] rounded-full border-b-2 border-b-gray-300" />
         <h1 className="col-span-1 text-center text-xl font-bold">
           Pending Invites
         </h1>
-        <div className="h-1 w-20 rounded-full border-b-2 border-b-gray-300" />
+        <div className="h-1 w-[24%] rounded-full border-b-2 border-b-gray-300" />
       </div>
 
-      <section className="flex h-1/2 flex-col space-y-3 overflow-y-auto">
+      <section className="mt-4 flex h-1/2 flex-col space-y-3 overflow-y-auto">
         {currentUserSent?.map((invite, i) => (
           <InviteDisplay
+            userId={userId}
             key={i}
             seller={{
               Avatar: invite.Seller.Avatar,

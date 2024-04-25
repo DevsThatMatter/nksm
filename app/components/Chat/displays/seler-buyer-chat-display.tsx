@@ -7,6 +7,7 @@ import { useChatStore } from "../../../../hooks/useChatStore";
 import { getChatDetails } from "../../../utils/chat-utils";
 import { countUnreadMessages } from "@/lib/actions/chat.actions";
 import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "../../ui/skeleton";
 
 export default function SellerBuyerChatDisplay({
   discussion,
@@ -36,6 +37,8 @@ export default function SellerBuyerChatDisplay({
         productId: discussion.productDetails.productId,
         caller: "get",
         currentUser: userId,
+      }).then((data) => {
+        return data;
       }),
   });
 
@@ -49,29 +52,36 @@ export default function SellerBuyerChatDisplay({
       )}
       onClick={() => setActiveDiscussion(discussion)}
     >
-      <Image
-        src={displayAvatar ?? ""}
-        alt={discussion.productDetails.Product_Name}
-        width={100}
-        height={100}
-        className="h-16 w-16 rounded-full"
-      />
-      <section className="flex w-full flex-col">
+      {(
+        <Image
+          src={displayAvatar ?? ""}
+          alt={discussion.productDetails.Product_Name}
+          width={100}
+          height={100}
+          className="h-16 w-16 rounded-full"
+        />
+      ) || <Skeleton className="h-16 w-20 rounded-full" />}
+      <section className="flex w-full flex-col space-y-2 pl-2">
         <div className="flex w-full flex-row items-center justify-between">
-          <h1>{displayName}</h1>
-          <span
-            className={cn(
-              "h-5 w-5",
-              "flex flex-shrink-0 items-center justify-center rounded-full text-xs",
-              "bg-blue-500 text-background dark:bg-blue-700",
-            )}
-          >
-            {data?.unreadCount}
-          </span>
+          <h1 className="line-clamp-1 text-lg font-semibold">
+            {displayName || <Skeleton className="h-3 w-32" />}
+          </h1>
+          {data?.unreadCount !== 0 && (
+            <span
+              className={cn(
+                "h-5 w-5",
+                "flex flex-shrink-0 items-center justify-center rounded-full text-base",
+                "bg-blue-500 font-semibold text-white dark:bg-blue-700",
+              )}
+            >
+              {data?.unreadCount}
+            </span>
+          )}
         </div>
-        <p className="text-sm text-muted-foreground">
-          {lastMessages?.get(discussion.productDetails.productId) ??
-            "No messages yet"}
+        <p className="h-3 text-sm text-muted-foreground">
+          {lastMessages?.get(discussion.productDetails.productId) ?? (
+            <Skeleton className="h-full w-32" />
+          )}
         </p>
       </section>
     </section>

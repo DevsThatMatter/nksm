@@ -47,6 +47,7 @@ export interface Product {
   Condition: ConditionEnum;
   Category: CategoryEnum;
   Expiry: Date;
+  isArchived: boolean;
 }
 
 export enum CategoryEnum {

@@ -7,14 +7,7 @@ import { Seller } from "@/types";
 import React from "react";
 import { Button } from "../ui/button";
 import { Icons } from "@/app/utils/icons";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogDescription,
-  DialogTitle,
-} from "../ui/dialog";
+import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
 import OfferForm from "./offer-form";
 import { auth } from "@/auth";
 import mongoose from "mongoose";
@@ -24,6 +17,9 @@ interface SellerCardProps {
   productName: string;
   productImages: string[];
   productId: mongoose.Types.ObjectId;
+  is_archived: boolean;
+  is_negotiable: boolean;
+  price: number;
 }
 
 async function SellerCard({
@@ -31,9 +27,11 @@ async function SellerCard({
   productName,
   productImages,
   productId,
+  is_archived,
+  is_negotiable,
+  price,
 }: SellerCardProps) {
   const senderEmail = (await auth())?.user?.email;
-  console.log(sellerInfo);
   return (
     <div>
       <h2 className="mt-6 pb-3 text-2xl font-semibold lg:mt-0 lg:pb-0 lg:text-xl">
@@ -50,26 +48,30 @@ async function SellerCard({
             <p className="text-sm text-foreground">{sellerInfo.Username}</p>
           </div>
         </div>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button
-              variant="default"
-              className="relative my-auto items-center justify-center bg-green-600 hover:bg-green-700 dark:text-foreground"
-            >
-              <Icons.sendIcon className="absolute bottom-0 left-2 top-0 m-auto h-4 w-4" />
-              <span className="pl-4">Send an Offer</span>
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="rounded-md">
-            <OfferForm
-              reciverEmail={sellerInfo.Email}
-              senderEmail={senderEmail ?? ""}
-              productImages={productImages}
-              productName={productName}
-              productId={String(productId)}
-            />
-          </DialogContent>
-        </Dialog>
+        {!is_archived && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="default"
+                className="relative my-auto items-center justify-center bg-green-600 hover:bg-green-700 dark:text-foreground"
+              >
+                <Icons.sendIcon className="absolute bottom-0 left-2 top-0 m-auto h-4 w-4" />
+                <span className="pl-4">Send an Offer</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="rounded-md">
+              <OfferForm
+                price={price}
+                is_negotiable={is_negotiable}
+                reciverEmail={sellerInfo.Email}
+                senderEmail={senderEmail ?? ""}
+                productImages={productImages}
+                productName={productName}
+                productId={String(productId)}
+              />
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
     </div>
   );
@@ -99,26 +101,3 @@ export function SellerCardSkeleton() {
 }
 
 export default SellerCard;
-{
-  /* <DialogContent className="rounded-md">
-            <CardTitle className="text-2xl">Enter Your Price</CardTitle>
-            <CardDescription>Let us know your offer.</CardDescription>
-            <CardContent className="space-y-2 p-4">
-              <Input
-                className="w-full"
-                min="0"
-                placeholder="How much are you willing to pay?"
-                step="0.01"
-                type="number"
-              />
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                Your bid will be submitted to the seller.
-              </p>
-            </CardContent>
-            <CardFooter className="flex">
-              <Button className="w-full bg-green-600 hover:bg-green-700 dark:text-foreground">
-                Submit Offer
-              </Button>
-            </CardFooter>
-          </DialogContent> */
-}

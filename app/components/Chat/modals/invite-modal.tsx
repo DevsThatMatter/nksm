@@ -9,16 +9,19 @@ import {
 } from "../../ui/dialog";
 import { cn } from "@/app/utils";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function InviteModal({
   endpoint,
   productId,
   sellerId,
   buyerId,
+  userId,
 }: {
   productId: string;
   sellerId: string;
   buyerId: string;
+  userId: string;
   endpoint: "Accept" | "Reject";
 }) {
   return (
@@ -26,7 +29,7 @@ export default function InviteModal({
       <DialogTrigger asChild>
         <button
           className={cn(
-            "rounded-lg px-3 py-1 text-sm",
+            "rounded-lg px-3 py-1 text-sm font-semibold",
             endpoint === "Accept"
               ? "bg-blue-600 text-white hover:bg-blue-700"
               : "bg-red-100 text-red-500 hover:text-red-600 dark:bg-background/30",
@@ -36,6 +39,7 @@ export default function InviteModal({
         </button>
       </DialogTrigger>
       <CustomDialogContent
+        userId={userId}
         endpoint={endpoint}
         productId={productId}
         sellerId={sellerId}
@@ -50,12 +54,15 @@ function CustomDialogContent({
   productId,
   sellerId,
   buyerId,
+  userId,
 }: {
   productId: string;
   sellerId: string;
   buyerId: string;
+  userId: string;
   endpoint: "Accept" | "Reject";
 }) {
+  const queryClient = useQueryClient();
   function handelMainAction() {
     const prom = acceptTheInvite({
       productId: productId,
@@ -70,6 +77,9 @@ function CustomDialogContent({
         endpoint === "Accept"
           ? "Unable to Accept the invite."
           : "Unable to Reject the invite.",
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["user-recived-invites", userId],
     });
   }
 

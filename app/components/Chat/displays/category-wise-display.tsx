@@ -10,14 +10,14 @@ export default function CategoryWiseDisplay({
   discussion: { productId: string; discussionGroup: chatDetails[] };
 }) {
   const { setActiveDiscussionGroup } = useChatStore();
-  // { productId: string; discussionGroup: chatDetails[]; }
+
   return (
     <section
       className={cn(
         "p-2",
         "cursor-pointer drop-shadow-md hover:drop-shadow-lg",
         "rounded-lg border",
-        "flex space-x-2 bg-muted md:space-x-4",
+        "flex items-center space-x-2 bg-muted md:space-x-4",
       )}
       onClick={() => {
         setActiveDiscussionGroup(
@@ -33,12 +33,15 @@ export default function CategoryWiseDisplay({
         height={100}
         className="h-16 w-16 rounded-md"
       />
-      <section>
-        <h1>{discussion.discussionGroup[0].productDetails.Product_Name}</h1>
+      <section className="flex flex-col space-y-1.5 pl-2">
+        <h1 className="line-clamp-1 text-lg font-bold">
+          {discussion.discussionGroup[0].productDetails.Product_Name}
+        </h1>
         <ul>
-          <span className="text-sm text-muted-foreground">
-            Buyer: {discussion.discussionGroup[0].buyerDetails.Name}
-          </span>
+          <h3 className="text-sm text-muted-foreground">
+            {discussion.discussionGroup.length > 1 ? "Buyers" : "Buyer"}:{" "}
+            {discussion.discussionGroup[0].buyerDetails.Name}
+          </h3>
           {discussion.discussionGroup.length > 1 && (
             <span className="text-sm text-muted-foreground">
               ...{discussion.discussionGroup.length - 1}more

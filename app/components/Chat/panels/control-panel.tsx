@@ -40,7 +40,7 @@ export default function ControlPanel({
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
         side={"left"}
-        className="h-full w-[90dvw] sm:w-[50dvw] lg:w-[60dvw]"
+        className="h-full w-[75dvw] sm:w-[50dvw] lg:w-[60dvw]"
       >
         <Tabs
           defaultValue="seller"
@@ -54,7 +54,7 @@ export default function ControlPanel({
           >
             <TabsTrigger value="seller">As Seller</TabsTrigger>
             <TabsTrigger value="buyer">As Buyer</TabsTrigger>
-            <TabsTrigger value="invites">invites</TabsTrigger>
+            <TabsTrigger value="invites">Invites</TabsTrigger>
           </TabsList>
 
           <TabsContent
