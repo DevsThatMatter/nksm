@@ -5,8 +5,10 @@ import { Product } from "@/types";
 import SellerCard from "./SellerCard";
 import CommentCard from "./CommentCard";
 import { cn } from "@/app/utils";
+import { EmblaOptionsType } from "embla-carousel";
 
 const ProductPage = ({ productInfo }: { productInfo: Product }) => {
+  const options: EmblaOptionsType = { align: "start", dragFree: true };
   return (
     <div key="1" className="mx-auto max-w-full p-4">
       <div className="gap-4 lg:grid lg:grid-cols-3">
