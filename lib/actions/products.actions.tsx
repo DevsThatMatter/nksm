@@ -9,9 +9,6 @@ import { CategoryEnum, ConditionEnum, SortBy } from "@/types";
 import { auth } from "@/auth";
 import { SavedProduct } from "@/app/components/Navbar/SavedItems";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
-import { M_PLUS_1 } from "next/font/google";
-
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -95,8 +92,8 @@ export const getSearchResults = async ({
     const query: FilterQuery<typeof Product> = category
       ? { Category: category, is_archived: false }
       : {
-          is_archived: false,
-        };
+        is_archived: false,
+      };
 
     if (searchString.trim() !== "") {
       query.$or = [
@@ -179,39 +176,28 @@ export const fetchProductDetails = async (productId: string) => {
   }
 };
 
-export async function fetchSavedProduct() {
+export async function fetchSavedProduct({
+  email,
+}: {
+  email: string;
+}): Promise<SavedProduct[]> {
   try {
     const email = (await auth())?.user?.email;
     if (!email) {
       return redirect("/login");
     }
     await connectToDB();
-    const user = await User.findOne({ Email: email });
-    if (!user) {
-      throw new Error("User not found");
-    }
+    const savedProducts = await User.findOne({ Email: email })
+      .populate({
+        path: "Saved_Products",
+        model: Product,
+        match: { is_archived: false },
+        select:
+          "_id Images Condition Total_Quantity_Available Price is_archived Negotiable Product_Name",
+      })
+      .select("Saved_Products");
 
-    const savedProducts = user.Saved_Products as Types.ObjectId[];
-
-    const svdProducts = await Promise.all(
-      savedProducts.map(async (productId) => {
-        const product = await Product.findById(productId);
-        return {
-          _id: product._id.toString(),
-          Image: product.Images[0],
-          Condition: product.Condition,
-          Price: product.Price,
-          Negotiable: product.Negotiable,
-          Product_Name: product.Product_Name,
-        };
-      }),
-    );
-    const savedItems = svdProducts.reduce((mp, product) => {
-      mp.set(product._id, product);
-      return mp;
-    }, new Map<string, SavedProduct>());
-
-    return savedItems;
+    return savedProducts.Saved_Products;
   } catch (error) {
     console.log("ERROR_WHILE_FETCHING_SAVED_PRODUCTS", error);
     throw error;
