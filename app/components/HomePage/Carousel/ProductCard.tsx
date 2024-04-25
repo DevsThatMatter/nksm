@@ -28,24 +28,17 @@ const ProductCard = async ({
   negotiable,
   productPageCarousel = false,
 }: ProductCardProps) => {
-  const product = {
-    _id: id.toString(),
-    Image: image_url,
-    Condition: condition,
-    Price: price,
-    Negotiable: negotiable,
-    Product_Name: name,
-  };
-
+  const adaptedPrice = price > 1000 ? Math.floor(price / 1000) + "k" : price;
   return (
     <CarouselItem
-      className={
+      className={cn(
+        "sm:basis-1/3",
         productPageCarousel
-          ? "basis-1/2 min-[200px]:basis-11/12 min-[300px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4"
-          : "basis-1/2 min-[200px]:basis-11/12 min-[300px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
-      }
+          ? "basis-11/12 min-[305px]:basis-9/12 min-[450px]:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+          : "basis-9/12 min-[425px]:basis-1/2 lg:basis-1/4 xl:basis-1/5",
+      )}
     >
-      <Card className="m-1 min-w-[120px]">
+      <Card className="m-1">
         <CardContent className="relative flex aspect-square items-center justify-center p-3">
           <Link href={`/product/${id}`}>
             <div className="flex flex-col justify-center">
@@ -57,10 +50,12 @@ const ProductCard = async ({
                 className="aspect-square rounded object-cover shadow-md"
               />
               <div className="mt-2 flex items-center justify-between">
-                <h1 className="line-clamp-1 overflow-hidden overflow-ellipsis font-semibold hover:underline min-[280px]:text-lg min-[300px]:max-w-12 min-[370px]:max-w-24 min-[440px]:max-w-52 sm:max-w-44 sm:text-xl md:max-w-40 lg:max-w-32 lg:text-base 2xl:max-w-48 2xl:text-xl min-[2000px]:max-w-60">
-                  {name}
-                </h1>
-                <span className="text-muted-foreground">₹{price}</span>
+                <span className="grow overflow-hidden">
+                  <h1 className="line-clamp-1 overflow-hidden overflow-ellipsis text-lg font-semibold hover:underline">
+                    {name}
+                  </h1>
+                </span>
+                <span className="text-muted-foreground">₹{adaptedPrice}</span>
               </div>
               <p className="line-clamp-2 h-8 w-full overflow-ellipsis break-all text-foreground min-[300px]:text-xs md:h-10 md:text-sm lg:h-8 lg:text-xs">
                 {description}
