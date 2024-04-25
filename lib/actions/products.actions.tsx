@@ -8,6 +8,7 @@ import { User } from "../models/user.model";
 import { CategoryEnum, SortBy, category } from "@/types";
 import { auth } from "@/auth";
 import { SavedProduct } from "@/app/components/Navbar/SavedItems";
+import { redirect } from "next/navigation";
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -167,65 +168,27 @@ export const fetchProductDetails = async (productId: string) => {
   }
 };
 
-export async function fetchSavedProduct({ email }: { email: string }) {
+export async function fetchSavedProduct({
+  email,
+}: {
+  email: string;
+}): Promise<SavedProduct[]> {
   try {
     await connectToDB();
-    let res = await User.aggregate([
-      {
-        $match: {
-          Email: email,
-        },
-      },
-      {
-        $lookup: {
-          from: "products",
-          localField: "Saved_Products",
-          foreignField: "_id",
-          as: "savedProducts",
-        },
-      },
-      {
-        $project: {
-          savedProducts: {
-            $map: {
-              input: "$savedProducts",
-              as: "product",
-              in: {
-                $mergeObjects: [
-                  "$$product",
-                  {
-                    Seller: {
-                      $toString: "$$product.Seller",
-                    },
-                    _id: {
-                      $toString: "$$product._id",
-                    },
-                  },
-                ],
-              },
-            },
-          },
-          _id: 0,
-        },
-      },
-      {
-        $match: {
-          "savedProducts.is_archived": false,
-        },
-      },
-    ]);
-    const result = res[0] as { savedProducts: SavedProduct[] };
-    return {
-      content: result.savedProducts,
-      status: 200,
-      error: null,
-    };
+    const savedProducts = await User.findOne({ Email: email })
+      .populate({
+        path: "Saved_Products",
+        model: Product,
+        match: { is_archived: false },
+        select:
+          "_id Images Condition Total_Quantity_Available Price is_archived Negotiable Product_Name",
+      })
+      .select("Saved_Products");
+
+    return savedProducts.Saved_Products;
   } catch (error) {
-    return {
-      content: null,
-      status: 500,
-      error: error,
-    };
+    console.log("ERROR_WHILE_FETCHING_SAVED_PRODUCTS", error);
+    throw error;
   }
 }
 
@@ -237,10 +200,7 @@ export async function removeSavedProduct({ productId }: { productId: string }) {
     const user = await User.findOne({ Email: email });
 
     if (!user) {
-      return {
-        error: null,
-        msg: "Please get authorized",
-      };
+      return redirect("/login");
     }
 
     const savedProducts = user.Saved_Products.map(
@@ -300,7 +260,7 @@ export async function getSaved({ productId }: { productId: string }) {
 
     return savedProducts.includes(new mongo.ObjectId(productId));
   } catch (error) {
-    // console.log("ERROR_WHILE_CHECKING_SAVED_PRODUCT", error);
-    return false;
+    console.log("ERROR_WHILE_CHECKING_SAVED_PRODUCT", error);
+    throw error;
   }
 }

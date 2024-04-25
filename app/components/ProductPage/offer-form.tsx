@@ -40,7 +40,6 @@ export default function OfferForm({
   });
 
   const sendEmailWithDetails = (formData: z.infer<typeof OfferSchema>) => {
-    console.log(typeof formData.price);
     const prom = sendEmail(
       senderEmail,
       reciverEmail,

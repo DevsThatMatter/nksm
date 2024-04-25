@@ -32,7 +32,7 @@ async function SellerCard({
   productId,
 }: SellerCardProps) {
   const senderEmail = (await auth())?.user?.email;
-  console.log(sellerInfo);
+
   return (
     <div>
       <h2 className="mt-6 pb-3 text-2xl font-semibold lg:mt-0 lg:pb-0 lg:text-xl">

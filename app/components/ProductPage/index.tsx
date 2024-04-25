@@ -11,7 +11,6 @@ import { Carousel, CarouselContent } from "../ui/carousel";
 import { EmblaOptionsType } from "embla-carousel";
 
 const ProductPage = ({ productInfo }: { productInfo: Product }) => {
-  console.log("product info => ", productInfo);
   const options: EmblaOptionsType = { loop: true, align: "center" };
   return (
     <div key="1" className="mx-auto max-w-full p-4">

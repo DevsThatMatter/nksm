@@ -6,22 +6,11 @@ import { cn } from "@/app/utils";
 import { Icons } from "@/app/utils/icons";
 import { ConditionEnum } from "@/types";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
+import { renderConditionIcon } from "../ProductPage/ProductDetails";
 
 const AddListingPreview = (
   previewData: Omit<PreviewInputs, "price"> & { price: number | string },
 ) => {
-  const renderConditionIcon = (condition: ConditionEnum | string) => {
-    switch (condition) {
-      case "Brand New":
-        return <Icons.new className="mr-1 h-3 w-3" />;
-      case "Like New":
-        return <Icons.likeNew className="mr-1 h-3 w-3" />;
-      case "Used":
-        return <Icons.used className="mr-1 h-3 w-3" />;
-      default:
-        return null;
-    }
-  };
   return (
     <div className={cn("mt-4 w-full")}>
       <Carousel className="w-full rounded-lg shadow-none">
