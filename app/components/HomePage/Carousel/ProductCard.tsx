@@ -22,11 +22,14 @@ const ProductCard = ({
   description,
   productPageCarousel = false,
 }: ProductCardProps) => {
+  const adaptedPrice = price > 1000 ? Math.floor(price / 1000) + "k" : price;
   return (
     <CarouselItem
       className={cn(
-        "basis-1/2 min-[200px]:basis-11/12 min-[330px]:basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4",
-        productPageCarousel ? "" : "xl:basis-1/5",
+        "sm:basis-1/3",
+        productPageCarousel
+          ? "basis-11/12 min-[305px]:basis-9/12 min-[450px]:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+          : "basis-9/12 min-[425px]:basis-1/2 lg:basis-1/4 xl:basis-1/5",
       )}
     >
       <Card className="m-1">
@@ -46,9 +49,7 @@ const ProductCard = ({
                     {name}
                   </h1>
                 </span>
-                <span className="text-muted-foreground max-[380px]:text-xs">
-                  ₹{price}
-                </span>
+                <span className="text-muted-foreground">₹{adaptedPrice}</span>
               </div>
               <p className="line-clamp-2 h-8 w-full overflow-ellipsis break-all text-foreground min-[300px]:text-xs md:h-10 md:text-sm lg:h-8 lg:text-xs">
                 {description}

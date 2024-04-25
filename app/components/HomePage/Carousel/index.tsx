@@ -12,10 +12,9 @@ import ProductSkeleton from "./ProductSkeleton";
 
 const ProductCarousel = ({
   options = {
-    loop: true,
     align: "start",
+    dragFree: true,
     containScroll: "trimSnaps",
-    skipSnaps: true,
   },
   productPageCarousel,
   arrows = true,
