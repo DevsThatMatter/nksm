@@ -40,7 +40,7 @@ export default function ControlPanel({
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
         side={"left"}
-        className="h-full w-[75dvw] sm:w-[50dvw] lg:w-[60dvw]"
+        className="h-full w-[80dvw] sm:w-[62dvw] md:w-[60dvw]"
       >
         <Tabs
           defaultValue="seller"

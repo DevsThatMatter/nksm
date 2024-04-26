@@ -2,9 +2,10 @@ import { auth } from "@/auth";
 import { getAllChats } from "@/lib/actions/chat.actions";
 
 import ControlPanel from "./panels/control-panel";
-import UserUnauthorized from "./user-unauthorized";
 import { Button } from "../ui/button";
 import { Icons } from "@/app/utils/icons";
+import { Sheet, SheetTrigger } from "../ui/sheet";
+import Link from "next/link";
 
 export default async function Chat({
   children = (
@@ -30,5 +31,11 @@ export default async function Chat({
       </ControlPanel>
     );
   }
-  return <UserUnauthorized />;
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Link href={"/login"}>{children}</Link>
+      </SheetTrigger>
+    </Sheet>
+  );
 }

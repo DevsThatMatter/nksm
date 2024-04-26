@@ -21,6 +21,10 @@ export function getChatDetails({
     activeDiscussion?.buyerDetails.id === userId
       ? activeDiscussion.sellerDetails.Avatar
       : activeDiscussion?.buyerDetails.Avatar;
+  const otherUserUserName =
+    activeDiscussion?.buyerDetails.id === userId
+      ? activeDiscussion.sellerDetails.Username
+      : activeDiscussion?.buyerDetails.Username;
 
   const queryKey = `chat${activeDiscussion?.productDetails.productId}productId${activeDiscussion?.productDetails.productId}sellerId${activeDiscussion?.sellerDetails.id}buyerId${activeDiscussion?.buyerDetails.id}query`;
   const addKey = `chat${activeDiscussion?.productDetails.productId}productId${activeDiscussion?.productDetails.productId}sellerId${activeDiscussion?.sellerDetails.id}buyerId${activeDiscussion?.buyerDetails.id}add`;
@@ -31,6 +35,7 @@ export function getChatDetails({
     name: otherUserName ?? "",
     avatar: otherUserAvatar ?? "",
     queryKey: queryKey,
+    rollNo: otherUserUserName ?? "",
   };
   const displayAvatar =
     discussion?.buyerDetails.id === userId

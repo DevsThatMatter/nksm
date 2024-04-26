@@ -9,6 +9,7 @@ interface userProfileProps {
   name: string;
   avatar: string;
   queryKey: string;
+  rollNo: string;
 }
 
 export default function UserProfile({
@@ -48,7 +49,9 @@ export default function UserProfile({
         <h3 className="font-semibold text-foreground">
           {otherUserDetails.name}
         </h3>
-        <h6 className="text-sm text-muted-foreground">{otherUserDetails.id}</h6>
+        <h6 className="text-sm text-muted-foreground">
+          {otherUserDetails.rollNo}
+        </h6>
       </section>
     </header>
   );

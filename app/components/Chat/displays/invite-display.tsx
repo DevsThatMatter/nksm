@@ -52,8 +52,8 @@ export default function InviteDisplay({
         "p-2",
         "rounded-lg border",
         "flex space-x-2 bg-muted md:space-x-4",
-        "drop-shadow-md hover:drop-shadow-lg",
-        buyer && "cursor-pointer",
+        "drop-shadow-md",
+        buyer && "cursor-pointer hover:drop-shadow-lg",
       )}
     >
       <Image
