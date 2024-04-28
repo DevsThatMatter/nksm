@@ -14,7 +14,6 @@ export const useChatObserver = ({
   productId: string;
   currentUserId: string;
 }) => {
-  console.log("unread message count => ", unreadMessages.length);
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -27,7 +26,7 @@ export const useChatObserver = ({
                 sellerId,
                 buyerId,
                 messageId,
-                caller: "update",
+                caller: "update-read",
                 currentUser: currentUserId,
               });
               entry.target.classList.remove("user-message-false");

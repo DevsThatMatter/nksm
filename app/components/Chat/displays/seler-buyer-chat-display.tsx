@@ -8,6 +8,8 @@ import { getChatDetails } from "../../../utils/chat-utils";
 import { countUnreadMessages } from "@/lib/actions/chat.actions";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "../../ui/skeleton";
+import { useEffect, useState } from "react";
+import { pusherClient } from "@/lib/pusher";
 
 export default function SellerBuyerChatDisplay({
   discussion,
@@ -16,18 +18,20 @@ export default function SellerBuyerChatDisplay({
   discussion: chatDetails;
   userId: string;
 }) {
-  const { displayAvatar, displayName } = getChatDetails({
-    userId: userId,
-    discussion: discussion,
-  });
+  const { displayAvatar, displayName, unreadMessageChannelKey, addKey } =
+    getChatDetails({
+      userId: userId,
+      discussion: discussion,
+    });
   const { setActiveDiscussion, lastMessages } = useChatStore();
+  const [unreadCount, setUnreadCount] = useState<number>(0);
 
   const { data } = useQuery({
     queryKey: [
       "count-unread-message",
       discussion.sellerDetails.id,
       discussion.buyerDetails.id,
-      discussion.buyerDetails.id,
+      discussion.productDetails.productId,
       userId,
     ],
     queryFn: () =>
@@ -38,9 +42,33 @@ export default function SellerBuyerChatDisplay({
         caller: "get",
         currentUser: userId,
       }).then((data) => {
+        setUnreadCount(data);
         return data;
       }),
   });
+
+  useEffect(() => {
+    pusherClient.subscribe(unreadMessageChannelKey);
+    pusherClient.subscribe(addKey);
+
+    function handelUpdatedUnreadCount(count: number) {
+      console.log("count => ", count);
+      setUnreadCount(count);
+    }
+    function handelUpdatedLastMessage(count: number) {
+      console.log("count => ", count);
+      setUnreadCount(count);
+    }
+
+    pusherClient.bind("unreadCount:inc", handelUpdatedUnreadCount);
+    pusherClient.bind("unreadCount:inc", handelUpdatedUnreadCount);
+    pusherClient.bind("lastMessage:new", handelUpdatedLastMessage);
+
+    return () => {
+      pusherClient.unsubscribe(unreadMessageChannelKey);
+      pusherClient.unbind("unreadCount:inc", handelUpdatedUnreadCount);
+    };
+  }, []);
 
   return (
     <section
@@ -63,26 +91,31 @@ export default function SellerBuyerChatDisplay({
       ) || <Skeleton className="h-16 w-20 rounded-full" />}
       <section className="flex w-full flex-col space-y-2 pl-2">
         <div className="flex w-full flex-row items-center justify-between">
-          <h1 className="line-clamp-1 text-lg font-semibold">
-            {displayName || <Skeleton className="h-3 w-32" />}
-          </h1>
-          {data?.unreadCount !== 0 && (
+          <div className="flex flex-col space-y-0">
+            <h1 className="line-clamp-1 text-lg font-semibold">
+              {displayName || <Skeleton className="h-3 w-32" />}
+            </h1>
+            <h4 className="m-0 line-clamp-1 p-0 text-sm text-muted-foreground">
+              For: {discussion.productDetails.Product_Name}
+            </h4>
+            <p className="h-3 text-sm text-muted-foreground">
+              {lastMessages?.get(discussion.productDetails.productId) ?? (
+                <Skeleton className="h-full w-32" />
+              )}
+            </p>
+          </div>
+          {data !== 0 && (
             <span
               className={cn(
                 "h-5 w-5",
-                "flex flex-shrink-0 items-center justify-center rounded-full text-base",
+                "flex flex-shrink-0 items-center justify-center rounded-full text-sm",
                 "bg-blue-500 font-semibold text-white dark:bg-blue-700",
               )}
             >
-              {data?.unreadCount}
+              {unreadCount}
             </span>
           )}
         </div>
-        <p className="h-3 text-sm text-muted-foreground">
-          {lastMessages?.get(discussion.productDetails.productId) ?? (
-            <Skeleton className="h-full w-32" />
-          )}
-        </p>
       </section>
     </section>
   );

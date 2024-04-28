@@ -29,7 +29,8 @@ export function getChatDetails({
   const queryKey = `chat${activeDiscussion?.productDetails.productId}productId${activeDiscussion?.productDetails.productId}sellerId${activeDiscussion?.sellerDetails.id}buyerId${activeDiscussion?.buyerDetails.id}query`;
   const addKey = `chat${activeDiscussion?.productDetails.productId}productId${activeDiscussion?.productDetails.productId}sellerId${activeDiscussion?.sellerDetails.id}buyerId${activeDiscussion?.buyerDetails.id}add`;
   const updateKey = `chat${activeDiscussion?.productDetails.productId}productId${activeDiscussion?.productDetails.productId}sellerId${activeDiscussion?.sellerDetails.id}buyerId${activeDiscussion?.buyerDetails.id}update`;
-
+  const unreadMessageChannelKey = `productId${activeDiscussion?.productDetails.productId}sellerId${activeDiscussion?.sellerDetails.id}buyerId${activeDiscussion?.buyerDetails.id}write-update-count`;
+  const lastMessageChannelKey = `productId${activeDiscussion?.productDetails.productId}sellerId${activeDiscussion?.sellerDetails.id}buyerId${activeDiscussion?.buyerDetails.id}last-message`;
   const otherUserDetails = {
     id: otherUserId ?? "",
     name: otherUserName ?? "",
@@ -53,5 +54,7 @@ export function getChatDetails({
     updateKey,
     displayAvatar,
     displayName,
+    unreadMessageChannelKey,
+    lastMessageChannelKey,
   };
 }

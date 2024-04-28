@@ -32,6 +32,7 @@ export default function MessageElement({
   if (msg.options) {
     return (
       <article
+        id={msg.msgId}
         className={cn(
           "mt-3 max-w-[80%] break-words rounded-lg p-3 shadow-md",
           msg.accepted === "accepted"
@@ -77,11 +78,13 @@ export default function MessageElement({
   }
   return (
     <article
+      id={msg.msgId}
       className={cn(
+        "text-sm",
         msg.readStatus
           ? "user-message-true"
           : msg.Sender !== currentUserId && "user-message-false",
-        "mt-3 max-w-[80%] break-words rounded-t-3xl px-4  py-3 font-medium",
+        "mt-3 max-w-[80%] break-words rounded-t-3xl px-3  py-2 font-medium",
         currentUserId === msg.Sender
           ? "ml-auto rounded-l-3xl rounded-tr-3xl text-white"
           : "mr-auto rounded-r-3xl rounded-br-3xl text-black dark:text-white",

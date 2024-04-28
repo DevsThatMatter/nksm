@@ -11,7 +11,7 @@ import {
   fetchSavedProduct,
 } from "@/lib/actions/products.actions";
 import { ReactNode, Suspense } from "react";
-import Chat from "../Chat";
+
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import SearchBar from "./SearchBar";
@@ -26,7 +26,11 @@ const Navbar = ({
           <span className="hidden pl-4 sm:inline-block"> Add Listing </span>
         </Button>
       </Link>
-      <Chat />
+      <Link href={"/chat"}>
+        <Button variant="ghost" size="icon">
+          <Icons.chaticon className="h-[1.3rem] w-[1.32rem]" />
+        </Button>
+      </Link>
       <Suspense
         fallback={
           <Button variant="ghost" size="icon" disabled>

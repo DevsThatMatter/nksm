@@ -53,9 +53,6 @@ export default function AsBuyerPanel({
     <main className="h-full">
       {!activeDiscussion ? (
         <>
-          {endpoint === "seller" && activeDiscussionGroup && (
-            <ProductDisplay productId={activeDiscussionGroup.productId} />
-          )}
           <ul
             className={cn(
               "h-full",

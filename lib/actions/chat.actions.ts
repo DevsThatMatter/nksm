@@ -14,6 +14,7 @@ import { pusherServer } from "../pusher";
 import { InviteStruct } from "@/app/components/Chat/displays/invite-display";
 import { client } from "../database/redis-config";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/auth";
 
 const mongoId = z.string().refine((value) => Types.ObjectId.isValid(value), {
   message: "Invalid ObjectId format",
@@ -433,75 +434,73 @@ async function computeUnreadMessages(
   ]);
 
   const unreadCount = (result.length > 0 ? result[0].unreadCount : 0) as number;
-
   return unreadCount;
 }
-
 export async function countUnreadMessages(
   props: z.infer<typeof UnreadMessagesProps> & {
-    caller: "get" | "update" | "db";
+    caller: "get" | "update-read" | "update-write";
     messageId?: string;
   },
 ) {
+  const userId = (await auth())?.user?.id;
+  const otherUser = props.buyerId === userId ? props.sellerId : props.buyerId;
   try {
-    const cacheKey = `productId${props.productId}sellerId${props.sellerId}buyerId${props.buyerId}cache`;
-    const cachedVal = await client.get(cacheKey);
-    if (props.caller === "db") {
-      const unreadCount = await computeUnreadMessages(props);
-      await client.set(cacheKey, unreadCount.toString());
-      return {
-        unreadCount,
-        productId: props.productId,
-      };
-    } else if (props.caller === "get") {
+    const chatId = (
+      await Chat.findOne({
+        Seller: new mongo.ObjectId(props.sellerId),
+        Buyer: new mongo.ObjectId(props.buyerId),
+        ProductId: new mongo.ObjectId(props.productId),
+      })
+    )._id.toString();
+
+    if (props.caller === "get") {
+      const cacheKey = `chatId-${chatId}-userId-${userId}`;
+      const cachedVal = await client.get(cacheKey);
       if (cachedVal) {
-        return {
-          unreadCount: parseInt(cachedVal),
-          productId: props.productId,
-        };
+        return Number(cachedVal);
       }
-      const unreadCount = await computeUnreadMessages(props);
-      await client.set(cacheKey, unreadCount.toString());
-      return {
-        unreadCount,
-        productId: props.productId,
-      };
+      const count = (await computeUnreadMessages(props)).toString();
+
+      await client.set(cacheKey, count, "EX", 1800);
+
+      return Number(count);
+    } else if (props.caller === "update-read") {
+      await Message.updateOne(
+        {
+          _id: new mongo.ObjectId(props.messageId),
+        },
+        {
+          isRead: true,
+        },
+      );
+      const cacheKey = `chatId-${chatId}-userId-${userId}`;
+      let cachedVal = Number(await client.get(cacheKey));
+      cachedVal--;
+
+      if (cachedVal < 0) {
+        cachedVal = 0;
+      }
+
+      await client.set(cacheKey, cachedVal, "EX", 1800);
+      return cachedVal;
     } else {
+      const otherUserCache = `chatId-${chatId}-userId-${otherUser}`;
+      let cachedVal = Number(await client.get(otherUserCache));
       if (cachedVal) {
-        let unreadCount = parseInt(cachedVal);
-        if (props.messageId) {
-          const updateResult = await Message.updateOne(
-            { _id: new mongo.ObjectId(props.messageId) },
-            { readStatus: true },
-          );
-          if (updateResult.modifiedCount === 1) {
-            unreadCount--;
-            if (unreadCount < 0) unreadCount = 0;
-            await client.set(cacheKey, unreadCount.toString(), "XX");
-          }
-        }
-        return {
-          unreadCount,
-          productId: props.productId,
-        };
-      } else {
-        let unreadCount = await computeUnreadMessages(props);
-        if (props.messageId) {
-          const updateResult = await Message.updateOne(
-            { _id: new mongo.ObjectId(props.messageId) },
-            { readStatus: true },
-          );
-          if (updateResult.modifiedCount === 1) {
-            unreadCount--;
-            if (unreadCount < 0) unreadCount = 0;
-            await client.set(cacheKey, unreadCount.toString());
-          }
-        }
-        return {
-          unreadCount,
-          productId: props.productId,
-        };
+        cachedVal++;
+        await client.set(otherUserCache, cachedVal, "EX", 1800);
+        return cachedVal;
       }
+      const count = (await computeUnreadMessages(props)).toString();
+
+      await client.set(otherUserCache, count, "EX", 1800);
+      const channelKey = `productId${props.productId}sellerId${props.sellerId}buyerId${props.buyerId}write-update-count`;
+
+      console.log("channel key => ", channelKey);
+
+      pusherServer.trigger(channelKey, "unreadCount:inc", Number(count));
+
+      return Number(count);
     }
   } catch (error) {
     throw error;
@@ -591,7 +590,13 @@ export async function createNewMessage(
       });
       await newChat.save();
     }
-
+    await countUnreadMessages({
+      productId,
+      sellerId,
+      buyerId,
+      currentUser: sender,
+      caller: "update-write",
+    });
     const addKey = `chat${validatedProps.productId}productId${validatedProps.productId}sellerId${validatedProps.sellerId}buyerId${validatedProps.buyerId}add`;
     await pusherServer.trigger(addKey, "messages:new", newMessage);
   } catch (error) {
