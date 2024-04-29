@@ -9,6 +9,7 @@ import { CategoryEnum, ConditionEnum, SortBy } from "@/types";
 import { auth } from "@/auth";
 import { SavedProduct } from "@/app/components/Navbar/SavedItems";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -193,7 +194,7 @@ export async function fetchSavedProduct({
         model: Product,
         match: { is_archived: false },
         select:
-          "_id Images Condition Total_Quantity_Available Price is_archived Negotiable Product_Name",
+          "_id Images Condition Total_Quantity_Available Price is_archived Negotiable Product_Name Description",
       })
       .select("Saved_Products");
 
@@ -226,6 +227,7 @@ export async function removeSavedProduct({ productId }: { productId: string }) {
     user.Saved_Products = updatedSavedProducts;
 
     await user.save();
+    revalidatePath("/saved-products");
     return {
       error: null,
       msg: "Removed successfully",
@@ -247,6 +249,7 @@ export async function saveProduct({ productId }: { productId: string }) {
       { Email: currentUserEmail },
       { $push: { Saved_Products: new mongo.ObjectId(productId) } },
     );
+    revalidatePath("/saved-products");
     return {
       msg: "Product saved",
       error: null,

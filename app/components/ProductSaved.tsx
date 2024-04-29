@@ -35,7 +35,9 @@ const ProductSaved = ({
         );
       },
     });
-    addSavedProduct(product._id.toString(), product);
+    queryClient.invalidateQueries({
+      queryKey: ["check-if-this-product-is-saved", id],
+    });
   }
 
   async function handleDelete() {
@@ -52,7 +54,9 @@ const ProductSaved = ({
         );
       },
     });
-    removeSavedProductFromCache(product._id.toString());
+    queryClient.invalidateQueries({
+      queryKey: ["check-if-this-product-is-saved", id],
+    });
   }
 
   return (

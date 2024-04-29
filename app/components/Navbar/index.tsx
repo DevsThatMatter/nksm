@@ -6,10 +6,7 @@ import { Separator } from "@/app/components/ui/separator";
 import UserChat from "../Chat/chat-panel";
 import SearchBar from "./SearchBar";
 import { ReactNode } from "react";
-import {
-  fetchRecentProductS,
-  fetchSavedProduct,
-} from "@/lib/actions/products.actions";
+import { fetchRecentProductS } from "@/lib/actions/products.actions";
 import { cn } from "@/app/utils";
 import { Button } from "../ui/button";
 import { Icons } from "@/app/utils/icons";
