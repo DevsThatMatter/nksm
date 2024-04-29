@@ -34,7 +34,6 @@ const ProductSaved = ({ className, id }: { className: string; id: string }) => {
     queryClient.invalidateQueries({
       queryKey: ["check-if-this-product-is-saved", id],
     });
-    router.refresh();
   }
 
   async function handleDelete() {
@@ -54,7 +53,6 @@ const ProductSaved = ({ className, id }: { className: string; id: string }) => {
     queryClient.invalidateQueries({
       queryKey: ["check-if-this-product-is-saved", id],
     });
-    router.refresh();
   }
 
   const { data, isFetching } = useQuery({

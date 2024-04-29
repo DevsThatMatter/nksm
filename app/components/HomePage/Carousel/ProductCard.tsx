@@ -7,7 +7,7 @@ import ProductSaved from "../../ProductSaved";
 import { cn } from "@/app/utils";
 
 interface ProductCardProps {
-  id: ObjectId;
+  id: ObjectId | string;
   image_url: string;
   name: string;
   price: number;
