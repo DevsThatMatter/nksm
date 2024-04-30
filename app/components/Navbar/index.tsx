@@ -6,7 +6,10 @@ import { Separator } from "@/app/components/ui/separator";
 import UserChat from "../Chat/chat-panel";
 import SearchBar from "./SearchBar";
 import { ReactNode } from "react";
-import { fetchRecentProductS } from "@/lib/actions/products.actions";
+import {
+  fetchRecentProductS,
+  fetchSavedProduct,
+} from "@/lib/actions/products.actions";
 import { cn } from "@/app/utils";
 import { Button } from "../ui/button";
 import { Icons } from "@/app/utils/icons";
@@ -36,6 +39,8 @@ const Navbar = async ({
   className?: string;
 }) => {
   const products = (await fetchRecentProductS()) || [];
+  const savedProducts = await fetchSavedProduct();
+
   return (
     <>
       <div className="sticky left-0 right-0 top-0 z-50 bg-background shadow-md">
@@ -59,7 +64,11 @@ const Navbar = async ({
               className,
             )}
           >
-            <SearchBar products={products} className="my-5 ml-3" />
+            <SearchBar
+              savedProducts={savedProducts}
+              products={products}
+              className="my-5 ml-3"
+            />
             {children}
           </div>
         </nav>

@@ -25,6 +25,14 @@ const SearchCard = ({
   condition,
   negotiable,
 }: ProductCardProps) => {
+  const product = {
+    _id: id.toString(),
+    Image: image_url,
+    Condition: condition,
+    Price: price,
+    Negotiable: negotiable,
+    Product_Name: name,
+  };
   return (
     <Link href={`/product/${id}`}>
       <Card className="my-4">
@@ -39,7 +47,7 @@ const SearchCard = ({
             />
             <ProductSaved
               className="absolute right-0 top-0 mr-2 mt-2 cursor-pointer rounded-full bg-gray-200 p-1 sm:mr-5 sm:mt-6"
-              id={id.toString()}
+              product={product}
             />
           </div>
           <div className="grid gap-2 text-base sm:max-w-[calc(100%-16rem)]">

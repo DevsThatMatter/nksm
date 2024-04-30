@@ -4,8 +4,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/app/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
-import { EmblaOptionsType, EmblaPluginType } from "embla-carousel";
+import { EmblaOptionsType } from "embla-carousel";
 import ProductCard from "@/app/components/HomePage/Carousel/ProductCard";
 import { fetchRecentProducts } from "@/lib/actions/products.actions";
 import { Suspense } from "react";
@@ -50,6 +49,8 @@ export const CarouselItems = async ({
       price={product.Price}
       description={product.Description}
       productPageCarousel={productPageCarousel}
+      condition={product.Condition}
+      negotiable={product.Negotiable}
     />
   ));
 };

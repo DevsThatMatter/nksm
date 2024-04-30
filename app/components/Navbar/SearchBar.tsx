@@ -5,6 +5,8 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useDebouncedCallback } from "use-debounce";
+import { SavedProduct } from "./SavedItems";
+import { useProductStore } from "@/hooks/productStore";
 
 type ProductsArray = {
   _id: string;
@@ -16,8 +18,10 @@ type ProductsArray = {
 export default function SearchBar({
   products,
   className,
+  savedProducts,
 }: {
   products: ProductsArray;
+  savedProducts: Map<string, SavedProduct>;
   className?: string;
 }) {
   const [input, setInput] = useState("");
@@ -33,6 +37,11 @@ export default function SearchBar({
       setIsDropdownOpen(false);
     }
   }, [pathname]);
+  const { setSavedProducts } = useProductStore();
+
+  useEffect(() => {
+    setSavedProducts(savedProducts);
+  }, [savedProducts, setSavedProducts]);
 
   const filteredProducts = products?.filter((product) =>
     product.Product_Name.toLowerCase().startsWith(input.toLowerCase()),

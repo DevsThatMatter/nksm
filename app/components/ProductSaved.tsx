@@ -1,26 +1,30 @@
 "use client";
 
 import {
-  getSaved,
   removeSavedProduct,
   saveProduct,
 } from "@/lib/actions/products.actions";
 
 import { BookmarkFilledIcon, BookmarkIcon } from "@radix-ui/react-icons";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { cn } from "../utils";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Skeleton } from "./ui/skeleton";
+import { useProductStore } from "@/hooks/productStore";
+import { SavedProduct } from "./Navbar/SavedItems";
 
-const ProductSaved = ({ className, id }: { className: string; id: string }) => {
+const ProductSaved = ({
+  className,
+  product,
+}: {
+  className: string;
+  product: SavedProduct;
+}) => {
   const [isSaved, setIsSaved] = useState(false);
-  const router = useRouter();
-  const queryClient = useQueryClient();
+  const { savedProducts, addSavedProduct, removeSavedProductFromCache } =
+    useProductStore();
 
   async function handelSave() {
-    const prom = saveProduct({ productId: id });
+    const prom = saveProduct({ productId: product._id.toString() });
     toast.promise(prom, {
       loading: "Processing",
       success: (data) => {
@@ -31,14 +35,12 @@ const ProductSaved = ({ className, id }: { className: string; id: string }) => {
         );
       },
     });
-    queryClient.invalidateQueries({
-      queryKey: ["check-if-this-product-is-saved", id],
-    });
+    addSavedProduct(product._id.toString(), product);
   }
 
   async function handleDelete() {
     const prom = removeSavedProduct({
-      productId: id,
+      productId: product._id.toString(),
     });
     toast.promise(prom, {
       loading: "Processing",
@@ -50,15 +52,8 @@ const ProductSaved = ({ className, id }: { className: string; id: string }) => {
         );
       },
     });
-    queryClient.invalidateQueries({
-      queryKey: ["check-if-this-product-is-saved", id],
-    });
+    removeSavedProductFromCache(product._id.toString());
   }
-
-  const { data, isFetching } = useQuery({
-    queryKey: ["check-if-this-product-is-saved", id],
-    queryFn: () => getSaved({ productId: id }),
-  });
 
   return (
     <div
@@ -67,9 +62,7 @@ const ProductSaved = ({ className, id }: { className: string; id: string }) => {
         setIsSaved(!isSaved);
       }}
     >
-      {isFetching ? (
-        <Skeleton className="h-4 w-4 rounded-full" />
-      ) : !data ? (
+      {!savedProducts?.has(product._id.toString()) ? (
         <BookmarkIcon
           className="h-4 w-4 text-gray-500"
           onClick={() => handelSave()}

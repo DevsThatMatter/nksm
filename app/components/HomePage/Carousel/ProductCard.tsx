@@ -4,7 +4,9 @@ import Link from "next/link";
 import { CarouselItem } from "../../ui/carousel";
 import { ObjectId } from "mongoose";
 import ProductSaved from "../../ProductSaved";
-import { cn } from "@/app/utils";
+import { ConditionEnum } from "@/types";
+import { fetchSavedProduct } from "@/lib/actions/products.actions";
+import { auth } from "@/auth";
 
 interface ProductCardProps {
   id: ObjectId | string;
@@ -13,15 +15,28 @@ interface ProductCardProps {
   price: number;
   description: string;
   productPageCarousel?: boolean;
+  condition: keyof typeof ConditionEnum;
+  negotiable: boolean;
 }
-const ProductCard = ({
+const ProductCard = async ({
   id,
   image_url,
   name,
   price,
   description,
+  condition,
+  negotiable,
   productPageCarousel = false,
 }: ProductCardProps) => {
+  const product = {
+    _id: id.toString(),
+    Image: image_url,
+    Condition: condition,
+    Price: price,
+    Negotiable: negotiable,
+    Product_Name: name,
+  };
+
   return (
     <CarouselItem
       className={
@@ -54,7 +69,7 @@ const ProductCard = ({
           </Link>
           <ProductSaved
             className="absolute right-0 top-0 mr-4 mt-4 rounded-full bg-gray-200 p-1 hover:cursor-pointer sm:mr-6 sm:mt-6 lg:mr-5 lg:mt-5 2xl:mr-6 2xl:mt-5"
-            id={id.toString()}
+            product={product}
           />
         </CardContent>
       </Card>
