@@ -10,6 +10,8 @@ import { auth } from "@/auth";
 import { SavedProduct } from "@/app/components/Navbar/SavedItems";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { M_PLUS_1 } from "next/font/google";
+
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
@@ -93,8 +95,8 @@ export const getSearchResults = async ({
     const query: FilterQuery<typeof Product> = category
       ? { Category: category, is_archived: false }
       : {
-        is_archived: false,
-      };
+          is_archived: false,
+        };
 
     if (searchString.trim() !== "") {
       query.$or = [
@@ -177,28 +179,39 @@ export const fetchProductDetails = async (productId: string) => {
   }
 };
 
-export async function fetchSavedProduct({
-  email,
-}: {
-  email: string;
-}): Promise<SavedProduct[]> {
+export async function fetchSavedProduct() {
   try {
     const email = (await auth())?.user?.email;
     if (!email) {
       return redirect("/login");
     }
     await connectToDB();
-    const savedProducts = await User.findOne({ Email: email })
-      .populate({
-        path: "Saved_Products",
-        model: Product,
-        match: { is_archived: false },
-        select:
-          "_id Images Condition Total_Quantity_Available Price is_archived Negotiable Product_Name Description",
-      })
-      .select("Saved_Products");
+    const user = await User.findOne({ Email: email });
+    if (!user) {
+      throw new Error("User not found");
+    }
 
-    return savedProducts.Saved_Products;
+    const savedProducts = user.Saved_Products as Types.ObjectId[];
+
+    const svdProducts = await Promise.all(
+      savedProducts.map(async (productId) => {
+        const product = await Product.findById(productId);
+        return {
+          _id: product._id.toString(),
+          Image: product.Images[0],
+          Condition: product.Condition,
+          Price: product.Price,
+          Negotiable: product.Negotiable,
+          Product_Name: product.Product_Name,
+        };
+      }),
+    );
+    const savedItems = svdProducts.reduce((mp, product) => {
+      mp.set(product._id, product);
+      return mp;
+    }, new Map<string, SavedProduct>());
+
+    return savedItems;
   } catch (error) {
     console.log("ERROR_WHILE_FETCHING_SAVED_PRODUCTS", error);
     throw error;
@@ -227,7 +240,6 @@ export async function removeSavedProduct({ productId }: { productId: string }) {
     user.Saved_Products = updatedSavedProducts;
 
     await user.save();
-    revalidatePath("/saved-products");
     return {
       error: null,
       msg: "Removed successfully",
@@ -249,7 +261,6 @@ export async function saveProduct({ productId }: { productId: string }) {
       { Email: currentUserEmail },
       { $push: { Saved_Products: new mongo.ObjectId(productId) } },
     );
-    revalidatePath("/saved-products");
     return {
       msg: "Product saved",
       error: null,

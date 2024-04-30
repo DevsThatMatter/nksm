@@ -5,12 +5,14 @@ import { Icons } from "@/app/utils/icons";
 import { toast } from "sonner";
 import { cn } from "@/app/utils";
 import { getSaved, removeSavedProduct } from "@/lib/actions/products.actions";
+import { useProductStore } from "@/hooks/productStore";
 
 export default function DeleteSavedProducts({
   productId,
 }: {
   productId: string;
 }) {
+  const { savedProducts, removeSavedProductFromCache } = useProductStore();
   async function handleDelete(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) {
@@ -31,7 +33,9 @@ export default function DeleteSavedProducts({
         );
       },
     });
+    removeSavedProductFromCache(productId);
   }
+
   return (
     <Button
       size="icon"

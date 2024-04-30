@@ -5,8 +5,7 @@ import { CarouselItem } from "../../ui/carousel";
 import { ObjectId } from "mongoose";
 import ProductSaved from "../../ProductSaved";
 import { ConditionEnum } from "@/types";
-import { fetchSavedProduct } from "@/lib/actions/products.actions";
-import { auth } from "@/auth";
+import { cn } from "@/app/utils";
 
 interface ProductCardProps {
   id: ObjectId | string;
@@ -28,7 +27,16 @@ const ProductCard = async ({
   negotiable,
   productPageCarousel = false,
 }: ProductCardProps) => {
+  const product = {
+    _id: id.toString(),
+    Image: image_url,
+    Condition: condition,
+    Price: price,
+    Negotiable: negotiable,
+    Product_Name: name,
+  };
   const adaptedPrice = price > 1000 ? Math.floor(price / 1000) + "k" : price;
+
   return (
     <CarouselItem
       className={cn(

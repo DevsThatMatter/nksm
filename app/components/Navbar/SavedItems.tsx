@@ -1,27 +1,26 @@
+"use client";
 import Image from "next/image";
 
 import Link from "next/link";
 import { cn } from "@/app/utils";
 import { ConditionEnum } from "@/types";
-import { ConditionEnum } from "@/types";
 
 import DeleteSavedProducts from "./delete-saved-products";
-import { fetchSavedProduct } from "@/lib/actions/products.actions";
 import { renderConditionIcon } from "../ProductPage/ProductDetails";
+import { useProductStore } from "@/hooks/productStore";
 
 export interface SavedProduct {
   _id: string;
-  Images: string[];
-  Condition: ConditionEnum;
-  Total_Quantity_Available: number;
+  Image: string;
+  Condition: keyof typeof ConditionEnum;
   Price: number;
   Negotiable: boolean;
   Product_Name: string;
-  Description: string;
 }
 
-export default async function SavedItems({ email }: { email: string }) {
-  const data = await fetchSavedProduct({ email });
+export default function SavedItems() {
+  const { savedProducts } = useProductStore();
+
   return (
     <aside className="w-full px-4 sm:max-w-sm md:max-w-md">
       <header className="mb-6 mt-5">
@@ -34,7 +33,7 @@ export default async function SavedItems({ email }: { email: string }) {
           "flex flex-col space-y-4",
         )}
       >
-        {data?.map((product, id) => (
+        {Array.from(savedProducts?.entries() ?? []).map(([id, product]) => (
           <li key={id}>
             <Link
               href={`/product/${String(product._id)}`}
@@ -50,7 +49,7 @@ export default async function SavedItems({ email }: { email: string }) {
                 height={200}
                 alt="Product Image"
                 className="h-16 w-16 rounded-lg object-cover"
-                src={product.Images[0]}
+                src={product.Image}
               />
               <article className="flex flex-grow flex-col">
                 <section className="flex items-center justify-between">
@@ -76,10 +75,11 @@ export default async function SavedItems({ email }: { email: string }) {
                       {product.Condition}
                     </p>
                     <p
-                      className={`mx-1 flex items-center justify-center rounded-3xl p-1 text-xs ${product.Negotiable
+                      className={`mx-1 flex items-center justify-center rounded-3xl p-1 text-xs ${
+                        product.Negotiable
                           ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-green-800"
                           : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-sky-900"
-                        }`}
+                      }`}
                     >
                       {product.Negotiable ? "Negotiable" : "Not Negotiable"}
                     </p>

@@ -7,7 +7,6 @@ import ProductDetails from "./ProductDetails";
 import SellerCard from "./SellerCard";
 
 const ProductPage = ({ productInfo }: { productInfo: Product }) => {
-  const options: EmblaOptionsType = { loop: true, align: "center" };
   return (
     <div key="1" className="mx-auto max-w-full p-4">
       <div className="gap-4 lg:grid lg:grid-cols-3 lg:grid-rows-2">
