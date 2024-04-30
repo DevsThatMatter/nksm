@@ -7,21 +7,37 @@ import { Seller } from "@/types";
 import React from "react";
 import { Button } from "../ui/button";
 import { Icons } from "@/app/utils/icons";
-import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "../ui/card";
-import { Input } from "../ui/input";
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogDescription,
+  DialogTitle,
+} from "../ui/dialog";
+import OfferForm from "./offer-form";
+import { auth } from "@/auth";
+import mongoose from "mongoose";
+interface SellerCardProps {
+  sellerInfo: Seller;
+  productName: string;
+  productImages: string[];
+  productId: mongoose.Types.ObjectId;
+}
 
-function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
+async function SellerCard({
+  sellerInfo,
+  productName,
+  productImages,
+  productId,
+}: SellerCardProps) {
+  const senderEmail = (await auth())?.user?.email;
+  console.log(sellerInfo);
   return (
     <div>
-      <h2 className="text-lg font-semibold">Seller Details</h2>
+      <h2 className="mt-6 pb-3 text-2xl font-semibold lg:mt-0 lg:pb-0 lg:text-xl">
+        Seller Details
+      </h2>
       <div className="my-2 flex justify-between">
         <div className="flex items-center">
           <Avatar className="h-[3rem] w-[3rem]">
@@ -44,6 +60,23 @@ function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
             </Button>
           </DialogTrigger>
           <DialogContent className="rounded-md">
+            <OfferForm
+              reciverEmail={sellerInfo.Email}
+              senderEmail={senderEmail ?? ""}
+              productImages={productImages}
+              productName={productName}
+              productId={String(productId)}
+            />
+          </DialogContent>
+        </Dialog>
+      </div>
+    </div>
+  );
+}
+
+export default SellerCard;
+{
+  /* <DialogContent className="rounded-md">
             <CardTitle className="text-2xl">Enter Your Price</CardTitle>
             <CardDescription>Let us know your offer.</CardDescription>
             <CardContent className="space-y-2 p-4">
@@ -63,11 +96,5 @@ function SellerCard({ sellerInfo }: { sellerInfo: Seller }) {
                 Submit Offer
               </Button>
             </CardFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-    </div>
-  );
+          </DialogContent> */
 }
-
-export default SellerCard;

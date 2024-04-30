@@ -1,12 +1,4 @@
 "use client";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/app/components/ui/breadcrumb";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -31,28 +23,6 @@ const ActiveLinks = () => {
       >
         Order History
       </Link>
-
-      <div className="absolute hidden self-center lg:right-[13rem] lg:block xl:right-[3rem]">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="/">Home</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>My Account</BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>
-                {pathname
-                  ? pathname?.charAt(1).toUpperCase() + pathname.slice(2)
-                  : ""}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
     </nav>
   );
 };

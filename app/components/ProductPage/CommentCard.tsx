@@ -7,12 +7,9 @@ import {
 } from "@/app/components/ui/avatar";
 import React from "react";
 
-import { addComment, listComments } from "@/lib/actions/comment.actions";
-import { redirect } from "next/navigation";
+import { listComments } from "@/lib/actions/comment.actions";
 import mongoose from "mongoose";
 import { auth } from "@/auth";
-import { revalidatePath } from "next/cache";
-import { Session } from "next-auth";
 import CommentForm from "./CommentForm";
 
 async function CommentCard({
@@ -24,7 +21,9 @@ async function CommentCard({
   const comments = await listComments(productId);
   return (
     <>
-      <h2 className="mt-5 text-lg font-semibold">Comments</h2>
+      <h2 className="mt-6 pb-3 text-2xl font-semibold lg:mt-3 lg:pb-0 lg:text-xl">
+        Comments
+      </h2>
       <ScrollArea className="mt-2 h-72 w-full rounded-md border p-2">
         <div className="space-y-4">
           {comments?.length ? (
@@ -49,7 +48,16 @@ async function CommentCard({
               </div>
             ))
           ) : (
-            <div>No Comments found!</div>
+            <div className="grid h-[15rem] place-content-center px-4">
+              <div className="text-center">
+                <h2 className="mt-6 text-xl font-bold tracking-tight text-foreground sm:text-3xl">
+                  Its Quiet Here!
+                </h2>
+                <p className="mt-4 text-muted-foreground">
+                  Be the first to start the conversation.
+                </p>
+              </div>
+            </div>
           )}
         </div>
       </ScrollArea>

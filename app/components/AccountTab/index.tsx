@@ -1,14 +1,8 @@
 "use client";
-import PencilIcon from "../ui/PencilIcon";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import Image from "next/image";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useState, useEffect } from "react";
-import { updateProfile } from "@/lib/actions/updateProfile.actions";
 import {
   Form,
   FormControl,
@@ -17,8 +11,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/app/components/ui/form";
-import RadixPencil from "../ui/radixpencil";
+import { updateProfile } from "@/lib/actions/updateProfile.actions";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
 import Loader from "../ui/loader";
+import RadixPencil from "../ui/radixpencil";
 
 const indianPhoneRegex: RegExp = /^(?:[6-9]\d{9})?$/;
 
@@ -64,7 +63,7 @@ export default function AccountTab({ ...props }) {
   };
 
   return (
-    <div className="mt-10 flex w-11/12 scale-100 flex-col rounded-xl bg-[#EEF6FF] p-6 dark:bg-[#152451] sm:w-3/5">
+    <div className="mt-10 flex w-11/12 scale-100 flex-col rounded-xl bg-[#EEF6FF] p-6 dark:bg-muted sm:w-3/5">
       <div className="relative -top-14 flex flex-col items-center justify-center gap-4 rounded-xl ">
         <div className="flex h-[5.5rem] w-[5.5rem] items-center justify-center sm:h-[6rem] sm:w-[6rem]">
           <Image
@@ -75,11 +74,11 @@ export default function AccountTab({ ...props }) {
             alt="Profile picture"
             width={100}
             height={100}
-            className=" rounded-full shadow-[0_7px_25px_-3px_rgba(0,0,0,0.3)] shadow-gray-500 dark:shadow-black md:h-full md:w-full"
+            className="rounded-full shadow-[0_7px_25px_-3px_rgba(0,0,0,0.3)] shadow-gray-500 dark:shadow-black md:h-full md:w-full"
           />
         </div>
         <Button
-          className={` ${isEditing ? "block" : "hidden"} ml-0 mt-2 sm:ml-1 sm:mt-2`}
+          className={`${isEditing ? "block" : "hidden"} ml-0 mt-2 sm:ml-1 sm:mt-2`}
           variant="secondary"
           size="lg"
         >
@@ -88,7 +87,7 @@ export default function AccountTab({ ...props }) {
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(sendData)}>
-          <div className="relative flex h-full w-full flex-col items-center justify-center gap-4 rounded-xl bg-[#DFF1FE] p-4 *:text-center *:text-base dark:bg-[#16213E] sm:items-start sm:*:text-start">
+          <div className="relative flex h-full w-full flex-col items-center justify-center gap-4 rounded-xl bg-[#DFF1FE] p-4 *:text-center *:text-base dark:bg-background/40 sm:items-start sm:*:text-start">
             <FormField
               name="name"
               control={form.control}

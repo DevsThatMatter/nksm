@@ -1,9 +1,8 @@
 import { HTMLAttributes, forwardRef } from "react";
 import { cn } from "@/app/utils";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Button } from "@/app/components/ui/button";
 
-const divVariants = cva("relative grow z-10  flex place-items-center", {
+const divVariants = cva("relative z-10 flex  grow place-items-center", {
   variants: {
     variant: {
       left: "rounded-l-lg",
