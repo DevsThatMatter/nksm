@@ -35,11 +35,23 @@ export default function Page({
     sortBy && Object.keys(sortFilterObject).includes(sortBy)
       ? sortBy
       : "newest";
+  console.log(selectedCategory);
+  const pageSize = 6;
+  const result = await getSearchResults({
+    searchString: q,
+    pageNumber: 1,
+    pageSize: pageSize,
+    category: selectedCategory,
+    sortBy: selectedSorting,
+  });
+  const loadMoreKey = JSON.stringify(
+    q + selectedCategory ?? "" + selectedSorting ?? "",
+  );
   return (
-    <section className="container m-auto grid grid-cols-[30%_auto] justify-center gap-x-1 px-2 sm:gap-x-[1%] sm:px-3 md:grid-cols-[13rem_calc(100%-13rem)] lg:grid-cols-[15rem_calc(100%-15rem)] xl:grid-cols-[20%_80%]">
+    <section className="container m-auto grid grid-cols-1 justify-center gap-x-1 px-2 sm:gap-x-[1%] sm:px-3 lg:grid-cols-[15rem_calc(100%-15rem)] xl:grid-cols-[20%_80%]">
       <Filter query={q} sorting={selectedSorting} category={selectedCategory} />
 
-      <section className="rounded-sm">
+      <section className="rounded-sm max-lg:w-full">
         <span className="sticky top-[4.769rem] z-10 flex flex-wrap items-center justify-between bg-background p-2">
           <p className="pl-1 text-xl font-semibold">
             Showing results for &quot;{q}&quot;
