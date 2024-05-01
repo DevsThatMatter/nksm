@@ -360,8 +360,8 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
       if (product.Total_Quantity_Available <= 0) {
         product.is_archive = true;
       }
-
       await product.save();
+
       await User.updateOne(
         {
           _id: new mongo.ObjectId(validatedProps.buyer),
