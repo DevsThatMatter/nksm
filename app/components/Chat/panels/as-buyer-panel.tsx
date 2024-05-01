@@ -38,7 +38,11 @@ export default function AsBuyerPanel({
             buyerId: buyerId,
             productId: productId,
           }).then((data) => {
-            updateLastMessage(productId, data.lastMsg ?? "");
+            updateLastMessage(
+              productId,
+              data.lastMsg?.sentBy ?? "",
+              data.lastMsg?.lastSentForeignMessage ?? "",
+            );
             return data;
           }),
       };

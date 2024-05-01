@@ -7,7 +7,8 @@ interface ChatStore {
     discussionGroup: chatDetails[];
   } | null;
   activeDiscussion: chatDetails | null;
-  lastMessages: Map<string, string> | null;
+  lastMessages: Map<string, Array<string>> | null;
+
   setActiveDiscussionGroup: (
     productId: string,
     DiscussionGroup: chatDetails[],
@@ -15,13 +16,14 @@ interface ChatStore {
   removeDiscussionGroup: () => void;
   setActiveDiscussion: (discussion: chatDetails) => void;
   removeActiveDiscussion: () => void;
-  updateLastMessage: (productId: string, message: string) => void;
+  updateLastMessage: (productId: string, by: string, message: string) => void;
 }
 
 export const useChatStore = create<ChatStore>()((set) => ({
   activeDiscussionGroup: null,
   activeDiscussion: null,
   lastMessages: null,
+
   setActiveDiscussion: (discussion: chatDetails) =>
     set((state) => ({
       ...state,
@@ -44,10 +46,10 @@ export const useChatStore = create<ChatStore>()((set) => ({
     set(() => ({
       activeDiscussionGroup: null,
     })),
-  updateLastMessage: (productId: string, message: string) =>
+  updateLastMessage: (productId: string, by: string, message: string) =>
     set((state) => {
       const updatedLastMessages = new Map(state.lastMessages || []);
-      updatedLastMessages.set(productId, message);
+      updatedLastMessages.set(productId, [by, message]);
       return { ...state, lastMessages: updatedLastMessages };
     }),
 }));

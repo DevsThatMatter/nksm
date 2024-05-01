@@ -334,7 +334,6 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
         );
       }
 
-      User;
       await Chat.updateMany(
         {
           Seller: new mongo.ObjectId(validatedProps.seller),
@@ -352,6 +351,25 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
         },
         {
           $set: { status: "stale" },
+        },
+      );
+      const product = await Product.findOne({
+        _id: new mongo.ObjectId(validatedProps.productId),
+      });
+      product.Total_Quantity_Available--;
+      if (product.Total_Quantity_Available <= 0) {
+        product.is_archive = true;
+      }
+
+      await product.save();
+      await User.updateOne(
+        {
+          _id: new mongo.ObjectId(validatedProps.buyer),
+        },
+        {
+          $push: {
+            Ordered_Products: new mongo.ObjectId(validatedProps.productId),
+          },
         },
       );
     } else {
@@ -470,7 +488,7 @@ export async function countUnreadMessages(
           _id: new mongo.ObjectId(props.messageId),
         },
         {
-          isRead: true,
+          readStatus: true,
         },
       );
       const cacheKey = `chatId-${chatId}-userId-${userId}`;
@@ -982,7 +1000,7 @@ export async function getLastMessages({
 }) {
   try {
     await connectToDB();
-    const pipeline: any[] = [
+    const pipeline = [
       {
         $match: {
           Seller: new mongo.ObjectId(sellerId),
@@ -1003,7 +1021,7 @@ export async function getLastMessages({
       },
       {
         $sort: {
-          "foreignMessages.TimeStamp": -1,
+          "foreignMessages.TimeStamp": -1 as const,
         },
       },
       {
@@ -1012,12 +1030,16 @@ export async function getLastMessages({
       {
         $project: {
           lastSentForeignMessage: "$foreignMessages.Message",
+          sentBy: "$foreignMessages.Sender",
           _id: 0,
         },
       },
     ];
-    const lastMsg = (await Chat.aggregate(pipeline))[0]
-      .lastSentForeignMessage as string;
+    const lastMsg: {
+      lastSentForeignMessage: string;
+      sentBy: string;
+    } = (await Chat.aggregate(pipeline))[0];
+
     return {
       lastMsg: lastMsg,
       productId: productId.toString(),

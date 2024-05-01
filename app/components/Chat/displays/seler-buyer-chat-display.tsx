@@ -61,7 +61,6 @@ export default function SellerBuyerChatDisplay({
     }
 
     pusherClient.bind("unreadCount:inc", handelUpdatedUnreadCount);
-    pusherClient.bind("unreadCount:inc", handelUpdatedUnreadCount);
     pusherClient.bind("lastMessage:new", handelUpdatedLastMessage);
 
     return () => {
@@ -69,6 +68,22 @@ export default function SellerBuyerChatDisplay({
       pusherClient.unbind("unreadCount:inc", handelUpdatedUnreadCount);
     };
   }, []);
+
+  const messageSender =
+    userId === lastMessages?.get(discussion.productDetails.productId)?.[0]
+      ? "you"
+      : displayName;
+
+  const lastMessage = lastMessages?.get(
+    discussion.productDetails.productId,
+  )?.[1];
+
+  const messageContent =
+    lastMessage !== undefined ? (
+      lastMessage
+    ) : (
+      <Skeleton className="h-full w-32" />
+    );
 
   return (
     <section
@@ -98,11 +113,10 @@ export default function SellerBuyerChatDisplay({
             <h4 className="m-0 line-clamp-1 p-0 text-sm text-muted-foreground">
               For: {discussion.productDetails.Product_Name}
             </h4>
-            <p className="h-3 text-sm text-muted-foreground">
-              {lastMessages?.get(discussion.productDetails.productId) ?? (
-                <Skeleton className="h-full w-32" />
-              )}
-            </p>
+            <span className="line-clamp-1 flex h-4 text-xs text-muted-foreground">
+              {messageContent && <p>{messageSender}:&nbsp;&nbsp;</p>}
+              <p>{messageContent}</p>
+            </span>
           </div>
           {data !== 0 && (
             <span

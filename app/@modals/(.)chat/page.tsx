@@ -1,9 +1,7 @@
 import ControlPanel from "@/app/components/Chat/panels/control-panel";
 import { Dialog, DialogCloseBtn } from "@/app/components/dialog";
-import { Icons } from "@/app/utils/icons";
 import { auth } from "@/auth";
 import { getAllChats } from "@/lib/actions/chat.actions";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function page() {

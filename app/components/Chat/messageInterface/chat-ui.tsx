@@ -12,11 +12,9 @@ import MessageElement from "./message-element";
 import ChatInput from "./chat-input";
 import { Skeleton } from "../../ui/skeleton";
 import { useChatObserver } from "@/hooks/useChatObserver";
-import { useQueryClient } from "@tanstack/react-query";
-import { Icons } from "@/app/utils/icons";
 
 export default function ChatUI1({ userId }: { userId: string }) {
-  const { activeDiscussion, updateLastMessage } = useChatStore();
+  const { activeDiscussion } = useChatStore();
   const productId = activeDiscussion?.productDetails.productId ?? "";
   const { queryKey, updateKey, addKey, otherUserDetails } = getChatDetails({
     userId: userId,
@@ -57,20 +55,14 @@ export default function ChatUI1({ userId }: { userId: string }) {
   useEffect(() => {
     if (data?.pages) {
       setMessages((prevMessages) => {
-        let updatedMessages = [...prevMessages];
-        data.pages.forEach((page) => {
-          const newMessages = page?.content?.messages;
-          if (newMessages) {
-            const filteredNewMessages = newMessages.filter(
-              (newMsg: getMessagesResult) =>
-                !updatedMessages.some(
-                  (prevMsg) => prevMsg.msgId === newMsg.msgId,
-                ),
-            );
-            updatedMessages = [...updatedMessages, ...filteredNewMessages];
-          }
-        });
-        return updatedMessages;
+        const newMessages = data.pages.flatMap(
+          (page) =>
+            page?.content?.messages?.filter(
+              (newMsg) =>
+                !prevMessages.some((prevMsg) => prevMsg.msgId === newMsg.msgId),
+            ) || [],
+        );
+        return [...prevMessages, ...newMessages];
       });
     }
   }, [data]);
