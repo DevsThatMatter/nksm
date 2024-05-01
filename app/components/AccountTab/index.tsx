@@ -29,7 +29,7 @@ const editProfileSchema = z.object({
     .max(30, "Name can only contain a maximum of 30 letters."),
   phone: z
     .string()
-    .regex(indianPhoneRegex, "Enter a valid mobile number.")
+    //.regex(indianPhoneRegex, "Enter a valid mobile number.")
     .optional()
     .or(z.literal("")), //Allows for no phone numbers to exist, since phone numbers aren't fetched by default from GoogleProvider
 });
@@ -77,13 +77,6 @@ export default function AccountTab({ ...props }) {
             className="rounded-full shadow-[0_7px_25px_-3px_rgba(0,0,0,0.3)] shadow-gray-500 dark:shadow-black md:h-full md:w-full"
           />
         </div>
-        <Button
-          className={`${isEditing ? "block" : "hidden"} ml-0 mt-2 sm:ml-1 sm:mt-2`}
-          variant="secondary"
-          size="lg"
-        >
-          Change
-        </Button>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(sendData)}>

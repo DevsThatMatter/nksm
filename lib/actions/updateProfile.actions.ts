@@ -14,7 +14,7 @@ const editProfileSchema = z.object({
     .max(30, "Name can only contain a maximum of 30 letters."),
   phone: z
     .string()
-    .regex(indianPhoneRegex, "Enter a valid mobile number.")
+    //.regex(indianPhoneRegex, "Enter a valid mobile number.")
     .optional()
     .or(z.literal("")), // Allows for no phone numbers to exist, since phone numbers aren't fetched by default from GoogleProvider
 });
