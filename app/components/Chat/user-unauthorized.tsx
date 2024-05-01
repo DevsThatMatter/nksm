@@ -14,7 +14,7 @@ export default function UserUnauthorized() {
     <div>
       <HoverCard>
         <HoverCardTrigger asChild>
-          <Button variant="link">
+          <Button variant="ghost" size="icon">
             <Icons.chaticon className="h-[1.3rem] w-[1.32rem]" />
           </Button>
         </HoverCardTrigger>

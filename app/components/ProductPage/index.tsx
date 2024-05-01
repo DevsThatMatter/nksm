@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { cn } from "@/app/utils";
 import { Product } from "@/types";
 import ProductCarousel from "../HomePage/Carousel";
@@ -22,7 +23,13 @@ const ProductPage = ({ productInfo }: { productInfo: Product }) => {
               productImages={productInfo.Images}
               productId={productInfo._id}
             />
-            <CommentCard productId={productInfo._id} />
+            <Suspense
+              fallback={
+                <div className="h-full w-full">Loading comments...</div>
+              }
+            >
+              <CommentCard productId={productInfo._id} />
+            </Suspense>
           </div>
         </div>
         <div className={cn("col-span-2 m-2 mt-8")}>

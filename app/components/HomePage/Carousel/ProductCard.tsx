@@ -2,12 +2,11 @@ import Image from "next/image";
 import { Card, CardContent } from "../../ui/card";
 import Link from "next/link";
 import { CarouselItem } from "../../ui/carousel";
-import { ObjectId } from "mongoose";
 import ProductSaved from "../../ProductSaved";
 import { cn } from "@/app/utils";
 
 interface ProductCardProps {
-  id: ObjectId;
+  id: string;
   image_url: string;
   name: string;
   price: number;
