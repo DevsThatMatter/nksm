@@ -1,9 +1,14 @@
-import ProductPage from "@/app/components/ProductPage";
+import ProductPage, { ProductPageSkeleton } from "@/app/components/ProductPage";
+import { Suspense } from "react";
 
 export default async function Page({
   params: { id },
 }: {
   params: { id: string };
 }) {
-  return <ProductPage id={id} />;
+  return (
+    <Suspense fallback={<ProductPageSkeleton />} key={"product-page"}>
+      <ProductPage id={id} />
+    </Suspense>
+  );
 }

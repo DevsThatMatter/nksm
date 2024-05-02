@@ -53,4 +53,38 @@ const ProductDetails = ({
   );
 };
 
+export const ProductDetailsSkeleton = () => {
+  return (
+    <div className={cn("mt-4")}>
+      <div className="flex justify-between">
+        <h1 className="w-32 animate-pulse whitespace-pre rounded-md bg-primary/10 text-2xl font-bold">
+          {" "}
+        </h1>
+        <p className="w-16 animate-pulse whitespace-pre rounded-md bg-primary/10 text-2xl font-semibold">
+          {" "}
+        </p>
+      </div>
+      <div className="flex justify-between">
+        <div className="flex ">
+          <p className="my-1 w-[4.5rem] animate-pulse whitespace-pre rounded-2xl border border-muted-foreground bg-primary/10 p-1 px-2 text-xs dark:font-semibold">
+            {" "}
+          </p>
+          <p className="m-1 w-[4.5rem] animate-pulse whitespace-pre rounded-3xl bg-primary/10 p-1 px-2 text-xs">
+            {" "}
+          </p>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          Available:{" "}
+          <span className="animate-pulse whitespace-pre rounded-md bg-primary/10">
+            {"     "}
+          </span>
+        </p>
+      </div>
+      <div className="mt-2 space-y-2">
+        <p className="w-full animate-pulse whitespace-pre bg-primary/10"> </p>
+      </div>
+    </div>
+  );
+};
+
 export default ProductDetails;

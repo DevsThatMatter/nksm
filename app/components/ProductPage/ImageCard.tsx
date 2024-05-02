@@ -7,6 +7,23 @@ import {
 import Image from "next/image";
 import Overlay from "./Overlay";
 import { EmblaOptionsType } from "embla-carousel";
+import { array } from "zod";
+import { Skeleton } from "../ui/skeleton";
+
+export function ImageCardSkeleton() {
+  return (
+    <div>
+      <div className="relative flex justify-end">
+        <div className="absolute bottom-0 left-0 top-0 w-[15%] space-y-2 overflow-auto rounded-md pr-2">
+          {[...Array(5)].map((_, index) => (
+            <Skeleton key={index} className="aspect-square w-full rounded-md" />
+          ))}
+        </div>
+        <Skeleton className="aspect-video w-[85%] rounded-lg border border-muted"></Skeleton>
+      </div>
+    </div>
+  );
+}
 
 export default function ImageCard({ images }: { images: string[] }) {
   const options: EmblaOptionsType = {
