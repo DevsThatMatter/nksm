@@ -101,25 +101,6 @@ export default function AccountTab({ ...props }) {
             />
 
             <FormField
-              name="phone"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="ml-2 w-full *:text-base">
-                  <FormLabel>Phone:</FormLabel>
-                  <FormControl>
-                    <Input
-                      className={`w-full border-slate-500 text-center disabled:border-0 disabled:font-bold sm:w-3/5 sm:text-start`}
-                      placeholder="Add a phone number"
-                      disabled={!isEditing || form.formState.isSubmitting}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
               name="email"
               render={({ field }) => (
                 <FormItem className="ml-2 w-full *:text-base">
