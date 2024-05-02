@@ -24,14 +24,11 @@ async function CommentCard({
       <h2 className="mt-6 pb-3 text-2xl font-semibold lg:mt-3 lg:pb-0 lg:text-xl">
         Comments
       </h2>
-      <ScrollArea
-        className="mt-2 flex h-72 w-full rounded-md border p-2"
-        viewportClassName="space-y-4"
-      >
+      <ScrollArea className="mt-2 flex h-72 w-full rounded-md border px-2">
         {comments?.length ? (
           comments.map((comment) => (
             <div
-              className="flex items-start space-x-2"
+              className="flex items-start space-x-2 py-2"
               key={comment._id?.toString()}
             >
               <Avatar>

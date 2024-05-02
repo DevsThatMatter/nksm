@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import Skeleton from "react-loading-skeleton";
+import { Skeleton } from "@/app/components/ui/skeleton";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -185,15 +185,7 @@ export default function ChatInput({
               )}
             />{" "}
           </button>
-        ) || (
-          <Skeleton
-            circle
-            width={40}
-            height={40}
-            baseColor="#e2e8f0"
-            highlightColor="#f7fafc"
-          />
-        )}
+        ) || <Skeleton className="size-10 rounded-full" />}
       </form>
     </Form>
   );

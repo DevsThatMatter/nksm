@@ -17,7 +17,7 @@ import { Input } from "../ui/input";
 const Navbar = ({
   children = (
     <>
-      <Link href="/add-listing">
+      <Link href="/add-listing" prefetch>
         <Button variant="default" className="relative">
           <Icons.add className="absolute bottom-0 left-2 top-0 m-auto h-5 w-5" />
           <span className="hidden pl-4 sm:inline-block"> Add Listing </span>
@@ -52,6 +52,7 @@ const Navbar = ({
       >
         <Suspense
           fallback={<Input className="pl-8 sm:w-56 md:w-[31.4rem]" readOnly />}
+          key="search"
         >
           <SearchSection />
         </Suspense>

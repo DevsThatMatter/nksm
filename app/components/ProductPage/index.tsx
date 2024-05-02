@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { cn } from "@/app/utils";
+import { fetchProductDetails } from "@/lib/actions/products.actions";
 import { Product } from "@/types";
 import ProductCarousel from "../HomePage/Carousel";
 import CommentCard from "./CommentCard";
@@ -7,7 +8,8 @@ import ImageCard from "./ImageCard";
 import ProductDetails from "./ProductDetails";
 import SellerCard from "./SellerCard";
 
-const ProductPage = ({ productInfo }: { productInfo: Product }) => {
+const ProductPage = async ({ id }: { id: string }) => {
+  const productInfo: Product = await fetchProductDetails(id);
   return (
     <div key="1" className="mx-auto max-w-full p-4">
       <div className="gap-4 lg:grid lg:grid-cols-3 lg:grid-rows-2">
@@ -27,6 +29,7 @@ const ProductPage = ({ productInfo }: { productInfo: Product }) => {
               fallback={
                 <div className="h-full w-full">Loading comments...</div>
               }
+              key="chats"
             >
               <CommentCard productId={productInfo._id} />
             </Suspense>
