@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { cn } from "@/app/utils";
 import { fetchProductDetails } from "@/lib/actions/products.actions";
 import { Product } from "@/types";
 import ProductCarousel from "../HomePage/Carousel";
@@ -27,7 +26,12 @@ const ProductPage = async ({ id }: { id: string }) => {
             />
             <Suspense
               fallback={
-                <div className="h-full w-full">Loading comments...</div>
+                <>
+                  <h2 className="mt-6 pb-3 text-2xl font-semibold lg:mt-3 lg:pb-0 lg:text-xl">
+                    Comments
+                  </h2>
+                  <div className="h-full w-full">Loading comments...</div>
+                </>
               }
               key="chats"
             >
@@ -35,10 +39,9 @@ const ProductPage = async ({ id }: { id: string }) => {
             </Suspense>
           </div>
         </div>
-        <div className={cn("col-span-2 m-2 mt-8")}>
+        <div className="col-span-2 m-2 mt-8">
           <h1 className="pb-3 text-2xl font-semibold">You may also like:</h1>
-
-          <ProductCarousel productPageCarousel arrows={false} />
+          <ProductCarousel productPageCarousel arrows={false} key="carousel" />
         </div>
       </div>
     </div>
@@ -62,14 +65,10 @@ export const ProductPageSkeleton = () => {
             </h2>
             <div className="h-full w-full">Loading comments...</div>
           </div>
-          <div className={cn("col-span-2 m-2 mt-8")}>
-            <h1 className="pb-3 text-2xl font-semibold">You may also like:</h1>
-            <ProductCarousel
-              productPageCarousel
-              arrows={false}
-              key="carousel"
-            />
-          </div>
+        </div>
+        <div className="col-span-2 m-2 mt-8">
+          <h1 className="pb-3 text-2xl font-semibold">You may also like:</h1>
+          <ProductCarousel productPageCarousel arrows={false} key="carousel" />
         </div>
       </div>
     </div>
