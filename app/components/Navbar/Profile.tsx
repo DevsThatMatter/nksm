@@ -33,6 +33,10 @@ export function Profile({ data, whichIcon }: UserProfileProps) {
     router.push("/login");
   };
 
+  const handleAccountInfoClick = () => {
+    router.push("/account");
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -66,7 +70,7 @@ export function Profile({ data, whichIcon }: UserProfileProps) {
             <DropdownMenuItem onClick={() => console.log("View Your Profile")}>
               View Your Orders
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => console.log("Settings")}>
+            <DropdownMenuItem onClick={handleAccountInfoClick}>
               Account Info
             </DropdownMenuItem>
           </>
