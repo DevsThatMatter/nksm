@@ -19,16 +19,18 @@ export default function NoOneToTalk({
         />
       </section>
       <section className="flex h-1/2 w-full flex-col items-center justify-center">
-        <h3 className="text-3xl text-primary">{"It's quiet here!"}</h3>
+        <h3 className="text-3xl text-primary">{"It's Quiet Here!"}</h3>
         <p className="mt-2 text-sm text-gray-600">
           Why not {endpoint === "seller" ? "sell" : "buy"} something?
         </p>
-        <Link
-          href={endpoint === "seller" ? "/add-listing" : "/explore-products"}
-          className={cn(buttonVariants({ variant: "default" }), "mt-4")}
-        >
-          {endpoint === "seller" ? "Add Listing" : "Explore Products"}
-        </Link>
+        {endpoint === "seller" && (
+          <Link
+            href={endpoint === "seller" ? "/add-listing" : "/explore-products"}
+            className={cn(buttonVariants({ variant: "default" }), "mt-4")}
+          >
+            Add a product
+          </Link>
+        )}
       </section>
     </main>
   );
