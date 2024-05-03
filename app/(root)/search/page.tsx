@@ -53,7 +53,7 @@ export default function Page({
 
       <section className="rounded-sm max-lg:w-full">
         <span className="sticky top-[4.769rem] z-10 flex flex-wrap items-center justify-between bg-background p-2">
-          <p className="pl-1 text-xl font-semibold">
+          <p className="max-w-[65%] pl-1 text-xl font-semibold max-md:text-sm max-[430px]:text-xs">
             Showing results for &quot;{q}&quot;
             {selectedCategory ? ` in ${selectedCategory}` : ""}
           </p>

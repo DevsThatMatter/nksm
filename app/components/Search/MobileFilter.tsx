@@ -18,15 +18,19 @@ import { cn } from "@/app/utils";
 import { spartan } from "@/app/utils/fonts";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { CategoryEnum } from "@/types";
 import { SortBy } from "@/types";
+import { useForm } from "react-hook-form";
 
 export const MobileFilter = ({ query, sorting, category }: FilterProps) => {
-  const [filter, setFilter] = useState({
-    category: category,
-    sorting: sorting,
+  const { watch, setValue } = useForm({
+    defaultValues: {
+      sorting,
+      category,
+    },
   });
+  const categoryValue = watch("category");
+  const sortingValue = watch("sorting");
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -36,21 +40,20 @@ export const MobileFilter = ({ query, sorting, category }: FilterProps) => {
         </button>
       </DrawerTrigger>
       <DrawerContent>
-        <div className="mx-auto w-full grow">
+        <form className="mx-auto w-full" method="POST">
           <DrawerHeader>
-            <DrawerDescription className="flex h-fit justify-evenly">
-              <div className="">
-                <p className="text-xl font-bold">Categories</p>
+            <DrawerDescription className="flex h-fit grow justify-evenly">
+              <section>
+                <p className="pb-1 text-center text-xl font-bold text-foreground">
+                  Categories
+                </p>
                 {categories.map(({ name, imgUrl }) => (
                   <figure
                     key={name}
                     className="relative w-full rounded-lg text-center"
-                    onClick={() =>
-                      setFilter({
-                        ...filter,
-                        category: name as CategoryEnum,
-                      })
-                    }
+                    onClick={() => {
+                      setValue("category", name as CategoryEnum);
+                    }}
                   >
                     <Image
                       className={cn(" aspect-[7/2] w-full object-cover")}
@@ -62,7 +65,7 @@ export const MobileFilter = ({ query, sorting, category }: FilterProps) => {
                     <figcaption
                       className={cn(
                         "absolute inset-0 flex items-center justify-center bg-white text-center text-lg transition-opacity dark:bg-[#0c0a09]",
-                        filter.category === name
+                        categoryValue === name
                           ? "!bg-opacity-10 text-foreground"
                           : "!bg-opacity-80 text-gray-400",
                       )}
@@ -78,18 +81,15 @@ export const MobileFilter = ({ query, sorting, category }: FilterProps) => {
                     </figcaption>
                   </figure>
                 ))}
-              </div>
+              </section>
 
-              <div className="space-y-5 text-foreground">
-                <p className="text-xl font-bold">Sort by</p>
+              <section className="space-y-5 text-foreground">
+                <p className="text-center text-xl font-bold">Sort by</p>
                 <RadioGroup
                   defaultValue={sorting}
                   className="space-y-5"
                   onValueChange={(value: SortBy) => {
-                    setFilter({
-                      ...filter,
-                      sorting: value,
-                    });
+                    setValue("sorting", value);
                   }}
                 >
                   <div className="flex items-center space-x-2">
@@ -109,10 +109,10 @@ export const MobileFilter = ({ query, sorting, category }: FilterProps) => {
                     <Label htmlFor="low">Price: Low to High</Label>
                   </div>
                 </RadioGroup>
-              </div>
+              </section>
             </DrawerDescription>
           </DrawerHeader>
-        </div>
+        </form>
         <DrawerFooter>
           <div className="flex justify-end gap-3">
             <DrawerClose asChild>
@@ -124,13 +124,11 @@ export const MobileFilter = ({ query, sorting, category }: FilterProps) => {
                 }}
               >
                 <Button
-                  className="bg-red-400"
-                  onClick={() =>
-                    setFilter({
-                      category: undefined,
-                      sorting: undefined,
-                    })
-                  }
+                  variant="outline"
+                  onClick={() => {
+                    setValue("sorting", "newest");
+                    setValue("category", undefined);
+                  }}
                 >
                   Clear
                 </Button>
@@ -141,12 +139,12 @@ export const MobileFilter = ({ query, sorting, category }: FilterProps) => {
                 href={{
                   query: {
                     q: query,
-                    sortBy: filter.sorting,
-                    category: filter.category,
+                    sortBy: sortingValue,
+                    category: categoryValue,
                   },
                 }}
               >
-                <Button className="">Apply</Button>
+                <Button type="submit">Apply</Button>
               </Link>
             </DrawerClose>
           </div>
