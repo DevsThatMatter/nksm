@@ -15,7 +15,7 @@ export interface FilterProps {
   category?: keyof typeof CategoryEnum;
 }
 
-export default function Page({
+export default async function Page({
   searchParams: { q, category, sortBy },
 }: {
   searchParams: {

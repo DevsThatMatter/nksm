@@ -36,7 +36,6 @@ export const MobileFilter = ({ query, sorting, category }: FilterProps) => {
     <Drawer>
       <DrawerTrigger asChild>
         <button className="z-40 flex w-full justify-end p-1 lg:hidden">
-          {" "}
           <MixerHorizontalIcon className="h-5 w-5" />
         </button>
       </DrawerTrigger>
@@ -44,55 +43,55 @@ export const MobileFilter = ({ query, sorting, category }: FilterProps) => {
         <form className="mx-auto w-full" action={handleSubmit}>
           <DrawerHeader>
             <DrawerDescription className="flex h-fit grow justify-evenly">
-              <section>
+              <section className="flex flex-col overflow-y-auto">
                 <p className="pb-1 text-center text-xl font-bold text-foreground">
                   Categories
                 </p>
-                <RadioGroup defaultValue={category} name="category">
-                  {categories.map(({ name, imgUrl }) => (
-                    <>
-                      <RadioGroupItem
-                        value={name}
-                        id={name}
-                        className="hidden"
-                      />
-                      <Label
-                        htmlFor={name}
-                        className="flex items-center space-x-2"
+                {categories.map(({ name, imgUrl }) => (
+                  <fieldset key={name}>
+                    <input
+                      type="radio"
+                      name="category"
+                      value={name}
+                      defaultChecked={category === name}
+                      id={name}
+                      className="peer hidden appearance-none"
+                    />
+                    <label
+                      htmlFor={name}
+                      className="group flex items-center space-x-2 peer-checked:[&_figcaption]:!bg-opacity-10 peer-checked:[&_figcaption]:text-foreground peer-checked:[&_img]:aspect-video"
+                    >
+                      <figure
+                        key={name}
+                        className="relative w-full rounded-lg text-center"
                       >
-                        <figure
-                          key={name}
-                          className="relative w-full rounded-lg text-center"
+                        <Image
+                          className={cn(
+                            "aspect-[7/2] w-full object-cover transition-all duration-300 ease-in-out",
+                          )}
+                          src={imgUrl}
+                          alt={name}
+                          width={150}
+                          height={150}
+                        />
+                        <figcaption
+                          className={cn(
+                            "absolute inset-0 flex items-center justify-center bg-white !bg-opacity-80 text-center text-lg text-gray-400 transition-opacity dark:bg-[#0c0a09]",
+                          )}
                         >
-                          <Image
-                            className={cn(" aspect-[7/2] w-full object-cover")}
-                            src={imgUrl}
-                            alt={name}
-                            width={150}
-                            height={150}
-                          />
-                          <figcaption
+                          <p
                             className={cn(
-                              "absolute inset-0 flex items-center justify-center bg-white text-center text-lg transition-opacity active:!bg-opacity-10 active:text-foreground dark:bg-[#0c0a09]",
-                              category === name
-                                ? "!bg-opacity-10 text-foreground"
-                                : "!bg-opacity-80 text-gray-400",
+                              "text-xl font-semibold @2xs:text-3xl @xs:text-4xl @sm:text-5xl @md:text-6xl @md:font-medium",
+                              spartan.className,
                             )}
                           >
-                            <p
-                              className={cn(
-                                "text-xl font-semibold @2xs:text-3xl @xs:text-4xl @sm:text-5xl @md:text-6xl @md:font-medium",
-                                spartan.className,
-                              )}
-                            >
-                              {name}
-                            </p>
-                          </figcaption>
-                        </figure>
-                      </Label>
-                    </>
-                  ))}
-                </RadioGroup>
+                            {name}
+                          </p>
+                        </figcaption>
+                      </figure>
+                    </label>
+                  </fieldset>
+                ))}
               </section>
 
               <section className="space-y-5 text-foreground">
