@@ -2,7 +2,6 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-
 import {
   Form,
   FormControl,
@@ -11,6 +10,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/app/components/ui/form";
+import { toast } from "sonner";
 import { updateProfile } from "@/lib/actions/updateProfile.actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -18,28 +18,15 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import Loader from "../ui/loader";
 import RadixPencil from "../ui/radixpencil";
-
-const indianPhoneRegex: RegExp = /^(?:[6-9]\d{9})?$/;
+import { editProfileSchema } from "@/lib/validations/profile-schema";
 
 type FormFields = z.infer<typeof editProfileSchema>;
-const editProfileSchema = z.object({
-  name: z
-    .string()
-    .min(3, "Name must contain atleast 3 characters.")
-    .max(30, "Name can only contain a maximum of 30 letters."),
-  phone: z
-    .string()
-    //.regex(indianPhoneRegex, "Enter a valid mobile number.")
-    .optional()
-    .or(z.literal("")), //Allows for no phone numbers to exist, since phone numbers aren't fetched by default from GoogleProvider
-});
 
 export default function AccountTab({ ...props }) {
   const [isEditing, setisEditing] = useState<boolean>(false);
   const form = useForm<FormFields>({
     defaultValues: {
       name: props.Name,
-      phone: props.Phone,
     },
     disabled: !isEditing,
     resolver: zodResolver(editProfileSchema),
@@ -48,15 +35,13 @@ export default function AccountTab({ ...props }) {
   const sendData: SubmitHandler<FormFields> = async (data) => {
     if (!isEditing) {
       setisEditing((prev) => !prev);
-
       return;
     }
-    const { name, phone } = data;
+    const { name } = data;
     const email = props.Email;
-    const response = await updateProfile({ name, phone, email });
+    const response = await updateProfile({ name, email });
     if (response?.error) {
-      alert(`Something went wrong:\n ${response.error}`);
-      console.log(data);
+      toast.error("Something went wrong");
       return;
     }
     setisEditing(false);
