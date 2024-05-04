@@ -2,15 +2,16 @@ import UserProfile from "./UserProfile";
 
 import Image from "next/image";
 import Link from "next/link";
-import { SavedItems } from "./SavedItems";
 import { Separator } from "@/app/components/ui/separator";
 import UserChat from "../Chat/chat-panel";
 import SearchBar from "./SearchBar";
-import { ReactNode, Suspense } from "react";
-import { fetchRecentProductS } from "@/lib/actions/products.actions";
+import { ReactNode } from "react";
+import {
+  fetchRecentProductS,
+  fetchSavedProduct,
+} from "@/lib/actions/products.actions";
 import { cn } from "@/app/utils";
 import { Button } from "../ui/button";
-import { countUnreadMessages } from "@/lib/actions/chat.actions";
 import { Icons } from "@/app/utils/icons";
 import { Input } from "../ui/input";
 
@@ -24,7 +25,11 @@ const Navbar = ({
         </Button>
       </Link>
       <UserChat />
-      <SavedItems />
+      <Link href={"/saved-products"}>
+        <Button variant="ghost" size="icon">
+          <Icons.saved className="h-[1.4rem] w-[1.4rem]" />
+        </Button>
+      </Link>
       <Separator orientation="vertical" className="h-10" />
       <UserProfile />
     </>

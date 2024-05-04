@@ -61,6 +61,8 @@ export const CarouselItems = async ({
       price={product.Price}
       description={product.Description}
       productPageCarousel={productPageCarousel}
+      condition={product.Condition}
+      negotiable={product.Negotiable}
     />
   ));
 };

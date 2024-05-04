@@ -21,6 +21,7 @@ import {
   Cross2Icon,
   UploadIcon,
   ReloadIcon,
+  TrashIcon,
 } from "@radix-ui/react-icons";
 
 export const Icons = {
@@ -46,4 +47,5 @@ export const Icons = {
   buffering: UpdateIcon,
   loading: ReloadIcon,
   upload: UploadIcon,
+  delete: TrashIcon,
 };
