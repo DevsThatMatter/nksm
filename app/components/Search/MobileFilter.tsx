@@ -1,4 +1,4 @@
-"use client";
+"use server";
 import { FilterProps } from "@/app/(root)/search/page";
 import { MixerHorizontalIcon } from "@radix-ui/react-icons";
 import {
@@ -17,20 +17,21 @@ import { categories } from "@/constants/categories";
 import { cn } from "@/app/utils";
 import { spartan } from "@/app/utils/fonts";
 import Image from "next/image";
+import { CategoryEnum, SortBy } from "@/types";
+import { redirect } from "next/navigation";
 import Link from "next/link";
-import { CategoryEnum } from "@/types";
-import { SortBy } from "@/types";
-import { useForm } from "react-hook-form";
 
 export const MobileFilter = ({ query, sorting, category }: FilterProps) => {
-  const { watch, setValue } = useForm({
-    defaultValues: {
-      sorting,
-      category,
-    },
-  });
-  const categoryValue = watch("category");
-  const sortingValue = watch("sorting");
+  const handleSubmit = (formData: FormData) => {
+    "use server";
+    const sortBy = formData.get("sorting") as SortBy;
+    const category = formData.get("category") as CategoryEnum;
+    const searchParams = new URLSearchParams();
+    if (sortBy) searchParams.set("sortBy", sortBy);
+    if (category) searchParams.set("category", category);
+    const url = `/search?q=${query}&${searchParams.toString()}`;
+    redirect(url);
+  };
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -40,47 +41,58 @@ export const MobileFilter = ({ query, sorting, category }: FilterProps) => {
         </button>
       </DrawerTrigger>
       <DrawerContent>
-        <form className="mx-auto w-full" method="POST">
+        <form className="mx-auto w-full" action={handleSubmit}>
           <DrawerHeader>
             <DrawerDescription className="flex h-fit grow justify-evenly">
               <section>
                 <p className="pb-1 text-center text-xl font-bold text-foreground">
                   Categories
                 </p>
-                {categories.map(({ name, imgUrl }) => (
-                  <figure
-                    key={name}
-                    className="relative w-full rounded-lg text-center"
-                    onClick={() => {
-                      setValue("category", name as CategoryEnum);
-                    }}
-                  >
-                    <Image
-                      className={cn(" aspect-[7/2] w-full object-cover")}
-                      src={imgUrl}
-                      alt={name}
-                      width={150}
-                      height={150}
-                    />
-                    <figcaption
-                      className={cn(
-                        "absolute inset-0 flex items-center justify-center bg-white text-center text-lg transition-opacity dark:bg-[#0c0a09]",
-                        categoryValue === name
-                          ? "!bg-opacity-10 text-foreground"
-                          : "!bg-opacity-80 text-gray-400",
-                      )}
-                    >
-                      <p
-                        className={cn(
-                          "text-xl font-semibold @2xs:text-3xl @xs:text-4xl @sm:text-5xl @md:text-6xl @md:font-medium",
-                          spartan.className,
-                        )}
+                <RadioGroup defaultValue={category} name="category">
+                  {categories.map(({ name, imgUrl }) => (
+                    <>
+                      <RadioGroupItem
+                        value={name}
+                        id={name}
+                        className="hidden"
+                      />
+                      <Label
+                        htmlFor={name}
+                        className="flex items-center space-x-2"
                       >
-                        {name}
-                      </p>
-                    </figcaption>
-                  </figure>
-                ))}
+                        <figure
+                          key={name}
+                          className="relative w-full rounded-lg text-center"
+                        >
+                          <Image
+                            className={cn(" aspect-[7/2] w-full object-cover")}
+                            src={imgUrl}
+                            alt={name}
+                            width={150}
+                            height={150}
+                          />
+                          <figcaption
+                            className={cn(
+                              "absolute inset-0 flex items-center justify-center bg-white text-center text-lg transition-opacity active:!bg-opacity-10 active:text-foreground dark:bg-[#0c0a09]",
+                              category === name
+                                ? "!bg-opacity-10 text-foreground"
+                                : "!bg-opacity-80 text-gray-400",
+                            )}
+                          >
+                            <p
+                              className={cn(
+                                "text-xl font-semibold @2xs:text-3xl @xs:text-4xl @sm:text-5xl @md:text-6xl @md:font-medium",
+                                spartan.className,
+                              )}
+                            >
+                              {name}
+                            </p>
+                          </figcaption>
+                        </figure>
+                      </Label>
+                    </>
+                  ))}
+                </RadioGroup>
               </section>
 
               <section className="space-y-5 text-foreground">
@@ -88,9 +100,7 @@ export const MobileFilter = ({ query, sorting, category }: FilterProps) => {
                 <RadioGroup
                   defaultValue={sorting}
                   className="space-y-5"
-                  onValueChange={(value: SortBy) => {
-                    setValue("sorting", value);
-                  }}
+                  name="sorting"
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="newest" id="newest" />
@@ -112,43 +122,25 @@ export const MobileFilter = ({ query, sorting, category }: FilterProps) => {
               </section>
             </DrawerDescription>
           </DrawerHeader>
-        </form>
-        <DrawerFooter>
-          <div className="flex justify-end gap-3">
-            <DrawerClose asChild>
-              <Link
-                href={{
-                  query: {
-                    q: query,
-                  },
-                }}
-              >
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setValue("sorting", "newest");
-                    setValue("category", undefined);
+          <DrawerFooter>
+            <div className="flex justify-end gap-3">
+              <DrawerClose asChild>
+                <Link
+                  href={{
+                    query: {
+                      q: query,
+                    },
                   }}
                 >
-                  Clear
-                </Button>
-              </Link>
-            </DrawerClose>
-            <DrawerClose asChild>
-              <Link
-                href={{
-                  query: {
-                    q: query,
-                    sortBy: sortingValue,
-                    category: categoryValue,
-                  },
-                }}
-              >
+                  <Button variant="outline">Clear</Button>
+                </Link>
+              </DrawerClose>
+              <DrawerClose asChild>
                 <Button type="submit">Apply</Button>
-              </Link>
-            </DrawerClose>
-          </div>
-        </DrawerFooter>
+              </DrawerClose>
+            </div>
+          </DrawerFooter>
+        </form>
       </DrawerContent>
     </Drawer>
   );
