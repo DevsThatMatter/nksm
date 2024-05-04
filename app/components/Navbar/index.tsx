@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Separator } from "@/app/components/ui/separator";
 import UserChat from "../Chat/chat-panel";
 import SearchBar from "./SearchBar";
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 import {
   fetchRecentProductS,
   fetchSavedProduct,
@@ -13,6 +13,7 @@ import {
 import { cn } from "@/app/utils";
 import { Button } from "../ui/button";
 import { Icons } from "@/app/utils/icons";
+import FetchedProducts from "./fetch-utils";
 import { Input } from "../ui/input";
 
 const Navbar = ({
@@ -25,11 +26,19 @@ const Navbar = ({
         </Button>
       </Link>
       <UserChat />
-      <Link href={"/saved-products"}>
-        <Button variant="ghost" size="icon">
-          <Icons.saved className="h-[1.4rem] w-[1.4rem]" />
-        </Button>
-      </Link>
+      <Suspense
+        fallback={
+          <Button variant="ghost" size="icon" disabled>
+            <Icons.saved className="h-[1.4rem] w-[1.4rem]" />
+          </Button>
+        }
+      >
+        <SavedIcon>
+          <Button variant="ghost" size="icon">
+            <Icons.saved className="h-[1.4rem] w-[1.4rem]" />
+          </Button>
+        </SavedIcon>
+      </Suspense>
       <Separator orientation="vertical" className="h-10" />
       <UserProfile />
     </>
@@ -64,6 +73,16 @@ const Navbar = ({
         {children}
       </div>
     </nav>
+  );
+};
+
+export const SavedIcon = async ({ children }: { children: ReactNode }) => {
+  const savedProducts = await fetchSavedProduct();
+  return (
+    <Link href={"/saved-products"}>
+      <FetchedProducts savedProducts={savedProducts} />
+      {children}
+    </Link>
   );
 };
 

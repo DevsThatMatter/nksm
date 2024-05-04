@@ -35,7 +35,7 @@ export default function SavedItems() {
           "flex flex-col space-y-4",
         )}
       >
-        {Array.from(savedProducts?.entries() ?? []).map(([id, product]) => (
+        {[...(savedProducts?.entries() ?? [])].map(([id, product]) => (
           <li key={id}>
             <Link
               href={`/product/${String(product._id)}`}

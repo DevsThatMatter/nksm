@@ -24,10 +24,12 @@ const ProductSaved = ({
     useProductStore();
 
   async function handelSave() {
-    const prom = saveProduct({ productId: product?._id.toString() });
+    const prom = saveProduct(product._id);
+    addSavedProduct(product._id, product);
     toast.promise(prom, {
       loading: "Processing",
       success: (data) => {
+        if (data.error) removeSavedProductFromCache(product._id);
         return (
           <span className={cn(data.error && "font-bold text-red-700")}>
             {data.msg || data.error}
@@ -35,16 +37,15 @@ const ProductSaved = ({
         );
       },
     });
-    addSavedProduct(product?._id.toString(), product);
   }
 
   async function handleDelete() {
-    const prom = removeSavedProduct({
-      productId: product?._id.toString(),
-    });
+    const prom = removeSavedProduct(product._id);
+    removeSavedProductFromCache(product._id);
     toast.promise(prom, {
       loading: "Processing",
       success: (data) => {
+        if (data.error) addSavedProduct(product._id, product);
         return (
           <span className={cn(data.error && "text-red-700")}>
             {data.msg || data.error}
@@ -52,7 +53,6 @@ const ProductSaved = ({
         );
       },
     });
-    removeSavedProductFromCache(product?._id.toString());
   }
 
   return (
@@ -62,7 +62,7 @@ const ProductSaved = ({
         setIsSaved(!isSaved);
       }}
     >
-      {!savedProducts?.has(product?._id?.toString()) ? (
+      {!savedProducts?.has(product?._id) ? (
         <BookmarkIcon
           className="h-4 w-4 text-gray-500"
           onClick={() => handelSave()}

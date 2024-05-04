@@ -183,35 +183,50 @@ export const fetchProductDetails = async (productId: string) => {
 
 export async function fetchSavedProduct() {
   try {
+    const savedItems = new Map<string, SavedProduct>();
     const email = (await auth())?.user?.email;
     if (!email) {
-      return redirect("/login");
+      return savedItems;
     }
     await connectToDB();
-    const user = await User.findOne({ Email: email });
-    if (!user) {
-      throw new Error("User not found");
-    }
+    const saved = (await User.aggregate([
+      {
+        $match: {
+          Email: email,
+        },
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "Saved_Products", // Use the unwound element for comparison (if applicable)
+          foreignField: "_id",
+          as: "products",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          products: {
+            $map: {
+              input: "$products",
+              as: "product",
+              in: {
+                _id: { $toString: "$$product._id" },
+                Image: { $arrayElemAt: ["$$product.Images", 0] },
+                Condition: "$$product.Condition",
+                Price: "$$product.Price",
+                Negotiable: "$$product.Negotiable",
+                Product_Name: "$$product.Product_Name",
+              },
+            },
+          },
+        },
+      },
+    ])) as [{ products: SavedProduct[] }];
 
-    const savedProducts = user.Saved_Products as Types.ObjectId[];
-
-    const svdProducts = await Promise.all(
-      savedProducts.map(async (productId) => {
-        const product = await Product.findById(productId);
-        return {
-          _id: product._id.toString(),
-          Image: product.Images[0],
-          Condition: product.Condition,
-          Price: product.Price,
-          Negotiable: product.Negotiable,
-          Product_Name: product.Product_Name,
-        };
-      }),
-    );
-    const savedItems = svdProducts.reduce((mp, product) => {
-      mp.set(product._id, product);
-      return mp;
-    }, new Map<string, SavedProduct>());
+    saved[0].products.forEach((savedProduct) => {
+      savedItems.set(savedProduct._id, savedProduct);
+    });
 
     return savedItems;
   } catch (error) {
@@ -227,28 +242,16 @@ export async function fetchSavedProduct() {
 // Negotiable: product.Negotiable,
 // Product_Name: product.Product_Name,
 
-export async function removeSavedProduct({ productId }: { productId: string }) {
+export async function removeSavedProduct(productId: string) {
   try {
-    const email = (await auth())?.user?.email ?? "";
+    const email = (await auth())?.user?.email;
+    if (!email) return redirect("/login");
     await connectToDB();
 
-    const user = await User.findOne({ Email: email });
-
-    if (!user) {
-      return redirect("/login");
-    }
-
-    const savedProducts = user.Saved_Products.map(
-      (id: Types.ObjectId) => new mongo.ObjectId(id.toString()),
+    await User.findOneAndUpdate(
+      { Email: email },
+      { $pull: { Saved_Products: productId } },
     );
-
-    const updatedSavedProducts = savedProducts.filter(
-      (id: Types.ObjectId) => id.toString() !== productId,
-    );
-
-    user.Saved_Products = updatedSavedProducts;
-
-    await user.save();
     return {
       error: null,
       msg: "Removed successfully",
@@ -262,7 +265,7 @@ export async function removeSavedProduct({ productId }: { productId: string }) {
   }
 }
 
-export async function saveProduct({ productId }: { productId: string }) {
+export async function saveProduct(productId: string) {
   try {
     await connectToDB();
     const currentUserEmail = (await auth())?.user?.email;
@@ -280,21 +283,5 @@ export async function saveProduct({ productId }: { productId: string }) {
       msg: null,
       error: "Server error, try later",
     };
-  }
-}
-
-export async function getSaved({ productId }: { productId: string }) {
-  try {
-    const currentUserEmail = (await auth())?.user?.email;
-    if (!currentUserEmail) {
-      return redirect("/login");
-    }
-    const savedProducts: Types.ObjectId[] = (
-      await User.findOne({ Email: currentUserEmail })
-    ).Saved_Products;
-    return savedProducts.includes(new mongo.ObjectId(productId));
-  } catch (error) {
-    console.log("ERROR_WHILE_CHECKING_SAVED_PRODUCT", error);
-    throw error;
   }
 }
