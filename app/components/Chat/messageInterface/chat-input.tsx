@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 
 import { Skeleton } from "@/app/components/ui/skeleton";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from "../../ui/button";
+import { Form, FormControl, FormItem } from "@/app/components/ui/form";
 import { cn } from "@/app/utils";
+import { Icons } from "@/app/utils/icons";
 import { createNewMessage, getChatStatus } from "@/lib/actions/chat.actions";
+import { Button } from "../../ui/button";
 import {
   Dialog,
   DialogClose,
@@ -16,8 +18,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../ui/dialog";
-import { Form, FormControl, FormItem } from "@/app/components/ui/form";
-import { Icons } from "@/app/utils/icons";
 
 const messageSchema = z.object({
   content: z.string().min(1),

@@ -1,16 +1,14 @@
 "use client";
 
-import SellerBuyerChatDisplay from "../displays/seler-buyer-chat-display";
 import { chatDetails } from "@/types";
+import SellerBuyerChatDisplay from "../displays/seller-buyer-chat-display";
 
+import { cn } from "@/app/utils";
+import { getLastMessages } from "@/lib/actions/chat.actions";
+import { useQueries } from "@tanstack/react-query";
+import { useChatStore } from "../../../../hooks/useChatStore";
 import ChatUI1 from "../messageInterface/chat-ui";
 import NoOneToTalk from "../no-one-to-talk";
-import { cn } from "@/app/utils";
-import { useQueries } from "@tanstack/react-query";
-import { getLastMessages } from "@/lib/actions/chat.actions";
-import { useEffect } from "react";
-import ProductDisplay from "../displays/product-display";
-import { useChatStore } from "../../../../hooks/useChatStore";
 
 export default function AsBuyerPanel({
   discussions,

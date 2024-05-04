@@ -1,15 +1,15 @@
 "use client";
 
 import { cn } from "@/app/utils";
+import { countUnreadMessages } from "@/lib/actions/chat.actions";
+import { pusherClient } from "@/lib/pusher";
 import { chatDetails } from "@/types";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { useChatStore } from "../../../../hooks/useChatStore";
 import { getChatDetails } from "../../../utils/chat-utils";
-import { countUnreadMessages } from "@/lib/actions/chat.actions";
-import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "../../ui/skeleton";
-import { useEffect, useState } from "react";
-import { pusherClient } from "@/lib/pusher";
 
 export default function SellerBuyerChatDisplay({
   discussion,
@@ -67,12 +67,12 @@ export default function SellerBuyerChatDisplay({
       pusherClient.unsubscribe(unreadMessageChannelKey);
       pusherClient.unbind("unreadCount:inc", handelUpdatedUnreadCount);
     };
-  }, []);
+  });
 
   const messageSender =
     userId === lastMessages?.get(discussion.productDetails.productId)?.[0]
-      ? "you"
-      : displayName;
+      ? "You"
+      : "Them";
 
   const lastMessage = lastMessages?.get(
     discussion.productDetails.productId,
@@ -121,7 +121,7 @@ export default function SellerBuyerChatDisplay({
           {data !== 0 && (
             <span
               className={cn(
-                "h-5 w-5",
+                "h-4 w-4",
                 "flex flex-shrink-0 items-center justify-center rounded-full text-sm",
                 "bg-blue-500 font-semibold text-white dark:bg-blue-700",
               )}
