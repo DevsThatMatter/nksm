@@ -172,9 +172,10 @@ export const fetchOrderHistory = async (email: string) => {
     const userInfo = await User.findOne({ Email: email })
       .select({
         Ordered_Products: true,
+        Owned_Products: true,
       })
       .populate({
-        path: "Ordered_Products",
+        path: "Ordered_Products Owned_Products",
         model: Product,
         select: "Images Product_Name Price Description Condition Negotiable",
       });

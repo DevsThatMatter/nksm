@@ -2,7 +2,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const ActiveLinks = () => {
+interface LinksClass {
+  defaultClassName: string;
+  activeClassName: string;
+  inactiveClassName: string;
+}
+const ActiveLinks = ({
+  defaultClassName,
+  activeClassName,
+  inactiveClassName,
+}: LinksClass) => {
   const pathname = usePathname();
 
   return (
@@ -13,15 +22,15 @@ const ActiveLinks = () => {
       <Link
         href="/account"
         aria-current="page"
-        className={`whitespace-nowrap border-b-2 ${pathname === "/account" ? "border-blue-500  text-blue-600" : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"} px-1 py-4 text-sm font-medium`}
+        className={`${pathname === "/account" ? activeClassName : inactiveClassName} ${defaultClassName}`}
       >
         Account Info
       </Link>
       <Link
         href="/orders"
-        className={`whitespace-nowrap border-b-2 ${pathname === "/orders" ? "border-blue-500  text-blue-600" : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"} px-1 py-4 text-sm font-medium`}
+        className={`${pathname === "/orders" ? activeClassName : inactiveClassName} ${defaultClassName}`}
       >
-        Order History
+        Orders
       </Link>
     </nav>
   );
