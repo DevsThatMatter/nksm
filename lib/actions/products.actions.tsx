@@ -1,16 +1,16 @@
 "use server";
 
-import { Product } from "../models/product.model";
-import { connectToDB } from "../database/mongoose";
-import { FilterQuery, SortOrder } from "mongoose";
 import SearchCard from "@/app/components/Search/SearchCard";
+import { CategoryEnum, SortBy } from "@/types";
+import { FilterQuery, SortOrder } from "mongoose";
+import { connectToDB } from "../database/mongoose";
+import { Product } from "../models/product.model";
 import { User } from "../models/user.model";
-import { CategoryEnum, SortBy, category } from "@/types";
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
     const fetchedProducts = await Product.find({})
-      .limit(10)
+      .limit(50)
       .select({ _id: 1, Images: 1, Product_Name: 1, Price: 1, Description: 1 })
       .sort({ createdAt: -1 });
 
@@ -26,7 +26,7 @@ export const fetchRecentProductS = async () => {
     const fetchedProducts = await Product.find({})
       .sort({ createdAt: -1 })
       .select({ _id: 1, Images: 1, Product_Name: 1, Price: 1 })
-      .limit(10);
+      .limit(50);
     const modifiedProducts = fetchedProducts.map((product) => ({
       _id: product._id.toString(),
       Product_Name: product.Product_Name,
