@@ -3,15 +3,16 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/app/components/ui/avatar";
-import { cn } from "@/app/utils";
+import { Seller } from "@/types";
+import React from "react";
+import { Button, buttonVariants } from "../ui/button";
 import { Icons } from "@/app/utils/icons";
 import { auth } from "@/auth";
-import { Seller } from "@/types";
 import mongoose from "mongoose";
-import { Button, buttonVariants } from "../ui/button";
+import { cn } from "@/app/utils";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import { Skeleton } from "../ui/skeleton";
 import OfferForm from "./offer-form";
+import { Skeleton } from "../ui/skeleton";
 interface SellerCardProps {
   sellerInfo: Seller;
   productName: string;

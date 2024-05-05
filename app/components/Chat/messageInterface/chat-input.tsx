@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../ui/dialog";
+import { useChatStore } from "@/hooks/useChatStore";
 
 const messageSchema = z.object({
   content: z.string().min(1),
@@ -46,6 +47,7 @@ export default function ChatInput({
   const isLoading = form.formState.isSubmitting;
   const [dealLock, setDealLock] = useState<boolean>(false);
   const [gLockedStatus, setGlockedStatus] = useState(false);
+  const { setIsLocked } = useChatStore();
 
   useEffect(() => {
     async function fetchChatStatus() {
@@ -58,6 +60,7 @@ export default function ChatInput({
       ).status;
       if (status === "stale" || status === "dead") {
         setGlockedStatus(true);
+        setIsLocked();
       }
     }
     fetchChatStatus();
