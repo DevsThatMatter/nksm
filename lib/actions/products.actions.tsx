@@ -1,5 +1,8 @@
 "use server";
 
+import { Product } from "../models/product.model";
+import { connectToDB } from "../database/mongoose";
+import mongoose, { FilterQuery, ObjectId, SortOrder } from "mongoose";
 import SearchCard from "@/app/components/Search/SearchCard";
 import { CategoryEnum, SortBy } from "@/types";
 import { FilterQuery, SortOrder } from "mongoose";
@@ -179,11 +182,27 @@ export const fetchOrderHistory = async (email: string) => {
         model: Product,
         select: "Images Product_Name Price Description Condition Negotiable",
       });
-
-    console.log(userInfo);
     return userInfo;
   } catch (e: unknown) {
     console.log("Something went wrong.");
     throw e;
+  }
+};
+
+export const removeProduct = async (productId: string) => {
+  try {
+    await connectToDB();
+
+    await Product.deleteOne({
+      _id: productId,
+    });
+    await User.updateMany({
+      $pull: {
+        Owned_Products: productId,
+      },
+    });
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    throw error;
   }
 };

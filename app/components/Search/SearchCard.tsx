@@ -14,6 +14,7 @@ interface ProductCardProps {
   description: string;
   condition: keyof typeof ConditionEnum;
   negotiable: boolean;
+  orderPage?: boolean;
 }
 
 const SearchCard = ({
@@ -24,6 +25,7 @@ const SearchCard = ({
   description,
   condition,
   negotiable,
+  orderPage = false,
 }: ProductCardProps) => {
   return (
     <Link href={`/product/${id}`} className="w-full">
@@ -38,7 +40,7 @@ const SearchCard = ({
               width={200}
             />
             <ProductSaved
-              className="absolute right-0 top-0 mr-2 mt-2 cursor-pointer rounded-full bg-gray-200 p-1 sm:mr-5 sm:mt-6"
+              className={`${orderPage ? "hidden" : ""} absolute right-0 top-0 mr-2 mt-2 cursor-pointer rounded-full bg-gray-200 p-1 sm:mr-5 sm:mt-6`}
               id={id.toString()}
             />
           </div>

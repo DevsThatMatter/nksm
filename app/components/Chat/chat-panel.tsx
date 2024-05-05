@@ -179,15 +179,15 @@ export default function UserChat({
                         key={discussions[0].sellerDetails.Username}
                         className="flex space-x-4"
                       >
-                        <div className="relative h-16 w-16">
+                        {discussions[0]?.productDetails?.Images?.[0] && (
                           <Image
                             src={discussions[0].productDetails.Images[0]}
-                            alt="product image"
+                            alt="Product Image"
                             fill
                             className="rounded-md"
                             sizes="100"
                           />
-                        </div>
+                        )}
                         <div className="flex flex-col justify-center">
                           <h1 className="mb-2 line-clamp-1 text-lg font-bold text-black dark:text-white">
                             {discussions[0].productDetails.Product_Name}
