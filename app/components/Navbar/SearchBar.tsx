@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useDebouncedCallback } from "use-debounce";
+import Link from "next/link";
 
 type ProductsArray = {
   _id: string;
@@ -75,11 +76,11 @@ export default function SearchBar({
                   "/search?q=" + e.target.value + `&category=${category}`,
                   { scroll: true },
                 ); // Show dropdown when input is not empty
-          }, 800)}
+          }, 500)}
           onFocus={() => {
             pathname != "/search" && setIsDropdownOpen(true);
           }}
-          onBlur={() => setIsDropdownOpen(false)}
+          onBlurCapture={() => setTimeout(() => setIsDropdownOpen(false), 100)}
         />
         {input &&
         isDropdownOpen &&
@@ -87,26 +88,28 @@ export default function SearchBar({
         filteredProducts.length > 0 ? (
           <div className="absolute left-0 right-0 z-50 mt-10 max-h-60 overflow-auto rounded-md border bg-card shadow-lg">
             {filteredProducts.map((product) => (
-              <li
-                key={product._id}
-                className="flex items-center justify-between border px-4 py-2 hover:bg-accent"
-              >
-                <div className="flex items-center">
-                  <Image
-                    alt={product.Product_Name}
-                    className="rounded-md"
-                    src={product.Images[0]}
-                    height={56}
-                    width={56}
-                    style={{
-                      aspectRatio: "64/64",
-                      objectFit: "cover",
-                    }}
-                  />
-                  <span className="ml-4">{product.Product_Name}</span>
-                </div>
-                <span>₹ {product.Price}</span>
-              </li>
+              <Link href={`/product/${product._id}`} key={product._id}>
+                <li
+                  key={product._id}
+                  className="flex items-center justify-between border px-4 py-2 hover:bg-accent"
+                >
+                  <div className="flex items-center">
+                    <Image
+                      alt={product.Product_Name}
+                      className="rounded-md"
+                      src={product.Images[0]}
+                      height={56}
+                      width={56}
+                      style={{
+                        aspectRatio: "64/64",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <span className="ml-4">{product.Product_Name}</span>
+                  </div>
+                  <span>₹ {product.Price}</span>
+                </li>
+              </Link>
             ))}
           </div>
         ) : (
