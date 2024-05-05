@@ -24,7 +24,7 @@ export default async function Page({
     sortBy?: SortBy;
   };
 }) {
-  if (!q) {
+  if (!q && !category) {
     redirect("/");
   }
   const selectedCategory =
