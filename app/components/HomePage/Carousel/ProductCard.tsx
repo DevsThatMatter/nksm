@@ -1,9 +1,9 @@
-import Image from "next/image";
-import { Card, CardContent } from "../../ui/card";
-import Link from "next/link";
-import { CarouselItem } from "../../ui/carousel";
-import ProductSaved from "../../ProductSaved";
 import { cn } from "@/app/utils";
+import Image from "next/image";
+import Link from "next/link";
+import ProductSaved from "../../ProductSaved";
+import { Card, CardContent } from "../../ui/card";
+import { CarouselItem } from "../../ui/carousel";
 
 interface ProductCardProps {
   id: string;
@@ -27,7 +27,7 @@ const ProductCard = ({
       className={cn(
         "sm:basis-1/3",
         productPageCarousel
-          ? "basis-11/12 min-[305px]:basis-9/12 min-[450px]:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+          ? "basis-11/12 min-[305px]:basis-9/12 min-[450px]:basis-1/2 lg:basis-1/4 xl:basis-1/6"
           : "basis-9/12 min-[425px]:basis-1/2 lg:basis-1/4 xl:basis-1/5",
       )}
     >

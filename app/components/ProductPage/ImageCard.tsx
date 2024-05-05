@@ -4,11 +4,10 @@ import {
   CarouselIndexNavigate,
   CarouselItem,
 } from "@/app/components/ui/carousel";
-import Image from "next/image";
-import Overlay from "./Overlay";
 import { EmblaOptionsType } from "embla-carousel";
-import { array } from "zod";
+import Image from "next/image";
 import { Skeleton } from "../ui/skeleton";
+import Overlay from "./Overlay";
 
 export function ImageCardSkeleton() {
   return (
@@ -40,7 +39,7 @@ export default function ImageCard({ images }: { images: string[] }) {
                 alt={`Image`}
                 width={200}
                 height={200}
-                className="cursor-pointer rounded-md"
+                className="aspect-square cursor-pointer rounded-md bg-muted object-contain"
               />
             </CarouselIndexNavigate>
           ))}

@@ -13,10 +13,10 @@ export default async function Page({
         <Suspense fallback={<ProductPageSkeleton />} key={"product-page"}>
           <ProductPage id={id} />
         </Suspense>
-        <div className="col-span-2 m-2 mt-8">
-          <h1 className="pb-3 text-2xl font-semibold">You may also like:</h1>
-          <ProductCarousel productPageCarousel arrows={false} key="carousel" />
-        </div>
+      </div>
+      <div className="m-2 mt-8">
+        <h1 className="pb-3 text-2xl font-semibold">You may also like:</h1>
+        <ProductCarousel productPageCarousel arrows={false} key="carousel" />
       </div>
     </div>
   );
