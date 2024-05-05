@@ -10,11 +10,11 @@ const OrdersTab = async ({ email }: { email: string }) => {
   !userInfo && redirect("/");
 
   return (
-    <main className="flex w-full justify-around gap-x-3">
-      <div className="mt-4 flex w-[50%] grow flex-col items-center gap-3 sm:mt-6">
+    <main className="flex w-full justify-around gap-x-3 max-[835px]:flex-col">
+      <div className="mt-4 flex w-[50%] grow flex-col items-center gap-3 max-[835px]:w-full sm:mt-6">
         <p className="text-xl font-bold">Ordered Products</p>
         {!userInfo.Ordered_Products.length ? (
-          <div className="flex h-[72vh] w-full flex-col items-center justify-center gap-3 sm:-mt-2">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-3 sm:-mt-2">
             <div className="text-gray-500">
               No orders to show here. Maybe you should buy something.
             </div>
@@ -42,10 +42,10 @@ const OrdersTab = async ({ email }: { email: string }) => {
           </div>
         )}
       </div>
-      <div className="mt-4 flex w-[50%] grow flex-col items-center gap-3 sm:mt-6">
+      <div className="mt-4 flex w-[50%] grow flex-col items-center gap-3 max-[835px]:w-full sm:mt-6">
         <p className="text-xl font-bold">Listed Products</p>
         {!userInfo.Owned_Products.length ? (
-          <div className="flex h-[72vh] w-full flex-col items-center justify-center gap-3 sm:-mt-2">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-3 sm:-mt-2">
             <div className="text-gray-500">
               You have not listed any products yet.
             </div>

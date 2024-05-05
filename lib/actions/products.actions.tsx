@@ -2,12 +2,9 @@
 
 import { Product } from "../models/product.model";
 import { connectToDB } from "../database/mongoose";
-import mongoose, { FilterQuery, ObjectId, SortOrder } from "mongoose";
+import { FilterQuery, SortOrder } from "mongoose";
 import SearchCard from "@/app/components/Search/SearchCard";
 import { CategoryEnum, SortBy } from "@/types";
-import { FilterQuery, SortOrder } from "mongoose";
-import { connectToDB } from "../database/mongoose";
-import { Product } from "../models/product.model";
 import { User } from "../models/user.model";
 export const fetchRecentProducts = async () => {
   try {

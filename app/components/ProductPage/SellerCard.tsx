@@ -11,6 +11,7 @@ import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
 import OfferForm from "./offer-form";
 import { auth } from "@/auth";
 import { ObjectId } from "mongoose";
+import { Skeleton } from "../ui/skeleton";
 interface SellerCardProps {
   sellerInfo: Seller;
   productName: string;
