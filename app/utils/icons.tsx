@@ -19,6 +19,7 @@ import {
   StarFilledIcon,
   StarIcon,
   SunIcon,
+  TrashIcon,
   UpdateIcon,
   UploadIcon,
 } from "@radix-ui/react-icons";
@@ -46,6 +47,7 @@ export const Icons = {
   buffering: UpdateIcon,
   loading: ReloadIcon,
   upload: UploadIcon,
+  delete: TrashIcon,
   serverCrash: (
     <svg
       xmlns="http://www.w3.org/2000/svg"

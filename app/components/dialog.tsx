@@ -62,7 +62,8 @@ function Dialog({
           <div
             className={cn(
               "fixed inset-0 z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-              location === "center" ? "backdrop-blur-sm" : "bg-black/80",
+              location === "center" && "backdrop-blur-sm",
+              location !== "center" && "bg-black/80",
             )}
           />
         </Overlay>
@@ -76,7 +77,7 @@ function Dialog({
             <div
               className={cn(
                 "relative max-h-full w-full max-w-full bg-background shadow-lg",
-                location === "center" ? "s:p-8 p-6" : "p-2",
+                location === "center" && "p-6 sm:p-8",
                 contentVariants({ location }),
                 className,
               )}
