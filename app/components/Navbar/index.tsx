@@ -10,7 +10,6 @@ import { ReactNode, Suspense } from "react";
 import { fetchRecentProductS } from "@/lib/actions/products.actions";
 import { cn } from "@/app/utils";
 import { Button } from "../ui/button";
-import { countUnreadMessages } from "@/lib/actions/chat.actions";
 import { Icons } from "@/app/utils/icons";
 import { Input } from "../ui/input";
 
@@ -35,9 +34,9 @@ const Navbar = ({
   className?: string;
 }) => {
   return (
-    <nav className="sticky left-0 right-0 top-0 z-50 flex max-h-[4.769rem] justify-center bg-background shadow-md lg:justify-between">
+    <nav className="sticky left-0 right-0 top-0 z-50 flex max-h-[4.769rem] justify-center border-b border-b-border bg-background shadow-md lg:justify-between">
       {!className && (
-        <Link href="/" className="mx-3 my-auto">
+        <Link href="/" className="mx-3 my-2">
           <Image
             src="/logon.svg"
             alt="Logo"
@@ -48,7 +47,10 @@ const Navbar = ({
         </Link>
       )}
       <div
-        className={cn("nav-items mr-5 flex items-center space-x-5", className)}
+        className={cn(
+          "nav-items mr-5 flex h-[4.769rem] items-center space-x-5",
+          className,
+        )}
       >
         <Suspense
           fallback={<Input className="pl-8 sm:w-56 md:w-[31.4rem]" readOnly />}
