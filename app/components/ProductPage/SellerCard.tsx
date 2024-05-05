@@ -18,6 +18,7 @@ import {
 import OfferForm from "./offer-form";
 import { auth } from "@/auth";
 import mongoose from "mongoose";
+import { Skeleton } from "../ui/skeleton";
 interface SellerCardProps {
   sellerInfo: Seller;
   productName: string;
@@ -69,6 +70,29 @@ async function SellerCard({
             />
           </DialogContent>
         </Dialog>
+      </div>
+    </div>
+  );
+}
+export function SellerCardSkeleton() {
+  return (
+    <div>
+      <h2 className="mt-6 pb-3 text-2xl font-semibold lg:mt-0 lg:pb-0 lg:text-xl">
+        Seller Details
+      </h2>
+      <div className="my-2 flex justify-between">
+        <div className="flex items-center">
+          <Skeleton className="size-[3rem] rounded-full" />
+          <div className="ml-2">
+            <p className="w-32 animate-pulse whitespace-pre rounded-md bg-primary/10 font-semibold">
+              {" "}
+            </p>
+            <p className="mt-1 w-16 animate-pulse whitespace-pre rounded-md bg-primary/10 text-sm">
+              {" "}
+            </p>
+          </div>
+        </div>
+        <Skeleton className="relative my-1 w-32 animate-pulse whitespace-pre bg-primary/10" />
       </div>
     </div>
   );

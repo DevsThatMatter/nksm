@@ -12,11 +12,12 @@ import { cn } from "@/app/utils";
 import { Button } from "../ui/button";
 import { countUnreadMessages } from "@/lib/actions/chat.actions";
 import { Icons } from "@/app/utils/icons";
+import { Input } from "../ui/input";
 
-const Navbar = async ({
+const Navbar = ({
   children = (
     <>
-      <Link href="/add-listing">
+      <Link href="/add-listing" prefetch>
         <Button variant="default" className="relative">
           <Icons.add className="absolute bottom-0 left-2 top-0 m-auto h-5 w-5" />
           <span className="hidden pl-4 sm:inline-block"> Add Listing </span>
@@ -33,38 +34,37 @@ const Navbar = async ({
   children?: ReactNode;
   className?: string;
 }) => {
-  const products = (await fetchRecentProductS()) || [];
   return (
-    <>
-      <div className="sticky left-0 right-0 top-0 z-50 bg-background shadow-md">
-        <nav className="max-h-30 flex justify-center lg:justify-between">
-          {!className && (
-            <div className="h-[4.769rem]">
-              <Link href="/">
-                <Image
-                  src="/logon.svg"
-                  alt="Logo"
-                  width={150}
-                  height={150}
-                  className="logo mx-3 my-2 mt-3 hidden dark:invert lg:block"
-                />
-              </Link>
-            </div>
-          )}
-          <div
-            className={cn(
-              "nav-items mr-5 flex items-center space-x-5",
-              className,
-            )}
-          >
-            <SearchBar products={products} className="my-5 ml-3" />
-            {children}
-          </div>
-        </nav>
-        <Separator orientation="horizontal" />
+    <nav className="sticky left-0 right-0 top-0 z-50 flex max-h-[4.769rem] justify-center bg-background shadow-md lg:justify-between">
+      {!className && (
+        <Link href="/" className="mx-3 my-auto">
+          <Image
+            src="/logon.svg"
+            alt="Logo"
+            width={150}
+            height={150}
+            className="logo mt-1 hidden dark:invert lg:block"
+          />
+        </Link>
+      )}
+      <div
+        className={cn("nav-items mr-5 flex items-center space-x-5", className)}
+      >
+        <Suspense
+          fallback={<Input className="pl-8 sm:w-56 md:w-[31.4rem]" readOnly />}
+          key="search"
+        >
+          <SearchSection />
+        </Suspense>
+        {children}
       </div>
-    </>
+    </nav>
   );
 };
 
 export default Navbar;
+
+const SearchSection = async () => {
+  const products = (await fetchRecentProductS()) || [];
+  return <SearchBar products={products} className="my-5 ml-3" />;
+};

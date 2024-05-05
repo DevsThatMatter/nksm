@@ -26,7 +26,6 @@ export default function SearchBar({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const dropdownRef = useRef(null);
 
   useEffect(() => {
     if (pathname != "/search") {
@@ -54,38 +53,30 @@ export default function SearchBar({
     setIsDropdownOpen(false);
   };
 
-  const handleFocusOut = () => {
-    if (dropdownRef.current) {
-      setIsDropdownOpen(false);
-    }
-  };
-
   return (
     <form action={handleSearchSubmit} className={className}>
-      <div className="relative" ref={dropdownRef}>
+      <div className="relative">
         <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-        <div>
-          <Input
-            placeholder="Search"
-            name="q"
-            className="w-100% pl-8 sm:w-56 md:w-[31.4rem]"
-            onChange={useDebouncedCallback((e) => {
-              // debounce can create artificial delay before querying db
-              setInput(e.target.value);
-              pathname != "/search"
-                ? setIsDropdownOpen(!!e.target.value)
-                : (e.target.value || category) &&
-                  router.push(
-                    "/search?q=" + e.target.value + `&category=${category}`,
-                    { scroll: true },
-                  ); // Show dropdown when input is not empty
-            }, 800)}
-            onFocus={() => {
-              pathname != "/search" && setIsDropdownOpen(true);
-            }}
-            onBlur={handleFocusOut}
-          />
-        </div>
+        <Input
+          placeholder="Search"
+          name="q"
+          className="pl-8 sm:w-56 md:w-[31.4rem]"
+          onChange={useDebouncedCallback((e) => {
+            // debounce can create artificial delay before querying db
+            setInput(e.target.value);
+            pathname != "/search"
+              ? setIsDropdownOpen(!!e.target.value)
+              : (e.target.value || category) &&
+                router.push(
+                  "/search?q=" + e.target.value + `&category=${category}`,
+                  { scroll: true },
+                ); // Show dropdown when input is not empty
+          }, 800)}
+          onFocus={() => {
+            pathname != "/search" && setIsDropdownOpen(true);
+          }}
+          onBlur={() => setIsDropdownOpen(false)}
+        />
         {input &&
         isDropdownOpen &&
         filteredProducts &&

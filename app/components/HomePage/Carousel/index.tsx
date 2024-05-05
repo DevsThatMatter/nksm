@@ -31,6 +31,7 @@ const ProductCarousel = ({
           fallback={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
             <ProductSkeleton key={i} />
           ))}
+          key="carousel"
         >
           <CarouselItems productPageCarousel={productPageCarousel} />
         </Suspense>
@@ -54,8 +55,8 @@ export const CarouselItems = async ({
   return data?.map((product) => (
     <ProductCard
       image_url={product.Images[0]}
-      key={product._id}
-      id={product._id}
+      key={product._id.toString()}
+      id={product._id.toString()}
       name={product.Product_Name}
       price={product.Price}
       description={product.Description}
