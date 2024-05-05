@@ -35,6 +35,11 @@ export default function SavedItems() {
           "flex flex-col space-y-4",
         )}
       >
+        {!savedProducts?.size && (
+          <p className="text-center text-lg text-muted-foreground">
+            You haven&apos;t saved any products.
+          </p>
+        )}
         {[...(savedProducts?.entries() ?? [])].map(([id, product]) => (
           <li key={id}>
             <Link

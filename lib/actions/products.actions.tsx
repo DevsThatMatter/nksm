@@ -1,15 +1,11 @@
 "use server";
 
-import { Product } from "../models/product.model";
-import { connectToDB } from "../database/mongoose";
 import { FilterQuery, SortOrder, Types, mongo } from "mongoose";
 import SearchCard from "@/app/components/Search/SearchCard";
-import { CategoryEnum, SortBy } from "@/types";
-import { FilterQuery, SortOrder } from "mongoose";
 import { connectToDB } from "../database/mongoose";
 import { Product } from "../models/product.model";
 import { User } from "../models/user.model";
-import { CategoryEnum, SortBy, category } from "@/types";
+import { CategoryEnum, SortBy } from "@/types";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { SavedProduct } from "@/app/components/Navbar/SavedItems";
