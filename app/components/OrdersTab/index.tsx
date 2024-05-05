@@ -60,7 +60,10 @@ const OrdersTab = async ({ email }: { email: string }) => {
           <div className="overflow-auto">
             {userInfo.Owned_Products.map((product: Product) => {
               return (
-                <ClientDiv id={product._id.toString()}>
+                <ClientDiv
+                  id={product._id.toString()}
+                  key={product.Product_Name}
+                >
                   <SearchCard
                     key={product._id.toString()}
                     id={product._id}

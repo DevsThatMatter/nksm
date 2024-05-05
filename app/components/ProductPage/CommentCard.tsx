@@ -8,15 +8,11 @@ import {
 import React from "react";
 
 import { listComments } from "@/lib/actions/comment.actions";
-import mongoose from "mongoose";
+import { ObjectId } from "mongoose";
 import { auth } from "@/auth";
 import CommentForm from "./CommentForm";
 
-async function CommentCard({
-  productId,
-}: {
-  productId: mongoose.Types.ObjectId;
-}) {
+async function CommentCard({ productId }: { productId: ObjectId }) {
   const userdata = await auth();
   const comments = await listComments(productId);
   return (
