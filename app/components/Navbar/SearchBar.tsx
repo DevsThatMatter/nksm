@@ -55,12 +55,16 @@ export default function SearchBar({
 
   return (
     <form action={handleSearchSubmit} className={className}>
-      <div className="relative">
+      <div className="group relative flex justify-center focus-within:absolute focus-within:left-0 focus-within:right-0 focus-within:top-5 focus-within:z-50 focus-within:mx-auto focus-within:w-[80%] focus-within:bg-background">
+        <div
+          className={`fixed inset-0 z-[-1] hidden ${pathname === "/" ? "backdrop-blur-sm" : ""} group-focus-within:block`}
+        ></div>
         <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Search"
           name="q"
-          className="pl-8 sm:w-56 md:w-[31.4rem]"
+          autoComplete="off"
+          className="pl-8 transition-all duration-500 ease-in-out group-focus-within:w-full sm:w-56 md:w-[31.4rem] "
           onChange={useDebouncedCallback((e) => {
             // debounce can create artificial delay before querying db
             setInput(e.target.value);
@@ -81,7 +85,7 @@ export default function SearchBar({
         isDropdownOpen &&
         filteredProducts &&
         filteredProducts.length > 0 ? (
-          <div className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-auto rounded-md border bg-card shadow-lg">
+          <div className="absolute left-0 right-0 z-50 mt-10 max-h-60 overflow-auto rounded-md border bg-card shadow-lg">
             {filteredProducts.map((product) => (
               <li
                 key={product._id}
@@ -109,7 +113,7 @@ export default function SearchBar({
           // Render "No results" message when no products match the input
           input &&
           isDropdownOpen && (
-            <div className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-auto rounded-md border bg-card shadow-lg">
+            <div className="absolute left-0 right-0 z-50 mt-10 max-h-60 overflow-auto rounded-md border bg-card shadow-lg">
               <div className="px-4 py-2">
                 Search NKSM for &quot;{input}&quot;
               </div>
