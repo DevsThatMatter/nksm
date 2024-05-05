@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { now } from "mongoose";
 
 // Define the schema for the 'chat' collection
 const chatSchema = new mongoose.Schema({
@@ -11,6 +11,8 @@ const chatSchema = new mongoose.Schema({
     enum: ["invite", "active", "stale", "dead"],
   },
   InitPrice: { type: Number, required: true },
+  CreatedAt: { type: mongoose.Schema.Types.Date, default: now() },
+  UpdatedAt: { type: mongoose.Schema.Types.Date, default: now() },
 });
 
 // Create the 'chat' model based on the schema

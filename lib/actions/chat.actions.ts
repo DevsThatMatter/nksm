@@ -1,14 +1,14 @@
 "use server";
 
 import * as z from "zod";
-import mongoose, { Types, mongo } from "mongoose";
+import { Types, mongo, now } from "mongoose";
 
 import { User } from "../models/user.model";
 import { connectToDB } from "../database/mongoose";
 import { Chat } from "../models/chats.model";
 import { Product } from "../models/product.model";
 
-import { MessageTypes, IChat, chatDetails, IProduct } from "@/types";
+import { MessageTypes, IChat, chatDetails } from "@/types";
 import { Message } from "../models/message.model";
 import { pusherServer } from "../pusher";
 import { InviteStruct } from "@/app/components/Chat/displays/invite-display";
@@ -38,7 +38,7 @@ function groupDocs(data: chatDetails[]): Map<string, chatDetails[]> {
 export async function getAllChats(userId: z.infer<typeof mongoId>) {
   try {
     connectToDB();
-
+    console.log("userid => ", userId);
     const matchStage0 = {
       $match: {
         Seller: new mongo.ObjectId(userId),
@@ -79,7 +79,11 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
         as: "buyerInfo",
       },
     };
-
+    const sortStage = {
+      $sort: {
+        UpdatedAt: -1 as const,
+      },
+    };
     const projectStage = {
       $project: {
         productDetails: {
@@ -143,6 +147,7 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
       productLookup,
       buyerLookup,
       sellerLookup,
+      sortStage,
       projectStage,
     ];
 
@@ -151,6 +156,7 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
       productLookup,
       buyerLookup,
       sellerLookup,
+      sortStage,
       projectStage,
     ];
 
@@ -598,6 +604,7 @@ export async function createNewMessage(
     if (chat) {
       console.log("chat found");
       chat.Messages.push(createdMessage._id);
+      chat.UpdatedAt = now();
       await chat.save();
     } else {
       const newChat = new Chat({
@@ -1051,5 +1058,31 @@ export async function getLastMessages({
       productId: productId.toString(),
       status: 500,
     };
+  }
+}
+
+const deleteChatProps = z.object({
+  Seller: mongoId,
+  Buyer: mongoId,
+  ProductId: mongoId,
+});
+
+export async function handelDeleteChat(props: z.infer<typeof deleteChatProps>) {
+  try {
+    const { success } = deleteChatProps.safeParse(props);
+    if (!success) {
+      throw new Error("Error  while parsing delete chat props");
+    }
+    await connectToDB();
+
+    await Chat.findOneAndDelete({
+      Seller: props.Seller,
+      Buyer: props.Buyer,
+      ProductId: props.ProductId,
+    });
+    revalidatePath("/chat");
+  } catch (error) {
+    console.log("ERORR_WHILE_DELETING_CHAT", error);
+    throw error;
   }
 }

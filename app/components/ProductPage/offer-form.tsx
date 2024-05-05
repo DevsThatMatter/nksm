@@ -1,19 +1,20 @@
 "use client";
-import {
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "../ui/card";
-import { Input } from "../ui/input";
-import { Form, FormControl, FormItem, FormMessage } from "../ui/form";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "../ui/button";
-import { sendEmail } from "@/lib/actions/email.actions";
-import { toast } from "sonner";
 import { cn } from "@/app/utils";
+import { sendEmail } from "@/lib/actions/email.actions";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { redirect } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import * as z from "zod";
+import { Button } from "../ui/button";
+import {
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardTitle,
+} from "../ui/card";
+import { Form, FormControl, FormItem, FormMessage } from "../ui/form";
+import { Input } from "../ui/input";
 
 interface OfferFormProps {
   reciverEmail: string;
@@ -23,6 +24,7 @@ interface OfferFormProps {
   productName: string;
   is_negotiable: boolean;
   price: number;
+  isLoggedIn: boolean;
 }
 export default function OfferForm({
   reciverEmail,
@@ -32,7 +34,12 @@ export default function OfferForm({
   productName,
   is_negotiable,
   price,
+  isLoggedIn,
 }: OfferFormProps) {
+  if (!isLoggedIn) {
+    redirect("/login");
+  }
+
   const OfferSchema = z.object({
     price: z.number().min(1, { message: "Zero values bids are not accepted" }),
   });
@@ -59,7 +66,7 @@ export default function OfferForm({
       success: (data) => {
         return (
           <span className={cn(data.error ? "text-red-600" : "text-lime-800")}>
-            {data.msg}
+            {data.msg || data.error}
           </span>
         );
       },
@@ -70,10 +77,14 @@ export default function OfferForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(sendEmailWithDetails)}>
-        <CardTitle className="mb-5 text-2xl">Enter Your Price</CardTitle>
-        <CardDescription className="mb-5">
-          Let us know your offer.
-        </CardDescription>
+        <CardTitle className="mb-5 text-2xl">
+          {is_negotiable ? "Enter Your Price" : "Send an Offer"}
+        </CardTitle>
+        {is_negotiable && (
+          <CardDescription className="mb-5">
+            Let us know your offer.
+          </CardDescription>
+        )}
         <CardContent className="space-y-2 p-4">
           <FormItem>
             <FormControl>
@@ -83,14 +94,18 @@ export default function OfferForm({
                 placeholder="How much are you willing to pay?"
                 step="0.1"
                 type="number"
-                readOnly={!is_negotiable}
+                disabled={!is_negotiable}
                 {...form.register("price", { valueAsNumber: true })}
               />
             </FormControl>
             <div className="flex text-xs text-gray-500 dark:text-gray-400">
-              <p>{"Your bid will be submitted to the seller. "}</p>
+              {is_negotiable && (
+                <p>{"Your bid will be submitted to the seller. "}</p>
+              )}
               {!is_negotiable && (
-                <p className="text-yellow-500">This price is not negotiable</p>
+                <p className="mt-4 text-yellow-500">
+                  This price is not negotiable
+                </p>
               )}
             </div>
             {form.formState.errors.price && (

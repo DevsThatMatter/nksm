@@ -19,23 +19,13 @@ export default function InvitePanel({ userId }: { userId: string }) {
     enabled: userId !== undefined,
   }).data;
 
-  // const [showSkeleton, setShowSkeleton] = useState(true);
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setShowSkeleton(false);
-  //   }, 100000);
-
-  //   return () => clearTimeout(timer);
-  // }, []);
-
   return (
     <main className="h-full px-4 pt-4">
       {isLoading ? (
         <InvitePanelSkeleton />
       ) : (
         <>
-          <section className="flex h-1/2 flex-col space-y-3 overflow-y-hidden">
+          <section className="flex h-1/2 flex-col space-y-3 overflow-y-auto">
             {data?.map((invite) =>
               invite.buyerDetails.map((buyer, i) => (
                 <InviteDisplay
@@ -83,7 +73,7 @@ export default function InvitePanel({ userId }: { userId: string }) {
 const InvitePanelSkeleton = () => {
   return (
     <>
-      <section className="flex h-1/2 flex-col space-y-3 overflow-y-hidden">
+      <section className="flex h-1/2 flex-col space-y-3 overflow-y-auto">
         {Array.from({ length: 3 }).map((_, i) => (
           <section
             key={i}

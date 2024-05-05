@@ -1,17 +1,17 @@
 import {
   Avatar,
-  AvatarImage,
   AvatarFallback,
+  AvatarImage,
 } from "@/app/components/ui/avatar";
-import { Seller } from "@/types";
-import React from "react";
-import { Button } from "../ui/button";
+import { cn } from "@/app/utils";
 import { Icons } from "@/app/utils/icons";
-import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
-import OfferForm from "./offer-form";
 import { auth } from "@/auth";
+import { Seller } from "@/types";
 import mongoose from "mongoose";
+import { Button, buttonVariants } from "../ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Skeleton } from "../ui/skeleton";
+import OfferForm from "./offer-form";
 interface SellerCardProps {
   sellerInfo: Seller;
   productName: string;
@@ -48,7 +48,7 @@ async function SellerCard({
             <p className="text-sm text-foreground">{sellerInfo.Username}</p>
           </div>
         </div>
-        {!is_archived && (
+        {!is_archived ? (
           <Dialog>
             <DialogTrigger asChild>
               <Button
@@ -68,9 +68,20 @@ async function SellerCard({
                 productImages={productImages}
                 productName={productName}
                 productId={String(productId)}
+                isLoggedIn={senderEmail ? true : false}
               />
             </DialogContent>
           </Dialog>
+        ) : (
+          <div
+            className={cn(
+              buttonVariants({ variant: "outline" }),
+              "relative my-auto items-center justify-center border border-amber-500 dark:text-foreground",
+            )}
+          >
+            <Icons.archived className="absolute bottom-0 left-2 top-0 m-auto h-4 w-4 text-amber-500" />
+            <span className="pl-4 text-amber-500">Archived</span>
+          </div>
         )}
       </div>
     </div>

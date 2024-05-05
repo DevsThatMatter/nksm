@@ -8,6 +8,7 @@ interface ChatStore {
   } | null;
   activeDiscussion: chatDetails | null;
   lastMessages: Map<string, Array<string>> | null;
+  isLocked: boolean;
 
   setActiveDiscussionGroup: (
     productId: string,
@@ -17,12 +18,14 @@ interface ChatStore {
   setActiveDiscussion: (discussion: chatDetails) => void;
   removeActiveDiscussion: () => void;
   updateLastMessage: (productId: string, by: string, message: string) => void;
+  setIsLocked: () => void;
 }
 
 export const useChatStore = create<ChatStore>()((set) => ({
   activeDiscussionGroup: null,
   activeDiscussion: null,
   lastMessages: null,
+  isLocked: false,
 
   setActiveDiscussion: (discussion: chatDetails) =>
     set((state) => ({
@@ -52,4 +55,8 @@ export const useChatStore = create<ChatStore>()((set) => ({
       updatedLastMessages.set(productId, [by, message]);
       return { ...state, lastMessages: updatedLastMessages };
     }),
+  setIsLocked: () =>
+    set(() => ({
+      isLocked: true,
+    })),
 }));

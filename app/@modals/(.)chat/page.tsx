@@ -12,7 +12,7 @@ export default async function page() {
 
     return (
       // there is an issue in here, that the states required for the navigation are not reset when unmount happen ubruptly
-      <Dialog className="max-w-sm" location={"start"}>
+      <Dialog className="max-w-sm md:max-w-md" location={"start"}>
         <ControlPanel
           userId={userId}
           data={{

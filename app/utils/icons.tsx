@@ -1,4 +1,5 @@
 import {
+  ArchiveIcon,
   AvatarIcon,
   BookmarkIcon,
   ChatBubbleIcon,
@@ -18,7 +19,6 @@ import {
   StarFilledIcon,
   StarIcon,
   SunIcon,
-  TrashIcon,
   UpdateIcon,
   UploadIcon,
 } from "@radix-ui/react-icons";
@@ -66,5 +66,5 @@ export const Icons = {
       <path d="m13 6-4 6h6l-4 6" />
     </svg>
   ),
-  delete: TrashIcon,
+  archived: ArchiveIcon,
 };
