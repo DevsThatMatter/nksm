@@ -9,10 +9,6 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "cdn.pixabay.com",
-      },
-      {
-        protocol: "https",
         hostname: "pub-2188c30af1504cb0a1acb7e6f7e0efae.r2.dev",
       },
       {
