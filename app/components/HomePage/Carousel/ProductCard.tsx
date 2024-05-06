@@ -1,17 +1,21 @@
 import { cn } from "@/app/utils";
+import { ConditionEnum } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import ProductSaved from "../../ProductSaved";
 import { Card, CardContent } from "../../ui/card";
 import { CarouselItem } from "../../ui/carousel";
+import { ObjectId } from "mongoose";
 
 interface ProductCardProps {
-  id: string;
+  id: ObjectId | string;
   image_url: string;
   name: string;
   price: number;
   description: string;
   productPageCarousel?: boolean;
+  condition: keyof typeof ConditionEnum;
+  negotiable: boolean;
 }
 const ProductCard = ({
   id,
@@ -19,9 +23,20 @@ const ProductCard = ({
   name,
   price,
   description,
+  condition,
+  negotiable,
   productPageCarousel = false,
 }: ProductCardProps) => {
   const adaptedPrice = price > 1000 ? Math.floor(price / 1000) + "k" : price;
+  const product = {
+    _id: id.toString(),
+    Image: image_url,
+    Condition: condition,
+    Price: price,
+    Negotiable: negotiable,
+    Product_Name: name,
+  };
+
   return (
     <CarouselItem
       className={cn(
@@ -57,7 +72,7 @@ const ProductCard = ({
           </Link>
           <ProductSaved
             className="absolute right-0 top-0 mr-4 mt-4 rounded-full bg-gray-200 p-1 hover:cursor-pointer sm:mr-6 sm:mt-6 lg:mr-5 lg:mt-5 2xl:mr-6 2xl:mt-5"
-            id={id.toString()}
+            product={product}
           />
         </CardContent>
       </Card>

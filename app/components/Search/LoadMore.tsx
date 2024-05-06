@@ -58,7 +58,7 @@ function LoadMore({
       {data}
 
       {isNext && (
-        <div ref={ref} id="load" className="w-full p-6">
+        <div ref={ref} id="load" className="w-full p-6 max-md:grid-cols-3">
           {inView && <SymbolIcon className="m-auto h-8 w-8 animate-spin " />}
         </div>
       )}

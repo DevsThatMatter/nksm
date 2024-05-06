@@ -59,7 +59,12 @@ function Dialog({
     <Root defaultOpen onOpenChange={() => setTimeout(() => router.back(), 140)}>
       <Portal forceMount>
         <Overlay asChild>
-          <div className="fixed inset-0 z-50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+          <div
+            className={cn(
+              "fixed inset-0 z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+              location === "center" ? "backdrop-blur-sm" : "bg-black/80",
+            )}
+          />
         </Overlay>
         <div className={cn(dialogLocations({ location }))}>
           <Content
@@ -70,7 +75,8 @@ function Dialog({
           >
             <div
               className={cn(
-                "relative max-h-full w-full max-w-full bg-background p-6 shadow-lg sm:p-8",
+                "relative max-h-full w-full max-w-full bg-background shadow-lg",
+                location === "center" ? "s:p-8 p-6" : "p-2",
                 contentVariants({ location }),
                 className,
               )}
