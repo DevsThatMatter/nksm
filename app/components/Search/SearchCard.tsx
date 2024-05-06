@@ -50,7 +50,7 @@ const SearchCard = ({
             />
             <ProductSaved
               className={`${orderPage ? "hidden" : ""} absolute right-0 top-0 mr-2 mt-2 cursor-pointer rounded-full bg-gray-200 p-1 sm:mr-5 sm:mt-6`}
-              id={id.toString()}
+              product={product}
             />
           </div>
           <div className="grid gap-2 text-base md:max-w-[calc(100%-16rem)]">
