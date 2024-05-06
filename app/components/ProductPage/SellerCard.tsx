@@ -7,23 +7,16 @@ import { Seller } from "@/types";
 import React from "react";
 import { Button } from "../ui/button";
 import { Icons } from "@/app/utils/icons";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogDescription,
-  DialogTitle,
-} from "../ui/dialog";
+import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
 import OfferForm from "./offer-form";
 import { auth } from "@/auth";
-import mongoose from "mongoose";
+import { ObjectId } from "mongoose";
 import { Skeleton } from "../ui/skeleton";
 interface SellerCardProps {
   sellerInfo: Seller;
   productName: string;
   productImages: string[];
-  productId: mongoose.Types.ObjectId;
+  productId: ObjectId;
 }
 
 async function SellerCard({

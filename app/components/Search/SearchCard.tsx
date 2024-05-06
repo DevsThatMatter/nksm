@@ -1,10 +1,10 @@
-import { CardContent, Card } from "@/app/components/ui/card";
+import { Card, CardContent } from "@/app/components/ui/card";
 import { ConditionEnum } from "@/types";
 import { ObjectId } from "mongoose";
-import { renderConditionIcon } from "../ProductPage/ProductDetails";
-import ProductSaved from "../ProductSaved";
 import Image from "next/image";
 import Link from "next/link";
+import { renderConditionIcon } from "../ProductPage/ProductDetails";
+import ProductSaved from "../ProductSaved";
 
 interface ProductCardProps {
   id: ObjectId;
@@ -14,6 +14,7 @@ interface ProductCardProps {
   description: string;
   condition: keyof typeof ConditionEnum;
   negotiable: boolean;
+  orderPage?: boolean;
 }
 
 const SearchCard = ({
@@ -24,6 +25,7 @@ const SearchCard = ({
   description,
   condition,
   negotiable,
+  orderPage = false,
 }: ProductCardProps) => {
   const product = {
     _id: id.toString(),
@@ -35,10 +37,10 @@ const SearchCard = ({
   };
 
   return (
-    <Link href={`/product/${id}`}>
-      <Card className="md:my-4">
-        <CardContent className="container relative flex flex-col items-start gap-6 p-3 md:h-64 md:flex-row md:p-6">
-          <div className="relative w-full md:static md:w-auto">
+    <Link href={`/product/${id}`} className="w-full">
+      <Card className="my-4">
+        <CardContent className="relative flex flex-col items-start gap-6 p-3 sm:h-64 sm:flex-row sm:p-6">
+          <div className="relative w-full sm:static sm:w-auto">
             <Image
               alt="Product Image"
               className="aspect-square overflow-hidden rounded-lg border border-gray-200 object-cover dark:border-gray-800 max-md:w-full"
@@ -47,7 +49,7 @@ const SearchCard = ({
               width={200}
             />
             <ProductSaved
-              className="absolute right-0 top-0 mr-2 mt-2 cursor-pointer rounded-full bg-gray-200 p-1 sm:mr-5 sm:mt-6"
+              className={`${orderPage ? "hidden" : ""} absolute right-0 top-0 mr-2 mt-2 cursor-pointer rounded-full bg-gray-200 p-1 sm:mr-5 sm:mt-6`}
               product={product}
             />
           </div>

@@ -1,11 +1,11 @@
 "use server";
 
-import { FilterQuery, SortOrder, Types, mongo } from "mongoose";
-import SearchCard from "@/app/components/Search/SearchCard";
-import { connectToDB } from "../database/mongoose";
 import { Product } from "../models/product.model";
-import { User } from "../models/user.model";
+import { connectToDB } from "../database/mongoose";
+import { FilterQuery, SortOrder, mongo } from "mongoose";
+import SearchCard from "@/app/components/Search/SearchCard";
 import { CategoryEnum, SortBy } from "@/types";
+import { User } from "../models/user.model";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { SavedProduct } from "@/app/components/Navbar/SavedItems";
@@ -177,6 +177,44 @@ export const fetchProductDetails = async (productId: string) => {
   }
 };
 
+export const fetchOrderHistory = async (email: string) => {
+  try {
+    await connectToDB();
+
+    const userInfo = await User.findOne({ Email: email })
+      .select({
+        Ordered_Products: true,
+        Owned_Products: true,
+      })
+      .populate({
+        path: "Ordered_Products Owned_Products",
+        model: Product,
+        select: "Images Product_Name Price Description Condition Negotiable",
+      });
+    return userInfo;
+  } catch (e: unknown) {
+    console.log("Something went wrong.");
+    throw e;
+  }
+};
+
+export const removeProduct = async (productId: string) => {
+  try {
+    await connectToDB();
+
+    await Product.deleteOne({
+      _id: productId,
+    });
+    await User.updateMany({
+      $pull: {
+        Owned_Products: productId,
+      },
+    });
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    throw error;
+  }
+};
 export async function fetchSavedProduct() {
   try {
     const savedItems = new Map<string, SavedProduct>();
