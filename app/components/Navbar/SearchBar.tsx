@@ -56,32 +56,36 @@ export default function SearchBar({
 
   return (
     <form action={handleSearchSubmit} className={className}>
-      <div className="group relative flex justify-center focus-within:absolute focus-within:left-0 focus-within:right-0 focus-within:top-5 focus-within:z-50 focus-within:mx-auto focus-within:w-[80%] focus-within:bg-background">
+      <div className="group relative flex justify-center focus-within:absolute focus-within:left-0 focus-within:right-0 focus-within:top-5 focus-within:z-50 focus-within:mx-auto focus-within:w-[80%]">
         <div
           className={`fixed inset-0 z-[-1] hidden ${pathname === "/" ? "backdrop-blur-sm" : ""} group-focus-within:block`}
         ></div>
-        <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search"
-          name="q"
-          autoComplete="off"
-          className="pl-8 transition-all duration-500 ease-in-out group-focus-within:w-full sm:w-56 md:w-[31.4rem] "
-          onChange={useDebouncedCallback((e) => {
-            // debounce can create artificial delay before querying db
-            setInput(e.target.value);
-            pathname != "/search"
-              ? setIsDropdownOpen(!!e.target.value)
-              : (e.target.value || category) &&
-                router.push(
-                  "/search?q=" + e.target.value + `&category=${category}`,
-                  { scroll: true },
-                ); // Show dropdown when input is not empty
-          }, 500)}
-          onFocus={() => {
-            pathname != "/search" && setIsDropdownOpen(true);
-          }}
-          onBlurCapture={() => setTimeout(() => setIsDropdownOpen(false), 100)}
-        />
+        <div className="relative transition-all duration-500 ease-in-out group-focus-within:w-full group-focus-within:bg-background sm:w-56 md:w-[31.4rem]">
+          <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search"
+            name="q"
+            autoComplete="off"
+            className="pl-8 group-focus-within:w-full sm:w-56 md:w-[31.4rem]"
+            onChange={useDebouncedCallback((e) => {
+              // debounce can create artificial delay before querying db
+              setInput(e.target.value);
+              pathname != "/search"
+                ? setIsDropdownOpen(!!e.target.value)
+                : (e.target.value || category) &&
+                  router.push(
+                    "/search?q=" + e.target.value + `&category=${category}`,
+                    { scroll: true },
+                  ); // Show dropdown when input is not empty
+            }, 500)}
+            onFocus={() => {
+              pathname != "/search" && setIsDropdownOpen(true);
+            }}
+            onBlurCapture={() =>
+              setTimeout(() => setIsDropdownOpen(false), 100)
+            }
+          />
+        </div>
         {input &&
         isDropdownOpen &&
         filteredProducts &&
