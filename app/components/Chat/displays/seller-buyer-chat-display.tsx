@@ -52,11 +52,9 @@ export default function SellerBuyerChatDisplay({
     pusherClient.subscribe(addKey);
 
     function handelUpdatedUnreadCount(count: number) {
-      console.log("count => ", count);
       setUnreadCount(count);
     }
     function handelUpdatedLastMessage(count: number) {
-      console.log("count => ", count);
       setUnreadCount(count);
     }
 
@@ -67,16 +65,13 @@ export default function SellerBuyerChatDisplay({
       pusherClient.unsubscribe(unreadMessageChannelKey);
       pusherClient.unbind("unreadCount:inc", handelUpdatedUnreadCount);
     };
-  });
+  }, []);
 
-  const messageSender =
-    userId === lastMessages?.get(discussion.productDetails.productId)?.[0]
-      ? "You"
-      : "Them";
+  const key = `seller:${discussion.sellerDetails.id}buyer:${discussion.buyerDetails.id}product:${discussion.productDetails.productId}`;
 
-  const lastMessage = lastMessages?.get(
-    discussion.productDetails.productId,
-  )?.[1];
+  const messageSender = userId === lastMessages?.get(key)?.[0] ? "You" : "Them";
+
+  const lastMessage = lastMessages?.get(key)?.[1];
 
   const messageContent =
     lastMessage !== undefined ? (

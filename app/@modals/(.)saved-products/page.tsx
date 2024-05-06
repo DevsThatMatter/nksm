@@ -8,7 +8,7 @@ export default async function SavedProducts() {
 
   if (userEmail) {
     return (
-      <Dialog className="max-w-sm" location={"end"}>
+      <Dialog className="max-w-sm p-4 md:max-w-md" location={"end"}>
         <SavedItems />
       </Dialog>
     );

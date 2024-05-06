@@ -19,6 +19,7 @@ import {
   DialogTrigger,
 } from "../../ui/dialog";
 import { useChatStore } from "@/hooks/useChatStore";
+import { Input } from "../../ui/input";
 
 const messageSchema = z.object({
   content: z.string().min(1),
@@ -122,8 +123,11 @@ export default function ChatInput({
         <FormItem className="w-full">
           <FormControl>
             <div className="items flex w-full max-w-[97%] items-center justify-between  rounded-md bg-muted">
-              <input
-                className="max-h-[200px] min-h-[40px] w-full resize-y overflow-y-auto bg-muted p-2 text-foreground placeholder:text-accent-foreground focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 "
+              <Input
+                disabled={isLoading}
+                className={cn(
+                  "max-h-[200px] min-h-[40px] w-full resize-y overflow-y-auto border-none bg-muted p-2 text-foreground shadow-none placeholder:text-accent-foreground focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+                )}
                 placeholder="Type a message"
                 {...form.register("content")}
                 autoComplete="off"

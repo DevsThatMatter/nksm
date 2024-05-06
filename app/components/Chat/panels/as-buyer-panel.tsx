@@ -19,8 +19,7 @@ export default function AsBuyerPanel({
   endpoint: "seller" | "buyer";
   discussions: { productId?: string; discussionGroup: chatDetails[] };
 }) {
-  const { activeDiscussion, updateLastMessage, activeDiscussionGroup } =
-    useChatStore();
+  const { activeDiscussion, updateLastMessage } = useChatStore();
 
   useQueries({
     queries: discussions.discussionGroup.map((chat) => {
@@ -37,7 +36,7 @@ export default function AsBuyerPanel({
             productId: productId,
           }).then((data) => {
             updateLastMessage(
-              productId,
+              `seller:${sellerId}buyer:${buyerId}product:${productId}`,
               data.lastMsg?.sentBy ?? "",
               data.lastMsg?.lastSentForeignMessage ?? "",
             );

@@ -27,7 +27,7 @@ export default function CategoryWiseDisplay({
       }}
     >
       <Image
-        src={discussion.discussionGroup[0].productDetails.Images[0]}
+        src={discussion.discussionGroup[0].productDetails?.Images?.[0]}
         alt={discussion.discussionGroup[0].productDetails.Product_Name}
         width={100}
         height={100}
@@ -37,14 +37,14 @@ export default function CategoryWiseDisplay({
         <h1 className="line-clamp-1 text-lg font-bold">
           {discussion.discussionGroup[0].productDetails.Product_Name}
         </h1>
-        <ul>
+        <ul className="flex">
           <h3 className="text-sm text-muted-foreground">
             {discussion.discussionGroup.length > 1 ? "Buyers" : "Buyer"}:{" "}
             {discussion.discussionGroup[0].buyerDetails.Name}
           </h3>
           {discussion.discussionGroup.length > 1 && (
             <span className="text-sm text-muted-foreground">
-              ...{discussion.discussionGroup.length - 1}more
+              ...{" " + (discussion.discussionGroup.length - 1) + " more"}
             </span>
           )}
         </ul>
