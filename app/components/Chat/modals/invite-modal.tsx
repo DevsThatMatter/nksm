@@ -10,6 +10,7 @@ import {
 import { cn } from "@/app/utils";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { useChatStore } from "@/hooks/useChatStore";
 
 export default function InviteModal({
   endpoint,
@@ -24,6 +25,8 @@ export default function InviteModal({
   userId: string;
   endpoint: "Accept" | "Reject";
 }) {
+  const queryClient = useQueryClient();
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -77,9 +80,6 @@ function CustomDialogContent({
         endpoint === "Accept"
           ? "Unable to Accept the invite."
           : "Unable to Reject the invite.",
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["user-recived-invites", userId],
     });
   }
 

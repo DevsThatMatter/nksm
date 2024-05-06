@@ -865,17 +865,13 @@ export async function acceptTheInvite(
         },
       );
     } else {
-      await Chat.updateOne(
-        {
-          Seller: props.sellerId,
-          Buyer: props.buyerId,
-          ProductId: props.productId,
-        },
-        {
-          status: "reject",
-        },
-      );
+      await Chat.findOneAndDelete({
+        Seller: props.sellerId,
+        Buyer: props.buyerId,
+        ProductId: props.productId,
+      });
     }
+    revalidatePath("/chat");
   } catch (error) {
     throw error;
   }
