@@ -46,7 +46,6 @@ export default function ChatInput({
     },
   });
 
-  const isLoading = form.formState.isSubmitting;
   const [dealLock, setDealLock] = useState<boolean>(false);
   const [gLockedStatus, setGlockedStatus] = useState(false);
   const [focus, changeFocus] = useState<boolean>(false);
@@ -74,6 +73,7 @@ export default function ChatInput({
       const sellerId = sellerDetails.id;
       const buyerId = buyerDetails.id;
       const dealDone = dealLock;
+      form.reset();
       await createNewMessage(
         message,
         sender,
@@ -82,7 +82,6 @@ export default function ChatInput({
         buyerId,
         productId,
       );
-      form.reset();
       changeFocus(!focus);
     } catch (error) {
       throw error;
@@ -96,6 +95,7 @@ export default function ChatInput({
         const sellerId = sellerDetails.id;
         const buyerId = buyerDetails.id;
         const dealDone = dealLock;
+        form.reset();
         await createNewMessage(
           message,
           sender,
@@ -104,7 +104,6 @@ export default function ChatInput({
           buyerId,
           productId,
         );
-        form.reset();
         changeFocus(!focus);
       } catch (error) {
         throw error;
@@ -130,7 +129,6 @@ export default function ChatInput({
           <FormControl>
             <div className="items flex w-full max-w-[97%] items-center justify-between  rounded-md bg-muted">
               <Input
-                disabled={isLoading}
                 className={cn(
                   "max-h-[200px] min-h-[40px] w-full resize-y overflow-y-auto border-none bg-muted p-2 text-foreground shadow-none placeholder:text-accent-foreground focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
                 )}
@@ -189,11 +187,10 @@ export default function ChatInput({
           </FormControl>
         </FormItem>
         {(
-          <button type="submit" disabled={isLoading}>
+          <button type="submit">
             <Icons.sendIcon
               className={cn(
                 "mx-1 h-5 w-5 transform cursor-pointer rounded-full  transition-transform hover:text-blue-500",
-                isLoading && "text-gray-500",
               )}
             />{" "}
           </button>
