@@ -1,20 +1,20 @@
 "use server";
 
-import * as z from "zod";
 import { Types, mongo, now } from "mongoose";
+import * as z from "zod";
 
-import { User } from "../models/user.model";
 import { connectToDB } from "../database/mongoose";
 import { Chat } from "../models/chats.model";
 import { Product } from "../models/product.model";
+import { User } from "../models/user.model";
 
-import { MessageTypes, IChat, chatDetails } from "@/types";
+import { InviteStruct } from "@/app/components/Chat/displays/invite-display";
+import { auth } from "@/auth";
+import { IChat, chatDetails } from "@/types";
+import { revalidatePath } from "next/cache";
+import { client } from "../database/redis-config";
 import { Message } from "../models/message.model";
 import { pusherServer } from "../pusher";
-import { InviteStruct } from "@/app/components/Chat/displays/invite-display";
-import { client } from "../database/redis-config";
-import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
 
 const mongoId = z.string().refine((value) => Types.ObjectId.isValid(value), {
   message: "Invalid ObjectId format",
@@ -544,6 +544,8 @@ const CreateNewMessage = z.object({
 });
 
 export async function createNewMessage(
+  id: string,
+  time: string,
   message: string,
   sender: string,
   dealDone: boolean,
@@ -560,8 +562,6 @@ export async function createNewMessage(
       buyerId,
       productId,
     });
-    const id = new mongo.ObjectId();
-    const time = new Date().toISOString();
     const msg = {
       _id: id,
       Sender: sender,
@@ -573,7 +573,6 @@ export async function createNewMessage(
     };
 
     const addKey = `chat${validatedProps.productId}productId${validatedProps.productId}sellerId${validatedProps.sellerId}buyerId${validatedProps.buyerId}add`;
-    await pusherServer.trigger(addKey, "messages:new", msg);
 
     const createdMessage = await Message.create({
       _id: id,
@@ -584,6 +583,8 @@ export async function createNewMessage(
       accepted: "pending",
       readStatus: false,
     });
+
+    await pusherServer.trigger(addKey, "messages:new", msg);
 
     await Chat.findOneAndUpdate(
       {
