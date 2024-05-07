@@ -7,17 +7,17 @@ import { Seller } from "@/types";
 import React from "react";
 import { Button, buttonVariants } from "../ui/button";
 import { Icons } from "@/app/utils/icons";
+import { Dialog, DialogTrigger, DialogContent } from "../ui/dialog";
 import { auth } from "@/auth";
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import { cn } from "@/app/utils";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import OfferForm from "./offer-form";
 import { Skeleton } from "../ui/skeleton";
 interface SellerCardProps {
   sellerInfo: Seller;
   productName: string;
   productImages: string[];
-  productId: mongoose.Types.ObjectId;
+  productId: ObjectId;
   is_archived: boolean;
   is_negotiable: boolean;
   price: number;
@@ -35,17 +35,19 @@ async function SellerCard({
   const senderEmail = (await auth())?.user?.email;
   return (
     <div>
-      <h2 className="mt-6 pb-3 text-2xl font-semibold lg:mt-0 lg:pb-0 lg:text-xl">
+      <h2 className="mt-6 pb-3 text-lg font-semibold lg:mt-0 lg:pb-0 lg:text-xl">
         Seller Details
       </h2>
       <div className="my-2 flex justify-between">
         <div className="flex items-center">
-          <Avatar className="h-[3rem] w-[3rem]">
+          <Avatar className="h-[3rem] w-[3rem] max-[400px]:h-[2rem] max-[400px]:w-[2rem]">
             <AvatarImage alt="Seller" src={sellerInfo.Avatar} />
             <AvatarFallback>{sellerInfo.Name?.slice(0, 2)}</AvatarFallback>
           </Avatar>
           <div className="ml-2">
-            <p className="font-semibold">{sellerInfo.Name}</p>
+            <p className="line-clamp-1 overflow-ellipsis break-words text-lg font-semibold">
+              {sellerInfo.Name}
+            </p>
             <p className="text-sm text-foreground">{sellerInfo.Username}</p>
           </div>
         </div>

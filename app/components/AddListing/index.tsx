@@ -35,7 +35,11 @@ import { Icons } from "@/app/utils/icons";
 
 export type PreviewInputs = z.infer<typeof FormDataSchemaFront>;
 
-export function AddListing() {
+export function AddListing({
+  defaultValues,
+}: {
+  defaultValues?: PreviewInputs;
+}) {
   const { edgestore } = useEdgeStore();
   const [currentStep, setCurrentStep] = useState<number>(1);
   const form = useForm<
@@ -48,14 +52,17 @@ export function AddListing() {
   >({
     resolver: zodResolver(FormDataSchemaFront),
     defaultValues: {
-      iname: "",
-      quantity: 1,
-      category: "",
-      description: "",
-      price: "100",
-      condition: "Brand New",
-      images: [],
-      negotiate: "Yes",
+      iname: defaultValues?.iname ?? "",
+      quantity: defaultValues?.quantity ?? 1,
+      category: defaultValues?.category ?? "",
+      description: defaultValues?.description ?? "",
+      price: defaultValues?.price ?? "100",
+      condition: defaultValues?.condition ?? "Brand New",
+      images: defaultValues?.images ?? [],
+      negotiate:
+        defaultValues?.negotiate || defaultValues?.negotiate === undefined
+          ? "Yes"
+          : "No",
     },
     mode: "onBlur",
   });
@@ -67,13 +74,11 @@ export function AddListing() {
     [],
   ];
   const next = async () => {
-    console.log(currentStep);
     if (currentStep < 4) {
       const fields = field[currentStep - 1];
       const output = await form.trigger(fields as FieldName[]);
 
       if (!output) return;
-      console.log("dfsf");
 
       setCurrentStep((step) => step + 1);
     } else {
@@ -92,23 +97,24 @@ export function AddListing() {
       negotiate,
     } = data;
     const resImageUrls = await Promise.all(
-      images.map(
-        async (image: File) =>
-          await edgestore.publicImages
-            .upload({
-              file: image,
-              input: { category: "profile" },
-              options: { temporary: true },
-              onProgressChange: async (progress) => {
-                if (progress === 100) {
-                  return;
-                }
-              },
-            })
-            .then((res) => res.url),
-      ),
+      images.map(async (image: File | string) => {
+        if (typeof image === "string") return image;
+        return await edgestore.publicImages
+          .upload({
+            file: image,
+            input: { category: "profile" },
+            options: { temporary: true },
+            onProgressChange: async (progress) => {
+              if (progress === 100) {
+                return;
+              }
+            },
+          })
+          .then((res) => res.url);
+      }),
     );
     await addProductFromListing({
+      ...(defaultValues && { id: defaultValues.id }),
       iname,
       quantity,
       category,
@@ -345,13 +351,15 @@ export function AddListing() {
                                   });
                                 }),
                               );
-                              console.log(compressedFiles);
                               field.onChange([
                                 ...field.value,
                                 ...compressedFiles,
                               ]);
                             }}
-                            disabled={field.value.length >= 6}
+                            disabled={
+                              defaultValues != undefined ||
+                              field.value.length >= 6
+                            }
                             multiple={true}
                             maxSize={5242880}
                             maxFiles={6}
@@ -362,18 +370,31 @@ export function AddListing() {
                                 {...getRootProps({
                                   className: cn(
                                     "p-3 mb-4 flex flex-col items-center justify-center w-full rounded-md cursor-pointer border border-dashed border-muted",
-                                    field.value.length >= 6 && "bg-muted",
+                                    field.value.length >= 6 ||
+                                      (defaultValues != undefined &&
+                                        "bg-muted cursor-not-allowed"),
                                   ),
                                 })}
                               >
-                                <Icons.upload className="mt-4 size-8 text-muted-foreground" />
+                                <Icons.upload
+                                  className={cn(
+                                    "mt-4 size-8 text-muted-foreground",
+                                    field.value.length >= 6 ||
+                                      (defaultValues != undefined &&
+                                        "cursor-not-allowed"),
+                                  )}
+                                />
                                 <div className="mb-2 mt-5 flex items-center gap-x-3">
                                   <label
                                     htmlFor="Products"
-                                    className={`text-md cursor-pointer font-semibold text-muted-foreground focus:underline focus:outline-none ${
+                                    className={cn(
+                                      "text-md cursor-pointer font-semibold text-muted-foreground focus:underline focus:outline-none",
                                       form.formState.errors.images &&
-                                      "text-red-500"
-                                    }`}
+                                        "text-red-500",
+                                      field.value.length >= 6 ||
+                                        (defaultValues != undefined &&
+                                          "cursor-not-allowed"),
+                                    )}
                                     tabIndex={0}
                                   >
                                     Click Here to Upload Images...
@@ -383,36 +404,46 @@ export function AddListing() {
                               </div>
                             )}
                           </Dropzone>
-                          {field.value.map((file: File, index: number) => (
-                            <div
-                              key={index}
-                              className="flex h-14 w-full items-center gap-5 rounded-md border p-1"
-                            >
-                              <Image
-                                src={URL.createObjectURL(file)}
-                                alt="Product Image"
-                                width={100}
-                                height={100}
-                                className="aspect-square h-full w-12 rounded-md object-cover"
-                              />
-                              <p className="line-clamp-1 grow overflow-ellipsis px-1 text-sm">
-                                {file.name}
-                              </p>
-                              <Button
-                                onClick={() =>
-                                  field.onChange(
-                                    field.value.filter(
-                                      (_: File, i: number) => i !== index,
-                                    ),
-                                  )
-                                }
-                                variant="ghost"
-                                className="m-1 h-10 w-10 border p-1"
+                          {field.value.map(
+                            (file: File | string, index: number) => (
+                              <div
+                                key={index}
+                                className="flex h-14 w-full items-center gap-5 rounded-md border p-1"
                               >
-                                <Icons.cross />
-                              </Button>
-                            </div>
-                          ))}
+                                <Image
+                                  src={
+                                    typeof file === "string"
+                                      ? file
+                                      : URL.createObjectURL(file)
+                                  }
+                                  alt="Product Image"
+                                  width={100}
+                                  height={100}
+                                  className="aspect-square h-full w-12 rounded-md object-cover"
+                                />
+                                <p className="line-clamp-1 grow overflow-ellipsis px-1 text-sm">
+                                  {typeof file === "string"
+                                    ? file
+                                    : file.name ?? "image " + index}
+                                </p>
+                                {!defaultValues && (
+                                  <Button
+                                    onClick={() =>
+                                      field.onChange(
+                                        field.value.filter(
+                                          (_: File, i: number) => i !== index,
+                                        ),
+                                      )
+                                    }
+                                    variant="ghost"
+                                    className="m-1 h-10 w-10 border p-1"
+                                  >
+                                    <Icons.cross />
+                                  </Button>
+                                )}
+                              </div>
+                            ),
+                          )}
                         </>
                       </FormControl>
                       <FormMessage />
@@ -429,17 +460,25 @@ export function AddListing() {
           type="button"
           variant="outline"
           onClick={prev}
-          disabled={currentStep === 1 || form.formState.isSubmitting}
+          disabled={
+            currentStep === 1 ||
+            form.formState.isSubmitting ||
+            form.formState.isSubmitted
+          }
           className="w-20"
         >
           Previous
         </Button>
         <Button
           onClick={next}
-          disabled={currentStep > 4 || form.formState.isSubmitting}
+          disabled={
+            currentStep > 4 ||
+            form.formState.isSubmitting ||
+            form.formState.isSubmitted
+          }
           className="w-20 overflow-x-visible px-2"
         >
-          {form.formState.isSubmitting ? (
+          {form.formState.isSubmitting || form.formState.isSubmitted ? (
             <Icons.loading className="animate-spin text-muted" />
           ) : (
             <>{currentStep === 4 ? "Submit" : "Next"}</>

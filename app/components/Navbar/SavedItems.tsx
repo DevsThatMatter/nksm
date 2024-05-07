@@ -82,10 +82,10 @@ export default function SavedItems() {
                       {product.Condition}
                     </p>
                     <p
-                      className={`mx-1 flex items-center justify-center rounded-3xl p-1 text-xs ${
+                      className={`m-1 flex items-center justify-center rounded-3xl px-2 py-1 text-xs ${
                         product.Negotiable
-                          ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-green-800"
-                          : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-sky-900"
+                          ? "bg-green-200 text-green-500 dark:bg-green-800/40 dark:text-green-400"
+                          : "bg-sky-200 text-sky-500 dark:bg-sky-800/40 dark:text-sky-400"
                       }`}
                     >
                       {product.Negotiable ? "Negotiable" : "Not Negotiable"}

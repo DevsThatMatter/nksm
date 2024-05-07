@@ -35,7 +35,7 @@ export interface CommentsInterface {
 export type CommentsType = CommentsInterface[];
 
 export interface Product {
-  _id: mongoose.Types.ObjectId;
+  _id: mongoose.Schema.Types.ObjectId;
   Seller: Seller;
   Comments: CommentsType;
   Quantity: number;

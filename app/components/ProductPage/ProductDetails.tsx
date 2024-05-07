@@ -1,7 +1,6 @@
-import React from "react";
-import { type ConditionEnum, Product } from "@/types";
 import { cn } from "@/app/utils";
 import { Icons } from "@/app/utils/icons";
+import { Product, type ConditionEnum } from "@/types";
 
 export const renderConditionIcon = (condition: ConditionEnum | string) => {
   switch (condition) {
@@ -35,7 +34,7 @@ const ProductDetails = ({
             {productInfo.Condition}
           </p>
           <p
-            className={`m-1 flex items-center justify-center rounded-3xl p-1 px-2 text-xs ${productInfo.Negotiable ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-green-800" : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-sky-900"}`}
+            className={`m-1 flex items-center justify-center rounded-3xl p-1 px-2 text-xs ${productInfo.Negotiable ? "bg-green-200 text-green-500 dark:bg-green-800/40 dark:text-green-400" : "bg-sky-200 text-sky-500 dark:bg-sky-800/40 dark:text-sky-400"}`}
           >
             {productInfo.Negotiable ? "Negotiable" : "Not Negotiable"}
           </p>

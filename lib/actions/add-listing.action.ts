@@ -14,33 +14,55 @@ export async function addProductFromListing(
   if (!result.success) {
     throw new Error(result.error.message);
   }
-  const id = await update(result.data);
-  redirect("/product/" + id, RedirectType.replace);
+  const id = await upsert(result.data);
+  return redirect(`/product/${id}`, RedirectType.replace);
 }
 
-async function update(values: z.infer<typeof FormDataSchemaBack>) {
+async function upsert(values: z.infer<typeof FormDataSchemaBack>) {
   try {
     await connectToDB();
-    const userObj = await auth();
-    if (!userObj?.user) {
+    const userId = (await auth())?.user?.id;
+    if (!userId) {
       throw new Error("User not found");
     }
 
-    const product = await Product.create({
-      Seller: userObj.user.id,
-      Total_Quantity_Available: values.quantity,
-      Product_Name: values.iname,
-      Description: values.description,
-      Price: values.price,
-      Images: values.images,
-      Condition: values.condition,
-      Category: values.category,
-      Negotiable: values.negotiate,
-    });
-
-    await User.findByIdAndUpdate(userObj.user.id, {
-      $push: { Owned_Products: product._id },
-    });
+    const product: any = values.id
+      ? await Product.findOneAndUpdate(
+          { _id: values.id, Seller: userId },
+          {
+            Total_Quantity_Available: values.quantity,
+            Product_Name: values.iname,
+            Description: values.description,
+            Price: values.price,
+            Images: values.images,
+            Condition: values.condition,
+            Category: values.category,
+            Negotiable: values.negotiate,
+          },
+          {
+            upsert: true,
+            new: true,
+            select: "_id",
+          },
+        ).lean()
+      : await Product.create({
+          Seller: userId,
+          Total_Quantity_Available: values.quantity,
+          Product_Name: values.iname,
+          Description: values.description,
+          Price: values.price,
+          Images: values.images,
+          Condition: values.condition,
+          Category: values.category,
+          Negotiable: values.negotiate,
+        });
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        $addToSet: { Owned_Products: product._id },
+      },
+      { select: "" },
+    ).lean();
     return product._id.toString();
   } catch (error) {
     throw new Error();

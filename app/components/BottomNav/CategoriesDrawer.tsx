@@ -1,5 +1,6 @@
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
@@ -23,10 +24,10 @@ const CategoriesDrawer = ({ children }: { children: React.ReactNode }) => {
             {categories.map((category) => (
               <Link
                 className="flex items-center justify-center p-2 font-semibold"
-                href={`/search?&category=${category.name}`}
+                href={`/search?q=&category=${category.name}`}
                 key={category.name}
               >
-                {category.name}
+                <DrawerClose>{category.name}</DrawerClose>
               </Link>
             ))}
           </nav>

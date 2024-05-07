@@ -1,6 +1,6 @@
 import { FilterProps } from "@/app/(root)/search/page";
-import Link from "next/link";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 import { MobileFilter } from "./MobileFilter";
 export const sortFilterObject = {
   low: "Price: Low to High",
@@ -19,7 +19,7 @@ const SortFilter = ({ query, sorting = "newest", category }: FilterProps) => {
       </button>
       <MobileFilter query={query} sorting={sorting} category={category} />
       <div className="max-lg:hidden">
-        <ul className="absolute z-20 hidden w-full rounded-lg border bg-background hover:block group-hover:block">
+        <ul className="absolute z-20 hidden w-full rounded-lg border bg-background p-2 hover:block group-hover:block">
           {Object.entries(sortFilterObject).map(([key, value]) => {
             if (key === sorting) return null;
             return (

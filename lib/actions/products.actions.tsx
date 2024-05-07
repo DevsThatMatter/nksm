@@ -1,19 +1,21 @@
 "use server";
 
-import { SavedProduct } from "@/app/components/Navbar/SavedItems";
-import SearchCard from "@/app/components/Search/SearchCard";
-import { auth } from "@/auth";
-import { CategoryEnum, SortBy } from "@/types";
-import { FilterQuery, SortOrder, mongo } from "mongoose";
-import { redirect } from "next/navigation";
-import { connectToDB } from "../database/mongoose";
 import { Product } from "../models/product.model";
+import { connectToDB } from "../database/mongoose";
+import { FilterQuery, SortOrder, mongo } from "mongoose";
+import SearchCard from "@/app/components/Search/SearchCard";
+import { CategoryEnum, SortBy } from "@/types";
 import { User } from "../models/user.model";
+import { auth } from "@/auth";
+import { RedirectType, redirect } from "next/navigation";
+import { SavedProduct } from "@/app/components/Navbar/SavedItems";
+import { revalidatePath } from "next/cache";
 
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
     const fetchedProducts = await Product.find({})
+      .where({ is_archived: false })
       .limit(50)
       .select({
         _id: 1,
@@ -178,6 +180,46 @@ export const fetchProductDetails = async (productId: string) => {
   }
 };
 
+export const fetchOrderHistory = async (email: string) => {
+  try {
+    await connectToDB();
+
+    const userInfo = await User.findOne({ Email: email })
+      .select({
+        Ordered_Products: true,
+        Owned_Products: true,
+      })
+      .populate({
+        path: "Ordered_Products Owned_Products",
+        model: Product,
+        select: "Images Product_Name Price Description Condition Negotiable",
+      });
+    return userInfo;
+  } catch (e: unknown) {
+    console.log("Something went wrong.");
+    throw e;
+  }
+};
+
+export const removeProduct = async (values: FormData) => {
+  try {
+    await connectToDB();
+    const productId = values.get("productId");
+    await Product.deleteOne({
+      _id: productId,
+    }).lean();
+    await User.updateOne({
+      $pull: {
+        Owned_Products: productId,
+      },
+    }).lean();
+    revalidatePath("orders");
+    redirect("/orders", RedirectType.replace);
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    throw error;
+  }
+};
 export async function fetchSavedProduct() {
   try {
     const savedItems = new Map<string, SavedProduct>();

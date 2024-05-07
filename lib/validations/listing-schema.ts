@@ -13,6 +13,7 @@ const FormDataSchema = z.object({
     .min(1, "Price must be at least 1")
     .max(999999, "Can't exceed 999999"),
   quantity: z.coerce.number().min(1, "Quantity must be at least 1"),
+  id: z.string().optional(),
 });
 export const FormDataSchemaFront = FormDataSchema.extend({
   images: z
