@@ -31,7 +31,7 @@ export default function ImageCard({ images }: { images: string[] }) {
   return (
     <Carousel removedContainer opts={options}>
       <div className="relative flex justify-end">
-        <div className="absolute bottom-0 left-0 top-0 w-[15%] space-y-2 overflow-auto pr-2">
+        <div className="absolute bottom-0 left-0 top-0 w-[15%] space-y-2 overflow-auto pr-2 max-sm:w-[25%]">
           {images.map((image: string, index: number) => (
             <CarouselIndexNavigate index={index} key={index}>
               <Image
@@ -39,13 +39,13 @@ export default function ImageCard({ images }: { images: string[] }) {
                 alt={`Image`}
                 width={200}
                 height={200}
-                className="aspect-square cursor-pointer rounded-md bg-muted object-contain"
+                className="cursor-pointer rounded-md bg-muted object-contain sm:aspect-square"
               />
             </CarouselIndexNavigate>
           ))}
         </div>
 
-        <Overlay className="aspect-video w-[85%] rounded-lg border border-muted bg-muted">
+        <Overlay className="aspect-[4/3] w-[85%] rounded-lg border border-muted bg-muted max-sm:w-[75%] sm:aspect-video">
           <CarouselContent className="h-full w-full bg-muted">
             {images.map((image: string, index: number) => (
               <CarouselItem key={index}>
