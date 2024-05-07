@@ -1,4 +1,3 @@
-"use client";
 import {
   Dialog,
   DialogContent,
@@ -10,30 +9,28 @@ import {
   DialogClose,
 } from "@/app/components/ui/dialog";
 import { MdDelete, MdEdit } from "react-icons/md";
+
 import { Button } from "../ui/button";
 import { removeProduct } from "@/lib/actions/products.actions";
+import Link from "next/link";
+
 const DialogOptions = ({ id }: { id: string }) => {
-  const handleRemoval = async (productId: string) => {
-    await removeProduct(productId);
-    location.reload();
-  };
-  const handleEdit = async (productId: string) => {
-    console.log(productId);
-  };
   return (
     <>
       <Button
         className="cursor-pointer sm:absolute sm:bottom-2 sm:right-16"
         variant="ghost"
         size="icon"
-        onClick={() => handleEdit(id)}
+        asChild
       >
-        <MdEdit
-          size={28}
-          className="text-foreground max-sm:hidden"
-          title="Edit your product"
-        />
-        <p className="sm:hidden">Edit</p>
+        <Link href={`add-listing/${id}`}>
+          <MdEdit
+            size={28}
+            className="text-foreground max-sm:hidden"
+            title="Edit your product"
+          />
+          <p className="sm:hidden">Edit</p>
+        </Link>
       </Button>
       <Dialog>
         <DialogTrigger asChild>
@@ -61,9 +58,13 @@ const DialogOptions = ({ id }: { id: string }) => {
             <DialogClose asChild>
               <Button variant="outline">No</Button>
             </DialogClose>
-            <Button variant="destructive" onClick={() => handleRemoval(id)}>
-              Yes
-            </Button>
+            <DialogClose>
+              <form action={removeProduct}>
+                <Button variant="destructive" value={id} name="productId">
+                  Yes
+                </Button>
+              </form>
+            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>

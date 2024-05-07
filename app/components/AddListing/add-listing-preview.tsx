@@ -6,9 +6,10 @@ import { ConditionEnum } from "@/types";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 
 const AddListingPreview = (
-  previewData: Omit<PreviewInputs, "price" | "negotiate"> & {
+  previewData: Omit<PreviewInputs, "price" | "negotiate" | "images"> & {
     price: number | string;
     negotiate: boolean | string;
+    images: (File | string)[];
   },
 ) => {
   const renderConditionIcon = (condition: ConditionEnum | string) => {
@@ -27,10 +28,12 @@ const AddListingPreview = (
     <div className={cn("mt-4 w-full")}>
       <Carousel className="w-full rounded-lg shadow-none">
         <CarouselContent>
-          {previewData.images.map((image: File, index: number) => (
+          {previewData.images.map((image: File | string, index: number) => (
             <CarouselItem key={index} className="rounded-md">
               <Image
-                src={URL.createObjectURL(image)}
+                src={
+                  typeof image === "string" ? image : URL.createObjectURL(image)
+                }
                 alt={`Image ${index + 1}`}
                 width={1920}
                 height={1080}

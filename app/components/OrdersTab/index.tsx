@@ -57,7 +57,7 @@ const OrdersTab = async ({ email }: { email: string }) => {
             </Link>
           </div>
         ) : (
-          <div className="overflow-auto">
+          <div className="w-full overflow-auto">
             {userInfo.Owned_Products.map((product: Product) => {
               return (
                 <ClientDiv
