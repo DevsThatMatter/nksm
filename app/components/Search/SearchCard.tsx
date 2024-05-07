@@ -66,7 +66,7 @@ const SearchCard = ({
                 {condition}
               </p>
               <p
-                className={`flex items-center justify-center rounded-3xl p-1 px-2 text-xs max-md:absolute max-md:left-0 max-md:top-0 max-md:ml-4 max-md:mt-4 ${negotiable ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-gray-200" : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-gray-200"}`}
+                className={`m-1 flex items-center justify-center rounded-3xl p-1 px-2 text-xs ${negotiable ? "bg-green-200 text-green-500 dark:bg-green-800/40 dark:text-green-400" : "bg-sky-200 text-sky-500 dark:bg-sky-800/40 dark:text-sky-400"}`}
               >
                 {negotiable ? "Negotiable" : "Not Negotiable"}
               </p>
