@@ -86,7 +86,11 @@ export default function SearchBar({
         filteredProducts.length > 0 ? (
           <div className="absolute left-0 right-0 z-50 mt-10 hidden max-h-60 overflow-auto rounded-md border bg-card shadow-lg group-focus-within:block">
             {filteredProducts.map((product) => (
-              <Link href={`/product/${product._id}`} key={product._id}>
+              <Link
+                href={`/product/${product._id}`}
+                key={product._id}
+                onClick={() => (document.activeElement as HTMLElement)?.blur()}
+              >
                 <li
                   key={product._id}
                   className="flex items-center justify-between border px-4 py-2 hover:bg-accent"
