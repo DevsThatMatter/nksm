@@ -1,17 +1,15 @@
+import { cn } from "@/app/utils";
+import { useChatQuery } from "@/hooks/useChatQuery";
+import { useChatScroll } from "@/hooks/useChatScroll";
+import { pusherClient } from "@/lib/pusher";
+import { MessageTypes } from "@/types";
 import { ElementRef, Fragment, useEffect, useRef, useState } from "react";
-import UserProfile from "../displays/user-profile-display";
 import { useChatStore } from "../../../../hooks/useChatStore";
 import { getChatDetails } from "../../../utils/chat-utils";
-import { useChatQuery } from "@/hooks/useChatQuery";
-import { MessageTypes } from "@/types";
-import { useChatScroll } from "@/hooks/useChatScroll";
-import { getMessagesResult } from "@/lib/actions/chat.actions";
-import { pusherClient } from "@/lib/pusher";
-import { cn } from "@/app/utils";
-import MessageElement from "./message-element";
-import ChatInput from "./chat-input";
 import { Skeleton } from "../../ui/skeleton";
-import { useChatObserver } from "@/hooks/useChatObserver";
+import UserProfile from "../displays/user-profile-display";
+import ChatInput from "./chat-input";
+import MessageElement from "./message-element";
 
 export default function ChatUI1({ userId }: { userId: string }) {
   const { activeDiscussion } = useChatStore();
@@ -72,6 +70,7 @@ export default function ChatUI1({ userId }: { userId: string }) {
     pusherClient.subscribe(updateKey);
 
     function newMessageHandler(message: MessageTypes) {
+      if (userId == message.Sender) return;
       setMessages((msg) => {
         return [message, ...msg];
       });
@@ -217,6 +216,7 @@ export default function ChatUI1({ userId }: { userId: string }) {
           buyerDetails={{
             id: activeDiscussion?.buyerDetails.id ?? "",
           }}
+          setMessages={setMessages}
         />
       </footer>
     </main>
