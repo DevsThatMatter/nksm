@@ -1,14 +1,18 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { Skeleton } from "@/app/components/ui/skeleton";
+import { MessageTypes } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import ObjectId from "bson-objectid";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { Form, FormControl, FormItem } from "@/app/components/ui/form";
 import { cn } from "@/app/utils";
 import { Icons } from "@/app/utils/icons";
+import { useChatStore } from "@/hooks/useChatStore";
 import { createNewMessage, getChatStatus } from "@/lib/actions/chat.actions";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "../../ui/button";
 import {
   Dialog,
@@ -18,9 +22,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../ui/dialog";
-import { useChatStore } from "@/hooks/useChatStore";
 import { Input } from "../../ui/input";
-import { useQuery } from "@tanstack/react-query";
 
 const messageSchema = z.object({
   content: z.string().min(1),
@@ -31,6 +33,7 @@ interface ChatInputProps {
   productId: string;
   sellerDetails: { id: string };
   buyerDetails: { id: string };
+  setMessages: Dispatch<SetStateAction<MessageTypes[]>>;
 }
 
 export default function ChatInput({
@@ -38,6 +41,7 @@ export default function ChatInput({
   productId,
   buyerDetails,
   sellerDetails,
+  setMessages,
 }: ChatInputProps) {
   const form = useForm({
     resolver: zodResolver(messageSchema),
@@ -74,7 +78,23 @@ export default function ChatInput({
       const buyerId = buyerDetails.id;
       const dealDone = dealLock;
       form.reset();
+      const id = ObjectId().toHexString();
+      const time = new Date().toISOString();
+      setMessages((prevMessages: MessageTypes[]) => [
+        {
+          msgId: id,
+          Sender: sender,
+          Message: dealDone ? "Lets have a deal?" : message,
+          options: dealDone,
+          TimeStamp: time,
+          accepted: "pending",
+          readStatus: false,
+        },
+        ...prevMessages,
+      ]);
       await createNewMessage(
+        id,
+        time,
         message,
         sender,
         dealDone,
@@ -96,7 +116,23 @@ export default function ChatInput({
         const buyerId = buyerDetails.id;
         const dealDone = dealLock;
         form.reset();
+        const id = ObjectId().toHexString();
+        const time = new Date().toISOString();
+        setMessages((prevMessages: MessageTypes[]) => [
+          {
+            msgId: id,
+            Sender: sender,
+            Message: dealDone ? "Lets have a deal?" : message,
+            options: dealDone,
+            TimeStamp: time,
+            accepted: "pending",
+            readStatus: false,
+          },
+          ...prevMessages,
+        ]);
         await createNewMessage(
+          id,
+          time,
           message,
           sender,
           dealDone,

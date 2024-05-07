@@ -15,6 +15,7 @@ import {
 } from "../ui/card";
 import { Form, FormControl, FormItem, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 interface OfferFormProps {
   reciverEmail: string;
@@ -114,12 +115,14 @@ export default function OfferForm({
           </FormItem>
         </CardContent>
         <CardFooter className="flex">
-          <Button
-            type="submit"
-            className="mt-5 w-full bg-green-600 hover:bg-green-700 dark:text-foreground"
-          >
-            Submit Offer
-          </Button>
+          <DialogClose asChild>
+            <Button
+              type="submit"
+              className="mt-5 w-full bg-green-600 hover:bg-green-700 dark:text-foreground"
+            >
+              Submit Offer
+            </Button>
+          </DialogClose>
         </CardFooter>
       </form>
     </Form>
