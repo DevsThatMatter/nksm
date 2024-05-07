@@ -1,7 +1,7 @@
 "use server";
 
 import * as z from "zod";
-import { Types, mongo } from "mongoose";
+import { Types, mongo, now } from "mongoose";
 
 import { User } from "../models/user.model";
 import { connectToDB } from "../database/mongoose";
@@ -11,8 +11,10 @@ import { Product } from "../models/product.model";
 import { MessageTypes, IChat, chatDetails } from "@/types";
 import { Message } from "../models/message.model";
 import { pusherServer } from "../pusher";
-import { InviteStruct } from "@/app/components/Chat/invites";
+import { InviteStruct } from "@/app/components/Chat/displays/invite-display";
 import { client } from "../database/redis-config";
+import { revalidatePath } from "next/cache";
+import { auth } from "@/auth";
 
 const mongoId = z.string().refine((value) => Types.ObjectId.isValid(value), {
   message: "Invalid ObjectId format",
@@ -36,7 +38,7 @@ function groupDocs(data: chatDetails[]): Map<string, chatDetails[]> {
 export async function getAllChats(userId: z.infer<typeof mongoId>) {
   try {
     connectToDB();
-
+    console.log("userid => ", userId);
     const matchStage0 = {
       $match: {
         Seller: new mongo.ObjectId(userId),
@@ -77,7 +79,11 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
         as: "buyerInfo",
       },
     };
-
+    const sortStage = {
+      $sort: {
+        UpdatedAt: -1 as const,
+      },
+    };
     const projectStage = {
       $project: {
         productDetails: {
@@ -141,6 +147,7 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
       productLookup,
       buyerLookup,
       sellerLookup,
+      sortStage,
       projectStage,
     ];
 
@@ -149,6 +156,7 @@ export async function getAllChats(userId: z.infer<typeof mongoId>) {
       productLookup,
       buyerLookup,
       sellerLookup,
+      sortStage,
       projectStage,
     ];
 
@@ -267,14 +275,15 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
           $set: { status: "stale" },
         },
       );
-      await Product.updateOne(
+      await Product.findByIdAndUpdate(
+        validatedProps.productId,
         {
-          _id: new mongo.ObjectId(props.productId),
+          $inc: { Total_Quantity_Available: -1 },
+          $set: { is_archived: { $lt: ["$Total_Quantity_Available", 1] } },
         },
-        {
-          is_archived: true,
-        },
+        { new: true },
       );
+
       const messageIds = await Chat.aggregate([
         {
           $match: {
@@ -332,7 +341,6 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
         );
       }
 
-      User;
       await Chat.updateMany(
         {
           Seller: new mongo.ObjectId(validatedProps.seller),
@@ -350,6 +358,25 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
         },
         {
           $set: { status: "stale" },
+        },
+      );
+      const product = await Product.findOne({
+        _id: new mongo.ObjectId(validatedProps.productId),
+      });
+      product.Total_Quantity_Available--;
+      if (product.Total_Quantity_Available <= 0) {
+        product.is_archive = true;
+      }
+      await product.save();
+
+      await User.updateOne(
+        {
+          _id: new mongo.ObjectId(validatedProps.buyer),
+        },
+        {
+          $push: {
+            Ordered_Products: new mongo.ObjectId(validatedProps.productId),
+          },
         },
       );
     } else {
@@ -432,75 +459,73 @@ async function computeUnreadMessages(
   ]);
 
   const unreadCount = (result.length > 0 ? result[0].unreadCount : 0) as number;
-
   return unreadCount;
 }
-
 export async function countUnreadMessages(
   props: z.infer<typeof UnreadMessagesProps> & {
-    caller: "get" | "update" | "db";
+    caller: "get" | "update-read" | "update-write";
     messageId?: string;
   },
 ) {
+  const userId = (await auth())?.user?.id;
+  const otherUser = props.buyerId === userId ? props.sellerId : props.buyerId;
   try {
-    const cacheKey = `productId${props.productId}sellerId${props.sellerId}buyerId${props.buyerId}cache`;
-    const cachedVal = await client.get(cacheKey);
-    if (props.caller === "db") {
-      const unreadCount = await computeUnreadMessages(props);
-      await client.set(cacheKey, unreadCount.toString());
-      return {
-        unreadCount,
-        productId: props.productId,
-      };
-    } else if (props.caller === "get") {
+    const chatId = (
+      await Chat.findOne({
+        Seller: new mongo.ObjectId(props.sellerId),
+        Buyer: new mongo.ObjectId(props.buyerId),
+        ProductId: new mongo.ObjectId(props.productId),
+      })
+    )._id.toString();
+
+    if (props.caller === "get") {
+      const cacheKey = `chatId-${chatId}-userId-${userId}`;
+      const cachedVal = await client.get(cacheKey);
       if (cachedVal) {
-        return {
-          unreadCount: parseInt(cachedVal),
-          productId: props.productId,
-        };
+        return Number(cachedVal);
       }
-      const unreadCount = await computeUnreadMessages(props);
-      await client.set(cacheKey, unreadCount.toString());
-      return {
-        unreadCount,
-        productId: props.productId,
-      };
+      const count = (await computeUnreadMessages(props)).toString();
+
+      await client.set(cacheKey, count, "EX", 1800);
+
+      return Number(count);
+    } else if (props.caller === "update-read") {
+      await Message.updateOne(
+        {
+          _id: new mongo.ObjectId(props.messageId),
+        },
+        {
+          readStatus: true,
+        },
+      );
+      const cacheKey = `chatId-${chatId}-userId-${userId}`;
+      let cachedVal = Number(await client.get(cacheKey));
+      cachedVal--;
+
+      if (cachedVal < 0) {
+        cachedVal = 0;
+      }
+
+      await client.set(cacheKey, cachedVal, "EX", 1800);
+      return cachedVal;
     } else {
+      const otherUserCache = `chatId-${chatId}-userId-${otherUser}`;
+      let cachedVal = Number(await client.get(otherUserCache));
       if (cachedVal) {
-        let unreadCount = parseInt(cachedVal);
-        if (props.messageId) {
-          const updateResult = await Message.updateOne(
-            { _id: new mongo.ObjectId(props.messageId) },
-            { readStatus: true },
-          );
-          if (updateResult.modifiedCount === 1) {
-            unreadCount--;
-            if (unreadCount < 0) unreadCount = 0;
-            await client.set(cacheKey, unreadCount.toString(), "XX");
-          }
-        }
-        return {
-          unreadCount,
-          productId: props.productId,
-        };
-      } else {
-        let unreadCount = await computeUnreadMessages(props);
-        if (props.messageId) {
-          const updateResult = await Message.updateOne(
-            { _id: new mongo.ObjectId(props.messageId) },
-            { readStatus: true },
-          );
-          if (updateResult.modifiedCount === 1) {
-            unreadCount--;
-            if (unreadCount < 0) unreadCount = 0;
-            await client.set(cacheKey, unreadCount.toString());
-          }
-        }
-        return {
-          unreadCount,
-          productId: props.productId,
-        };
+        cachedVal++;
+        await client.set(otherUserCache, cachedVal, "EX", 1800);
+        return cachedVal;
       }
+      const count = (await computeUnreadMessages(props)).toString();
+
+      await client.set(otherUserCache, count, "EX", 1800);
+      const channelKey = `productId${props.productId}sellerId${props.sellerId}buyerId${props.buyerId}write-update-count`;
+
+      console.log("channel key => ", channelKey);
+
+      pusherServer.trigger(channelKey, "unreadCount:inc", Number(count));
+
+      return Number(count);
     }
   } catch (error) {
     throw error;
@@ -535,64 +560,51 @@ export async function createNewMessage(
       buyerId,
       productId,
     });
+    const id = new mongo.ObjectId();
+    const time = new Date().toISOString();
+    const msg = {
+      _id: id,
+      Sender: sender,
+      Message: dealDone ? "Lets have a deal?" : validatedProps.message,
+      options: dealDone,
+      TimeStamp: time,
+      accepted: "pending",
+      readStatus: false,
+    };
 
-    const product = await Product.findById(productId);
-    if (!product) {
-      throw new Error(`No product with this id ${productId}`);
-    }
-
-    const currentTimeStamp = new Date();
-    let newMessage: MessageTypes;
-
-    if (dealDone) {
-      newMessage = {
-        Sender: validatedProps.sender,
-        Message: "Lets have a deal?",
-        options: true,
-        TimeStamp: currentTimeStamp.toISOString(),
-        accepted: "pending",
-        readStatus: false,
-      };
-    } else {
-      newMessage = {
-        Sender: validatedProps.sender,
-        Message: validatedProps.message,
-        options: false,
-        TimeStamp: currentTimeStamp.toISOString(),
-        readStatus: false,
-      };
-    }
-
-    const chat = await Chat.findOne({
-      Seller: validatedProps.sellerId,
-      Buyer: validatedProps.buyerId,
-      ProductId: validatedProps.productId,
-    });
+    const addKey = `chat${validatedProps.productId}productId${validatedProps.productId}sellerId${validatedProps.sellerId}buyerId${validatedProps.buyerId}add`;
+    await pusherServer.trigger(addKey, "messages:new", msg);
 
     const createdMessage = await Message.create({
-      ...newMessage,
+      _id: id,
+      Sender: sender,
+      Message: dealDone ? "Lets have a deal?" : validatedProps.message,
+      options: dealDone,
+      TimeStamp: time,
+      accepted: "pending",
+      readStatus: false,
     });
 
-    newMessage = {
-      ...newMessage,
-      msgId: String(createdMessage._id),
-    };
-    if (chat) {
-      console.log("chat found");
-      chat.Messages.push(createdMessage._id);
-      await chat.save();
-    } else {
-      const newChat = new Chat({
+    await Chat.findOneAndUpdate(
+      {
         Seller: validatedProps.sellerId,
         Buyer: validatedProps.buyerId,
         ProductId: validatedProps.productId,
-        Messages: [createdMessage._id],
-      });
-      await newChat.save();
-    }
+      },
+      {
+        $push: { Messages: createdMessage._id },
+        $set: { UpdatedAt: now() },
+      },
+      { upsert: true, new: true },
+    );
 
-    const addKey = `chat${validatedProps.productId}productId${validatedProps.productId}sellerId${validatedProps.sellerId}buyerId${validatedProps.buyerId}add`;
-    await pusherServer.trigger(addKey, "messages:new", newMessage);
+    await countUnreadMessages({
+      productId,
+      sellerId,
+      buyerId,
+      currentUser: sender,
+      caller: "update-write",
+    });
   } catch (error) {
     console.log("error ", error);
     if (error instanceof z.ZodError) {
@@ -834,17 +846,13 @@ export async function acceptTheInvite(
         },
       );
     } else {
-      await Chat.updateOne(
-        {
-          Seller: props.sellerId,
-          Buyer: props.buyerId,
-          ProductId: props.productId,
-        },
-        {
-          status: "reject",
-        },
-      );
+      await Chat.findOneAndDelete({
+        Seller: props.sellerId,
+        Buyer: props.buyerId,
+        ProductId: props.productId,
+      });
     }
+    revalidatePath("/chat");
   } catch (error) {
     throw error;
   }
@@ -858,7 +866,7 @@ const ChatStatusProps = z.object({
 
 export async function getChatStatus(props: z.infer<typeof ChatStatusProps>) {
   try {
-    const status = (
+    const status: string = (
       await Chat.findOne({
         Seller: props.sellerId,
         Buyer: props.buyerId,
@@ -976,7 +984,7 @@ export async function getLastMessages({
 }) {
   try {
     await connectToDB();
-    const pipeline: any[] = [
+    const pipeline = [
       {
         $match: {
           Seller: new mongo.ObjectId(sellerId),
@@ -997,7 +1005,7 @@ export async function getLastMessages({
       },
       {
         $sort: {
-          "foreignMessages.TimeStamp": -1,
+          "foreignMessages.TimeStamp": -1 as const,
         },
       },
       {
@@ -1006,20 +1014,52 @@ export async function getLastMessages({
       {
         $project: {
           lastSentForeignMessage: "$foreignMessages.Message",
+          sentBy: "$foreignMessages.Sender",
           _id: 0,
         },
       },
     ];
-    const lastMsg = (await Chat.aggregate(pipeline))[0]
-      .lastSentForeignMessage as string;
+    const lastMsg: {
+      lastSentForeignMessage: string;
+      sentBy: string;
+    } = (await Chat.aggregate(pipeline))[0];
+    console.log("last msg => ", lastMsg);
     return {
       lastMsg: lastMsg,
+      productId: productId.toString(),
       status: 200,
     };
   } catch (error) {
     return {
       lastMsg: null,
+      productId: productId.toString(),
       status: 500,
     };
+  }
+}
+
+const deleteChatProps = z.object({
+  Seller: mongoId,
+  Buyer: mongoId,
+  ProductId: mongoId,
+});
+
+export async function handelDeleteChat(props: z.infer<typeof deleteChatProps>) {
+  try {
+    const { success } = deleteChatProps.safeParse(props);
+    if (!success) {
+      throw new Error("Error  while parsing delete chat props");
+    }
+    await connectToDB();
+
+    await Chat.findOneAndDelete({
+      Seller: props.Seller,
+      Buyer: props.Buyer,
+      ProductId: props.ProductId,
+    });
+    revalidatePath("/chat");
+  } catch (error) {
+    console.log("ERORR_WHILE_DELETING_CHAT", error);
+    throw error;
   }
 }

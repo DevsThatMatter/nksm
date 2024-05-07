@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 
 import { Skeleton } from "@/app/components/ui/skeleton";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from "../ui/button";
+import { Form, FormControl, FormItem } from "@/app/components/ui/form";
 import { cn } from "@/app/utils";
+import { Icons } from "@/app/utils/icons";
 import { createNewMessage, getChatStatus } from "@/lib/actions/chat.actions";
+import { Button } from "../../ui/button";
 import {
   Dialog,
   DialogClose,
@@ -15,9 +17,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import { Form, FormControl, FormItem } from "@/app/components/ui/form";
-import { Icons } from "@/app/utils/icons";
+} from "../../ui/dialog";
+import { useChatStore } from "@/hooks/useChatStore";
+import { Input } from "../../ui/input";
+import { useQuery } from "@tanstack/react-query";
 
 const messageSchema = z.object({
   content: z.string().min(1),
@@ -43,34 +46,34 @@ export default function ChatInput({
     },
   });
 
-  const isLoading = form.formState.isSubmitting;
   const [dealLock, setDealLock] = useState<boolean>(false);
   const [gLockedStatus, setGlockedStatus] = useState(false);
+  const [focus, changeFocus] = useState<boolean>(false);
+  const { setIsLocked } = useChatStore();
 
-  useEffect(() => {
-    async function fetchChatStatus() {
-      const status = (
-        await getChatStatus({
-          sellerId: sellerDetails.id,
-          buyerId: buyerDetails.id,
-          productId,
-        })
-      ).status;
-      if (status === "stale" || status === "dead") {
-        setGlockedStatus(true);
-      }
-    }
-    fetchChatStatus();
-  }, [sellerDetails, buyerDetails, productId]);
+  useQuery({
+    queryKey: ["lock-status", sellerDetails.id, buyerDetails.id, productId],
+    queryFn: () =>
+      getChatStatus({
+        sellerId: sellerDetails.id,
+        buyerId: buyerDetails.id,
+        productId,
+      }).then((data) => {
+        if (data.status === "stale" || data.status === "dead") {
+          setGlockedStatus(true);
+          setIsLocked();
+        }
+      }),
+  });
 
   async function onSend(values: z.infer<typeof messageSchema>) {
     try {
-      console.log("triggered ");
       const message = values.content;
       const sender = userId;
       const sellerId = sellerDetails.id;
       const buyerId = buyerDetails.id;
       const dealDone = dealLock;
+      form.reset();
       await createNewMessage(
         message,
         sender,
@@ -79,7 +82,7 @@ export default function ChatInput({
         buyerId,
         productId,
       );
-      form.reset();
+      changeFocus(!focus);
     } catch (error) {
       throw error;
     }
@@ -92,6 +95,7 @@ export default function ChatInput({
         const sellerId = sellerDetails.id;
         const buyerId = buyerDetails.id;
         const dealDone = dealLock;
+        form.reset();
         await createNewMessage(
           message,
           sender,
@@ -100,7 +104,7 @@ export default function ChatInput({
           buyerId,
           productId,
         );
-        form.reset();
+        changeFocus(!focus);
       } catch (error) {
         throw error;
       }
@@ -111,6 +115,10 @@ export default function ChatInput({
     }
   }, [buyerDetails.id, dealLock, form, productId, sellerDetails.id, userId]);
 
+  useEffect(() => {
+    form.setFocus("content");
+  }, [focus]);
+
   return (
     <Form {...form}>
       <form
@@ -120,8 +128,10 @@ export default function ChatInput({
         <FormItem className="w-full">
           <FormControl>
             <div className="items flex w-full max-w-[97%] items-center justify-between  rounded-md bg-muted">
-              <input
-                className="max-h-[200px] min-h-[40px] w-full resize-y overflow-y-auto bg-muted p-2 text-foreground placeholder:text-accent-foreground focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 "
+              <Input
+                className={cn(
+                  "max-h-[200px] min-h-[40px] w-full resize-y overflow-y-auto border-none bg-muted p-2 text-foreground shadow-none placeholder:text-accent-foreground focus:border-none focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+                )}
                 placeholder="Type a message"
                 {...form.register("content")}
                 autoComplete="off"
@@ -177,11 +187,10 @@ export default function ChatInput({
           </FormControl>
         </FormItem>
         {(
-          <button type="submit" disabled={isLoading}>
+          <button type="submit">
             <Icons.sendIcon
               className={cn(
                 "mx-1 h-5 w-5 transform cursor-pointer rounded-full  transition-transform hover:text-blue-500",
-                isLoading && "text-gray-500",
               )}
             />{" "}
           </button>

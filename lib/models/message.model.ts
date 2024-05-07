@@ -4,11 +4,11 @@ const messageSchema = new mongoose.Schema({
   Sender: String,
   Message: String,
   options: Boolean,
-  FileUrl: String,
   TimeStamp: String,
   accepted: {
     type: String,
     enum: ["accepted", "rejected", "pending"],
+    default: "pending",
   },
   readStatus: Boolean,
 });

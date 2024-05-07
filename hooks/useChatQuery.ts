@@ -7,7 +7,6 @@ interface ChatQueryProps {
   buyerId: string;
   productId: string;
   currentUser: string;
-  pageNo: number;
 }
 
 export const useChatQuery = ({

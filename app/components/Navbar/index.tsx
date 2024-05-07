@@ -1,20 +1,21 @@
 import UserProfile from "./UserProfile";
 
+import { Separator } from "@/app/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
-import { Separator } from "@/app/components/ui/separator";
-import UserChat from "../Chat/chat-panel";
-import SearchBar from "./SearchBar";
-import { ReactNode, Suspense } from "react";
+
+import { cn } from "@/app/utils";
+import { Icons } from "@/app/utils/icons";
 import {
   fetchRecentProductS,
   fetchSavedProduct,
 } from "@/lib/actions/products.actions";
-import { cn } from "@/app/utils";
+import { ReactNode, Suspense } from "react";
+
 import { Button } from "../ui/button";
-import { Icons } from "@/app/utils/icons";
-import FetchedProducts from "./fetch-utils";
 import { Input } from "../ui/input";
+import SearchBar from "./SearchBar";
+import FetchedProducts from "./fetch-utils";
 
 const Navbar = ({
   children = (
@@ -25,7 +26,11 @@ const Navbar = ({
           <span className="hidden pl-4 sm:inline-block"> Add Listing </span>
         </Button>
       </Link>
-      <UserChat />
+      <Link href={"/chat"}>
+        <Button variant="ghost" size="icon">
+          <Icons.chaticon className="h-[1.3rem] w-[1.32rem]" />
+        </Button>
+      </Link>
       <Suspense
         fallback={
           <Button variant="ghost" size="icon" disabled>
@@ -52,7 +57,6 @@ const Navbar = ({
     <nav className="sticky left-0 right-0 top-0 z-50 flex max-h-[4.769rem] justify-center border-b border-b-border bg-background shadow-md lg:justify-between">
       {!className && (
         <Link href="/" className="mx-3 my-1">
-
           <Image
             src="/logon.svg"
             alt="Logo"
