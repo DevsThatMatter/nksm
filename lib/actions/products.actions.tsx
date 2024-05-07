@@ -14,6 +14,7 @@ export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
     const fetchedProducts = await Product.find({})
+      .where({ is_archived: false })
       .limit(50)
       .select({
         _id: 1,
