@@ -20,6 +20,7 @@ import {
 } from "../../ui/dialog";
 import { useChatStore } from "@/hooks/useChatStore";
 import { Input } from "../../ui/input";
+import { useQuery } from "@tanstack/react-query";
 
 const messageSchema = z.object({
   content: z.string().min(1),
@@ -48,24 +49,23 @@ export default function ChatInput({
   const isLoading = form.formState.isSubmitting;
   const [dealLock, setDealLock] = useState<boolean>(false);
   const [gLockedStatus, setGlockedStatus] = useState(false);
+  const [focus, changeFocus] = useState<boolean>(false);
   const { setIsLocked } = useChatStore();
 
-  useEffect(() => {
-    async function fetchChatStatus() {
-      const status = (
-        await getChatStatus({
-          sellerId: sellerDetails.id,
-          buyerId: buyerDetails.id,
-          productId,
-        })
-      ).status;
-      if (status === "stale" || status === "dead") {
-        setGlockedStatus(true);
-        setIsLocked();
-      }
-    }
-    fetchChatStatus();
-  }, [sellerDetails, buyerDetails, productId]);
+  useQuery({
+    queryKey: ["lock-status", sellerDetails.id, buyerDetails.id, productId],
+    queryFn: () =>
+      getChatStatus({
+        sellerId: sellerDetails.id,
+        buyerId: buyerDetails.id,
+        productId,
+      }).then((data) => {
+        if (data.status === "stale" || data.status === "dead") {
+          setGlockedStatus(true);
+          setIsLocked();
+        }
+      }),
+  });
 
   async function onSend(values: z.infer<typeof messageSchema>) {
     try {
@@ -83,6 +83,7 @@ export default function ChatInput({
         productId,
       );
       form.reset();
+      changeFocus(!focus);
     } catch (error) {
       throw error;
     }
@@ -104,6 +105,7 @@ export default function ChatInput({
           productId,
         );
         form.reset();
+        changeFocus(!focus);
       } catch (error) {
         throw error;
       }
@@ -113,6 +115,10 @@ export default function ChatInput({
       setDealLock(false);
     }
   }, [buyerDetails.id, dealLock, form, productId, sellerDetails.id, userId]);
+
+  useEffect(() => {
+    form.setFocus("content");
+  }, [focus]);
 
   return (
     <Form {...form}>

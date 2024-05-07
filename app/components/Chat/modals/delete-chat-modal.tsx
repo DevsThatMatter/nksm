@@ -26,10 +26,7 @@ export default function DeleteChat({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          disabled={isLocked}
-          className="mr-3 bg-red-500 hover:bg-red-600"
-        >
+        <Button className="mr-3 bg-red-500 hover:bg-red-600">
           Delete chat
         </Button>
       </DialogTrigger>

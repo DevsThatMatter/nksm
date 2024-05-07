@@ -31,6 +31,7 @@ export function getChatDetails({
   const updateKey = `chat${activeDiscussion?.productDetails.productId}productId${activeDiscussion?.productDetails.productId}sellerId${activeDiscussion?.sellerDetails.id}buyerId${activeDiscussion?.buyerDetails.id}update`;
   const unreadMessageChannelKey = `productId${activeDiscussion?.productDetails.productId}sellerId${activeDiscussion?.sellerDetails.id}buyerId${activeDiscussion?.buyerDetails.id}write-update-count`;
   const lastMessageChannelKey = `productId${activeDiscussion?.productDetails.productId}sellerId${activeDiscussion?.sellerDetails.id}buyerId${activeDiscussion?.buyerDetails.id}last-message`;
+
   const otherUserDetails = {
     id: otherUserId ?? "",
     name: otherUserName ?? "",

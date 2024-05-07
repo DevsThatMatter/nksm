@@ -42,15 +42,15 @@ export default function ChatUI1({ userId }: { userId: string }) {
     count: messages.length,
   });
 
-  const messageElements = document.querySelectorAll(".user-message-false");
+  // const messageElements = document.querySelectorAll(".user-message-false");
 
-  useChatObserver({
-    unreadMessages: messageElements,
-    sellerId: activeDiscussion?.sellerDetails.id ?? "",
-    buyerId: activeDiscussion?.buyerDetails.id ?? "",
-    productId: activeDiscussion?.productDetails.productId ?? "",
-    currentUserId: userId,
-  });
+  // useChatObserver({
+  //   unreadMessages: messageElements,
+  //   sellerId: activeDiscussion?.sellerDetails.id ?? "",
+  //   buyerId: activeDiscussion?.buyerDetails.id ?? "",
+  //   productId: activeDiscussion?.productDetails.productId ?? "",
+  //   currentUserId: userId,
+  // });
 
   useEffect(() => {
     if (data?.pages) {

@@ -275,14 +275,15 @@ export async function lockDeal(props: z.infer<typeof LockDealProps>) {
           $set: { status: "stale" },
         },
       );
-      await Product.updateOne(
+      await Product.findByIdAndUpdate(
+        validatedProps.productId,
         {
-          _id: new mongo.ObjectId(props.productId),
+          $inc: { Total_Quantity_Available: -1 },
+          $set: { is_archived: { $lt: ["$Total_Quantity_Available", 1] } },
         },
-        {
-          is_archived: true,
-        },
+        { new: true },
       );
+
       const messageIds = await Chat.aggregate([
         {
           $match: {
@@ -559,36 +560,32 @@ export async function createNewMessage(
       buyerId,
       productId,
     });
-
-    const createdMessage = await Message.create({
+    const id = new mongo.ObjectId();
+    const time = new Date().toISOString();
+    const msg = {
+      _id: id,
       Sender: sender,
       Message: dealDone ? "Lets have a deal?" : validatedProps.message,
       options: dealDone,
-      TimeStamp: new Date().toISOString(),
-      accepted: "pending",
-      readStatus: false,
-    });
-
-    let newMessage: MessageTypes = {
-      msgId: createdMessage._id.toString(),
-      Sender: sender,
-      Message: createdMessage.Message,
-      options: dealDone ? true : false,
-      TimeStamp: createdMessage.TimeStamp,
+      TimeStamp: time,
       accepted: "pending",
       readStatus: false,
     };
 
     const addKey = `chat${validatedProps.productId}productId${validatedProps.productId}sellerId${validatedProps.sellerId}buyerId${validatedProps.buyerId}add`;
-    await pusherServer.trigger(addKey, "messages:new", newMessage);
+    await pusherServer.trigger(addKey, "messages:new", msg);
 
-    const chat = await Chat.findOne({
-      Seller: validatedProps.sellerId,
-      Buyer: validatedProps.buyerId,
-      ProductId: validatedProps.productId,
+    const createdMessage = await Message.create({
+      _id: id,
+      Sender: sender,
+      Message: dealDone ? "Lets have a deal?" : validatedProps.message,
+      options: dealDone,
+      TimeStamp: time,
+      accepted: "pending",
+      readStatus: false,
     });
 
-    const updatedChat = await Chat.findOneAndUpdate(
+    await Chat.findOneAndUpdate(
       {
         Seller: validatedProps.sellerId,
         Buyer: validatedProps.buyerId,
@@ -869,7 +866,7 @@ const ChatStatusProps = z.object({
 
 export async function getChatStatus(props: z.infer<typeof ChatStatusProps>) {
   try {
-    const status = (
+    const status: string = (
       await Chat.findOne({
         Seller: props.sellerId,
         Buyer: props.buyerId,
