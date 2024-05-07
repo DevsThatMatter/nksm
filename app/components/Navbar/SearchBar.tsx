@@ -29,8 +29,10 @@ export default function SearchBar({
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname != "/search") {
+    if (pathname == "/search") {
       setIsDropdownOpen(false);
+    } else {
+      setIsDropdownOpen(true);
     }
   }, [pathname]);
 
@@ -41,7 +43,6 @@ export default function SearchBar({
   const handleSearchSubmit = (formData: FormData) => {
     const input = formData.get("q")?.toString().trim();
     if (!input && pathname == "/search") {
-      console.log(category);
       if (category) {
         router.push("/search?category=" + category);
       } else {
@@ -51,7 +52,6 @@ export default function SearchBar({
     } else {
       router.push("/search?q=" + formData.get("q"));
     }
-    setIsDropdownOpen(false);
   };
 
   return (
@@ -78,19 +78,13 @@ export default function SearchBar({
                     { scroll: true },
                   ); // Show dropdown when input is not empty
             }, 500)}
-            onFocus={() => {
-              pathname != "/search" && setIsDropdownOpen(true);
-            }}
-            onBlurCapture={() =>
-              setTimeout(() => setIsDropdownOpen(false), 100)
-            }
           />
         </div>
         {input &&
         isDropdownOpen &&
         filteredProducts &&
         filteredProducts.length > 0 ? (
-          <div className="absolute left-0 right-0 z-50 mt-10 max-h-60 overflow-auto rounded-md border bg-card shadow-lg">
+          <div className="absolute left-0 right-0 z-50 mt-10 hidden max-h-60 overflow-auto rounded-md border bg-card shadow-lg group-focus-within:block">
             {filteredProducts.map((product) => (
               <Link href={`/product/${product._id}`} key={product._id}>
                 <li
@@ -100,14 +94,10 @@ export default function SearchBar({
                   <div className="flex items-center">
                     <Image
                       alt={product.Product_Name}
-                      className="rounded-md"
+                      className="aspect-square rounded-md object-cover"
                       src={product.Images[0]}
                       height={56}
                       width={56}
-                      style={{
-                        aspectRatio: "64/64",
-                        objectFit: "cover",
-                      }}
                     />
                     <span className="ml-4">{product.Product_Name}</span>
                   </div>
@@ -120,11 +110,14 @@ export default function SearchBar({
           // Render "No results" message when no products match the input
           input &&
           isDropdownOpen && (
-            <div className="absolute left-0 right-0 z-50 mt-10 max-h-60 overflow-auto rounded-md border bg-card shadow-lg">
-              <div className="px-4 py-2">
+            <button
+              className="absolute left-0 right-0 z-50 mt-10 hidden max-h-60 overflow-auto rounded-md border bg-card shadow-lg group-focus-within:block"
+              type="submit"
+            >
+              <div className="w-full px-4 py-2 text-left">
                 Search NKSM for &quot;{input}&quot;
               </div>
-            </div>
+            </button>
           )
         )}
       </div>
