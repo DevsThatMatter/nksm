@@ -1,7 +1,7 @@
+import { cn } from "@/app/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { buttonVariants } from "../ui/button";
-import { cn } from "@/app/utils";
 
 export default function NoOneToTalk({
   endpoint,
@@ -12,7 +12,9 @@ export default function NoOneToTalk({
     <main className="flex h-screen flex-col items-center justify-center">
       <section className="relative h-1/2 w-full">
         <Image
-          src={"/monoUseImages/noWork.png"}
+          src={
+            "https://pub-2188c30af1504cb0a1acb7e6f7e0efae.r2.dev/monoUseImages%2FnoWork.png"
+          }
           alt="mono-use"
           layout="fill"
           objectFit="contain"
