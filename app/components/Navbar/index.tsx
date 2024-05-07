@@ -2,16 +2,18 @@ import UserProfile from "./UserProfile";
 
 import Image from "next/image";
 import Link from "next/link";
-import { SavedItems } from "./SavedItems";
 import { Separator } from "@/app/components/ui/separator";
 import UserChat from "../Chat/chat-panel";
 import SearchBar from "./SearchBar";
 import { ReactNode, Suspense } from "react";
-import { fetchRecentProductS } from "@/lib/actions/products.actions";
+import {
+  fetchRecentProductS,
+  fetchSavedProduct,
+} from "@/lib/actions/products.actions";
 import { cn } from "@/app/utils";
 import { Button } from "../ui/button";
-import { countUnreadMessages } from "@/lib/actions/chat.actions";
 import { Icons } from "@/app/utils/icons";
+import FetchedProducts from "./fetch-utils";
 import { Input } from "../ui/input";
 
 const Navbar = ({
@@ -24,7 +26,19 @@ const Navbar = ({
         </Button>
       </Link>
       <UserChat />
-      <SavedItems />
+      <Suspense
+        fallback={
+          <Button variant="ghost" size="icon" disabled>
+            <Icons.saved className="h-[1.4rem] w-[1.4rem]" />
+          </Button>
+        }
+      >
+        <SavedIcon>
+          <Button variant="ghost" size="icon">
+            <Icons.saved className="h-[1.4rem] w-[1.4rem]" />
+          </Button>
+        </SavedIcon>
+      </Suspense>
       <Separator orientation="vertical" className="h-10" />
       <UserProfile />
     </>
@@ -35,9 +49,10 @@ const Navbar = ({
   className?: string;
 }) => {
   return (
-    <nav className="sticky left-0 right-0 top-0 z-50 flex max-h-[4.769rem] justify-center bg-background shadow-md lg:justify-between">
+    <nav className="sticky left-0 right-0 top-0 z-50 flex max-h-[4.769rem] justify-center border-b border-b-border bg-background shadow-md lg:justify-between">
       {!className && (
         <Link href="/" className="mx-3 my-1">
+
           <Image
             src="/logon.svg"
             alt="Logo"
@@ -48,7 +63,10 @@ const Navbar = ({
         </Link>
       )}
       <div
-        className={cn("nav-items mr-5 flex items-center space-x-5", className)}
+        className={cn(
+          "nav-items mr-5 flex h-[4.769rem] items-center space-x-5",
+          className,
+        )}
       >
         <Suspense
           fallback={<Input className="pl-8 sm:w-56 md:w-[31.4rem]" readOnly />}
@@ -59,6 +77,16 @@ const Navbar = ({
         {children}
       </div>
     </nav>
+  );
+};
+
+export const SavedIcon = async ({ children }: { children: ReactNode }) => {
+  const savedProducts = await fetchSavedProduct();
+  return (
+    <Link href={"/saved-products"}>
+      <FetchedProducts savedProducts={savedProducts} />
+      {children}
+    </Link>
   );
 };
 

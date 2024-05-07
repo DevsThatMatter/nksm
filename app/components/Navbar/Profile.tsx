@@ -1,6 +1,10 @@
 "use client";
 
-import { useTheme } from "next-themes";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/app/components/ui/avatar";
 import { Button } from "@/app/components/ui/button";
 import {
   DropdownMenu,
@@ -8,15 +12,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/app/components/ui/avatar";
+import { useTheme } from "next-themes";
 
-import { signOut } from "next-auth/react";
-import { Session } from "next-auth";
 import { Icons } from "@/app/utils/icons";
+import { Session } from "next-auth";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 interface UserProfileProps {
@@ -31,6 +31,10 @@ export function Profile({ data, whichIcon }: UserProfileProps) {
   };
   const handleLogin = () => {
     router.push("/login");
+  };
+
+  const handleAccountInfoClick = () => {
+    router.push("/account");
   };
 
   return (
@@ -63,10 +67,7 @@ export function Profile({ data, whichIcon }: UserProfileProps) {
       <DropdownMenuContent align="start">
         {data?.user && (
           <>
-            <DropdownMenuItem onClick={() => console.log("View Your Profile")}>
-              View Your Orders
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => console.log("Settings")}>
+            <DropdownMenuItem onClick={handleAccountInfoClick}>
               Account Info
             </DropdownMenuItem>
           </>

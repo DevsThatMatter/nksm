@@ -1,17 +1,31 @@
 "use server";
 
+import { Product } from "../models/product.model";
+import { connectToDB } from "../database/mongoose";
+import { FilterQuery, SortOrder, mongo } from "mongoose";
 import SearchCard from "@/app/components/Search/SearchCard";
 import { CategoryEnum, SortBy } from "@/types";
-import { FilterQuery, SortOrder } from "mongoose";
-import { connectToDB } from "../database/mongoose";
-import { Product } from "../models/product.model";
 import { User } from "../models/user.model";
+import { auth } from "@/auth";
+import { RedirectType, redirect } from "next/navigation";
+import { SavedProduct } from "@/app/components/Navbar/SavedItems";
+import { revalidatePath } from "next/cache";
+
 export const fetchRecentProducts = async () => {
   try {
     await connectToDB();
     const fetchedProducts = await Product.find({})
+      .where({ is_archived: false })
       .limit(50)
-      .select({ _id: 1, Images: 1, Product_Name: 1, Price: 1, Description: 1 })
+      .select({
+        _id: 1,
+        Images: 1,
+        Product_Name: 1,
+        Price: 1,
+        Description: 1,
+        Negotiable: 1,
+        Condition: 1,
+      })
       .sort({ createdAt: -1 });
 
     return fetchedProducts;
@@ -164,3 +178,148 @@ export const fetchProductDetails = async (productId: string) => {
     throw error;
   }
 };
+
+export const fetchOrderHistory = async (email: string) => {
+  try {
+    await connectToDB();
+
+    const userInfo = await User.findOne({ Email: email })
+      .select({
+        Ordered_Products: true,
+        Owned_Products: true,
+      })
+      .populate({
+        path: "Ordered_Products Owned_Products",
+        model: Product,
+        select: "Images Product_Name Price Description Condition Negotiable",
+      });
+    return userInfo;
+  } catch (e: unknown) {
+    console.log("Something went wrong.");
+    throw e;
+  }
+};
+
+export const removeProduct = async (values: FormData) => {
+  try {
+    await connectToDB();
+    const productId = values.get("productId");
+    await Product.deleteOne({
+      _id: productId,
+    }).lean();
+    await User.updateOne({
+      $pull: {
+        Owned_Products: productId,
+      },
+    }).lean();
+    revalidatePath("orders");
+    redirect("/orders", RedirectType.replace);
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    throw error;
+  }
+};
+export async function fetchSavedProduct() {
+  try {
+    const savedItems = new Map<string, SavedProduct>();
+    const email = (await auth())?.user?.email;
+    if (!email) {
+      return savedItems;
+    }
+    await connectToDB();
+    const saved = (await User.aggregate([
+      {
+        $match: {
+          Email: email,
+        },
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "Saved_Products", // Use the unwound element for comparison (if applicable)
+          foreignField: "_id",
+          as: "products",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          products: {
+            $map: {
+              input: "$products",
+              as: "product",
+              in: {
+                _id: { $toString: "$$product._id" },
+                Image: { $arrayElemAt: ["$$product.Images", 0] },
+                Condition: "$$product.Condition",
+                Price: "$$product.Price",
+                Negotiable: "$$product.Negotiable",
+                Product_Name: "$$product.Product_Name",
+              },
+            },
+          },
+        },
+      },
+    ])) as [{ products: SavedProduct[] }];
+
+    saved[0].products.forEach((savedProduct) => {
+      savedItems.set(savedProduct._id, savedProduct);
+    });
+
+    return savedItems;
+  } catch (error) {
+    console.log("ERROR_WHILE_FETCHING_SAVED_PRODUCTS", error);
+    throw error;
+  }
+}
+
+// _id: product._id.toString(),
+// Image: product.Images[0],
+// Condition: product.Condition,
+// Price: product.Price,
+// Negotiable: product.Negotiable,
+// Product_Name: product.Product_Name,
+
+export async function removeSavedProduct(productId: string) {
+  try {
+    const email = (await auth())?.user?.email;
+    if (!email) return redirect("/login");
+    await connectToDB();
+
+    await User.findOneAndUpdate(
+      { Email: email },
+      { $pull: { Saved_Products: productId } },
+    );
+    return {
+      error: null,
+      msg: "Removed successfully",
+    };
+  } catch (error) {
+    console.error("Error removing product:", error);
+    return {
+      error: null,
+      msg: "Server error, try later",
+    };
+  }
+}
+
+export async function saveProduct(productId: string) {
+  try {
+    await connectToDB();
+    const currentUserEmail = (await auth())?.user?.email;
+    await User.updateOne(
+      { Email: currentUserEmail },
+      { $push: { Saved_Products: new mongo.ObjectId(productId) } },
+    );
+    return {
+      msg: "Product saved",
+      error: null,
+    };
+  } catch (error) {
+    console.log("ERROR_WHILE_SAVING_PRODUCT", error);
+    return {
+      msg: null,
+      error: "Server error, try later",
+    };
+  }
+}

@@ -180,13 +180,13 @@ export default function UserChat({
                         className="flex space-x-4"
                       >
                         <div className="relative h-16 w-16">
-                          <Image
+                          {/* <Image
                             src={discussions[0].productDetails.Images[0]}
                             alt="product image"
                             fill
                             className="rounded-md"
                             sizes="100"
-                          />
+                          /> */}
                         </div>
                         <div className="flex flex-col justify-center">
                           <h1 className="mb-2 line-clamp-1 text-lg font-bold text-black dark:text-white">

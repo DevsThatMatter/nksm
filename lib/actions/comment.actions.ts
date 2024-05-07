@@ -2,13 +2,13 @@
 import { CommentsType } from "@/types";
 import { connectToDB } from "../database/mongoose";
 import { Comments } from "../models/comments.model";
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import { Session } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { RedirectType, redirect } from "next/navigation";
 
 export const addComment = async (commentData: {
-  Product: mongoose.Types.ObjectId;
+  Product: ObjectId | string;
   User: mongoose.Types.ObjectId;
   Comment: string;
 }) => {
@@ -27,7 +27,7 @@ export const addComment = async (commentData: {
   }
 };
 
-export const listComments = async (productID: mongoose.Types.ObjectId) => {
+export const listComments = async (productID: ObjectId) => {
   try {
     await connectToDB();
     const comments: CommentsType = await Comments.aggregate([
@@ -68,7 +68,7 @@ export const listComments = async (productID: mongoose.Types.ObjectId) => {
 export const sendComment = async (
   formData: FormData,
   userdata: Session | null,
-  productId: mongoose.Types.ObjectId | string,
+  productId: ObjectId | string,
 ) => {
   const comment = formData.get("content") as string;
   if (!userdata) {
@@ -77,7 +77,7 @@ export const sendComment = async (
   try {
     if (comment.trim() !== "") {
       const newcomment = {
-        Product: new mongoose.Types.ObjectId(productId),
+        Product: productId,
         User: new mongoose.Types.ObjectId(userdata?.user?.id),
         Comment: comment,
       };

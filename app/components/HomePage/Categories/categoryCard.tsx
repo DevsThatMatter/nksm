@@ -20,7 +20,13 @@ const CategoryCard: React.FC<CategoryProp> = ({
 }) => {
   return (
     <Link
-      href={""}
+      href={{
+        pathname: "/search",
+        query: {
+          q: "",
+          category: name,
+        },
+      }}
       key={name}
       className={cn(
         "group relative aspect-square overflow-hidden rounded-lg @container sm:aspect-auto sm:h-[30vh] md:h-[60vh] lg:h-auto",

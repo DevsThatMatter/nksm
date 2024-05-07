@@ -1,11 +1,13 @@
+import { Suspense } from "react";
+
 import BottomNavContainer from "./BottomNavContainer";
 import UserChat from "../Chat/chat-panel";
 import UserProfile from "../Navbar/UserProfile";
 import ButtonContainer from "./ButtonContainer";
 import NavButton from "./NavButton";
 import PlusBottomContainer from "./PlusBottomContainer";
-
 import CategoriesDrawer from "./CategoriesDrawer";
+import { SavedIcon } from "../Navbar";
 
 const BottomNav = () => {
   return (
@@ -34,14 +36,29 @@ const BottomNav = () => {
       </ButtonContainer>
       <PlusBottomContainer />
       <ButtonContainer variant={"right"}>
-        <NavButton>
-          <svg
-            className="w-8 fill-[#4B5563] dark:fill-gray-500"
-            viewBox="0 0 24 24"
-          >
-            <path d="M6 5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v13.131a1 1 0 0 1-1.555.832l-3.89-2.593a1 1 0 0 0-1.11 0l-3.89 2.593A1 1 0 0 1 6 18.131V5Z"></path>
-          </svg>
-        </NavButton>
+        <Suspense
+          fallback={
+            <NavButton>
+              <svg
+                className="w-8 fill-[#4B5563] dark:fill-gray-500"
+                viewBox="0 0 24 24"
+              >
+                <path d="M6 5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v13.131a1 1 0 0 1-1.555.832l-3.89-2.593a1 1 0 0 0-1.11 0l-3.89 2.593A1 1 0 0 1 6 18.131V5Z"></path>
+              </svg>
+            </NavButton>
+          }
+        >
+          <SavedIcon>
+            <NavButton>
+              <svg
+                className="w-8 fill-[#4B5563] dark:fill-gray-500"
+                viewBox="0 0 24 24"
+              >
+                <path d="M6 5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v13.131a1 1 0 0 1-1.555.832l-3.89-2.593a1 1 0 0 0-1.11 0l-3.89 2.593A1 1 0 0 1 6 18.131V5Z"></path>
+              </svg>
+            </NavButton>
+          </SavedIcon>
+        </Suspense>
         <UserProfile whichIcon={true} />
       </ButtonContainer>
     </BottomNavContainer>

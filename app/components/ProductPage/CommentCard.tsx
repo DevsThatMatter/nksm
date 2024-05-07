@@ -8,20 +8,16 @@ import {
 import React from "react";
 
 import { listComments } from "@/lib/actions/comment.actions";
-import mongoose from "mongoose";
+import { ObjectId } from "mongoose";
 import { auth } from "@/auth";
 import CommentForm from "./CommentForm";
 
-async function CommentCard({
-  productId,
-}: {
-  productId: mongoose.Types.ObjectId;
-}) {
+async function CommentCard({ productId }: { productId: ObjectId }) {
   const userdata = await auth();
   const comments = await listComments(productId);
   return (
     <>
-      <h2 className="mt-6 pb-3 text-2xl font-semibold lg:mt-3 lg:pb-0 lg:text-xl">
+      <h2 className="mt-6 pb-3 text-lg font-semibold lg:mt-0 lg:pb-0 lg:text-xl">
         Comments
       </h2>
       <ScrollArea className="mt-2 flex h-72 w-full rounded-md border px-2">

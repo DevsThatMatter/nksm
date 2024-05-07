@@ -1,14 +1,15 @@
-import Image from "next/image";
-import { PreviewInputs } from ".";
 import { cn } from "@/app/utils";
 import { Icons } from "@/app/utils/icons";
 import { ConditionEnum } from "@/types";
+import Image from "next/image";
+import { PreviewInputs } from ".";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 
 const AddListingPreview = (
-  previewData: Omit<PreviewInputs, "price" | "negotiate"> & {
+  previewData: Omit<PreviewInputs, "price" | "negotiate" | "images"> & {
     price: number | string;
     negotiate: boolean | string;
+    images: (File | string)[];
   },
 ) => {
   const renderConditionIcon = (condition: ConditionEnum | string) => {
@@ -27,10 +28,12 @@ const AddListingPreview = (
     <div className={cn("mt-4 w-full")}>
       <Carousel className="w-full rounded-lg shadow-none">
         <CarouselContent>
-          {previewData.images.map((image: File, index: number) => (
+          {previewData.images.map((image: File | string, index: number) => (
             <CarouselItem key={index} className="rounded-md">
               <Image
-                src={URL.createObjectURL(image)}
+                src={
+                  typeof image === "string" ? image : URL.createObjectURL(image)
+                }
                 alt={`Image ${index + 1}`}
                 width={1920}
                 height={1080}
@@ -51,7 +54,7 @@ const AddListingPreview = (
             {previewData.condition}
           </p>
           <p
-            className={`m-1 flex items-center justify-center rounded-3xl p-1 px-2 text-xs ${previewData.negotiate ? "bg-green-200 text-green-500 dark:bg-green-500 dark:text-green-800" : "bg-sky-200 text-sky-500 dark:bg-sky-500 dark:text-sky-900"}`}
+            className={`m-1 flex items-center justify-center rounded-3xl p-1 px-2 text-xs ${previewData.negotiate === true || previewData.negotiate === "Yes" ? "bg-green-200 text-green-500 dark:bg-green-800/40 dark:text-green-400" : "bg-sky-200 text-sky-500 dark:bg-sky-800/40 dark:text-sky-400"}`}
           >
             {previewData.negotiate === true || previewData.negotiate === "Yes"
               ? "Negotiable"

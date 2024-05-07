@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   Owned_Products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   Address: { type: String },
   Ordered_Products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  Saved_Products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   Comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comments" }],
 });
 
