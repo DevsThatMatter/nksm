@@ -51,13 +51,14 @@ const Navbar = ({
   return (
     <nav className="sticky left-0 right-0 top-0 z-50 flex max-h-[4.769rem] justify-center border-b border-b-border bg-background shadow-md lg:justify-between">
       {!className && (
-        <Link href="/" className="mx-3 my-2">
+        <Link href="/" className="mx-3 my-1">
+
           <Image
             src="/logon.svg"
             alt="Logo"
-            width={150}
-            height={150}
-            className="logo mt-1 hidden dark:invert lg:block"
+            width={175}
+            height={175}
+            className="logo mt-2 hidden dark:invert lg:block"
           />
         </Link>
       )}
