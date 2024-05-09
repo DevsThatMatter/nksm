@@ -2,14 +2,9 @@
 
 import { Chat } from "../models/chats.model";
 import { User } from "../models/user.model";
-import { mongo } from "mongoose";
+import mongoose, { Types, mongo } from "mongoose";
 import { connectToDB } from "../database/mongoose";
 import nodemailer from "nodemailer";
-
-async function getIdByEmail(email: string) {
-  const id = (await User.findOne({ Email: email }))._id;
-  return id;
-}
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -120,9 +115,18 @@ export async function sendEmail(
         success: true,
       };
     }
+    const emails = await User.find({
+      $or: [{ Email: senderEmail }, { Email: receiverEmail }],
+    })
+      .limit(2)
+      .select("Email _id")
+      .lean();
+    const buyerId = emails.find((email) => email.Email === senderEmail)?._id;
+    const sellerId = emails.find((email) => email.Email === receiverEmail)?._id;
+
     const existingInviteOrChat = await Chat.findOne({
-      Seller: new mongo.ObjectId(await getIdByEmail(receiverEmail)),
-      Buyer: new mongo.ObjectId(await getIdByEmail(senderEmail)),
+      Seller: sellerId,
+      Buyer: buyerId,
       ProductId: new mongo.ObjectId(productId),
       status: { $ne: "dead" },
     }).countDocuments();
@@ -140,27 +144,38 @@ export async function sendEmail(
       to: receiverEmail,
       html: htmlTemplate,
     });
-    const sellerId = new mongo.ObjectId(await getIdByEmail(receiverEmail));
-    const buyerId = new mongo.ObjectId(await getIdByEmail(senderEmail));
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    const invite = await Chat.create({
-      Seller: sellerId,
-      Buyer: buyerId,
-      ProductId: productId,
-      status: "invite",
-      Messages: [],
-      InitPrice: price,
-    });
+    const invite = (await Chat.create(
+      [
+        {
+          Seller: sellerId,
+          Buyer: buyerId,
+          ProductId: productId,
+          status: "invite",
+          Messages: [],
+          InitPrice: price,
+        },
+      ],
+      { session },
+    )) as Record<string, any>;
+    console.log(invite[0]);
+    await Promise.all([
+      User.updateOne(
+        { _id: sellerId },
+        { $push: { Chat_IDs: invite[0]._id } },
+        { session },
+      ),
+      User.updateOne(
+        { _id: buyerId },
+        { $push: { Chat_IDs: invite[0]._id } },
+        { session },
+      ),
+    ]);
 
-    const seller = await User.findOne({
-      _id: sellerId,
-    });
-    seller.Chat_IDs.push(invite._id);
-
-    const buyer = await User.findOne({
-      _id: buyerId,
-    });
-    buyer.Chat_IDs.push(invite._id);
+    await session.commitTransaction();
+    session.endSession();
 
     return {
       error: null,
