@@ -50,6 +50,7 @@ export default function InvitePanel({ userId }: { userId: string }) {
           <section className="mt-4 flex h-1/2 flex-col space-y-3 overflow-y-auto">
             {currentUserSent?.map((invite, i) => (
               <InviteDisplay
+                className="opacity-30"
                 userId={userId}
                 key={i}
                 seller={{

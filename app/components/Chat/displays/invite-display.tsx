@@ -1,6 +1,5 @@
 import { cn } from "@/app/utils";
 import Image from "next/image";
-import React from "react";
 import InviteModal from "../modals/invite-modal";
 
 interface UserDetails {
@@ -26,6 +25,7 @@ export interface InviteStruct {
 
 export default function InviteDisplay({
   buyer,
+  className,
   product,
   initPrice,
   sellerId,
@@ -37,6 +37,7 @@ export default function InviteDisplay({
   buyer?: UserDetails & {
     buyerId: string;
   };
+  className?: string;
   seller?: {
     Avatar: string;
     Name: string;
@@ -54,6 +55,7 @@ export default function InviteDisplay({
         "flex space-x-2 bg-muted md:space-x-4",
         "drop-shadow-md",
         buyer && "cursor-pointer hover:drop-shadow-lg",
+        className,
       )}
     >
       <Image

@@ -62,7 +62,7 @@ const Navbar = ({
             alt="Logo"
             width={175}
             height={175}
-            className="logo mt-2 hidden dark:invert lg:block"
+            className="logo mr-1 mt-2 hidden dark:invert lg:block"
           />
         </Link>
       )}
