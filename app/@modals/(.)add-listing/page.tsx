@@ -1,12 +1,14 @@
+import { Suspense } from "react";
+
 import { AddListing } from "@/app/components/AddListing";
 import { AuthUtil } from "@/app/components/authutil";
 import { Dialog, DialogCloseBtn } from "@/app/components/dialog";
-import { Suspense } from "react";
 
 const ListingPage = () => {
   return (
     <Dialog
-      className="grid max-w-lg gap-4 overflow-auto border focus-within:ring-0 focus:ring-0 focus-visible:ring-0"
+      className="max-w-lg overflow-auto border focus-within:ring-0 focus:ring-0 focus-visible:ring-0"
+      contentClassName="grid gap-4"
       location="center"
       disableClickOutside
     >
