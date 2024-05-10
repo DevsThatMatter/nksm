@@ -1,18 +1,20 @@
-import { AddListing, PreviewInputs } from "@/app/components/AddListing";
-import { Dialog, DialogCloseBtn } from "@/app/components/dialog";
-import { Button } from "@/app/components/ui/button";
-import { Icons } from "@/app/utils/icons";
-import { auth } from "@/auth";
-import { Product } from "@/lib/models/product.model";
 import { Types } from "mongoose";
 import Link from "next/link";
 import { RedirectType, redirect } from "next/navigation";
 import { Suspense } from "react";
 
+import { AddListing } from "@/app/components/AddListing";
+import { Dialog, DialogCloseBtn } from "@/app/components/dialog";
+import { Button } from "@/app/components/ui/button";
+import { Icons } from "@/app/utils/icons";
+import { auth } from "@/auth";
+import { Product } from "@/lib/models/product.model";
+
 const EditPage = ({ params: { editId } }: { params: { editId: string } }) => {
   return (
     <Dialog
-      className="grid max-w-lg gap-4 overflow-auto border focus-within:ring-0 focus:ring-0 focus-visible:ring-0"
+      className="max-w-lg overflow-auto border focus-within:ring-0 focus:ring-0 focus-visible:ring-0"
+      contentClassName="grid gap-4"
       location="center"
       disableClickOutside
     >

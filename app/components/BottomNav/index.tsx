@@ -13,7 +13,7 @@ const BottomNav = () => {
   return (
     <BottomNavContainer>
       <ButtonContainer>
-        <Link href={"/chat"}>
+        <Link href={"/chat"} prefetch>
           <NavButton className="m-1 pl-1 pt-1">
             <svg
               className="w-8  fill-[#4B5563] dark:fill-gray-500"

@@ -1,10 +1,11 @@
 "use client";
 
-import { Close, Content, Overlay, Portal, Root } from "@radix-ui/react-dialog";
-import { useRouter } from "next/navigation";
-
-import { Cross2Icon } from "@radix-ui/react-icons";
 import { VariantProps, cva } from "class-variance-authority";
+import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+
+import { Close, Content, Overlay, Portal, Root } from "@radix-ui/react-dialog";
+import { Cross2Icon } from "@radix-ui/react-icons";
 
 import { cn } from "../utils";
 import { Button } from "./ui/button";
@@ -44,19 +45,23 @@ const contentVariants = cva(
 interface DialogProps extends VariantProps<typeof dialogLocations> {
   disableClickOutside?: boolean;
   className?: string;
+  contentClassName?: string;
   children: React.ReactNode;
 }
 
 function Dialog({
   disableClickOutside,
   className,
+  contentClassName,
   children,
   location,
 }: DialogProps) {
   const router = useRouter();
+  const Comp = location === "center" ? "div" : SwipeableDiv;
+  const direction = location === "start" ? "left" : "right";
 
   return (
-    <Root defaultOpen onOpenChange={() => setTimeout(() => router.back(), 140)}>
+    <Root defaultOpen onOpenChange={() => setTimeout(() => router.back(), 130)}>
       <Portal forceMount>
         <Overlay asChild>
           <div
@@ -69,21 +74,25 @@ function Dialog({
         </Overlay>
         <div className={cn(dialogLocations({ location }))}>
           <Content
-            asChild
+            className={cn(
+              "relative max-h-full w-full max-w-full bg-background shadow-lg",
+              contentVariants({ location }),
+              className,
+            )}
             onPointerDownOutside={(e) => {
               if (disableClickOutside) e.preventDefault();
             }}
           >
-            <div
+            <Comp
               className={cn(
-                "relative max-h-full w-full max-w-full bg-background shadow-lg",
+                "h-full w-full",
                 location === "center" && "p-6 sm:p-8",
-                contentVariants({ location }),
-                className,
+                contentClassName,
               )}
+              direction={direction}
             >
               {children}
-            </div>
+            </Comp>
           </Content>
         </div>
       </Portal>
@@ -103,6 +112,49 @@ const DialogCloseBtn = ({ className }: { className?: string }) => {
         <span className="sr-only">Close</span>
       </Button>
     </Close>
+  );
+};
+const SwipeableDiv = ({
+  className,
+  children,
+  direction,
+}: {
+  className?: string;
+  children: React.ReactNode;
+  direction: "left" | "right";
+}) => {
+  const [startX, setStartX] = useState<number | null>(null);
+
+  const minSwipeDistance = 100;
+
+  const onTouchStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    setStartX(e.touches[0].clientX);
+  }, []);
+
+  const onTouchEnd = useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      if (startX === null) return;
+      const endX = startX - (startX - e.changedTouches[0].clientX);
+      const distance = startX - endX;
+      if (
+        (direction === "left" && distance > minSwipeDistance) ||
+        (direction === "right" && distance < -minSwipeDistance)
+      ) {
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+      }
+      setStartX(null);
+    },
+    [startX, direction, minSwipeDistance],
+  );
+
+  return (
+    <div
+      className={className}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      {children}
+    </div>
   );
 };
 
