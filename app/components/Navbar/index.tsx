@@ -26,7 +26,7 @@ const Navbar = ({
           <span className="hidden pl-4 sm:inline-block"> Add Listing </span>
         </Button>
       </Link>
-      <Link href={"/chat"}>
+      <Link href={"/chat"} prefetch>
         <Button variant="ghost" size="icon">
           <Icons.chaticon className="h-[1.3rem] w-[1.32rem]" />
         </Button>
