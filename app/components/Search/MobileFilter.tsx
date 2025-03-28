@@ -1,6 +1,6 @@
 "use server";
 import { FilterProps } from "@/app/(root)/search/page";
-import { MixerHorizontalIcon } from "@radix-ui/react-icons";
+import { categories } from "@/app/components/HomePage/Categories";
 import {
   Drawer,
   DrawerClose,
@@ -10,16 +10,16 @@ import {
   DrawerHeader,
   DrawerTrigger,
 } from "@/app/components/ui/drawer";
-import { Label } from "../ui/label";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Button } from "../ui/button";
-import { categories } from "@/constants/categories";
 import { cn } from "@/app/utils";
 import { spartan } from "@/app/utils/fonts";
-import Image from "next/image";
 import { CategoryEnum, SortBy } from "@/types";
-import { redirect } from "next/navigation";
+import { MixerHorizontalIcon } from "@radix-ui/react-icons";
+import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 export const MobileFilter = ({ query, sorting, category }: FilterProps) => {
   const handleSubmit = (formData: FormData) => {

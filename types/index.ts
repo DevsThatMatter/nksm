@@ -1,12 +1,14 @@
 import mongoose, { ObjectId, Types } from "mongoose";
 
-export type category = {
+export type Category = {
   name: string;
   imgUrl: string;
   darkImgUrl: string;
-  imageClassName?: string;
-  className?: string;
-  textClassName?: string;
+  classNames?: {
+    image?: string;
+    root?: string;
+    text?: string;
+  };
 };
 
 export type SortBy = "newest" | "oldest" | "high" | "low";

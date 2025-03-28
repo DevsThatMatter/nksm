@@ -1,10 +1,10 @@
-import { categories } from "@/constants/categories";
-import Link from "next/link";
-import Image from "next/image";
-import { Separator } from "../ui/separator";
-import { spartan } from "@/app/utils/fonts";
-import { cn } from "@/app/utils";
 import { FilterProps } from "@/app/(root)/search/page";
+import { categories } from "@/app/components/HomePage/Categories";
+import { cn } from "@/app/utils";
+import { spartan } from "@/app/utils/fonts";
+import Image from "next/image";
+import Link from "next/link";
+import { Separator } from "../ui/separator";
 
 const Filter = ({ query, sorting = "newest", category }: FilterProps) => {
   return (

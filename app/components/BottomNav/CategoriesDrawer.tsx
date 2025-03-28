@@ -1,3 +1,4 @@
+import { categories } from "@/app/components/HomePage/Categories";
 import {
   Drawer,
   DrawerClose,
@@ -7,7 +8,6 @@ import {
   DrawerTrigger,
 } from "@/app/components/ui/drawer";
 import { Separator } from "@/app/components/ui/separator";
-import { categories } from "@/constants/categories";
 import Link from "next/link";
 
 const CategoriesDrawer = ({ children }: { children: React.ReactNode }) => {
